@@ -8,7 +8,7 @@ type Props = {
 
 const SignUp = (props: Props) => {
     return (
-        <div className='flex flex-col gap-4 pt-2'>
+        <div className='flex flex-col gap-4'>
             <div>
                 <h1 className='heading1 text-primary font-bold'>Create a new account</h1>
             </div>
