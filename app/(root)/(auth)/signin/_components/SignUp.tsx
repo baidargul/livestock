@@ -1,5 +1,8 @@
+import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
+import { useLoader } from '@/hooks/useLoader'
+import { LoaderState } from '@/types/useLoader'
 import React from 'react'
 
 type Props = {
@@ -7,19 +10,36 @@ type Props = {
 }
 
 const SignUp = (props: Props) => {
+    const loading = useLoader((state: LoaderState) => state.loading)
+    const setLoading = useLoader((state: LoaderState) => state.setLoading)
+    const form = {
+        name: "",
+        email: "",
+        password: ""
+    }
+
+    const handleSignUp = async () => {
+        if (!form.name || !form.email || !form.password) return
+        setLoading(true)
+        const response = await actions.client.user.signup(form.name, form.email, form.password)
+        console.log(response)
+        setLoading(false)
+    }
+
+
     return (
         <div className='flex flex-col gap-4'>
             <div>
                 <h1 className='heading1 text-primary font-bold'>Create a new account</h1>
             </div>
             <div className='flex flex-col gap-1'>
-                <Textbox label='Name:' placeholder='Muhammad Usman' />
-                <Textbox label='Email:' placeholder='musmanjamil@gmail.com' />
-                <Textbox label='Password:' placeholder='1234' type='password' />
+                <Textbox label='Name:' value={form.name} onChange={(val: string) => form.name = val} placeholder='Muhammad Usman' />
+                <Textbox label='Email:' value={form.email} onChange={(val: string) => form.email = val} placeholder='musmanjamil@gmail.com' />
+                <Textbox label='Password:' value={form.password} onChange={(val: string) => form.password = val} placeholder='1234' type='password' />
             </div>
             <div className='flex justify-between items-center'>
                 <label onClick={() => props.setStage("signin")} className='text-primary text-sm border-b border-red-600 cursor-pointer'>Sign In</label>
-                <Button>Create</Button>
+                <Button onClick={handleSignUp}>Create</Button>
             </div>
         </div>
     )

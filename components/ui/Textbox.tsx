@@ -1,19 +1,30 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 type Props = {
     label?: string
     type?: "text" | "email" | "password" | "number" | "date" | "tel" | "url" | "search"
     placeholder?: string
     disabled?: boolean
+    value?: string
+    onChange?: (val: string) => void
 }
 
 const Textbox = (props: Props) => {
     const txtRef: any = useRef(null)
     const [value, setValue] = useState<string | number>("")
 
+    useEffect(() => {
+        if (props.value) {
+            setValue(props.value)
+        }
+    }, [props.value])
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value)
+        if (props.onChange) {
+            props.onChange(e.target.value)
+        }
     }
 
     const handleOnFocus = () => {
