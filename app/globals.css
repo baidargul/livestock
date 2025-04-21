@@ -23,16 +23,16 @@
     @apply py-2 px-4 select-none rounded cursor-pointer active:scale-90 transition-all duration-200;
   }
   .btn-primary {
-    @apply bg-red-600 border-red-600 text-center text-white;
+    @apply bg-red-600 border-red-600 text-center text-white disabled:bg-gradient-to-b disabled:from-zinc-300 disabled:to-zinc-100 disabled:text-zinc-500 disabled:border disabled:border-zinc-300 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-white text-center text-red-600 border border-red-600;
+    @apply bg-white text-center text-red-600 border border-red-600 disabled:from-zinc-300 disabled:to-zinc-100 disabled:text-zinc-500 disabled:border disabled:border-zinc-300 disabled:cursor-not-allowed;
   }
 }
 
 @layer components {
   .textbox {
-    @apply w-full h-10 px-2 appearance-none transition-all duration-200 ease-in-out border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-700 selection:bg-red-100;
+    @apply w-full h-10 px-2 appearance-none transition-all duration-200 ease-in-out border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-700 selection:bg-red-100 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-black;
   }
 }
