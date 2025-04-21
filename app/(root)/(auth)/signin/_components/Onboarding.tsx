@@ -8,6 +8,9 @@ type Props = {
 }
 
 const Onboarding = (props: Props) => {
+    const { setStage } = props
+
+
     return (
         <>
             <div className='heading1 text-primary text-center'>
@@ -16,8 +19,8 @@ const Onboarding = (props: Props) => {
                 <div className='subheading1 text-center'>Apka apni livestock ka sab se behtareen digital partner!</div>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-2 w-full'>
-                <Button >Create an account</Button>
-                <Button variant='btn-secondary' >Already have an account?</Button>
+                <Button onClick={() => setStage("signup")} >Create an account</Button>
+                <Button onClick={() => setStage("signin")} variant='btn-secondary' >Already have an account?</Button>
             </div>
         </>
     )

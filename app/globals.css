@@ -9,6 +9,10 @@
     @apply text-sm font-medium text-zinc-600;
   }
 
+  .label {
+    @apply text-base font-medium text-zinc-700;
+  }
+
   .text-primary {
     @apply text-red-600 select-none;
   }
@@ -24,5 +28,11 @@
 
   .btn-secondary {
     @apply bg-white text-center text-red-600 border border-red-600;
+  }
+}
+
+@layer components {
+  .textbox {
+    @apply w-full h-10 px-2 appearance-none transition-all duration-200 ease-in-out border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-700 selection:bg-red-100;
   }
 }
