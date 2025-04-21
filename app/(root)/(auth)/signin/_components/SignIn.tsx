@@ -9,6 +9,9 @@ type Props = {
 const SignIn = (props: Props) => {
     return (
         <div className='flex flex-col gap-4 pt-14'>
+            <div>
+                <h1 className='heading1 text-primary font-bold'>Login to your account</h1>
+            </div>
             <div className='flex flex-col gap-1'>
                 <Textbox label='Email:' placeholder='musmanjamil@gmail.com' />
                 <Textbox label='Password:' placeholder='1234' type='password' />

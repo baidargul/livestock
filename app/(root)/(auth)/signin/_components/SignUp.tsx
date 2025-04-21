@@ -8,7 +8,10 @@ type Props = {
 
 const SignUp = (props: Props) => {
     return (
-        <div className='flex flex-col gap-4 pt-5'>
+        <div className='flex flex-col gap-4 pt-2'>
+            <div>
+                <h1 className='heading1 text-primary font-bold'>Create a new account</h1>
+            </div>
             <div className='flex flex-col gap-1'>
                 <Textbox label='Name:' placeholder='Muhammad Usman' />
                 <Textbox label='Email:' placeholder='musmanjamil@gmail.com' />
