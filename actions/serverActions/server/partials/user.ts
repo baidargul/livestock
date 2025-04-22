@@ -13,6 +13,20 @@ async function signup(name: string, email: string, password: string) {
       return response;
     }
 
+    let isExits: any = await prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+      select: { name: true },
+    });
+
+    if (isExits) {
+      response.status = 400;
+      response.message = "User already exists";
+      response.data = null;
+      return response;
+    }
+
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
