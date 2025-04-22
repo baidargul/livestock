@@ -18,12 +18,12 @@ async function signup(name: string, email: string, password: string) {
       where: {
         email: email,
       },
-      select: { name: true },
+      select: { name: true, id: true },
     });
 
     if (isExits) {
       response.status = 400;
-      response.message = "User already exists";
+      response.message = "User with this email already exists";
       response.data = null;
       return response;
     }
