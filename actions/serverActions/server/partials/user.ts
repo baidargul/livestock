@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 async function signup(name: string, email: string, password: string) {
   const response = {
     status: 500,
@@ -13,7 +14,7 @@ async function signup(name: string, email: string, password: string) {
       return response;
     }
 
-    let isExits: any = await prisma.user.findFirst({
+    let isExits: any = await prisma.users.findFirst({
       where: {
         email: email,
       },
