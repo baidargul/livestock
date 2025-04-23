@@ -10,7 +10,6 @@ type Props = {
 }
 
 const SignUp = (props: Props) => {
-    const loading = useLoader((state: LoaderState) => state.loading)
     const setLoading = useLoader((state: LoaderState) => state.setLoading)
     const form = {
         name: "",
@@ -22,7 +21,6 @@ const SignUp = (props: Props) => {
         if (!form.name || !form.email || !form.password) return
         setLoading(true)
         const response = await actions.client.user.signup(form.name, form.email, form.password)
-        console.log(response)
         setLoading(false)
     }
 

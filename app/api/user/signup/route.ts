@@ -21,13 +21,6 @@ export async function POST(req: NextRequest) {
     const { name, email, password } = data;
 
     response = await actions.server.user.signup(name, email, password);
-    if (response.status !== 200) {
-      return new Response(JSON.stringify(response));
-    }
-
-    response.status = 200;
-    response.message = "User signed up successfully";
-    response.data = {};
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

@@ -14,39 +14,25 @@ async function signup(name: string, email: string, password: string) {
       return response;
     }
 
-    let isExits: any = await prisma.users.findFirst({
-      where: {
-        email: email,
-      },
-      select: { name: true, id: true },
-    });
+    console.time("creating user");
+    try {
+      const newUser = await prisma.users.create({
+        data: { name, email, password },
+      });
 
-    if (isExits) {
-      response.status = 400;
-      response.message = "User with this email already exists";
-      response.data = null;
+      response.status = 200;
+      response.message = "User created successfully";
+      response.data = newUser;
       return response;
+    } catch (e: any) {
+      if (e.code === "P2002") {
+        response.status = 400;
+        response.message = "User with this email already exists";
+        response.data = null;
+        return response;
+      }
     }
-
-    const user = await prisma.users.create({
-      data: {
-        name: name,
-        email: email,
-        password: password,
-      },
-    });
-
-    if (!user) {
-      response.status = 400;
-      response.message = "User not created";
-      response.data = null;
-      return response;
-    }
-
-    response.status = 200;
-    response.message = "User created successfully";
-    response.data = user;
-    return response;
+    console.timeEnd("creating user");
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
     response.status = 500;
