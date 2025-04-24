@@ -8,7 +8,7 @@ type Props = {
 
 const layout = (props: Props) => {
     return (
-        <div className='w-full min-h-[100dvh] flex flex-col justify-between'>
+        <div className='w-full select-none min-h-[100dvh] flex flex-col justify-between'>
             <PhoneHeaderHome />
             {props.children}
             <PhoneFooter />
