@@ -29,8 +29,8 @@ const SectionCategoryBar = (props: Props) => {
         <div className='w-full flex justify-between gap-2 items-center'>
             {
                 categories.map((category, index) => (
-                    <div onClick={() => handleSelectCategory(category)} key={index} className={`${selected.toLocaleLowerCase() === category.toLocaleLowerCase() ? "opacity-100" : selected === "" ? "opacity-100" : "opacity-50 blur-[.5px]"} transition-all duration-300 ease-in-out`}>
-                        <Image src={images.hens.covers[1]} alt={category} width={50} height={50} className='rounded-full object-cover w-12 h-12' />
+                    <div onClick={() => handleSelectCategory(category)} key={index} className={`${selected.toLocaleLowerCase() === category.toLocaleLowerCase() ? "opacity-100" : selected === "" ? "opacity-100" : "opacity-50 blur-[.5px]"} cursor-pointer transition-all duration-300 ease-in-out`}>
+                        <Image src={images.hens.covers[1]} alt={category} width={50} height={50} className={`rounded-full object-cover w-12 h-12 ${selected.toLocaleLowerCase() === category.toLocaleLowerCase() && "p-[2px] bg-emerald-500"} `} />
                         <div className='text-center text-sm font-semibold'>{category}</div>
                     </div>
                 ))
