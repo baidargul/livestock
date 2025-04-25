@@ -1,5 +1,6 @@
 import BackNavigator from '@/components/controls/BackNavigator'
 import Tag from '@/components/general/Tags/Tag'
+import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
 import { ArrowLeftCircleIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -30,7 +31,7 @@ export async function generateStaticParams() {
 const page = async (props: Props) => {
     const { params } = props
     return (
-        <div className='relative'>
+        <div className='relative w-full min-h-[100vh]'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                 <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
             </BackNavigator>
@@ -70,6 +71,9 @@ const page = async (props: Props) => {
                     <h2 className='text-lg font-bold text-gray-800'>Description</h2>
                     <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
                 </div>
+            </div>
+            <div className='fixed bottom-4 left-0 flex justify-center items-center w-full'>
+                <Button className='w-full mx-4'>Buy Now</Button>
             </div>
         </div>
     )
