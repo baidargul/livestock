@@ -10,7 +10,7 @@ const SectionCategoryBarClientWrapper = (props: Props) => {
     const [selected, setSelected] = useState<{ name: string, component: any } | null>(null)
 
     const handleSelectCategory = (category: any) => {
-        if (String(category.name).toLocaleLowerCase() === String(selected).toLocaleLowerCase()) {
+        if (String(category.name).toLocaleLowerCase() === String(selected?.name).toLocaleLowerCase()) {
             setSelected(null)
             if (props.onChange) {
                 props.onChange(null)
