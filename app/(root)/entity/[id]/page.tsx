@@ -1,4 +1,5 @@
 import BackNavigator from '@/components/controls/BackNavigator'
+import Tag from '@/components/general/Tags/Tag'
 import { images } from '@/consts/images'
 import { ArrowLeftCircleIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -8,7 +9,6 @@ type Props = {
     params: Promise<{ id: string }>
 }
 
-//generate static props
 export async function generateStaticParams() {
     return [
         { id: '1' },
@@ -50,6 +50,25 @@ const page = async (props: Props) => {
                     <div className='px-4 py-2'>
                         <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
                     </div>
+                </div>
+            </div>
+            <div className='mt-30 px-4 flex flex-col gap-4'>
+                <div className='flex flex-wrap gap-4'>
+                    {[1, 2, 3].map((item: number) => {
+                        return (
+                            <Image key={item} src={images.hens.covers[item as keyof typeof images.hens.covers]} alt='hen' width={100} height={100} loading='lazy' layout='fixed' className='rounded cursor-pointer' />
+                        )
+                    })}
+                </div>
+                <div className='flex flex-wrap gap-2'>
+                    <Tag>Male</Tag>
+                    <Tag>3 Months</Tag>
+                    <Tag>Brown</Tag>
+                    <Tag>Hyperactive</Tag>
+                </div>
+                <div className='py-2'>
+                    <h2 className='text-lg font-bold text-gray-800'>Description</h2>
+                    <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
                 </div>
             </div>
         </div>
