@@ -5,10 +5,30 @@ import Image from 'next/image'
 import React from 'react'
 
 type Props = {
-    params: { id: string }
+    params: Promise<{ id: string }>
 }
 
-const page = (props: Props) => {
+//generate static props
+export async function generateStaticParams() {
+    return [
+        { id: '1' },
+        { id: '2' },
+        { id: '3' },
+        { id: '4' },
+        { id: '5' },
+        { id: '6' },
+        { id: '7' },
+        { id: '8' },
+        { id: '9' },
+        { id: '10' },
+        { id: '11' },
+        { id: '12' },
+        { id: '13' },
+    ]
+}
+
+const page = async (props: Props) => {
+    const { params } = props
     return (
         <div className='relative'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
