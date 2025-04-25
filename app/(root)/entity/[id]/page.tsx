@@ -53,7 +53,7 @@ const page = async (props: Props) => {
                     </div>
                 </div>
             </div>
-            <div className='mt-30 px-4 flex flex-col gap-4'>
+            <div className='mt-40 px-4 flex flex-col gap-4'>
                 <div className='flex flex-wrap gap-4'>
                     {[1, 2, 3].map((item: number) => {
                         return (
