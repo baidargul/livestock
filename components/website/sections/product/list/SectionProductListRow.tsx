@@ -8,7 +8,7 @@ type Props = {}
 const SectionProductListRow = (props: Props) => {
     return (
         <div className="flex items-center gap-0">
-            <Image src={images.hens.covers[3]} alt='Product List Row' width={1000} height={1000} draggable={false} className='w-36 h-36 select-none object-cover rounded-lg' />
+            <Image src={images.hens.covers[3]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-36 h-36 select-none object-cover rounded-lg' />
             <div className='p-2 pl-4 bg-emerald-50 rounded-r-xl'>
                 <h1 className='text-xl font-semibold'>Golden Retriver</h1>
                 <div className='flex subheading1 gap-1 items-center -mt-1'>
