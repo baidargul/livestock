@@ -55,11 +55,11 @@ const page = async (props: Props) => {
                 </div>
             </div>
             <div className='mt-40 px-4 flex flex-col gap-4'>
-                <div className='flex flex-wrap justify-center items-center gap-4'>
-                    {[1, 2, 3].map((item: number) => {
+                <div className='flex flex-wrap justify-center items-center gap-2'>
+                    {[1, 2, 3, 3, 2, 1, 2, 3, 1].map((item: number) => {
                         return (
                             <MediaViewer key={item} image={images.hens.covers[item as keyof typeof images.hens.covers]}>
-                                <Image src={images.hens.covers[item as keyof typeof images.hens.covers]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-44 h-24 object-cover rounded cursor-pointer' />
+                                <Image src={images.hens.covers[item as keyof typeof images.hens.covers]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover rounded-xl cursor-pointer' />
                             </MediaViewer>
                         )
                     })}
