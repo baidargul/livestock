@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,11 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String?
   email     String?  @unique
   password  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  animals   Animal[] // Opposite relation field for linking animals
+}
+
+model Animal {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic Info
+  type          String
+  breed         String
+  age           Float // Age in years or months, adjust accordingly
+  weight        Float // Weight in kilograms or pounds
+  gender        String // Male, Female, Other
+  colorMarkings String? // Optional: Color and specific markings
+
+  // Health Info
+  vaccinationStatus Boolean
+  medicalHistory    String? // Optional: Description of past medical history
+  pregnancyStatus   Boolean? // Optional: If applicable (e.g., for female animals)
+  certificationDocs String[] // Optional: Array of document URLs
+
+  // Commercial Info
+  price             Float
+  quantityAvailable Int
+  location          Location          @relation(fields: [locationId], references: [id])
+  locationId        String            @db.ObjectId
+  deliveryOptions   DeliveryOptions[]
+
+  // Media
+  images String[] // URLs for high-quality images
+  videos String[] // URLs for videos
+
+  @@index([type, breed, price]) // Index for efficient queries
+}
+
+model Location {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  latitude  Float
+  longitude Float
+  address   String
+  animals   Animal[] // Opposite relation field
+}
+
+enum DeliveryOptions {
+  SELF_PICKUP
+  SELLER_DELIVERY
 }
