@@ -1,0 +1,37 @@
+'use client'
+import Image from 'next/image'
+import React, { useState } from 'react'
+
+type Props = {
+    children: React.ReactNode
+    image: any
+}
+
+const MediaViewer = (props: Props) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const handleOpen = () => {
+        setIsOpen(true)
+    }
+
+    const handleClose = () => {
+        setIsOpen(false)
+    }
+
+    return (
+        <>
+            {isOpen && <div onClick={handleClose} className='fixed top-0 left-0 w-full h-full bg-black/70 backdrop-blur-[1px] z-20'></div>}
+            <div className={`fixed select-none top-0 left-0 z-30 w-[90%]  h-[90%]flex justify-center items-center transition-all duration-100 ease-in-out delay-150 ${isOpen ? "opacity-100 pointer-events-auto translate-y-0" : "0 opacity-0 translate-y-full pointer-events-none"}`} style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <div className={`bg-white p-4 rounded drop-shadow-2xl w-full h-full`}>
+                    <Image src={props.image} loading='lazy' layout='responsive' width={100} height={100} quality={50} alt='livestock' className=' w-full h-full object-contain' />
+                </div>
+            </div>
+            <span
+                className=''
+                onClick={handleOpen}
+            >{props.children}</span>
+        </>
+    )
+}
+
+export default MediaViewer

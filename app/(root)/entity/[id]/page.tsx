@@ -1,4 +1,5 @@
 import BackNavigator from '@/components/controls/BackNavigator'
+import MediaViewer from '@/components/controls/MediaViewer'
 import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
@@ -41,7 +42,7 @@ const page = async (props: Props) => {
                     draggable={false}
                     priority
                     layout="responsive"
-                    quality={70}
+                    quality={50}
                     alt="hen"
                     className="w-full h-[400px] z-0 select-none object-cover"
                 />
@@ -54,10 +55,12 @@ const page = async (props: Props) => {
                 </div>
             </div>
             <div className='mt-40 px-4 flex flex-col gap-4'>
-                <div className='flex flex-wrap gap-4'>
+                <div className='flex flex-wrap justify-center items-center gap-4'>
                     {[1, 2, 3].map((item: number) => {
                         return (
-                            <Image key={item} src={images.hens.covers[item as keyof typeof images.hens.covers]} alt='hen' width={100} height={100} loading='lazy' layout='fixed' className='rounded cursor-pointer' />
+                            <MediaViewer key={item} image={images.hens.covers[item as keyof typeof images.hens.covers]}>
+                                <Image src={images.hens.covers[item as keyof typeof images.hens.covers]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-44 h-24 object-cover rounded cursor-pointer' />
+                            </MediaViewer>
                         )
                     })}
                 </div>
