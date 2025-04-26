@@ -75,7 +75,7 @@ const page = async (props: Props) => {
                     <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
                 </div>
             </div>
-            <div className='fixed bottom-4 left-0 flex justify-center items-center w-full'>
+            <div className='my-4 flex justify-center items-center w-full'>
                 <Button className='w-full mx-4'>Buy Now</Button>
             </div>
         </div>
