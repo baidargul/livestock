@@ -16,7 +16,7 @@ async function signup(name: string, email: string, password: string) {
 
     console.time("creating user");
     try {
-      const newUser = await prisma.users.create({
+      const newUser = await prisma.user.create({
         data: { name, email, password },
       });
 
@@ -57,7 +57,7 @@ async function signin(email: string, password: string) {
       return response;
     }
 
-    let isExits: any = await prisma.users.findFirst({
+    let isExits: any = await prisma.user.findFirst({
       where: {
         email: email,
         password: password,
