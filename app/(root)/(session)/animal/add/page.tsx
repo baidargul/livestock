@@ -3,6 +3,7 @@ import { Animal } from '@prisma/client'
 import React, { useState } from 'react'
 import SelectAnimal from './_components/SelectAnimal'
 import SelectBreed from './_components/SelectBreed'
+import SelectAgeGenderWeight from './_components/SelectAgeGenderWeight'
 
 type Props = {}
 
@@ -22,6 +23,7 @@ const page = (props: Props) => {
     const screens: any = {
         1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
         2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
+        3: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
     }
 
 

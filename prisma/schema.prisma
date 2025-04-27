@@ -28,7 +28,9 @@ model Animal {
   type          String
   breed         String
   age           Float // Age in years or months, adjust accordingly
+  ageUnit       String
   weight        Float // Weight in kilograms or pounds
+  weightUnit    String
   gender        String // Male, Female, Other
   colorMarkings String? // Optional: Color and specific markings
 
