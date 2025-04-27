@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import PhoneFooter from '@/components/website/footer/Phone';
+import PhoneHeaderHome from '@/components/website/header/home/Phone';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFpZGFyZ3VsIiwiYSI6ImNtOXltcHh1bDA0MDMybG9nN2FqM3diZGoifQ.2rn1oEkLLbc_QVQL7UVXNw';
 
@@ -32,9 +33,9 @@ const LiveLocation = () => {
         mapRef.current.on('zoomend', () => setUserInteracted(true));
 
         mapRef.current.on('load', () => {
-            markerRef.current = new mapboxgl.Marker({ anchor: 'center' })
-                .setLngLat([0, 0])
-                .addTo(mapRef.current!);
+            // markerRef.current = new mapboxgl.Marker({ anchor: 'center' })
+            //     .setLngLat([0, 0])
+            //     .addTo(mapRef.current!);
         });
 
         const watchId = navigator.geolocation.watchPosition(
@@ -43,12 +44,12 @@ const LiveLocation = () => {
                 setLocation({ lat: latitude, lng: longitude });
 
                 // Only re-center map if user hasn't interacted
-                if (!userInteracted) {
-                    mapRef.current!.setCenter([longitude, latitude]);
-                }
+                // if (!userInteracted) {
+                //     mapRef.current!.setCenter([longitude, latitude]);
+                // }
 
-                // Always update marker position
-                markerRef.current!.setLngLat([longitude, latitude]);
+                // // Always update marker position
+                // markerRef.current!.setLngLat([longitude, latitude]);
             },
             (err) => console.error('Geolocation error:', err),
             {
@@ -59,7 +60,7 @@ const LiveLocation = () => {
         );
 
         return () => {
-            navigator.geolocation.clearWatch(watchId);
+            // navigator.geolocation.clearWatch(watchId);
             mapRef.current!.remove();
         };
     }, []);
@@ -67,11 +68,17 @@ const LiveLocation = () => {
     console.log(location)
 
     return (
-        <div className="relative w-full h-screen">
-            <div ref={mapContainer} className="w-full h-full" />
-            // inside your LiveLocation component’s return block, below the map
+        <div className="w-full select-none min-h-[100dvh] flex flex-col justify-between">
+            <style>
+                {` .mapboxgl-control-container{
+                    display: none !important;
+                }`}
+            </style>
+
+            <PhoneHeaderHome />
+            <div ref={mapContainer} className="relative w-full  h-full flex justify-center items-center" />
             {location && (
-                <div className="absolute bottom-20 left-4 z-20 bg-white p-2 rounded shadow">
+                <div className="absolute top-32 left-2 z-20 bg-white p-2 rounded shadow">
                     <p>Latitude: {location.lat.toFixed(6)}</p>
                     <p>Longitude: {location.lng.toFixed(6)}</p>
                     <button
