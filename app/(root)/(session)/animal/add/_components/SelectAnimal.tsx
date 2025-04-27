@@ -89,7 +89,7 @@ const SelectAnimal = (props: Props) => {
                     animals.map((animal: any) => {
                         return (
                             <div key={animal.id} className={`relative w-32 h-32 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer  ${props.animal?.type && props.animal?.type === animal.name.toLocaleLowerCase() ? "bg-emerald-700 text-emerald-700" : "hover:bg-gray-100"}`} onClick={() => handleSelectAnimal(animal)}>
-                                <Image src={animal.image} alt={animal.name} loading="lazy" layout='fixed' width={100} height={100} className={`w-full h-full absolute inset-0 z-0 object-cover mb-2 ${props.animal?.type && props.animal?.type === animal.name.toLocaleLowerCase() ? "p-2 rounded-xl" : ``} ${props.animal?.type && props.animal?.type !== animal.name.toLocaleLowerCase() ? "grayscale blur-[1px] opacity-70" : ``}`} />
+                                <Image src={animal.image} alt={animal.name} loading="lazy" layout='fixed' width={100} height={100} className={`w-full h-full absolute inset-0 z-0 object-cover mb-2 rounded-lg ${props.animal?.type && props.animal?.type === animal.name.toLocaleLowerCase() ? "p-2 rounded-xl" : ``} ${props.animal?.type && props.animal?.type !== animal.name.toLocaleLowerCase() ? "grayscale blur-[1px] opacity-70" : ``}`} />
                                 <h1 className={`text-lg absolute z-10 bottom-0 left-1/2 -translate-x-1/2 font-semibold transition-all duration-200 ease-in-out ${props.animal?.type && props.animal?.type === animal.name.toLocaleLowerCase() ? "bg-emerald-700" : "bg-black"}  w-full text-white text-center`}>{animal.name}</h1>
                             </div>
                         )
