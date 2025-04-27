@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import PhoneFooter from '@/components/website/footer/Phone';
 import PhoneHeaderHome from '@/components/website/header/home/Phone';
+import { LocateIcon, LocationEditIcon } from 'lucide-react';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFpZGFyZ3VsIiwiYSI6ImNtOXltcHh1bDA0MDMybG9nN2FqM3diZGoifQ.2rn1oEkLLbc_QVQL7UVXNw';
 
@@ -44,12 +45,12 @@ const LiveLocation = () => {
                 setLocation({ lat: latitude, lng: longitude });
 
                 // Only re-center map if user hasn't interacted
-                // if (!userInteracted) {
-                //     mapRef.current!.setCenter([longitude, latitude]);
-                // }
+                if (!userInteracted) {
+                    mapRef.current!.setCenter([longitude, latitude]);
+                }
 
-                // // Always update marker position
-                // markerRef.current!.setLngLat([longitude, latitude]);
+                // Always update marker position
+                markerRef.current!.setLngLat([longitude, latitude]);
             },
             (err) => console.error('Geolocation error:', err),
             {
@@ -60,7 +61,7 @@ const LiveLocation = () => {
         );
 
         return () => {
-            // navigator.geolocation.clearWatch(watchId);
+            navigator.geolocation.clearWatch(watchId);
             mapRef.current!.remove();
         };
     }, []);
@@ -72,31 +73,36 @@ const LiveLocation = () => {
             <style>
                 {` .mapboxgl-control-container{
                     display: none !important;
-                }`}
+                }
+                
+               
+                `}
             </style>
 
             <PhoneHeaderHome />
-            <div ref={mapContainer} className="relative w-full  h-full flex justify-center items-center" />
+            <div ref={mapContainer} className="w-[400px] h-[400px] flex justify-center items-center mx-auto" />
             {location && (
-                <div className="absolute top-32 left-2 z-20 bg-white p-2 rounded shadow">
-                    <p>Latitude: {location.lat.toFixed(6)}</p>
-                    <p>Longitude: {location.lng.toFixed(6)}</p>
-                    <button
-                        className="mt-2 px-3 py-1 bg-emerald-600 text-white rounded"
-                        onClick={() => {
-                            // Let user manually adjust marker
-                            mapRef.current!.getContainer().style.cursor = 'crosshair';
-                            const onClick = (e: mapboxgl.MapMouseEvent) => {
-                                markerRef.current!.setLngLat(e.lngLat);
-                                setLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng });
-                                mapRef.current!.off('click', onClick);
-                                mapRef.current!.getContainer().style.cursor = '';
-                            };
-                            mapRef.current!.on('click', onClick);
-                        }}
-                    >
-                        Adjust Location
-                    </button>
+                <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 bg-white p-2 rounded shadow">
+                    <div className='flex items-center gap-2'>
+                        <p>Lat: <span className='p-1 bg-zinc-100 text-center text-sm font-mono rounded border border-zinc-200'>{location.lat.toFixed(6)}</span></p>
+                        <p>Lon: <span className='p-1 bg-zinc-100 text-center text-sm font-mono rounded border border-zinc-200'>{location.lng.toFixed(6)}</span></p>
+                        <button
+                            className="p-1 px-2 ml-4 cursor-pointer w-fit bg-emerald-600 text-white flex gap-1 items-center rounded"
+                            onClick={() => {
+                                // Let user manually adjust marker
+                                mapRef.current!.getContainer().style.cursor = 'crosshair';
+                                const onClick = (e: mapboxgl.MapMouseEvent) => {
+                                    markerRef.current!.setLngLat(e.lngLat);
+                                    setLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng });
+                                    mapRef.current!.off('click', onClick);
+                                    mapRef.current!.getContainer().style.cursor = '';
+                                };
+                                mapRef.current!.on('click', onClick);
+                            }}
+                        >
+                            <LocateIcon className='w-4 h-4' />
+                        </button>
+                    </div>
                 </div>
             )}
             <PhoneFooter />
