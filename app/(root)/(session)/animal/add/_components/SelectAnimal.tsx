@@ -46,7 +46,7 @@ const SelectAnimal = (props: Props) => {
         {
             id: 8,
             name: "Chicken",
-            image: images.hens.images[1],
+            image: images.chicken.images[1],
         },
         {
             id: 9,

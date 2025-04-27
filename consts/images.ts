@@ -48,7 +48,7 @@ export const images = {
       mobileIcon: mobileIcon,
     },
   },
-  hens: {
+  chicken: {
     covers: {
       1: img202504202145187037,
       2: img202504202147119137,
@@ -169,4 +169,4 @@ export const images = {
       { name: "Rex", images: [rabbit1, rabbit2] },
     ],
   },
-};
+} as any;

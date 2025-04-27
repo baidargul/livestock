@@ -2,6 +2,7 @@
 import { Animal } from '@prisma/client'
 import React, { useState } from 'react'
 import SelectAnimal from './_components/SelectAnimal'
+import SelectBreed from './_components/SelectBreed'
 
 type Props = {}
 
@@ -20,7 +21,7 @@ const page = (props: Props) => {
 
     const screens: any = {
         1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
-        2: <div>2</div>,
+        2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
     }
 
 

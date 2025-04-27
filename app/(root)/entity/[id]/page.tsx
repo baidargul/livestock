@@ -38,7 +38,7 @@ const page = async (props: Props) => {
             </BackNavigator>
             <div className='relative'>
                 <Image
-                    src={images.hens.covers[1]}
+                    src={images.chicken.covers[1]}
                     draggable={false}
                     priority
                     layout="responsive"
@@ -58,8 +58,8 @@ const page = async (props: Props) => {
                 <div className='flex flex-wrap justify-center items-center gap-2'>
                     {[1, 2, 3, 3, 2, 1, 2, 3, 1].map((item: number) => {
                         return (
-                            <MediaViewer key={item} image={images.hens.covers[item as keyof typeof images.hens.covers]}>
-                                <Image src={images.hens.covers[item as keyof typeof images.hens.covers]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover rounded-xl cursor-pointer' />
+                            <MediaViewer key={item} image={images.chicken.covers[item as keyof typeof images.chicken.covers]}>
+                                <Image src={images.chicken.covers[item as keyof typeof images.chicken.covers]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover rounded-xl cursor-pointer' />
                             </MediaViewer>
                         )
                     })}
