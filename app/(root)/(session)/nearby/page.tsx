@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import PhoneFooter from '@/components/website/footer/Phone';
 import PhoneHeaderHome from '@/components/website/header/home/Phone';
-import { LocateIcon, LocationEditIcon } from 'lucide-react';
+import { LocateIcon } from 'lucide-react';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmFpZGFyZ3VsIiwiYSI6ImNtOXltcHh1bDA0MDMybG9nN2FqM3diZGoifQ.2rn1oEkLLbc_QVQL7UVXNw';
 
@@ -13,8 +13,7 @@ const LiveLocation = () => {
     const mapRef = useRef<mapboxgl.Map | null>(null);
     const markerRef = useRef<mapboxgl.Marker | null>(null);
     const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-    const [userInteracted, setUserInteracted] = useState(false); // Track user interaction
-
+    const [userInteracted, setUserInteracted] = useState(false);
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -29,28 +28,35 @@ const LiveLocation = () => {
             zoom: 15,
         });
 
-        // Listen for user interaction (zooming/panning)
+        // Add these CSS fixes
+        const canvasContainer = mapRef.current.getCanvasContainer();
+        canvasContainer.style.transform = 'none';
+        const canvas = mapRef.current.getCanvas();
+        canvas.style.position = 'static';
+
         mapRef.current.on('moveend', () => setUserInteracted(true));
         mapRef.current.on('zoomend', () => setUserInteracted(true));
-
-        mapRef.current.on('load', () => {
-            // markerRef.current = new mapboxgl.Marker({ anchor: 'center' })
-            //     .setLngLat([0, 0])
-            //     .addTo(mapRef.current!);
-        });
 
         const watchId = navigator.geolocation.watchPosition(
             ({ coords }) => {
                 const { latitude, longitude } = coords;
                 setLocation({ lat: latitude, lng: longitude });
 
-                // Only re-center map if user hasn't interacted
                 if (!userInteracted) {
                     mapRef.current!.setCenter([longitude, latitude]);
                 }
 
-                // Always update marker position
-                markerRef.current!.setLngLat([longitude, latitude]);
+                if (!markerRef.current) {
+                    // Create marker on first position update
+                    markerRef.current = new mapboxgl.Marker({
+                        anchor: 'center',
+                        offset: [0, -15] // Adjust if needed for precise placement
+                    })
+                        .setLngLat([longitude, latitude])
+                        .addTo(mapRef.current!);
+                } else {
+                    markerRef.current.setLngLat([longitude, latitude]);
+                }
             },
             (err) => console.error('Geolocation error:', err),
             {
@@ -62,42 +68,46 @@ const LiveLocation = () => {
 
         return () => {
             navigator.geolocation.clearWatch(watchId);
-            mapRef.current!.remove();
+            mapRef.current?.remove();
         };
     }, []);
-
-    console.log(location)
 
     return (
         <div className="w-full select-none min-h-[100dvh] flex flex-col justify-between">
             <style>
-                {` .mapboxgl-control-container{
-                    display: none !important;
-                }
-                
-               
+                {` 
+                .mapboxgl-control-container { display: none !important; }
+                .mapboxgl-canvas-container { transform: none !important; }
+                .mapboxgl-canvas { position: static !important; }
                 `}
             </style>
 
             <PhoneHeaderHome />
-            <div ref={mapContainer} className="w-[400px] h-[400px] flex justify-center items-center mx-auto" />
+            <div
+                ref={mapContainer}
+                className="w-[400px] h-[400px] flex justify-center items-center mx-auto relative"
+            />
+
             {location && (
                 <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 bg-white p-2 rounded shadow">
                     <div className='flex items-center gap-2'>
-                        <p>Lat: <span className='p-1 bg-zinc-100 text-center text-sm font-mono rounded border border-zinc-200'>{location.lat.toFixed(6)}</span></p>
-                        <p>Lon: <span className='p-1 bg-zinc-100 text-center text-sm font-mono rounded border border-zinc-200'>{location.lng.toFixed(6)}</span></p>
+                        <p>Lat: <span className='p-1 bg-zinc-100 text-sm font-mono rounded border'>{location.lat.toFixed(6)}</span></p>
+                        <p>Lon: <span className='p-1 bg-zinc-100 text-sm font-mono rounded border'>{location.lng.toFixed(6)}</span></p>
                         <button
-                            className="p-1 px-2 ml-4 cursor-pointer w-fit bg-emerald-600 text-white flex gap-1 items-center rounded"
+                            className="p-1 px-2 ml-4 bg-emerald-600 text-white rounded"
                             onClick={() => {
-                                // Let user manually adjust marker
-                                mapRef.current!.getContainer().style.cursor = 'crosshair';
-                                const onClick = (e: mapboxgl.MapMouseEvent) => {
-                                    markerRef.current!.setLngLat(e.lngLat);
-                                    setLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng });
-                                    mapRef.current!.off('click', onClick);
-                                    mapRef.current!.getContainer().style.cursor = '';
+                                const map = mapRef.current!;
+                                map.getContainer().style.cursor = 'crosshair';
+
+                                const clickHandler = (e: mapboxgl.MapMouseEvent) => {
+                                    const newPos = e.lngLat;
+                                    markerRef.current!.setLngLat(newPos);
+                                    setLocation({ lat: newPos.lat, lng: newPos.lng });
+                                    map.off('click', clickHandler);
+                                    map.getContainer().style.cursor = '';
                                 };
-                                mapRef.current!.on('click', onClick);
+
+                                map.on('click', clickHandler);
                             }}
                         >
                             <LocateIcon className='w-4 h-4' />
