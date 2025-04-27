@@ -61,6 +61,11 @@ export const images = {
       4: chicken3,
       5: chicken4,
     },
+    breeds: [
+      { name: "Rhode Island Red", images: [chicken1, chicken2] },
+      { name: "Leghorn", images: [chicken3, chicken4] },
+      { name: "Plymouth Rock", images: [chicken, chicken] },
+    ],
   },
   cow: {
     images: {
@@ -68,12 +73,22 @@ export const images = {
       2: cow1,
       3: cow2,
     },
+    breeds: [
+      { name: "Holstein", images: [cow1, cow2] },
+      { name: "Jersey", images: [cow, cow] },
+      { name: "Angus", images: [cow, cow] },
+    ],
   },
   dog: {
     images: {
       1: dog,
       2: dog1,
     },
+    breeds: [
+      { name: "Labrador Retriever", images: [dog1, dog] },
+      { name: "German Shepherd", images: [dog, dog1] },
+      { name: "Golden Retriever", images: [dog1, dog] },
+    ],
   },
   cat: {
     images: {
@@ -82,6 +97,11 @@ export const images = {
       3: cat2,
       4: cat3,
     },
+    breeds: [
+      { name: "Persian", images: [cat1, cat2] },
+      { name: "Siamese", images: [cat3, cat1] },
+      { name: "Maine Coon", images: [cat2, cat1] },
+    ],
   },
   goat: {
     images: {
@@ -90,6 +110,11 @@ export const images = {
       3: goat2,
       4: goat3,
     },
+    breeds: [
+      { name: "Boer", images: [goat1, goat2] },
+      { name: "Nubian", images: [goat3, goat1] },
+      { name: "Alpine", images: [goat1, goat2] },
+    ],
   },
   sheep: {
     images: {
@@ -99,6 +124,11 @@ export const images = {
       4: sheep3,
       5: sheep4,
     },
+    breeds: [
+      { name: "Merino", images: [sheep1, sheep2] },
+      { name: "Suffolk", images: [sheep3, sheep4] },
+      { name: "Dorset", images: [sheep1, sheep2] },
+    ],
   },
   horse: {
     images: {
@@ -107,6 +137,11 @@ export const images = {
       3: horse2,
       4: horse3,
     },
+    breeds: [
+      { name: "Arabian", images: [horse1, horse2] },
+      { name: "Thoroughbred", images: [horse3, horse1] },
+      { name: "Quarter Horse", images: [horse2, horse1] },
+    ],
   },
   duck: {
     images: {
@@ -115,6 +150,11 @@ export const images = {
       3: duck2,
       4: duck3,
     },
+    breeds: [
+      { name: "Pekin", images: [duck1, duck2] },
+      { name: "Muscovy", images: [duck3, duck1] },
+      { name: "Indian Runner", images: [duck1, duck2] },
+    ],
   },
   rabbit: {
     images: {
@@ -123,5 +163,10 @@ export const images = {
       3: rabbit2,
       4: rabbit3,
     },
+    breeds: [
+      { name: "Holland Lop", images: [rabbit1, rabbit2] },
+      { name: "Netherland Dwarf", images: [rabbit3, rabbit1] },
+      { name: "Rex", images: [rabbit1, rabbit2] },
+    ],
   },
 };
