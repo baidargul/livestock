@@ -8,7 +8,7 @@ import SelectAgeGenderWeight from './_components/SelectAgeGenderWeight'
 type Props = {}
 
 const page = (props: Props) => {
-    const [animal, setAnimal] = useState<Animal | null>(null)
+    const [animal, setAnimal] = useState<Animal | null>()
     const [currentScreen, setCurrentScreen] = useState(1)
 
     const handleMoveNext = () => {
@@ -23,7 +23,7 @@ const page = (props: Props) => {
     const screens: any = {
         1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
         2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
-        3: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
+        3: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
     }
 
 
