@@ -43,7 +43,29 @@ const SelectAgeGenderWeight = (props: Props) => {
     }
 
     const handleMinimumQuantityChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, minimumOrderQuantity: Number(val) }))
+        const minValue = Number(val);
+
+        if (isNaN(minValue)) {
+            console.error("Invalid input: not a number");
+            return;
+        }
+
+        if (minValue > props.animal.quantityAvailable) {
+            props.setAnimal((prev: any) => ({
+                ...prev,
+                minimumOrderQuantity: props.animal.quantityAvailable,
+            }));
+        } else if (minValue < 1) {
+            props.setAnimal((prev: any) => ({
+                ...prev,
+                minimumOrderQuantity: 1,
+            }));
+        } else {
+            props.setAnimal((prev: any) => ({
+                ...prev,
+                minimumOrderQuantity: minValue,
+            }));
+        }
     }
 
     return (
