@@ -1,4 +1,5 @@
 import Button from '@/components/ui/Button'
+import Checkbox from '@/components/ui/Checkbox'
 import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
@@ -36,12 +37,27 @@ const SelectAgeGenderWeight = (props: Props) => {
     const handleWeightUnitChange = (val: string) => {
         props.setAnimal((prev: any) => ({ ...prev, weightUnit: val }))
     }
+
+    const handleAllowMinimumChange = (val: boolean) => {
+        props.setAnimal((prev: any) => ({ ...prev, isQuantityNegotiable: val }))
+    }
+
+    const handleMinimumQuantityChange = (val: string) => {
+        props.setAnimal((prev: any) => ({ ...prev, minimumOrderQuantity: Number(val) }))
+    }
+
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
             <div className='text-xl font-semibold tracking-tight text-center'>{`More about`}</div>
             <div className='flex flex-col gap-4 w-full '>
                 <Radiogroup options={["Male", "Female"]} onChange={handleGenderChange} value={props.animal.gender} label='Gender' />
-                <Textbox label='Quantity' type='number' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
+                <div className='flex items-center gap-4'>
+                    <Textbox label='Quantity' type='number' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
+                    <div className={`flex flex-col gap-1`}>
+                        <Checkbox onChange={handleAllowMinimumChange} value={props.animal.isQuantityNegotiable ?? false} label='Accept minimum' />
+                        {props.animal.isQuantityNegotiable && props.animal.isQuantityNegotiable === true && <Textbox type='number' placeholder='Minimum quantity allowed' value={String(props.animal.minimumOrderQuantity) ?? 1} onChange={handleMinimumQuantityChange} />}
+                    </div>
+                </div>
                 <div className='flex items-center justify-between gap-2'>
                     <Textbox label='Age' type='number' value={String(props.animal.age)} onChange={handleAgeChange} />
                     <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit} onChange={handleAgeUnitChange} />

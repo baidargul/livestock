@@ -41,11 +41,13 @@ model Animal {
   certificationDocs String[] // Optional: Array of document URLs
 
   // Commercial Info
-  price             Float
-  quantityAvailable Int
-  location          Location          @relation(fields: [locationId], references: [id])
-  locationId        String            @db.ObjectId
-  deliveryOptions   DeliveryOptions[]
+  price                Float
+  quantityAvailable    Int
+  isQuantityNegotiable Boolean
+  minimumOrderQuantity Int? // Optional: Minimum order quantity for bulk purchases
+  location             Location          @relation(fields: [locationId], references: [id])
+  locationId           String            @db.ObjectId
+  deliveryOptions      DeliveryOptions[]
 
   // Media
   images String[] // URLs for high-quality images
