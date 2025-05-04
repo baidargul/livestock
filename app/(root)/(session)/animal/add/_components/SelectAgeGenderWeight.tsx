@@ -98,7 +98,7 @@ const SelectAgeGenderWeight = (props: Props) => {
                 </div>
                 <div className='flex items-center gap-5'>
                     <Checkbox onChange={(val: boolean) => handleChecks(val, "vaccinationStatus")} value={props.animal.vaccinationStatus ?? false} label='Vaccined' />
-                    <Checkbox onChange={(val: boolean) => handleChecks(val, "pregnancyStatus")} value={props.animal.pregnancyStatus ?? false} label='Can be pregnant' />
+                    <Checkbox onChange={(val: boolean) => handleChecks(val, "pregnancyStatus")} value={props.animal.pregnancyStatus ?? false} label='Can get pregnant' />
                 </div>
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>

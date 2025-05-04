@@ -65,7 +65,7 @@ const AddMedia = (props: Props) => {
                         return (
                             <div key={index} className='relative'>
                                 <Trash onClick={() => handleRemoveMedia(index)} className='absolute w-5 h-5 top-1 right-1 z-10 cursor-pointer bg-white border p-1 rounded-full text-red-500 fill-red-500 hover:text-red-700 transition-all duration-200 ease-in-out' />
-                                <Image src={URL.createObjectURL(image)} alt="animal" width={100} height={100} className='w-24 h-24 object-contain border border-emerald-400 rounded-xl' />
+                                <Image src={URL.createObjectURL(image)} alt="animal" width={24} height={24} priority layout='fixed' className='w-24 h-24 object-contain border border-emerald-400 rounded-xl' />
                             </div>
                         )
                     })}
