@@ -69,6 +69,13 @@ const SelectAgeGenderWeight = (props: Props) => {
         }
     }
 
+    const handleChecks = (val: boolean, key: string) => {
+        props.setAnimal((prev: any) => ({
+            ...prev,
+            [key]: val,
+        }));
+    };
+
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
             <div className='text-xl font-semibold tracking-tight text-center'>{`More about ${formalizeText(props.animal.breed)} ${props.animal.type}`}</div>
@@ -88,6 +95,10 @@ const SelectAgeGenderWeight = (props: Props) => {
                 <div className='flex items-center justify-between gap-2'>
                     <Textbox label='Weight' type='number' value={String(props.animal.weight)} onChange={handleWeightChange} />
                     <Selectbox label='Unit' options={["Kg", "Lbs"]} value={props.animal.weightUnit} onChange={handleWeightUnitChange} />
+                </div>
+                <div className='flex items-center gap-5'>
+                    <Checkbox onChange={(val: boolean) => handleChecks(val, "vaccinationStatus")} value={props.animal.vaccinationStatus ?? false} label='Vaccined' />
+                    <Checkbox onChange={(val: boolean) => handleChecks(val, "pregnancyStatus")} value={props.animal.pregnancyStatus ?? false} label='Can be pregnant' />
                 </div>
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
