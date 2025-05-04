@@ -10,7 +10,7 @@ type Props = {
 
 const Button = (props: Props) => {
     return (
-        <button disabled={props.disabled ?? false} onClick={props.onClick} className={`btn ${props.variant ?? "btn-primary"} ${props.className}`}>{props.children}</button>
+        <button disabled={props.disabled ?? false} onClick={props.onClick} className={`btn ${props.variant ?? "btn-primary disabled:pointer-events-none"} ${props.className}`}>{props.children}</button>
     )
 }
 
