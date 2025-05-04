@@ -1,5 +1,6 @@
 import Button from '@/components/ui/Button'
 import ImageUploadWrapper from '@/components/wrappers/ImageUploadWrapper'
+import { constructBase64Image, fileToPayload, ImagePayload } from '@/lib/image'
 import { formalizeText } from '@/lib/utils'
 import { FileImageIcon, Trash } from 'lucide-react'
 import Image from 'next/image'
@@ -21,18 +22,23 @@ const AddMedia = (props: Props) => {
         }
     }, [props.animal])
 
-    const handleAddMedia = (files: File[]) => {
+    const handleAddMedia = async (files: File[]) => {
         if (files.length > 4) {
             alert("You can only upload 4 files")
             return
         }
-        const formData = new FormData()
-        files.forEach((file) => {
-            formData.append('images', file)
-        })
-        console.log()
-        props.setAnimal({ ...props.animal, images: formData.getAll('images') })
-        setImages(formData.getAll('images'))
+        try {
+            // Convert all files to payloads in parallel
+            const payloads = await Promise.all(files.map(fileToPayload));
+
+            // Set into your animal state
+            props.setAnimal({ ...props.animal, images: payloads });
+            setImages(payloads);
+
+        } catch (error) {
+            console.error("Error converting files:", error);
+            alert("There was an error processing your images. Please try again.");
+        }
     }
 
     const handleRemoveMedia = (index: number) => {
@@ -45,8 +51,6 @@ const AddMedia = (props: Props) => {
         props.setAnimal({ ...props.animal, images: [] })
     }
 
-
-    console.log(props.animal)
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4 select-none'>
@@ -63,11 +67,14 @@ const AddMedia = (props: Props) => {
                     <Trash onClick={handleRemoveAllMedia} className='cursor-pointer w-8 h-8 border rounded-full p-1 text-red-500 fill-red-500 hover:text-red-700 transition-all duration-200 ease-in-out' />
                 </div>
                 <div className='flex flex-wrap gap-2 justify-center'>
-                    {images.map((image: File, index: number) => {
+                    {images.map((image: ImagePayload, index: number) => {
+
+                        console.log(image)
+
                         return (
                             <div key={index} className='relative'>
                                 <Trash onClick={() => handleRemoveMedia(index)} className='absolute w-5 h-5 top-1 right-1 z-10 cursor-pointer bg-white border p-1 rounded-full text-red-500 fill-red-500 hover:text-red-700 transition-all duration-200 ease-in-out' />
-                                <Image src={URL.createObjectURL(image)} alt="animal" width={24} height={24} priority layout='fixed' className='w-24 h-24 object-contain border border-emerald-400 rounded-xl' />
+                                <Image src={`${constructBase64Image(image.base64, image.extension)}`} alt="animal" width={24} height={24} priority layout='fixed' className='w-24 h-24 object-contain border border-emerald-400 rounded-xl' />
                             </div>
                         )
                     })}

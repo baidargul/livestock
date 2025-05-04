@@ -1,6 +1,8 @@
 import Button from '@/components/ui/Button'
 import Checkbox from '@/components/ui/Checkbox'
+import Radiogroup from '@/components/ui/radiogroup'
 import Textbox from '@/components/ui/Textbox'
+import axios from 'axios'
 import React, { useRef, useState } from 'react'
 
 type Props = {
@@ -54,6 +56,14 @@ const PriceAndDelivery = (props: Props) => {
     const self = isExists('SELF_PICKUP')
     const seller = isExists('SELLER_DELIVERY')
 
+    const handleHitApi = async () => {
+        const data = {
+            ...props.animal,
+        }
+        const response = await axios.post(`/api/post`, data)
+        console.log(response)
+    }
+
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
@@ -67,7 +77,7 @@ const PriceAndDelivery = (props: Props) => {
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={props.moveNext} className='w-full' disabled={props.animal?.breed && props.animal?.breed !== "" ? false : true}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
+                <Button onClick={handleHitApi} className='w-full' disabled={props.animal?.breed && props.animal?.breed !== "" ? false : true}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
             </div>
         </div>
     )
