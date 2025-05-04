@@ -5,6 +5,7 @@ import SelectAnimal from './_components/SelectAnimal'
 import SelectBreed from './_components/SelectBreed'
 import SelectAgeGenderWeight from './_components/SelectAgeGenderWeight'
 import AddMedia from './_components/AddMedia'
+import TitleAndDescription from './_components/TitleAndDescription'
 
 type Props = {}
 
@@ -25,7 +26,8 @@ const page = (props: Props) => {
         1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
         2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
         3: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        4: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />
+        4: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        5: <TitleAndDescription moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
     }
 
 

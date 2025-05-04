@@ -3,6 +3,7 @@ import Checkbox from '@/components/ui/Checkbox'
 import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
+import { formalizeText } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import React from 'react'
 
@@ -70,7 +71,7 @@ const SelectAgeGenderWeight = (props: Props) => {
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
-            <div className='text-xl font-semibold tracking-tight text-center'>{`More about`}</div>
+            <div className='text-xl font-semibold tracking-tight text-center'>{`More about ${formalizeText(props.animal.breed)} ${props.animal.type}`}</div>
             <div className='flex flex-col gap-4 w-full '>
                 <Radiogroup options={["Male", "Female"]} onChange={handleGenderChange} value={props.animal.gender} label='Gender' />
                 <div className='flex items-center gap-4'>
