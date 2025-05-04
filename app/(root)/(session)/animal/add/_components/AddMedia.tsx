@@ -49,7 +49,7 @@ const AddMedia = (props: Props) => {
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4 select-none'>
             <div className='text-xl font-semibold tracking-tight text-center'>Please select atleast 4 images of {formalizeText(props.animal.breed)} {props.animal.type}</div>
-            {props.animal?.images?.length < 4 || !props.animal?.images && <ImageUploadWrapper limit={4} onChange={handleAddMedia}>
+            {!props.animal?.images || props.animal?.images?.length < 4 && <ImageUploadWrapper limit={4} onChange={handleAddMedia}>
                 <div className='p-2 bg-emerald-100 cursor-pointer border-emerald-400 flex flex-col justify-center items-center rounded-xl border' style={{ boxShadow: "0px 20px 14px -8px #98d3b5" }}>
                     <FileImageIcon className='w-28 h-28 text-emerald-800' />
                     <div className='text-xl font-bold font-sans text-emerald-800'>Select Images</div>
