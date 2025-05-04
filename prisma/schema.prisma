@@ -48,6 +48,8 @@ model Animal {
   location             Location          @relation(fields: [locationId], references: [id])
   locationId           String            @db.ObjectId
   deliveryOptions      DeliveryOptions[]
+  title                String?
+  description          String?
 
   // Media
   images String[] // URLs for high-quality images
