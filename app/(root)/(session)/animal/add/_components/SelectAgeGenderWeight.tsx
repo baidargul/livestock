@@ -87,7 +87,7 @@ const SelectAgeGenderWeight = (props: Props) => {
                         <div className='flex gap-4'>
                             <Textbox label='Male' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
                             <Textbox label='Female' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
-                            <Textbox label='Mix' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
+                            {/* <Textbox label='Mix' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} /> */}
                         </div>
                         {/* <div className={`flex flex-col gap-2`}>
                             <Checkbox onChange={handleAllowMinimumChange} value={props.animal.isQuantityNegotiable ?? false} label='کم سے کم کتنی تعداد؟' />
@@ -96,11 +96,11 @@ const SelectAgeGenderWeight = (props: Props) => {
                     </div>
                 </Groupbox>
                 <div className='flex items-center justify-between gap-2'>
-                    <Textbox label='Age' type='number' value={String(props.animal.age)} onChange={handleAgeChange} />
+                    <Textbox label='Average age' type='number' value={String(props.animal.age)} onChange={handleAgeChange} />
                     <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit} onChange={handleAgeUnitChange} />
                 </div>
                 <div className='flex items-center justify-between gap-2'>
-                    <Textbox label={props.animal.quantityAvailable > 1 ? 'Avg Weight' : 'Weight'} type='number' value={String(props.animal.weight)} onChange={handleWeightChange} />
+                    <Textbox label={`Average weight`} type='number' value={String(props.animal.weight)} onChange={handleWeightChange} />
                     <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit} onChange={handleWeightUnitChange} />
                 </div>
                 {/* <div className='flex items-center gap-5'>
