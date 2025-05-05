@@ -71,8 +71,8 @@ const PriceAndDelivery = (props: Props) => {
             <div>
                 <input ref={txtRef} onFocus={handleOnFocus} value={props.animal.price ?? 0} onChange={(e: any) => handlePriceChange(Number(e.target.value))} placeholder='Rs ' type='number' className='text-2xl p-4 outline-none ring-0 bg-emerald-50 border-y border-emerald-300 text-emerald-700 font-semibold selection:bg-emerald-200 tracking-wide focus-within:tracking-wide w-fit appearance-none text-center ' />
                 <div className='flex items-center justify-between gap-4 w-full p-4'>
-                    <Checkbox label='SELF PICKUP' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
-                    <Checkbox label='SELLER DELIVERY' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
+                    <Checkbox label='ALLOW SELF PICKUP' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
+                    <Checkbox label='ALLOW CARGO' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
                 </div>
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>

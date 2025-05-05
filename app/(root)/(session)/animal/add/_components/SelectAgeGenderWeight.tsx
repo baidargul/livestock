@@ -1,5 +1,6 @@
 import Button from '@/components/ui/Button'
 import Checkbox from '@/components/ui/Checkbox'
+import Groupbox from '@/components/ui/Groupbox'
 import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
@@ -80,26 +81,32 @@ const SelectAgeGenderWeight = (props: Props) => {
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
             <div className='text-xl font-semibold tracking-tight text-center'>{`More about ${formalizeText(props.animal.breed)} ${props.animal.type}`}</div>
             <div className='flex flex-col gap-4 w-full '>
-                <Radiogroup options={["Male", "Female"]} onChange={handleGenderChange} value={props.animal.gender} label='Gender' />
-                <div className='flex items-center gap-4'>
-                    <Textbox label='Quantity' type='number' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
-                    <div className={`flex flex-col gap-1`}>
-                        <Checkbox onChange={handleAllowMinimumChange} value={props.animal.isQuantityNegotiable ?? false} label='Accept minimum' />
-                        {props.animal.isQuantityNegotiable && props.animal.isQuantityNegotiable === true && <Textbox type='number' placeholder='Minimum quantity allowed' value={String(props.animal.minimumOrderQuantity) ?? 1} onChange={handleMinimumQuantityChange} />}
+                {/* <Radiogroup options={["Male", "Female"]} onChange={handleGenderChange} value={props.animal.gender} label='Gender' /> */}
+                <Groupbox name='Quantities'>
+                    <div className='flex flex-col gap-4'>
+                        <div className='flex gap-4'>
+                            <Textbox label='Male' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
+                            <Textbox label='Female' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
+                            <Textbox label='Mix' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} />
+                        </div>
+                        {/* <div className={`flex flex-col gap-2`}>
+                            <Checkbox onChange={handleAllowMinimumChange} value={props.animal.isQuantityNegotiable ?? false} label='کم سے کم کتنی تعداد؟' />
+                            {props.animal.isQuantityNegotiable && props.animal.isQuantityNegotiable === true && <Textbox type='number' placeholder='Minimum quantity allowed' value={String(props.animal.minimumOrderQuantity) ?? 1} onChange={handleMinimumQuantityChange} />}
+                        </div> */}
                     </div>
-                </div>
+                </Groupbox>
                 <div className='flex items-center justify-between gap-2'>
                     <Textbox label='Age' type='number' value={String(props.animal.age)} onChange={handleAgeChange} />
                     <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit} onChange={handleAgeUnitChange} />
                 </div>
                 <div className='flex items-center justify-between gap-2'>
-                    <Textbox label='Weight' type='number' value={String(props.animal.weight)} onChange={handleWeightChange} />
-                    <Selectbox label='Unit' options={["Kg", "Lbs"]} value={props.animal.weightUnit} onChange={handleWeightUnitChange} />
+                    <Textbox label={props.animal.quantityAvailable > 1 ? 'Avg Weight' : 'Weight'} type='number' value={String(props.animal.weight)} onChange={handleWeightChange} />
+                    <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit} onChange={handleWeightUnitChange} />
                 </div>
-                <div className='flex items-center gap-5'>
+                {/* <div className='flex items-center gap-5'>
                     <Checkbox onChange={(val: boolean) => handleChecks(val, "vaccinationStatus")} value={props.animal.vaccinationStatus ?? false} label='Vaccined' />
                     <Checkbox onChange={(val: boolean) => handleChecks(val, "pregnancyStatus")} value={props.animal.pregnancyStatus ?? false} label='Can get pregnant' />
-                </div>
+                </div> */}
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>

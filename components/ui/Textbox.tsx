@@ -10,6 +10,7 @@ type Props = {
     value?: string
     onChange?: (val: string) => void
     className?: string
+    labelClassName?: string
 }
 
 const Textbox = (props: Props) => {
@@ -37,7 +38,7 @@ const Textbox = (props: Props) => {
 
     return (
         <div className='flex flex-col gap-1'>
-            {props.label && props.label.length > 0 && <label className='label'>{props.label}</label>}
+            {props.label && props.label.length > 0 && <label className={`label ${props.labelClassName}`}>{props.label}</label>}
             <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} className={`textbox w-full focus-within:tracking-wide ${props.className}`} onChange={handleChange} onFocus={handleOnFocus} value={value} />
         </div>
     )
