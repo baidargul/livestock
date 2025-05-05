@@ -42,6 +42,7 @@ model Animal {
 
   // Commercial Info
   price                   Float
+  quantityAvailable       Int
   maleQuantityAvailable   Int
   femaleQuantityAvailable Int
   mixQuantityAvailable    Int
