@@ -19,8 +19,8 @@ model User {
 
 model Animal {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -31,42 +31,22 @@ model Animal {
   ageUnit       String
   averageWeight Float // Weight in kilograms or pounds
   weightUnit    String
-  gender        String // Male, Female, Other
   colorMarkings String? // Optional: Color and specific markings
-
-  // Health Info
-  vaccinationStatus Boolean
-  medicalHistory    String? // Optional: Description of past medical history
-  pregnancyStatus   Boolean? // Optional: If applicable (e.g., for female animals)
-  certificationDocs String[] // Optional: Array of document URLs
 
   // Commercial Info
   price                   Float
-  maleQuantityAvailable   Int
-  femaleQuantityAvailable Int
-  isQuantityNegotiable    Boolean
-  minimumOrderQuantity    Int? // Optional: Minimum order quantity for bulk purchases
+  maleQuantityAvailable   Int?
+  femaleQuantityAvailable Int?
   city                    String
   province                String
-  location                Location          @relation(fields: [locationId], references: [id])
-  locationId              String            @db.ObjectId
   deliveryOptions         DeliveryOptions[]
   title                   String?
   description             String?
 
   // Media
-  images String[] // URLs for high-quality images
-  videos String[] // URLs for videos
+  images Json // JSON field to store an array of objects
 
   @@index([type, breed, price]) // Index for efficient queries
-}
-
-model Location {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  latitude  Float
-  longitude Float
-  address   String
-  animals   Animal[] // Opposite relation field
 }
 
 enum DeliveryOptions {

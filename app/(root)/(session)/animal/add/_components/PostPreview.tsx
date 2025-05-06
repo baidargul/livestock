@@ -24,7 +24,7 @@ const PostPreview = (props: Props) => {
         }
         const response = await axios.post(`/api/post`, data)
         console.log(response)
-        // setIsPosting(false)
+        setIsPosting(false)
     }
 
     const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)

@@ -47,7 +47,7 @@ async function uploadImages(images: ImagePayload[]) {
       return response;
     }
 
-    response.status = 200;
+    response.status = errors.length === 0 ? 200 : 400;
     response.message = "Files uploaded successfully";
     response.data = results;
     return response;

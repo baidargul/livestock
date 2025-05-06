@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { actions } from "@/actions/serverActions/actions";
 import { NextRequest } from "next/server";
 
@@ -13,6 +14,28 @@ export async function POST(req: NextRequest) {
 
     const { images } = data;
     const uploads = await actions.server.images.uploadImages(images);
+    if (uploads.status === 400) {
+      response.status = 400;
+      response.message = `Unable to upload images`;
+      response.data = uploads.data;
+      return new Response(JSON.stringify(response));
+    }
+
+    data.images = uploads.data;
+
+    const raw = {
+      ...data,
+      averageAge: Number(data.averageAge) ?? 0,
+      averageWeight: Number(data.averageWeight) ?? 0,
+      maleQuantityAvailable: Number(data.maleQuantityAvailable) ?? 0,
+      femaleQuantityAvailable: Number(data.femaleQuantityAvailable) ?? 0,
+      price: Number(data.price) ?? 0,
+    };
+
+    const animal = await prisma.animal.create({
+      data: raw,
+    });
+
     // Sample Image response
     // Bucket: "murghimandi";
     // ChecksumCRC32: "aFHz3Q==";
@@ -23,8 +46,8 @@ export async function POST(req: NextRequest) {
     // key: "44c7d475-f10e-4cc1-a6ed-b4ad05f5fce3-sheep1.png";
 
     response.status = 200;
-    response.message = "Files uploaded successfully";
-    response.data = uploads; // Assuming data contains the uploaded file information
+    response.message = "Animal created successfully";
+    response.data = animal; // Assuming data contains the uploaded file information
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

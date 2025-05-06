@@ -23,6 +23,8 @@ const page = (props: Props) => {
         setCurrentScreen((prev) => prev - 1)
     }
 
+    console.log(animal)
+
 
     const screens: any = {
         1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
