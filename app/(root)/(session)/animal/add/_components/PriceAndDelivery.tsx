@@ -56,28 +56,20 @@ const PriceAndDelivery = (props: Props) => {
     const self = isExists('SELF_PICKUP')
     const seller = isExists('SELLER_DELIVERY')
 
-    const handleHitApi = async () => {
-        const data = {
-            ...props.animal,
-        }
-        const response = await axios.post(`/api/post`, data)
-        console.log(response)
-    }
-
-
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
             <div className='text-xl font-semibold tracking-tight text-center'>{`Commericial Information`}</div>
-            <div>
-                <input ref={txtRef} onFocus={handleOnFocus} value={props.animal.price ?? 0} onChange={(e: any) => handlePriceChange(Number(e.target.value))} placeholder='Rs ' type='number' className='text-2xl p-4 outline-none ring-0 bg-emerald-50 border-y border-emerald-300 text-emerald-700 font-semibold selection:bg-emerald-200 tracking-wide focus-within:tracking-wide w-fit appearance-none text-center ' />
-                <div className='flex items-center justify-between gap-4 w-full p-4'>
+            <div className='w-full flex flex-col items-center gap-4'>
+                <label className='text-sm text-center w-full flex justify-center items-center font-semibold tracking-widest'>PRICE</label>
+                <input ref={txtRef} onFocus={handleOnFocus} onChange={(e: any) => handlePriceChange(Number(e.target.value))} value={props.animal.price} placeholder='Rs ' type='number' className='text-2xl border-b border-black selection:bg-emerald-100 text-center p-2 outline-0 text-emerald-500' />
+                <div className='flex flex-col justify-between gap-4 w-full p-4'>
                     <Checkbox label='SELF PICKUP AVAILABLE' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
                     <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
                 </div>
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={handleHitApi} className='w-full' disabled={props.animal?.breed && props.animal?.breed !== "" ? false : true}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
+                <Button onClick={props.moveNext} className='w-full' disabled={props.animal?.breed && props.animal?.breed !== "" ? false : true}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
             </div>
         </div>
     )

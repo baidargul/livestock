@@ -17,11 +17,21 @@ const TitleAndDescription = (props: Props) => {
             <div>
                 <div className='flex flex-col gap-2 mt-4'>
                     <label htmlFor="title" className='text-sm font-semibold'>Title</label>
-                    <Textbox id='title' placeholder={`e.g. ${props.animal.breed} is looking for a new home`} onChange={(e: any) => props.setAnimal({ ...props.animal, title: e })} />
+                    <Textbox id='title' placeholder={`e.g. ${props.animal.breed} is looking for a new home`} onChange={(e: any) => props.setAnimal({ ...props.animal, title: e })} value={props.animal.title} />
                 </div>
                 <div className='flex flex-col gap-2 mt-4'>
                     <label htmlFor="description" className='text-sm font-semibold'>Description</label>
-                    <textarea rows={4} id='description' placeholder={`e.g. ${props.animal.breed} is a friendly ${props.animal.type}.`} className='w-full p-2 border border-gray-300 rounded-md' onChange={(e) => props.setAnimal({ ...props.animal, description: e.target.value })} />
+                    <textarea rows={4} id='description' placeholder={`e.g. ${props.animal.breed} is a friendly ${props.animal.type}.`} className='w-full p-2 border border-gray-300 rounded-md' onChange={(e) => props.setAnimal({ ...props.animal, description: e.target.value })} value={props.animal.description} />
+                    <div className='flex gap-2 justify-between items-center'>
+                        <div className='flex flex-col gap-2 my-2'>
+                            <label htmlFor="title" className='text-sm font-semibold'>Province</label>
+                            <Textbox id='title' placeholder={`Punjab`} onChange={(e: any) => props.setAnimal({ ...props.animal, province: e })} value={props.animal.province} />
+                        </div>
+                        <div className='flex flex-col gap-2 my-2'>
+                            <label htmlFor="title" className='text-sm font-semibold'>City</label>
+                            <Textbox id='title' placeholder={`Multan`} onChange={(e: any) => props.setAnimal({ ...props.animal, city: e })} value={props.animal.city} />
+                        </div>
+                    </div>
                     <label className='p-1 text-sm text-center bg-amber-50 rounded-md border-amber-100 border tracking-tight'>⚠️ Avoid sharing phone numbers, email addresses, or other contact details, or your account might get banned.</label>
                 </div>
             </div>

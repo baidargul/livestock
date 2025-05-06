@@ -46,6 +46,8 @@ model Animal {
   femaleQuantityAvailable Int
   isQuantityNegotiable    Boolean
   minimumOrderQuantity    Int? // Optional: Minimum order quantity for bulk purchases
+  city                    String
+  province                String
   location                Location          @relation(fields: [locationId], references: [id])
   locationId              String            @db.ObjectId
   deliveryOptions         DeliveryOptions[]

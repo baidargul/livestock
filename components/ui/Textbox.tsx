@@ -7,7 +7,7 @@ type Props = {
     type?: "text" | "email" | "password" | "number" | "date" | "tel" | "url" | "search"
     placeholder?: string
     disabled?: boolean
-    value?: string
+    value?: string | number
     onChange?: (val: string) => void
     className?: string
     labelClassName?: string

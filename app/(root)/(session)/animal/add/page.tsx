@@ -7,6 +7,7 @@ import SelectAgeGenderWeight from './_components/SelectAgeGenderWeight'
 import AddMedia from './_components/AddMedia'
 import TitleAndDescription from './_components/TitleAndDescription'
 import PriceAndDelivery from './_components/PriceAndDelivery'
+import PostPreview from './_components/PostPreview'
 
 type Props = {}
 
@@ -30,6 +31,7 @@ const page = (props: Props) => {
         4: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
         5: <TitleAndDescription moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
         6: <PriceAndDelivery moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        7: <PostPreview moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
     }
 
 
