@@ -60,6 +60,29 @@ async function uploadImages(images: ImagePayload[]) {
   }
 }
 
+async function fetchImages(images: any) {
+  let rawImages = [];
+  for (const img of images) {
+    try {
+      const imageURL = `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`;
+      const response = await fetch(imageURL);
+
+      const contentType = response.headers.get("Content-Type");
+      const imageBuffer = await response.arrayBuffer();
+
+      // Dynamically assign the correct MIME type
+      const image = `data:${contentType};base64,${Buffer.from(
+        imageBuffer
+      ).toString("base64")}`;
+      rawImages.push({ name: img.Key, image });
+    } catch (error) {
+      console.error(`Error fetching image ${img.Key}:`, error);
+    }
+  }
+  return rawImages;
+}
+
 export const images = {
+  fetchImages,
   uploadImages,
 };
