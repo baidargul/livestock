@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
+import { Animal } from "@prisma/client";
 async function listAll() {
   const response = {
     status: 500,
@@ -27,6 +28,44 @@ async function listAll() {
   }
 }
 
+async function list(val: any, key: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const whereClause = {
+      [key]: val,
+    };
+    const target: any = await prisma.animal.findFirst({
+      where: { ...whereClause },
+    });
+
+    if (!target) {
+      response.status = 400;
+      response.message = `Animal not found`;
+      response.data = null;
+      return response;
+    }
+
+    const images = await actions.server.images.fetchImages(target.images);
+    const animal = { ...target, images };
+
+    response.status = 200;
+    response.message = "Animal fetched successfully";
+    response.data = animal;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR]: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const post = {
+  list,
   listAll,
 };

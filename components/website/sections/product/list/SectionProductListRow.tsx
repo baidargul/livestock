@@ -20,7 +20,7 @@ const SectionProductListRow = (props: Props) => {
     const selfPickup = props.animal?.deliveryOptions.includes("SELF_PICKUP")
 
     return (
-        <Link href={`/entity/1`} className='w-full'>
+        <Link href={`/entity/${props.animal?.id}`} className='w-full'>
             <div className="flex items-center gap-0">
                 <div className='relative bg-zinc-50 border-l border-y border-zinc-200/40'>
                     {props.animal?.deliveryOptions.length > 0 && <div className='absolute bottom-2 left-2 bg-emerald-100 rounded-md p-1 flex gap-1 items-center text-emerald-600'>

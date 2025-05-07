@@ -1,9 +1,12 @@
+import { actions } from '@/actions/serverActions/actions'
 import BackNavigator from '@/components/controls/BackNavigator'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
-import { ArrowLeftCircleIcon } from 'lucide-react'
+import { formalizeText } from '@/lib/utils'
+import { Animal } from '@prisma/client'
+import { ArrowLeftCircleIcon, ClipboardCheckIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -31,49 +34,58 @@ export async function generateStaticParams() {
 
 const page = async (props: Props) => {
     const { params } = props
+    const { id } = await params
+
+    const response = await actions.server.post.list(id, 'id');
+    const animal = response.data as any
+
     return (
-        <div className='relative w-full min-h-[100vh]'>
+        animal && <div className='relative w-full min-h-[100vh]'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                 <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
             </BackNavigator>
             <div className='relative'>
                 <Image
-                    src={images.chicken.covers[1]}
+                    src={animal.images[0].image}
                     draggable={false}
                     priority
-                    layout="responsive"
+                    layout="fixed"
                     quality={50}
                     alt="hen"
-                    className="w-full h-[400px] z-0 select-none object-cover"
+                    width={100}
+                    height={100}
+                    style={{ height: "250px" }}
+                    className="w-full h-[250px] z-0 select-none origin-top-left object-left-top object-cover"
                 />
 
                 <div className='bg-emerald-50 p-4 rounded-lg mx-4 absolute -mt-20 z-10' style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
-                    <h1 className='text-3xl text-center font-bold text-gray-800 mt-4'>Golden Retriver</h1>
+                    <h1 className='text-3xl text-center font-bold text-gray-800 mt-4'>{formalizeText(animal?.breed ?? "")} {formalizeText(animal?.type ?? "")}</h1>
                     <div className='px-4 py-2'>
                         <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
                     </div>
                 </div>
             </div>
-            <div className='mt-40 px-4 flex flex-col gap-4'>
-                <div className='flex flex-wrap justify-center items-center gap-2'>
-                    {[1, 2, 3, 3, 2, 1, 2, 3, 1].map((item: number) => {
+            <div className='mt-32 p-4'>
+                <h2 className='text-lg font-bold text-gray-800'>{animal.title}</h2>
+                <p className='text-sm text-gray-600'>{animal.description}</p>
+            </div>
+            <div className='px-4 flex flex-col gap-4'>
+                <div className='flex flex-wrap justify-start items-start gap-2'>
+                    {animal.images.map((item: any) => {
                         return (
-                            <MediaViewer key={item} image={images.chicken.covers[item as keyof typeof images.chicken.covers]}>
-                                <Image src={images.chicken.covers[item as keyof typeof images.chicken.covers]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover rounded-xl cursor-pointer' />
+                            <MediaViewer key={item} image={item.image}>
+                                <Image src={item.image} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover object-left-center rounded-xl cursor-pointer' />
                             </MediaViewer>
                         )
                     })}
                 </div>
-                <div className='flex flex-wrap gap-2'>
-                    <Tag>Male</Tag>
-                    <Tag>3 Months</Tag>
-                    <Tag>Brown</Tag>
-                    <Tag>Hyperactive</Tag>
-                </div>
-                <div className='py-2'>
-                    <h2 className='text-lg font-bold text-gray-800'>Description</h2>
-                    <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
-                </div>
+                <div className='flex justify-evenly items-center my-4 w-full'>{
+                    animal.deliveryOptions.map((option: any) => {
+                        return (
+                            <div className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Seller delivery"}</div>
+                        )
+                    })
+                }</div>
             </div>
             <div className='my-4 flex justify-center items-center w-full'>
                 <Button className='w-full mx-4'>Buy Now</Button>
