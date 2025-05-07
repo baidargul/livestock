@@ -48,7 +48,15 @@ export async function POST(req: NextRequest) {
     response.status = 200;
     response.message = "Animal created successfully";
     response.data = animal; // Assuming data contains the uploaded file information
-    return new Response(JSON.stringify(response));
+    return new Response(JSON.stringify(response), {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+        "Surrogate-Control": "no-store",
+      },
+    });
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
     response.status = 500;
@@ -81,7 +89,15 @@ export async function DELETE(req: NextRequest) {
     response.status = 200;
     response.message = "Post deleted successfully";
     response.data = deletedPost;
-    return new Response(JSON.stringify(response));
+    return new Response(JSON.stringify(response), {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+        "Surrogate-Control": "no-store",
+      },
+    });
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
     response.status = 500;
