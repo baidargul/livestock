@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { actions } from "@/actions/serverActions/actions";
 import { NextRequest } from "next/server";
 
-async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const response = {
     status: 500,
     message: "Internal Server Error",

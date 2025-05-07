@@ -4,6 +4,7 @@ import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
 import { Calendar1Icon, CalendarIcon, ClipboardCheckIcon, WeightIcon } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 }
 
 const PostPreview = (props: Props) => {
+    const router = useRouter()
     const [isPosting, setIsPosting] = useState(false)
 
 
@@ -23,7 +25,9 @@ const PostPreview = (props: Props) => {
             ...props.animal,
         }
         const response = await axios.post(`/api/post`, data)
-        console.log(response)
+        if (response.status === 200) {
+            router.push(`/home`)
+        }
         setIsPosting(false)
     }
 
