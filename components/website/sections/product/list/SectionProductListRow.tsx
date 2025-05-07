@@ -1,7 +1,7 @@
 import RatingBar from '@/components/website/ratings/RatingBar'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
-import { PackageOpenIcon, TruckIcon } from 'lucide-react'
+import { BaggageClaim, PackageOpenIcon, SquareUserIcon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -22,19 +22,19 @@ const SectionProductListRow = (props: Props) => {
     return (
         <Link href={`/entity/1`} className='w-full'>
             <div className="flex items-center gap-0">
-                <div className='relative'>
+                <div className='relative bg-zinc-50 border-l border-y border-zinc-200/40'>
                     {props.animal?.deliveryOptions.length > 0 && <div className='absolute bottom-2 left-2 bg-emerald-100 rounded-md p-1 flex gap-1 items-center text-emerald-600'>
                         {sellerCargo && <div title='SELLER CARGO'>
                             <TruckIcon size={20} />
                         </div>}
                         {selfPickup && <div title='SELF PICKUP'>
-                            <PackageOpenIcon size={20} />
+                            <SquareUserIcon size={20} />
                         </div>}
                     </div>}
-                    <Image src={props.animal?.images[0].image} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-40 h-40 select-none object-cover rounded-l-lg' />
+                    <Image src={props.animal?.images[0].image} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='min-w-32 w-40 h-40 select-none object-cover rounded-l-lg' />
                 </div>
-                <div className='p-2 pl-4 bg-emerald-50 rounded-r-xl'>
-                    <h1 className='text-xl font-semibold'>{props.animal?.title}</h1>
+                <div className='p-2 pl-4 w-auto bg-zinc-50 border-r border-y border-zinc-200/40 rounded-r-xl'>
+                    <div className='text-[1rem] transition-all duration-200 ease-in-out w-[90%] sm:w-auto sm:text-xl font-semibold truncate'>{props.animal?.title}</div>
                     <div className='flex subheading1 gap-1 items-center -mt-1'>
                         <div className='font-medium'>{totalQuantity}</div> <div className='font-medium'>{`${formalizeText(props.animal?.type)} ${props.animal?.breed}`}</div>
                     </div>
