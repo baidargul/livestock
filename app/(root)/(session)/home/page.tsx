@@ -10,7 +10,7 @@ const page = async (props: Props) => {
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post`, {
         method: 'GET',
-        cache: 'no-store', // Ensures the request bypasses the cache
+        cache: 'no-store',
     });
 
     const data = await response.json()
@@ -33,10 +33,6 @@ const page = async (props: Props) => {
                 {
                     animals.map((animal: any) => <SectionProductListRow key={animal.id} animal={animal} />)
                 }
-                {/* <SectionProductListRow /> */}
-                {/* <SectionProductListRow /> */}
-                {/* <SectionProductListRow /> */}
-                {/* <SectionProductListRow /> */}
             </div>
         </div>
     )
