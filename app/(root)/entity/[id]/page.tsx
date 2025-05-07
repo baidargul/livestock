@@ -1,12 +1,13 @@
 import { actions } from '@/actions/serverActions/actions'
 import BackNavigator from '@/components/controls/BackNavigator'
+import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
 import { formalizeText } from '@/lib/utils'
 import { Animal } from '@prisma/client'
-import { ArrowLeftCircleIcon, ClipboardCheckIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, ClipboardCheckIcon, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -44,6 +45,9 @@ const page = async (props: Props) => {
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                 <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
             </BackNavigator>
+            <DeleteProductWrapper>
+                <Trash2Icon size={32} className='absolute top-3 right-0 z-10 text-red-500 rounded-l-full w-14 bg-white p-1' />
+            </DeleteProductWrapper>
             <div className='relative'>
                 <Image
                     src={animal.images[0].image}
@@ -73,7 +77,7 @@ const page = async (props: Props) => {
                 <div className='flex flex-wrap justify-start items-start gap-2'>
                     {animal.images.map((item: any) => {
                         return (
-                            <MediaViewer key={item} image={item.image}>
+                            <MediaViewer key={item.name} image={item.image}>
                                 <Image src={item.image} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover object-left-center rounded-xl cursor-pointer' />
                             </MediaViewer>
                         )
@@ -82,7 +86,7 @@ const page = async (props: Props) => {
                 <div className='flex justify-evenly items-center my-4 w-full'>{
                     animal.deliveryOptions.map((option: any) => {
                         return (
-                            <div className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Seller delivery"}</div>
+                            <div key={option} className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Seller delivery"}</div>
                         )
                     })
                 }</div>

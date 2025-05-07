@@ -65,7 +65,7 @@ const PostPreview = (props: Props) => {
                             <div>{
                                 props.animal.deliveryOptions.map((option: any) => {
                                     return (
-                                        <div className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Seller delivery"}</div>
+                                        <div key={option} className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Seller delivery"}</div>
                                     )
                                 })
                             }</div>
