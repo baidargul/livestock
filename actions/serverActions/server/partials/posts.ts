@@ -72,9 +72,20 @@ async function removePost(id: string) {
   };
 
   try {
+    const images = await prisma.animal.findFirst({
+      where: { id },
+      select: {
+        images: true,
+      },
+    });
+    const deletedImages = await actions.server.images.deleteImages(
+      images?.images as any
+    );
+
     const deletedPost = await prisma.animal.delete({
       where: { id },
     });
+
     response.status = 200;
     response.message = "Post deleted successfully";
     response.data = deletedPost;

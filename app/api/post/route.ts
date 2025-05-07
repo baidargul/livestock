@@ -83,11 +83,18 @@ export async function DELETE(req: NextRequest) {
       return new Response(JSON.stringify(response));
     }
 
-    const deletedPost = await prisma.animal.delete({
-      where: { id },
-    });
-    response.status = 200;
-    response.message = "Post deleted successfully";
+    const deletedResponse = await actions.server.post.removePost(id);
+
+    if (deletedResponse.status === 400) {
+      response.status = deletedResponse.status;
+      response.message = deletedResponse.message;
+      response.data = deletedResponse.data;
+      return new Response(JSON.stringify(response));
+    }
+    const deletedPost = deletedResponse.data;
+
+    response.status = deletedResponse.status;
+    response.message = deletedResponse.message;
     response.data = deletedPost;
     return new Response(JSON.stringify(response), {
       headers: {

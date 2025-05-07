@@ -82,7 +82,71 @@ async function fetchImages(images: any) {
   return rawImages;
 }
 
+async function deleteImages(images: any[]) {
+  const errors: any[] = [];
+  const results: any[] = [];
+  const response = {
+    status: 500,
+    message: "File deletion failed",
+    data: null,
+  } as any;
+
+  try {
+    // Validate environment variable first
+    const bucketName = process.env.R2_BUCKET_NAME;
+    if (!bucketName) {
+      throw new Error("R2_BUCKET_NAME environment variable not configured");
+    }
+
+    for (const img of images) {
+      try {
+        // Validate required Key property
+        if (!img?.Key) {
+          throw new Error("Missing Key property in image object");
+        }
+
+        const params = {
+          Bucket: bucketName,
+          Key: img.Key,
+        };
+
+        // Explicitly type the result
+        const deleteResult = await r2Client.deleteObject(params).promise();
+        console.log("[DELETE SUCCESS]", deleteResult);
+        results.push(deleteResult);
+      } catch (error: any) {
+        console.error(`[DELETE ERROR] Key: ${img.Key}`, error);
+        errors.push({
+          Key: img.Key,
+          error: error.message,
+          code: error.code || "DELETE_ERROR",
+        });
+      }
+    }
+
+    // Response handling remains the same
+    if (errors.length > 0) {
+      response.status = 400;
+      response.message = "Some files failed to delete";
+      response.data = { successes: results, failures: errors };
+    } else {
+      response.status = 200;
+      response.message = "Files deleted successfully";
+      response.data = results;
+    }
+
+    return response;
+  } catch (error: any) {
+    console.error("[SERVER ERROR]", error);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const images = {
-  fetchImages,
   uploadImages,
+  fetchImages,
+  deleteImages,
 };
