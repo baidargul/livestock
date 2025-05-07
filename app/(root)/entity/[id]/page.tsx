@@ -45,7 +45,7 @@ const page = async (props: Props) => {
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                 <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
             </BackNavigator>
-            <DeleteProductWrapper>
+            <DeleteProductWrapper id={animal.id}>
                 <Trash2Icon size={32} className='absolute top-3 right-0 z-10 text-red-500 rounded-l-full w-14 bg-white p-1' />
             </DeleteProductWrapper>
             <div className='relative'>

@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { actions } from "@/actions/serverActions/actions";
 import { NextRequest } from "next/server";
 
-export async function POST(req: NextRequest) {
+async function POST(req: NextRequest) {
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -48,6 +48,39 @@ export async function POST(req: NextRequest) {
     response.status = 200;
     response.message = "Animal created successfully";
     response.data = animal; // Assuming data contains the uploaded file information
+    return new Response(JSON.stringify(response));
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return new Response(JSON.stringify(response));
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const id = new URL(req.url).searchParams.get("id");
+
+    if (!id) {
+      response.status = 400;
+      response.message = `Post not found`;
+      response.data = null;
+      return new Response(JSON.stringify(response));
+    }
+
+    const deletedPost = await prisma.animal.delete({
+      where: { id },
+    });
+    response.status = 200;
+    response.message = "Post deleted successfully";
+    response.data = deletedPost;
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
