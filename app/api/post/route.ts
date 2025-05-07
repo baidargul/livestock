@@ -106,3 +106,33 @@ export async function DELETE(req: NextRequest) {
     return new Response(JSON.stringify(response));
   }
 }
+
+export async function GET(req: NextRequest) {
+  const response: any = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const animals = await actions.server.post.listAll();
+    response.status = animals.status;
+    response.message = animals.message;
+    response.data = animals.data;
+    return new Response(JSON.stringify(response), {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+        "Surrogate-Control": "no-store",
+      },
+    });
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return new Response(JSON.stringify(response));
+  }
+}

@@ -8,7 +8,22 @@ type Props = {}
 
 const page = async (props: Props) => {
 
-    const animals = await actions.server.post.listAll();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post`, {
+        method: 'GET',
+        cache: 'no-store', // Ensures the request bypasses the cache
+    });
+
+    const data = await response.json()
+    if (data.status !== 200) {
+        return (
+            <div>
+                {data.message}
+            </div>
+        )
+    }
+
+    const animals = data.data
+
 
     return (
         <div className='px-4 flex flex-col gap-2 items-start w-full'>
@@ -16,7 +31,7 @@ const page = async (props: Props) => {
             <SectionCategoryBar />
             <div className='py-4 flex flex-col gap-4'>
                 {
-                    animals.data.map((animal: any) => <SectionProductListRow key={animal.id} animal={animal} />)
+                    animals.map((animal: any) => <SectionProductListRow key={animal.id} animal={animal} />)
                 }
                 {/* <SectionProductListRow /> */}
                 {/* <SectionProductListRow /> */}
