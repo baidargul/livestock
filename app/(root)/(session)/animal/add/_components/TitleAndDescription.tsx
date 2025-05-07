@@ -37,7 +37,8 @@ const TitleAndDescription = (props: Props) => {
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={props.moveNext} className='w-full' disabled={props.animal?.breed && props.animal?.breed !== "" ? false : true}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
+                <Button onClick={props.moveNext} className='w-full' disabled={!props.animal?.title || String(props.animal?.title).length === 0 || !props.animal?.description || String(props.animal?.description).length === 0 || !props.animal?.province || String(props.animal?.province).length === 0 || !props.animal?.city || String(props.animal?.city).length === 0
+                }>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
             </div>
         </div>
     )

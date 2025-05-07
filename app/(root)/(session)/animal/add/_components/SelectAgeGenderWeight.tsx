@@ -16,20 +16,15 @@ type Props = {
 }
 
 const SelectAgeGenderWeight = (props: Props) => {
-
-    const handleGenderChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, gender: val }))
-    }
-
     const handleWeightChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, averageWeight: val }))
+        props.setAnimal((prev: any) => ({ ...prev, averageWeight: Number(val) }))
     }
     const handleAgeChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, averageAge: val }))
+        props.setAnimal((prev: any) => ({ ...prev, averageAge: Number(val) }))
     }
 
     const handleQuantityChange = (val: string | number, key: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, [key]: val }))
+        props.setAnimal((prev: any) => ({ ...prev, [key]: Number(val) }))
     }
 
     const handleAgeUnitChange = (val: string) => {
@@ -40,16 +35,13 @@ const SelectAgeGenderWeight = (props: Props) => {
         props.setAnimal((prev: any) => ({ ...prev, weightUnit: val }))
     }
 
-    const handleAllowMinimumChange = (val: boolean) => {
-        props.setAnimal((prev: any) => ({ ...prev, isQuantityNegotiable: val }))
+    const handleMoveNext = () => {
+        if (props.animal.maleQuantityAvailable || props.animal.femaleQuantityAvailable) {
+            if (Number(props.animal.maleQuantityAvailable) > 0 || Number(props.animal.femaleQuantityAvailable) > 0) {
+                props.moveNext()
+            }
+        }
     }
-
-    const handleChecks = (val: boolean, key: string) => {
-        props.setAnimal((prev: any) => ({
-            ...prev,
-            [key]: val,
-        }));
-    };
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
@@ -82,7 +74,7 @@ const SelectAgeGenderWeight = (props: Props) => {
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={props.moveNext} className='w-full'>Next</Button>
+                <Button onClick={handleMoveNext} disabled={!props.animal.averageAge || !props.animal.averageWeight || !props.animal.ageUnit || !props.animal.weightUnit} className='w-full'>Next</Button>
             </div>
         </div>
     )

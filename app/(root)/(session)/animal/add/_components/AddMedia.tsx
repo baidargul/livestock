@@ -14,6 +14,7 @@ type Props = {
 }
 
 const AddMedia = (props: Props) => {
+    const [loading, setLoading] = useState(false)
     const [images, setImages] = useState<any[]>([])
 
     useEffect(() => {
@@ -23,6 +24,7 @@ const AddMedia = (props: Props) => {
     }, [props.animal])
 
     const handleAddMedia = async (files: File[]) => {
+        setLoading(true)
         if (files.length > 4) {
             alert("You can only upload 4 files")
             return
@@ -39,6 +41,7 @@ const AddMedia = (props: Props) => {
             console.error("Error converting files:", error);
             alert("There was an error processing your images. Please try again.");
         }
+        setLoading(false)
     }
 
     const handleRemoveMedia = (index: number) => {
@@ -53,7 +56,12 @@ const AddMedia = (props: Props) => {
 
 
     return (
-        <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4 select-none'>
+        <div className='w-full relative min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4 select-none'>
+            {loading && <div className='fixed top-0 left-0 w-full h-full inset-0 bg-emerald-200/40 backdrop-blur-sm z-50 flex justify-center items-center'>
+                <div className='bg-white font-semibold tracking-wide text-emerald-800 border border-emerald-800 drop-shadow-sm rounded-xl p-4 flex flex-col gap-2 items-center text-center'>
+                    Please wait...
+                </div>
+            </div>}
             <div className='text-xl font-semibold tracking-tight text-center'>Please select atleast 4 images of {formalizeText(props.animal.breed)} {props.animal.type}</div>
             {images.length !== 4 && <ImageUploadWrapper limit={4} onChange={handleAddMedia}>
                 <div className='p-2 bg-emerald-100 cursor-pointer border-emerald-400 flex flex-col justify-center items-center rounded-xl border' style={{ boxShadow: "0px 20px 14px -8px #98d3b5" }}>
