@@ -1,5 +1,4 @@
 import RatingBar from '@/components/website/ratings/RatingBar'
-import { images } from '@/consts/images'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import { PackageOpenIcon, TruckIcon } from 'lucide-react'
