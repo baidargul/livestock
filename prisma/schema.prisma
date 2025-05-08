@@ -27,10 +27,10 @@ model Animal {
   // Basic Info
   type          String
   breed         String
-  averageAge    Float // Age in years or months, adjust accordingly
-  ageUnit       String
-  averageWeight Float // Weight in kilograms or pounds
-  weightUnit    String
+  averageAge    Float? // Age in years or months, adjust accordingly
+  ageUnit       String?
+  averageWeight Float? // Weight in kilograms or pounds
+  weightUnit    String?
   colorMarkings String? // Optional: Color and specific markings
 
   // Commercial Info
