@@ -113,11 +113,11 @@ const SelectAgeGenderWeight = (props: Props) => {
                 </div>
                 <div className='flex items-center justify-between gap-2'>
                     <Textbox label='Average age' type='number' value={Number(props.animal.averageAge)} onChange={handleAgeChange} />
-                    <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit} onChange={handleAgeUnitChange} />
+                    <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit ?? ""} onChange={handleAgeUnitChange} />
                 </div>
                 <div className='flex items-center justify-between gap-2'>
                     <Textbox label={`Average weight`} type='number' value={Number(props.animal.averageWeight)} onChange={handleWeightChange} />
-                    <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit} onChange={handleWeightUnitChange} />
+                    <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit ?? ""} onChange={handleWeightUnitChange} />
                 </div>
                 {/* <div className='flex items-center gap-5'>
                     <Checkbox onChange={(val: boolean) => handleChecks(val, "vaccinationStatus")} value={props.animal.vaccinationStatus ?? false} label='Vaccined' />
