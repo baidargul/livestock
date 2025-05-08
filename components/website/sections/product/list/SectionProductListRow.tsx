@@ -51,7 +51,7 @@ const SectionProductListRow = (props: Props) => {
                         </div>
                     </div>
                     <div className='text-xl mt-2 text-emerald-600 tracking-wide font-bold'>
-                        {formatCurrency(props.animal?.price)}
+                        {formatCurrency(props.animal.price * totalQuantity)} {props.animal.priceUnit && <span className='text-base'>{`/${props.animal.priceUnit}`}</span>}
                     </div>
                 </div>
             </div>

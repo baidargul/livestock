@@ -5,7 +5,7 @@ import MediaViewer from '@/components/controls/MediaViewer'
 import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
-import { formalizeText } from '@/lib/utils'
+import { formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import { ArrowLeftCircleIcon, ClipboardCheckIcon, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
@@ -40,6 +40,13 @@ const page = async (props: Props) => {
     const response = await actions.server.post.list(id, 'id');
     const animal = response.data as any
 
+    const checkQuantity = () => {
+        const totalQuantity = Number(animal.maleQuantityAvailable || 0) + Number(animal.femaleQuantityAvailable || 0)
+        return totalQuantity
+    }
+
+    const totalQuantity = checkQuantity()
+
     return (
         animal && <div className='relative w-full min-h-[100vh]'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
@@ -69,9 +76,11 @@ const page = async (props: Props) => {
                     </div>
                 </div>
             </div>
-            <div className='mt-32 p-4'>
+            <div className='mt-40 p-4'>
                 <h2 className='text-lg font-bold text-gray-800'>{animal.title}</h2>
                 <p className='text-sm text-gray-600'>{animal.description}</p>
+                <div className='text-4xl text-left tracking-wide font-semibold text-emerald-700'>{formatCurrency(Number(animal.price) * totalQuantity)}</div>
+                <p className='text-sm text-gray-600'>{`${totalQuantity} x ${formalizeText(animal.type)}${totalQuantity > 1 ? "s" : ""} at ${formatCurrency(animal.price)} ${animal.priceUnit ?? ''} ${totalQuantity > 1 ? !animal.priceUnit ? "each." : "" : ""}`}</p>
             </div>
             <div className='px-4 flex flex-col gap-4'>
                 <div className='flex flex-wrap justify-start items-start gap-2'>

@@ -27,8 +27,9 @@ const PostPreview = (props: Props) => {
         const response = await axios.post(`/api/post`, data)
         if (response.status === 200) {
             router.push(`/home`)
+        } else {
+            setIsPosting(false)
         }
-        setIsPosting(false)
     }
 
     const checkQuantity = () => {
