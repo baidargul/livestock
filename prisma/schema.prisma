@@ -35,6 +35,7 @@ model Animal {
 
   // Commercial Info
   price                   Float
+  priceUnit               String?
   maleQuantityAvailable   Int?
   femaleQuantityAvailable Int?
   city                    String

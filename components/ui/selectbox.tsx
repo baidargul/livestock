@@ -20,7 +20,7 @@ const Selectbox = (props: Props) => {
                 {
                     props.options.map((option, index) => (
                         <div key={index} className={`p-2 text-center tracking-tight rounded border border-emerald-700 cursor-pointer ${String(props.value).toLocaleLowerCase() === String(option).toLocaleLowerCase() ? 'bg-emerald-700 text-white' : 'bg-white text-black'}`} onClick={() => handleChange(option)}>
-                            <label htmlFor={option} className=''>{option}</label>
+                            <label htmlFor={option} className='cursor-pointer'>{option}</label>
                         </div>
                     ))
                 }

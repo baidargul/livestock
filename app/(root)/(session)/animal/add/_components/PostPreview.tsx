@@ -31,7 +31,12 @@ const PostPreview = (props: Props) => {
         setIsPosting(false)
     }
 
-    const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
+    const checkQuantity = () => {
+        const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
+        return totalQuantity
+    }
+
+    const totalQuantity = checkQuantity()
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
             <div className='w-full'>
@@ -73,7 +78,7 @@ const PostPreview = (props: Props) => {
                                     )
                                 })
                             }</div>
-                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(props.animal.price)}</div>
+                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(Number(props.animal.price * checkQuantity()))}</div>
                         </div>}
                     </div>
                 </div>
