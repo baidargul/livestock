@@ -78,7 +78,7 @@ const PostPreview = (props: Props) => {
                                     )
                                 })
                             }</div>
-                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(Number(props.animal.price * checkQuantity()))}</div>
+                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(Number(props.animal.price * checkQuantity()))} <span className='text-base'>{`/${props.animal.priceUnit}`}</span></div>
                         </div>}
                     </div>
                 </div>

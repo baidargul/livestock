@@ -75,7 +75,9 @@ const PriceAndDelivery = (props: Props) => {
             handlePriceUnit("per Piece")
         } else if (val > 1) {
             setPriceUnits(["per Piece", `per ${formalizeText(props.animal.weightUnit ?? "Kg")}`])
-            handlePriceUnit(`per ${formalizeText(props.animal.weightUnit ?? "Kg")}`)
+            if (!props.animal.priceUnit) {
+                handlePriceUnit(`per ${formalizeText(props.animal.weightUnit ?? "Kg")}`)
+            }
         }
     }, [])
 
