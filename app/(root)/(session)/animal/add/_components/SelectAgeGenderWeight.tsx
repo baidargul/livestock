@@ -6,7 +6,7 @@ import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
 import { formalizeText } from '@/lib/utils'
 import { Animal } from '@prisma/client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     moveNext: () => void
@@ -16,6 +16,56 @@ type Props = {
 }
 
 const SelectAgeGenderWeight = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
+    const [isDisabledForward, setIsDisabledForward] = useState(true)
+
+    useEffect(() => {
+        if (!props.animal.averageWeight) {
+            props.setAnimal((prev: any) => ({ ...prev, averageWeight: 0 }))
+        }
+        if (!props.animal.averageAge) {
+            props.setAnimal((prev: any) => ({ ...prev, averageAge: 0 }))
+        }
+
+        const validated = validate()
+        setIsDisabledForward(validated)
+        setIsMounted(true)
+    }, [])
+
+    useEffect(() => {
+        if (isMounted) {
+            const validated = validate()
+            setIsDisabledForward(validated)
+        }
+    }, [props.animal])
+
+    const validate = () => {
+        let disableForward = true
+        if (props.animal.maleQuantityAvailable || props.animal.femaleQuantityAvailable) {
+            if (Number(props.animal.maleQuantityAvailable) > 0 || Number(props.animal.femaleQuantityAvailable) > 0) {
+                disableForward = false
+            } else {
+                disableForward = true
+            }
+        }
+        if (props.animal.averageAge && props.animal.averageAge > 0) {
+            if (props.animal.ageUnit) {
+                disableForward = false
+            } else {
+                disableForward = true
+            }
+        }
+        if (props.animal.averageWeight && props.animal.averageWeight > 0) {
+            if (props.animal.weightUnit) {
+                disableForward = false
+            } else {
+                disableForward = true
+            }
+        }
+
+        return disableForward
+    }
+
     const handleWeightChange = (val: string) => {
         props.setAnimal((prev: any) => ({ ...prev, averageWeight: Number(val) }))
     }
@@ -42,6 +92,8 @@ const SelectAgeGenderWeight = (props: Props) => {
             }
         }
     }
+
+
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
@@ -74,7 +126,7 @@ const SelectAgeGenderWeight = (props: Props) => {
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={handleMoveNext} disabled={!props.animal.averageAge || !props.animal.averageWeight || !props.animal.ageUnit || !props.animal.weightUnit} className='w-full'>Next</Button>
+                <Button onClick={handleMoveNext} disabled={isDisabledForward} className='w-full'>Next</Button>
             </div>
         </div>
     )
