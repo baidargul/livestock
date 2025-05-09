@@ -72,6 +72,7 @@ const PriceAndDelivery = (props: Props) => {
 
     useEffect(() => {
         const val = Number(checkQuantity())
+        setSelectedUnit(props.animal.priceUnit)
         if (val === 1) {
             setPriceUnits(["per Piece"])
             handlePriceUnit("per Piece")

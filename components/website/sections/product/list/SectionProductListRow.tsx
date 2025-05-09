@@ -39,8 +39,8 @@ const SectionProductListRow = (props: Props) => {
                         <div className='font-medium'>{totalQuantity}</div> <div className='font-medium'>{`${formalizeText(props.animal?.type)} ${props.animal?.breed}`}</div>
                     </div>
                     <div>
-                        <span className='text-sm tracking-tight'>{props.animal?.maleQuantityAvailable} Male</span>
-                        <span className='text-sm tracking-tight'> {props.animal?.femaleQuantityAvailable} Female</span>
+                        {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <span className='text-sm tracking-tight'>{props.animal?.maleQuantityAvailable} Male</span>}
+                        {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <span className='text-sm tracking-tight'> {props.animal?.femaleQuantityAvailable} Female</span>}
                     </div>
                     <div className='flex gap-1 items-center my-2'>
                         <div className='font-medium w-[70%] tracking-tight text-base leading-4'>
@@ -51,7 +51,7 @@ const SectionProductListRow = (props: Props) => {
                         </div>
                     </div>
                     <div className='text-xl mt-2 text-emerald-600 tracking-wide font-bold'>
-                        {formatCurrency(props.animal.price * totalQuantity)} {props.animal.priceUnit && <span className='text-base'>{`/${props.animal.priceUnit}`}</span>}
+                        {formatCurrency(props.animal.price * totalQuantity * (props.animal.priceUnit === "per Kg" ? Number(props.animal.averageWeight) : 1))} {props.animal.priceUnit && <span className='text-base'>{`/${props.animal.priceUnit}`}</span>}
                     </div>
                 </div>
             </div>
