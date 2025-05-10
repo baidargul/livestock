@@ -10,10 +10,11 @@ async function listAll() {
   try {
     const all = await prisma.animal.findMany();
     let animals = [];
-    for (const animal of all) {
-      const images = await actions.server.images.fetchImages(animal.images);
-      animals.push({ ...animal, images });
-    }
+    // for (const animal of all) {
+    //   const images = await actions.server.images.fetchImages(animal.images);
+    //   animals.push({ ...animal, images });
+    // }
+    animals = all;
 
     response.status = 200;
     response.message = "Posts fetched successfully";
@@ -48,8 +49,9 @@ async function list(val: any, key: string) {
       return response;
     }
 
-    const images = await actions.server.images.fetchImages(target.images);
-    const animal = { ...target, images };
+    // const images = await actions.server.images.fetchImages(target.images);
+    // const animal = { ...target, images };
+    const animal = target;
 
     response.status = 200;
     response.message = "Animal fetched successfully";

@@ -28,7 +28,7 @@ const TitleAndDescription = (props: Props) => {
                             <Textbox id='title' placeholder={`Punjab`} onChange={(e: any) => props.setAnimal({ ...props.animal, province: e })} value={props.animal.province} />
                         </div>
                         <div className='flex flex-col gap-2 my-2'>
-                            <label htmlFor="title" className='text-sm font-semibold'>City</label>
+                            <label htmlFor="title" className='text-sm font-semibold'>District</label>
                             <Textbox id='title' placeholder={`Multan`} onChange={(e: any) => props.setAnimal({ ...props.animal, city: e })} value={props.animal.city} />
                         </div>
                     </div>
