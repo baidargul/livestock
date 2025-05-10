@@ -8,13 +8,18 @@ async function listAll() {
     data: null as any,
   };
   try {
-    const all = await prisma.animal.findMany();
-    let animals = [];
-    // for (const animal of all) {
-    //   const images = await actions.server.images.fetchImages(animal.images);
-    //   animals.push({ ...animal, images });
-    // }
-    animals = all;
+    const all: any = await prisma.animal.findMany();
+    let animals: any = [];
+    for (const animal of all) {
+      // const images = await actions.server.images.fetchImages(animal.images);
+      const images = animal?.images.map((img: any) => {
+        return {
+          name: img.Key,
+          image: `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`,
+        };
+      });
+      animals.push({ ...animal, images });
+    }
 
     response.status = 200;
     response.message = "Posts fetched successfully";
@@ -49,9 +54,8 @@ async function list(val: any, key: string) {
       return response;
     }
 
-    // const images = await actions.server.images.fetchImages(target.images);
-    // const animal = { ...target, images };
-    const animal = target;
+    const images = await actions.server.images.fetchImages(target.images);
+    const animal = { ...target, images };
 
     response.status = 200;
     response.message = "Animal fetched successfully";

@@ -12,8 +12,6 @@ type Props = {
 
 const SectionProductListRow = (props: Props) => {
 
-    // console.log(props.animal)
-
     const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
 
     const sellerCargo = props.animal?.deliveryOptions.includes("SELLER_DELIVERY")
