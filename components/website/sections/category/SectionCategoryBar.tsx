@@ -70,7 +70,7 @@ export default SectionCategoryBar
 const Product = (props: { category: string, image: string }) => {
 
     return (
-        <div className='cursor-pointer transition-all duration-300 ease-in-out'>
+        <div className='cursor-pointer min-w-[50px] transition-all duration-300 ease-in-out'>
             <Image src={props.image} priority layout='fixed' alt={props.category} width={50} height={50} className={`rounded-full object-cover w-12 h-12`} />
             <div className='text-center text-sm font-semibold'>{props.category}</div>
         </div>
