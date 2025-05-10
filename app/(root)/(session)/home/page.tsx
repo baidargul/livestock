@@ -1,4 +1,3 @@
-import { actions } from '@/actions/serverActions/actions'
 import SectionCategoryBar from '@/components/website/sections/category/SectionCategoryBar'
 import SectionLandingPageImage from '@/components/website/sections/landingpage/LandingPageImage'
 import SectionProductListRow from '@/components/website/sections/product/list/SectionProductListRow'

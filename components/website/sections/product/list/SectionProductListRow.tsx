@@ -1,7 +1,7 @@
 import RatingBar from '@/components/website/ratings/RatingBar'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
-import { BaggageClaim, PackageOpenIcon, SquareUserIcon, TruckIcon } from 'lucide-react'
+import { SquareUserIcon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
