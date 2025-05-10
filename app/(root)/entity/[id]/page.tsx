@@ -95,6 +95,7 @@ const page = async (props: Props) => {
                 }</div>
             </div>
             <div className='my-4 flex justify-center items-center w-full'>
+                <Button variant='btn-secondary' className='w-full mx-4'>Make an offer</Button>
                 <Button className='w-full mx-4'>Buy Now</Button>
             </div>
         </div>
