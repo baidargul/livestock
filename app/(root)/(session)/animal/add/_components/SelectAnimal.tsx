@@ -15,47 +15,47 @@ const SelectAnimal = (props: Props) => {
     const animals = [
         {
             id: 1,
-            name: "Dog",
+            name: "Dogs",
             image: images.dog.images[1],
         },
         {
             id: 2,
-            name: "Cat",
+            name: "Cats",
             image: images.cat.images[1],
         },
         {
             id: 3,
-            name: "Cow",
+            name: "Cows",
             image: images.cow.images[1],
         },
         {
             id: 4,
-            name: "Goat",
+            name: "Goats",
             image: images.goat.images[1],
         },
         {
             id: 5,
-            name: "Sheep",
+            name: "Sheeps",
             image: images.sheep.images[1],
         },
         {
             id: 6,
-            name: "Horse",
+            name: "Horses",
             image: images.horse.images[1],
         },
         {
             id: 8,
-            name: "Chicken",
+            name: "Chickens",
             image: images.chicken.images[1],
         },
         {
             id: 9,
-            name: "Duck",
+            name: "Ducks",
             image: images.duck.images[1],
         },
         {
             id: 12,
-            name: "Rabbit",
+            name: "Rabbits",
             image: images.rabbit.images[1],
         },
     ]

@@ -4,9 +4,14 @@ import SectionLandingPageImage from '@/components/website/sections/landingpage/L
 import SectionProductListRow from '@/components/website/sections/product/list/SectionProductListRow'
 import React from 'react'
 
-type Props = {}
+type Props = {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
 
 const page = async (props: Props) => {
+
+    const filters = (await props.searchParams)
+    const selectedCategoryFilter = filters.category
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post`, {
         method: 'GET',
@@ -28,10 +33,13 @@ const page = async (props: Props) => {
     return (
         <div className='px-4 flex flex-col gap-2 items-start w-full'>
             <SectionLandingPageImage />
-            <SectionCategoryBar />
+            <SectionCategoryBar value={selectedCategoryFilter as string} />
             <div className='py-4 flex flex-col gap-4'>
                 {
-                    animals.map((animal: any) => <SectionProductListRow key={animal.id} animal={animal} />)
+                    animals.map((animal: any) => {
+                        if (String(animal.type).toLocaleLowerCase() !== String(selectedCategoryFilter).toLocaleLowerCase()) return
+                        return (<SectionProductListRow key={animal.id} animal={animal} />)
+                    })
                 }
             </div>
         </div>

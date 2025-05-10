@@ -4,6 +4,7 @@ import SectionCategoryBarClientWrapper from './_SectionCategoryBar/SelectionCate
 
 type Props = {
     onChange?: (category: string) => void
+    value?: string
 }
 
 const SectionCategoryBar = (props: Props) => {
@@ -14,7 +15,7 @@ const SectionCategoryBar = (props: Props) => {
     ))
 
     return (
-        <SectionCategoryBarClientWrapper onChange={props.onChange} categories={products} />
+        <SectionCategoryBarClientWrapper onChange={props.onChange} categories={products} value={props.value} />
     )
 }
 

@@ -1,13 +1,21 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     onChange?: (category: any) => void
     categories?: any[]
+    value?: string
 }
 
 const SectionCategoryBarClientWrapper = (props: Props) => {
     const [selected, setSelected] = useState<{ name: string, component: any } | null>(null)
+
+    useEffect(() => {
+        console.log(props.value)
+        if (props.value) {
+            setSelected(props.categories?.find((category: any) => String(category.name).toLocaleLowerCase() === String(props.value).toLocaleLowerCase()))
+        }
+    }, [props.value])
 
     const handleSelectCategory = (category: any) => {
         if (String(category.name).toLocaleLowerCase() === String(selected?.name).toLocaleLowerCase()) {
