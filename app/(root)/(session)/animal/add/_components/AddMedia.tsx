@@ -25,8 +25,8 @@ const AddMedia = (props: Props) => {
 
     const handleAddMedia = async (files: File[]) => {
         setLoading(true)
-        if (files.length > 4) {
-            alert("You can only upload 4 files")
+        if (files.length > 3) {
+            alert("You can only upload 3 files")
             return
         }
         try {
@@ -62,7 +62,7 @@ const AddMedia = (props: Props) => {
                     Please wait...
                 </div>
             </div>}
-            <div className='text-xl font-semibold tracking-tight text-center'>Please select atleast 4 images of {formalizeText(props.animal.breed)} {props.animal.type}</div>
+            <div className='text-xl font-semibold tracking-tight text-center'>Please select 3 images of {formalizeText(props.animal.breed)} {props.animal.type}</div>
             {images.length !== 4 && <ImageUploadWrapper limit={4} onChange={handleAddMedia}>
                 <div className='p-2 bg-emerald-100 cursor-pointer border-emerald-400 flex flex-col justify-center items-center rounded-xl border' style={{ boxShadow: "0px 20px 14px -8px #98d3b5" }}>
                     <FileImageIcon className='w-28 h-28 text-emerald-800' />
@@ -87,7 +87,7 @@ const AddMedia = (props: Props) => {
             </div>}
             <div className='flex items-center justify-between gap-4 w-full p-4'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={props.moveNext} className='w-full' disabled={images && images.length === 4 ? false : true}>Next</Button>
+                <Button onClick={props.moveNext} className='w-full' disabled={images && images.length === 3 ? false : true}>Next</Button>
             </div>
         </div >
     )
