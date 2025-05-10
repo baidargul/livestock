@@ -37,7 +37,9 @@ const page = async (props: Props) => {
             <div className='py-4 flex flex-col gap-4'>
                 {
                     animals.map((animal: any) => {
-                        if (String(animal.type).toLocaleLowerCase() !== String(selectedCategoryFilter).toLocaleLowerCase()) return
+                        if (selectedCategoryFilter && String(selectedCategoryFilter).length > 0) {
+                            if (String(animal.type).toLocaleLowerCase() !== String(selectedCategoryFilter).toLocaleLowerCase()) return
+                        }
                         return (<SectionProductListRow key={animal.id} animal={animal} />)
                     })
                 }

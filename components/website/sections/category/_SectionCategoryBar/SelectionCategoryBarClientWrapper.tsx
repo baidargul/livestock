@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
@@ -9,9 +10,8 @@ type Props = {
 
 const SectionCategoryBarClientWrapper = (props: Props) => {
     const [selected, setSelected] = useState<{ name: string, component: any } | null>(null)
-
+    const router = useRouter();
     useEffect(() => {
-        console.log(props.value)
         if (props.value) {
             setSelected(props.categories?.find((category: any) => String(category.name).toLocaleLowerCase() === String(props.value).toLocaleLowerCase()))
         }
@@ -23,13 +23,31 @@ const SectionCategoryBarClientWrapper = (props: Props) => {
             if (props.onChange) {
                 props.onChange(null)
             }
+            UpdateQueryFilter(null)
         } else {
             setSelected(category)
             if (props.onChange) {
                 props.onChange(category)
             }
+            UpdateQueryFilter(String(category.name).toLocaleLowerCase())
         }
     }
+
+    const UpdateQueryFilter = (value: string | null) => {
+        const params = new URLSearchParams(window.location.search);
+
+        if (value) {
+            params.set("category", value);
+        } else {
+            params.delete("category");
+        }
+
+        // FOR Update URL without page reload
+        // router.push(`?${params.toString()}`, { scroll: false });
+
+        // Force full page reload
+        window.location.href = `?${params.toString()}`;
+    };
 
     return (
         <div className='w-full flex justify-between gap-2 items-center'>
