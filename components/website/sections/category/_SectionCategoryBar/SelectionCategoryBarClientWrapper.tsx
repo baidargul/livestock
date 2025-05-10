@@ -9,27 +9,30 @@ type Props = {
 }
 
 const SectionCategoryBarClientWrapper = (props: Props) => {
-    const [selected, setSelected] = useState<{ name: string, component: any } | null>(null)
+    const [selected, setSelected] = useState<{ name: any, component: any } | null>(null)
     const router = useRouter();
     useEffect(() => {
         if (props.value) {
-            setSelected(props.categories?.find((category: any) => String(category.name).toLocaleLowerCase() === String(props.value).toLocaleLowerCase()))
+            const category = (props.categories?.find((category: any) => String(category.name.name).toLocaleLowerCase() === String(props.value).toLocaleLowerCase()))
+            if (category) {
+                setSelected(category)
+            }
         }
     }, [props.value])
 
     const handleSelectCategory = (category: any) => {
-        if (String(category.name).toLocaleLowerCase() === String(selected?.name).toLocaleLowerCase()) {
+        if (category.name.name.toLocaleLowerCase() === selected?.name.name.toLocaleLowerCase()) {
             setSelected(null)
+            UpdateQueryFilter(null)
             if (props.onChange) {
                 props.onChange(null)
             }
-            UpdateQueryFilter(null)
         } else {
             setSelected(category)
+            UpdateQueryFilter(String(category.name.name).toLocaleLowerCase())
             if (props.onChange) {
-                props.onChange(category)
+                props.onChange(category.name.name)
             }
-            UpdateQueryFilter(String(category.name).toLocaleLowerCase())
         }
     }
 
@@ -55,7 +58,7 @@ const SectionCategoryBarClientWrapper = (props: Props) => {
                 props.categories && props.categories.map((category, index) => {
 
                     return (
-                        <div onClick={() => handleSelectCategory(category)} key={index} className={`${selected && selected.name.toLocaleLowerCase() === String(category.name).toLocaleLowerCase() ? "opacity-100" : !selected ? "opacity-100" : "opacity-50 blur-[.5px]"} cursor-pointer transition-all duration-300 ease-in-out`}>
+                        <div onClick={() => handleSelectCategory(category)} key={index} className={`${selected && selected.name.name.toLocaleLowerCase() === category.name.name.toLocaleLowerCase() ? "opacity-100" : !selected ? "opacity-100" : "opacity-50 blur-[.5px]"} cursor-pointer transition-all duration-300 ease-in-out`}>
                             {category.component}
                         </div>
                     )
