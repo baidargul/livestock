@@ -9,7 +9,7 @@ const UserProfileIcon = (props: Props) => {
     return (
         <div>
             <Link href={'/animal/add'}>
-                <Image src={images.chicken.covers[3]} width={40} height={40} layout='fixed' loading='lazy' quality={100} alt='livestock' className='rounded-full object-cover w-10 h-10' />
+                <Image src={images.chickens.covers[3]} width={40} height={40} layout='fixed' loading='lazy' quality={100} alt='livestock' className='rounded-full object-cover w-10 h-10' />
             </Link>
         </div>
     )

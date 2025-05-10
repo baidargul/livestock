@@ -48,7 +48,7 @@ export const images = {
       mobileIcon: mobileIcon,
     },
   },
-  chicken: {
+  chickens: {
     covers: {
       1: img202504202145187037,
       2: img202504202147119137,
@@ -67,7 +67,7 @@ export const images = {
       { name: "Plymouth Rock", images: [chicken, chicken] },
     ],
   },
-  cow: {
+  cows: {
     images: {
       1: cow,
       2: cow1,
@@ -79,7 +79,7 @@ export const images = {
       { name: "Angus", images: [cow, cow] },
     ],
   },
-  dog: {
+  dogs: {
     images: {
       1: dog,
       2: dog1,
@@ -90,7 +90,7 @@ export const images = {
       { name: "Golden Retriever", images: [dog1, dog] },
     ],
   },
-  cat: {
+  cats: {
     images: {
       1: cat,
       2: cat1,
@@ -103,7 +103,7 @@ export const images = {
       { name: "Maine Coon", images: [cat2, cat1] },
     ],
   },
-  goat: {
+  goats: {
     images: {
       1: goat,
       2: goat1,
@@ -116,7 +116,7 @@ export const images = {
       { name: "Alpine", images: [goat1, goat2] },
     ],
   },
-  sheep: {
+  sheeps: {
     images: {
       1: sheep,
       2: sheep1,
@@ -130,7 +130,7 @@ export const images = {
       { name: "Dorset", images: [sheep1, sheep2] },
     ],
   },
-  horse: {
+  horses: {
     images: {
       1: horse,
       2: horse1,
@@ -143,7 +143,7 @@ export const images = {
       { name: "Quarter Horse", images: [horse2, horse1] },
     ],
   },
-  duck: {
+  ducks: {
     images: {
       1: duck,
       2: duck1,
@@ -156,7 +156,7 @@ export const images = {
       { name: "Indian Runner", images: [duck1, duck2] },
     ],
   },
-  rabbit: {
+  rabbits: {
     images: {
       1: rabbit,
       2: rabbit1,

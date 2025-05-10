@@ -12,47 +12,47 @@ const SectionCategoryBar = (props: Props) => {
         {
             id: 1,
             name: "Dogs",
-            image: images.dog.images[1],
+            image: images.dogs.images[1],
         },
         {
             id: 2,
             name: "Cats",
-            image: images.cat.images[1],
+            image: images.cats.images[1],
         },
         {
             id: 3,
             name: "Cows",
-            image: images.cow.images[1],
+            image: images.cows.images[1],
         },
         {
             id: 4,
             name: "Goats",
-            image: images.goat.images[1],
+            image: images.goats.images[1],
         },
         {
             id: 5,
             name: "Sheeps",
-            image: images.sheep.images[1],
+            image: images.sheeps.images[1],
         },
         {
             id: 6,
             name: "Horses",
-            image: images.horse.images[1],
+            image: images.horses.images[1],
         },
         {
             id: 8,
             name: "Chickens",
-            image: images.chicken.images[1],
+            image: images.chickens.images[1],
         },
         {
             id: 9,
             name: "Ducks",
-            image: images.duck.images[1],
+            image: images.ducks.images[1],
         },
         {
             id: 12,
             name: "Rabbits",
-            image: images.rabbit.images[1],
+            image: images.rabbits.images[1],
         },
     ]
 

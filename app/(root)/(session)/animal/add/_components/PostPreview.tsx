@@ -45,10 +45,10 @@ const PostPreview = (props: Props) => {
                 <div className='flex flex-col gap-4 leading-tight tracking-tight text-start'>
                     <div className='grid grid-cols-2 gap-2'>
                         {
-                            props.animal?.images && props.animal?.images.length > 0 && props.animal.images.map((image: ImagePayload) => {
+                            props.animal?.images && props.animal?.images.length > 0 && props.animal.images.map((image: ImagePayload, index: number) => {
 
                                 return (
-                                    <Image src={constructBase64Image(image.base64, image.extension)} priority layout='fixed' width={100} height={100} quality={50} alt="" className='w-full h-28 object-cover rounded-md border border-emerald-800' />
+                                    <Image src={constructBase64Image(image.base64, image.extension)} key={index} priority layout='fixed' width={100} height={100} quality={50} alt="" className='w-full h-28 object-cover rounded-md border border-emerald-800' />
                                 )
                             })
                         }
