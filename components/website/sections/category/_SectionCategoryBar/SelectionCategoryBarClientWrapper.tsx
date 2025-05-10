@@ -50,7 +50,7 @@ const SectionCategoryBarClientWrapper = (props: Props) => {
     };
 
     return (
-        <div className='w-full flex justify-between gap-2 items-center'>
+        <div className='w-full flex justify-between gap-2 items-center overflow-x-auto'>
             {
                 props.categories && props.categories.map((category, index) => {
 
