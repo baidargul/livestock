@@ -70,7 +70,7 @@ const BiddingWrapper = (props: Props) => {
                         <Button className='w-full'>Place Offer</Button>
                     </div>
                 </div>
-                <div onClick={() => handleOpen(true)}>
+                <div onClick={() => handleOpen(true)} className='w-full'>
                     {props.children}
                 </div>
             </div>
