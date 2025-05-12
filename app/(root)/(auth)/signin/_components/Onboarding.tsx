@@ -15,7 +15,7 @@ const Onboarding = (props: Props) => {
         <>
             <div className='heading1 text-primary text-center'>
                 <Image src={images.site.logo.desktopIcon} draggable={false} width={500} height={500} quality={4} alt='livestock' className='select-none pointer-events-none mx-auto -mt-5 w-32 h-32 object-contain' />
-                Welcome to Livestock
+                Welcome to Janwar Markaz
                 <div className='subheading1 text-center'>Apka apni livestock ka sab se behtareen digital partner!</div>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-2 w-full'>

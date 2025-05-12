@@ -18,6 +18,9 @@ async function signup(name: string, email: string, password: string) {
     try {
       const newUser = await prisma.user.create({
         data: { name, email, password },
+        omit: {
+          password: true,
+        },
       });
 
       response.status = 200;
@@ -62,7 +65,7 @@ async function signin(email: string, password: string) {
         email: email,
         password: password,
       },
-      select: { name: true, id: true },
+      select: { name: true, email: true, id: true },
     });
 
     if (!isExits) {

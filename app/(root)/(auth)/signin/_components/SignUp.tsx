@@ -2,6 +2,7 @@ import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
 import { useLoader } from '@/hooks/useLoader'
+import { useSession } from '@/hooks/useSession'
 import { LoaderState } from '@/types/useLoader'
 import React from 'react'
 
@@ -11,6 +12,7 @@ type Props = {
 
 const SignUp = (props: Props) => {
     const setLoading = useLoader((state: LoaderState) => state.setLoading)
+    const setUser = useSession((state: any) => state.setUser)
     const form = {
         name: "",
         email: "",
@@ -21,6 +23,10 @@ const SignUp = (props: Props) => {
         if (!form.name || !form.email || !form.password) return
         setLoading(true)
         const response = await actions.client.user.signup(form.name, form.email, form.password)
+        if (response?.status === 200) {
+            setUser(response.data)
+            props.setStage("signin")
+        }
         setLoading(false)
     }
 

@@ -9,7 +9,7 @@ async function signup(name: string, email: string, password: string) {
     password,
   };
   const response = await axios.post(apiPath + "/signup", data);
-  return response;
+  return response.data;
 }
 
 async function signin(email: string, password: string) {
@@ -19,7 +19,7 @@ async function signin(email: string, password: string) {
     password,
   };
   const response = await axios.post(apiPath + "/signin", data);
-  return response;
+  return response.data;
 }
 
 export const user = {

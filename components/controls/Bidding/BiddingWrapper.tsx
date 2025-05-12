@@ -45,7 +45,7 @@ const BiddingWrapper = (props: Props) => {
                         {
                             props.animal.images && props.animal.images.length > 0 && props.animal.images.map((image: any, index: number) => {
                                 return (
-                                    <Image src={image.image} width={100} height={100} layout='fixed' priority key={index} className='rounded-md border border-emerald-800/10 drop-shadow-[2px]' alt={`${props.animal.title}, ${props.animal.type} - ${props.animal.breed}`} />
+                                    <Image src={image.image} width={100} height={100} layout='fixed' priority key={index} className='rounded-md object-contain border border-emerald-800/10 drop-shadow-[2px]' alt={`${props.animal.title}, ${props.animal.type} - ${props.animal.breed}`} />
                                 )
                             })
                         }

@@ -2,6 +2,7 @@ import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
 import { useLoader } from '@/hooks/useLoader'
+import { useSession } from '@/hooks/useSession'
 import React, { useState } from 'react'
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 
 const SignIn = (props: Props) => {
     const setLoading = useLoader((state: any) => state.setLoading)
+    const setUser = useSession((state: any) => state.setUser)
     const [form, setForm] = useState({
         email: "",
         password: ""
@@ -27,6 +29,9 @@ const SignIn = (props: Props) => {
         if (!form.email || !form.password) return alert("All fields are required")
         setLoading(true)
         const response = await actions.client.user.signin(form.email, form.password)
+        if (response?.status === 200) {
+            setUser(response.data)
+        }
         setLoading(false)
     }
 
