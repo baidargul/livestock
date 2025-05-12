@@ -87,7 +87,35 @@ async function signin(email: string, password: string) {
     return new Response(JSON.stringify(response));
   }
 }
+
+async function signout(session: any) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const deletedSession = await prisma.sessions.deleteMany({
+      where: {
+        id: session.token,
+      },
+    });
+    response.status = 200;
+    response.message = "User signed out successfully";
+    response.data = deletedSession;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return new Response(JSON.stringify(response));
+  }
+}
+
 export const user = {
   signin,
   signup,
+  signout,
 };

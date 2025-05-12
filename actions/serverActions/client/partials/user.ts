@@ -22,7 +22,13 @@ async function signin(email: string, password: string) {
   return response.data;
 }
 
+async function signout(session: any) {
+  const response = await axios.post(apiPath + "/signout", session);
+  return response.data;
+}
+
 export const user = {
   signin,
   signup,
+  signout,
 };
