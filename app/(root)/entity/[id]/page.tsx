@@ -11,6 +11,7 @@ import { ArrowLeftCircleIcon, ClipboardCheckIcon, Trash2Icon } from 'lucide-reac
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
+import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -95,8 +96,11 @@ const page = async (props: Props) => {
                 }</div>
             </div>
             <div className='my-4 flex justify-center items-center w-full'>
-                <Button variant='btn-secondary' className='w-full mx-4'>Direct Engage</Button>
-                <Button className='w-full mx-4'>Buy Now</Button>
+                {/* <Button variant='btn-secondary' className='w-full mx-4'>Direct Engage</Button> */}
+                <BiddingWrapper animal={animal}>
+                    <Button className='w-full mx-4'>Buy Now</Button>
+                </BiddingWrapper>
+                {/* <Button className='w-full mx-4'>Buy Now</Button> */}
             </div>
         </div>
     )
