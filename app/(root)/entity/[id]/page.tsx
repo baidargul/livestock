@@ -95,7 +95,7 @@ const page = async (props: Props) => {
                     })
                 }</div>
             </div>
-            <div className='my-4 px-4 flex justify-center items-center w-full'>
+            <div className='mb-2 px-4 flex justify-center items-center w-full'>
                 {/* <Button variant='btn-secondary' className='w-full mx-4'>Direct Engage</Button> */}
                 <BiddingWrapper animal={animal}>
                     <Button className='w-full'>Buy Now</Button>
