@@ -16,6 +16,7 @@ model User {
   updatedAt DateTime   @updatedAt
   animals   Animal[] // Opposite relation field for linking animals
   sessions  Sessions[]
+  bids      Bids[]
 }
 
 model Animal {
@@ -44,6 +45,7 @@ model Animal {
   deliveryOptions         DeliveryOptions[]
   title                   String?
   description             String?
+  bids                    Bids[]
 
   // Media
   images Json // JSON field to store an array of objects
@@ -56,6 +58,16 @@ model Sessions {
   userId    String?  @db.ObjectId
   user      User?    @relation(fields: [userId], references: [id])
   expiry    DateTime
+  createdAt DateTime @default(now())
+}
+
+model Bids {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  animalId  String?  @db.ObjectId
+  animal    Animal?  @relation(fields: [animalId], references: [id])
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  price     Float
   createdAt DateTime @default(now())
 }
 
