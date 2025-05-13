@@ -3,6 +3,7 @@ import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 const SignIn = (props: Props) => {
     const setLoading = useLoader((state: any) => state.setLoading)
     const setUser = useSession((state: any) => state.setUser)
+    const router = useRouter();
     const [form, setForm] = useState({
         email: "",
         password: ""
@@ -31,6 +33,7 @@ const SignIn = (props: Props) => {
         const response = await actions.client.user.signin(form.email, form.password)
         if (response?.status === 200) {
             setUser(response.data)
+            router.push("/home")
         }
         setLoading(false)
     }
