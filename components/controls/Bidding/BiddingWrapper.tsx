@@ -1,10 +1,11 @@
 'use client'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
+import { useSession } from '@/hooks/useSession'
 import { formalizeText, formatCurrency } from '@/lib/utils'
-import { Animal } from '@prisma/client'
 import Image from 'next/image'
-import React, { useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 
 type Props = {
     children: React.ReactNode
@@ -14,6 +15,9 @@ type Props = {
 const BiddingWrapper = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState(0)
+    const getUser = useSession((state: any) => state.getUser)
+    const router = useRouter()
+    const user = getUser()
 
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
@@ -27,6 +31,14 @@ const BiddingWrapper = (props: Props) => {
     const handleOfferChange = (val: string) => {
         const offer = Number(val)
         setOfferValue(offer)
+    }
+
+    const handlePostOffer = async () => {
+        if (!user.id) {
+            alert("Please sign in to place a bid")
+            router.push("/signin")
+            return
+        }
     }
 
     return (
@@ -66,7 +78,7 @@ const BiddingWrapper = (props: Props) => {
                 </div>
                 <div className='w-full gap-2 mb-2 flex items-center'>
                     <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
-                    <Button className='w-full'>Place Offer</Button>
+                    <Button onClick={handlePostOffer} className='w-full'>Place Offer</Button>
                 </div>
             </div>
             <div onClick={() => handleOpen(true)} className='w-full'>
