@@ -1,5 +1,6 @@
 import Button from '@/components/ui/Button'
 import ImageUploadWrapper from '@/components/wrappers/ImageUploadWrapper'
+import { useLoader } from '@/hooks/useLoader'
 import { constructBase64Image, fileToPayload, ImagePayload } from '@/lib/image'
 import { formalizeText } from '@/lib/utils'
 import { FileImageIcon, Trash } from 'lucide-react'
@@ -14,8 +15,8 @@ type Props = {
 }
 
 const AddMedia = (props: Props) => {
-    const [loading, setLoading] = useState(false)
     const [images, setImages] = useState<any[]>([])
+    const setLoading = useLoader((state: any) => state.setLoading)
 
     useEffect(() => {
         if (props.animal.images) {
@@ -42,6 +43,7 @@ const AddMedia = (props: Props) => {
             alert("There was an error processing your images. Please try again.");
         }
         setLoading(false)
+
     }
 
     const handleRemoveMedia = (index: number) => {
@@ -57,11 +59,6 @@ const AddMedia = (props: Props) => {
 
     return (
         <div className='w-full relative min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4 select-none'>
-            {loading && <div className='fixed top-0 left-0 w-full h-full inset-0 bg-emerald-200/40 backdrop-blur-sm z-50 flex justify-center items-center'>
-                <div className='bg-white font-semibold tracking-wide text-emerald-800 border border-emerald-800 drop-shadow-sm rounded-xl p-4 flex flex-col gap-2 items-center text-center'>
-                    Please wait...
-                </div>
-            </div>}
             <div className='text-xl font-semibold tracking-tight text-center'>Please select 3 images of {formalizeText(props.animal.breed)} {props.animal.type}</div>
             {images.length !== 4 && <ImageUploadWrapper limit={4} onChange={handleAddMedia}>
                 <div className='p-2 bg-emerald-100 cursor-pointer border-emerald-400 flex flex-col justify-center items-center rounded-xl border' style={{ boxShadow: "0px 20px 14px -8px #98d3b5" }}>

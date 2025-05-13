@@ -1,4 +1,5 @@
 import Button from '@/components/ui/Button'
+import { useLoader } from '@/hooks/useLoader'
 import { constructBase64Image, ImagePayload } from '@/lib/image'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
@@ -17,10 +18,11 @@ type Props = {
 const PostPreview = (props: Props) => {
     const router = useRouter()
     const [isPosting, setIsPosting] = useState(false)
-
+    const setLoading = useLoader((state: any) => state.setLoading)
 
     const handleHitApi = async () => {
         setIsPosting(true)
+        setLoading(true)
         const data = {
             ...props.animal,
         }
@@ -30,6 +32,7 @@ const PostPreview = (props: Props) => {
         } else {
             setIsPosting(false)
         }
+        setLoading(false)
     }
 
     const checkQuantity = () => {
