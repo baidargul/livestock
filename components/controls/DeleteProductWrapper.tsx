@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import { useLoader } from '@/hooks/useLoader'
 import React from 'react'
 
 type Props = {
@@ -9,8 +10,10 @@ type Props = {
 }
 
 const DeleteProductWrapper = (props: Props) => {
+    const setLoading = useLoader((state: any) => state.setLoading)
 
     const handleDelete = async () => {
+        setLoading(true)
         const response = await actions.client.posts.removePost(props.id)
         console.log(response)
         if (response.status === 200) {
@@ -20,6 +23,7 @@ const DeleteProductWrapper = (props: Props) => {
                 window.location.replace("/home")
             }
         }
+        setLoading(false)
     }
 
     return (
