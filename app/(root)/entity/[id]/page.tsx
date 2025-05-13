@@ -2,16 +2,13 @@ import { actions } from '@/actions/serverActions/actions'
 import BackNavigator from '@/components/controls/BackNavigator'
 import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
-import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
-import { images } from '@/consts/images'
 import { formalizeText, formatCurrency } from '@/lib/utils'
-import { Animal } from '@prisma/client'
 import { ArrowLeftCircleIcon, ClipboardCheckIcon, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
-import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
+import dynamic from 'next/dynamic'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -23,6 +20,7 @@ export async function generateStaticParams() {
 }
 
 const page = async (props: Props) => {
+    const BiddingWrapper = dynamic(() => import('@/components/controls/Bidding/BiddingWrapper'))
     const { params } = props
     const { id } = await params
 
@@ -33,8 +31,6 @@ const page = async (props: Props) => {
         const totalQuantity = Number(animal.maleQuantityAvailable || 0) + Number(animal.femaleQuantityAvailable || 0)
         return totalQuantity
     }
-
-    const totalQuantity = checkQuantity()
 
     return (
         animal && <div className='relative w-full min-h-[100vh]'>

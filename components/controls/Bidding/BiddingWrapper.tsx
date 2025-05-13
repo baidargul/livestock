@@ -5,7 +5,7 @@ import { useSession } from '@/hooks/useSession'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
@@ -15,9 +15,14 @@ type Props = {
 const BiddingWrapper = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState(0)
+    const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser)
     const router = useRouter()
-    const user = getUser()
+
+    useEffect(() => {
+        const rawUser = getUser();
+        setUser(rawUser);
+    }, []);
 
     const handleOpen = (val: boolean) => {
         setIsOpen(val)

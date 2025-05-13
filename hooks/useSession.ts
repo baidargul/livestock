@@ -1,8 +1,14 @@
 import { create } from "zustand";
 
 export const useSession = create((set) => ({
-  user: null,
-  getUser: () => JSON.parse(localStorage.getItem("session") || "{}"),
+  user:
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("user") || "null")
+      : null,
+  getUser: () => {
+    if (typeof window === "undefined") return null;
+    return JSON.parse(localStorage.getItem("user") || "null");
+  },
   logoutUser: () => {
     set({ user: null });
     localStorage.removeItem("session");
