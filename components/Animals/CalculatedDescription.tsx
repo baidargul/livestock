@@ -100,7 +100,7 @@ const PerSet = (animal: Animal) => {
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Selling</td>
                             <td className="py-2">
-                                <span className='tracking-wider'>{formalizeText(animal.breed)} {animal.type} Sets</span>
+                                <span className='tracking-wider'>{formalizeText(animal.breed)} {animal.type} Set</span>
                                 <span className="block text-gray-600 text-xs mt-1">
                                     Complete set of {quantity} available.
                                 </span>
