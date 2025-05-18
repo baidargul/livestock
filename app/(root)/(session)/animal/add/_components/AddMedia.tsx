@@ -28,6 +28,7 @@ const AddMedia = (props: Props) => {
         setLoading(true)
         if (files.length > 3) {
             alert("You can only upload 3 files")
+            setLoading(false)
             return
         }
         try {
