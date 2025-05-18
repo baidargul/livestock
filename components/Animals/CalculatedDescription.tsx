@@ -122,7 +122,7 @@ const PerSet = (animal: Animal) => {
                             <td className="py-2">
                                 <div className="flex flex-col">
                                     <span className="font-semibold">
-                                        {formatCurrency(animal.price * quantity)}
+                                        {formatCurrency(animal.price)}
                                     </span>
                                 </div>
                             </td>
