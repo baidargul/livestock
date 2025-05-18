@@ -20,7 +20,6 @@ const CalculatedDescription = (props: Props) => {
 }
 
 export default CalculatedDescription
-
 const PerWeight = (animal: Animal) => {
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
     return (
@@ -28,13 +27,14 @@ const PerWeight = (animal: Animal) => {
             <div className='leading-5' >
                 <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> by {animal.priceUnit?.toLocaleLowerCase()}.</span>
                 <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} with an average weight of {animal.averageWeight} {animal.weightUnit?.toLocaleLowerCase()} each.</span>
-                {animal.averageAge && animal.averageAge > 0 && <span> Average age: {animal.averageAge} {animal.ageUnit?.toLocaleLowerCase()}.</span>}
+                {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                    <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
+                )}
                 <span> My {String(animal.priceUnit).toLocaleLowerCase()} offer is {formatCurrency(animal.price ?? 0)} which makes a total of <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price * quantity * Number(animal.averageWeight ?? 0))}</span></span>
             </div >
             <div className="w-full my-4 bg-slate-50 px-2 border-b-4 border-slate-400/20 overflow-x-auto">
                 <table className="w-full border-collapse">
                     <tbody className="text-sm">
-                        {/* Selling Info Row */}
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Selling</td>
                             <td className="py-2">
@@ -45,7 +45,6 @@ const PerWeight = (animal: Animal) => {
                             </td>
                         </tr>
 
-                        {/* Quantity & Weight Row */}
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Details</td>
                             <td className="py-2">
@@ -56,16 +55,15 @@ const PerWeight = (animal: Animal) => {
                                     <div>
                                         Avg. {animal.averageWeight} {animal.weightUnit?.toLowerCase()}
                                     </div>
-                                    {animal.averageAge && animal.averageAge > 0 && (
+                                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
-                                            Avg. age: {animal.averageAge} {animal.ageUnit?.toLowerCase()}
+                                            Avg. age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
                                 </div>
                             </td>
                         </tr>
 
-                        {/* Pricing Row */}
                         <tr>
                             <td className="py-2 pr-4 font-medium">Offer</td>
                             <td className="py-2">
@@ -91,13 +89,14 @@ const PerSet = (animal: Animal) => {
         <div>
             <div className='leading-5'>
                 <span>I want to sell <span className='font-semibold'> {quantity} {formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> as a complete set.</span>
-                {animal.averageAge && animal.averageAge > 0 && <span> Average age: {animal.averageAge} {animal.ageUnit?.toLocaleLowerCase()}.</span>}
+                {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                    <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
+                )}
                 <span> My offer is <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price)}</span> as whole set.</span>
             </div>
             <div className="w-full my-4 bg-slate-50 px-2 border-b-4 border-slate-400/20 overflow-x-auto">
                 <table className="w-full border-collapse">
                     <tbody className="text-sm">
-                        {/* Selling Info Row */}
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Selling</td>
                             <td className="py-2">
@@ -108,27 +107,25 @@ const PerSet = (animal: Animal) => {
                             </td>
                         </tr>
 
-                        {/* Set Details Row */}
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Details</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
-                                    <div>
+                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div>
                                         <span className="font-semibold">{animal.maleQuantityAvailable}</span> Male
-                                    </div>
-                                    <div>
+                                    </div>}
+                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div>
                                         <span className="font-semibold">{animal.femaleQuantityAvailable}</span> Female
-                                    </div>
-                                    {animal.averageAge && animal.averageAge > 0 && (
+                                    </div>}
+                                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
-                                            Avg. age: {animal.averageAge} {animal.ageUnit?.toLowerCase()}
+                                            Avg. age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
                                 </div>
                             </td>
                         </tr>
 
-                        {/* Pricing Row */}
                         <tr>
                             <td className="py-2 pr-4 font-medium">Pricing</td>
                             <td className="py-2">
@@ -153,14 +150,15 @@ const PerPC = (animal: Animal) => {
         <div>
             <div className='leading-5'>
                 <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> individually.</span>
-                {animal.averageAge && animal.averageAge > 0 && <span> Average age: {animal.averageAge} {animal.ageUnit?.toLocaleLowerCase()}.</span>}
+                {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                    <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
+                )}
                 <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} available for sale.</span>
                 <span> My per piece price is {formatCurrency(animal.price ?? 0)} totaling <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price * quantity)}</span></span>
             </div>
             <div className="w-full my-4 bg-slate-50 px-2 border-b-4 border-slate-400/20 overflow-x-auto">
                 <table className="w-full border-collapse">
                     <tbody className="text-sm">
-                        {/* Selling Info Row */}
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Selling</td>
                             <td className="py-2">
@@ -171,27 +169,25 @@ const PerPC = (animal: Animal) => {
                             </td>
                         </tr>
 
-                        {/* Quantity Row */}
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Details</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
-                                    <div>
+                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div>
                                         <span className="font-semibold">{animal.maleQuantityAvailable}</span> Male
-                                    </div>
-                                    <div>
+                                    </div>}
+                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div>
                                         <span className="font-semibold">{animal.femaleQuantityAvailable}</span> Female
-                                    </div>
-                                    {animal.averageAge && animal.averageAge > 0 && (
+                                    </div>}
+                                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
-                                            Avg. age: {animal.averageAge} {animal.ageUnit?.toLowerCase()}
+                                            Age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
                                 </div>
                             </td>
                         </tr>
 
-                        {/* Pricing Row */}
                         <tr>
                             <td className="py-2 pr-4 font-medium">Pricing</td>
                             <td className="py-2">
