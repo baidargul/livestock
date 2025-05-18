@@ -25,26 +25,25 @@ const AddMedia = (props: Props) => {
     }, [props.animal])
 
     const handleAddMedia = async (files: File[]) => {
-        setLoading(true)
         if (files.length > 3) {
             alert("You can only upload 3 files")
-            setLoading(false)
             return
+        } else {
+            setLoading(true)
+            try {
+                // Convert all files to payloads in parallel
+                const payloads = await Promise.all(files.map(fileToPayload));
+
+                // Set into your animal state
+                props.setAnimal({ ...props.animal, images: payloads });
+                setImages(payloads);
+
+            } catch (error) {
+                console.error("Error converting files:", error);
+                alert("There was an error processing your images. Please try again.");
+            }
+            setLoading(false)
         }
-        try {
-            // Convert all files to payloads in parallel
-            const payloads = await Promise.all(files.map(fileToPayload));
-
-            // Set into your animal state
-            props.setAnimal({ ...props.animal, images: payloads });
-            setImages(payloads);
-
-        } catch (error) {
-            console.error("Error converting files:", error);
-            alert("There was an error processing your images. Please try again.");
-        }
-        setLoading(false)
-
     }
 
     const handleRemoveMedia = (index: number) => {
