@@ -9,6 +9,7 @@ import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
 import dynamic from 'next/dynamic'
+import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -62,16 +63,17 @@ const page = async (props: Props) => {
                 </div>
             </div>
             <div className='mt-40 p-4'>
-                <h2 className='text-lg font-bold text-gray-800'>{animal.title}</h2>
-                <p className='text-sm text-gray-600'>{animal.description}</p>
-                {animal.priceUnit !== "per Set" && animal.priceUnit !== "per Kg" && <div>
+                <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
+                <p className='text-lg text-gray-600'>{animal.description}</p>
+                {/* {animal.priceUnit !== "per Set" && animal.priceUnit !== "per Kg" && <div>
                     <div> {formalizeText(animal.breed)} {`${animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(animal.price ?? 0) * checkQuantity())}</span></div>
-                </div>}
-                {animal.priceUnit === "per Kg" && <div className='flex flex-col gap-1'>
+                </div>} */}
+                {/* {animal.priceUnit === "per Kg" && <div className='flex flex-col gap-1'>
                     <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{animal.averageWeight} {animal.weightUnit}</span></div>
                     <div className=''>Price per {animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(animal.averageWeight) * Number(animal.price ?? 0))}</span></div>
                     <div className=''> {formalizeText(animal.breed)} {`${animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(animal.averageWeight) * Number(animal.price ?? 0) * checkQuantity())}</span></div>
-                </div>}
+                </div>} */}
+                <CalculatedDescription animal={animal} />
             </div>
             <div className='px-4 flex flex-col gap-4'>
                 <div className='flex flex-wrap justify-start items-start gap-2'>
@@ -93,9 +95,6 @@ const page = async (props: Props) => {
                 }</div>
             </div>
             <div className='px-4 my-2 flex flex-col gap-1 justify-end items-end'>
-                <div className='font-bold text-xl'>
-                    {calculatePricing(animal).text}
-                </div>
                 {/* <div className='select-none p-1 bg-green-100 rounded-md scale-75 origin-top-right border border-green-300 w-fit font-bold tracking-wider text-green-800'>
                     {animal.priceUnit && <span className='text-base uppercase '>{`${animal.priceUnit === "per Set" ? "Whole set" : animal.priceUnit}`}</span>}
                 </div> */}
