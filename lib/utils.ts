@@ -15,31 +15,41 @@ export function formatCurrency(amount: number, ignoreSymbol?: boolean) {
 
 export function calculatePricing(animal: Animal) {
   const quantity =
-    Number(animal.maleQuantityAvailable) +
-    Number(animal.femaleQuantityAvailable);
+    Number(animal.maleQuantityAvailable || 0) +
+    Number(animal.femaleQuantityAvailable || 0);
+
+  const price = Number(animal.price || 0);
+  const priceUnit = String(animal.priceUnit).toLowerCase();
+  const weightUnit = String(animal.weightUnit).toLowerCase();
+  const avgWeight = Number(animal.averageWeight || 0);
+
   let priceString = "";
-  let price = 0;
-  let priceUnit = String(animal.priceUnit);
-  if (
-    priceUnit === `per ${animal.weightUnit}` ||
-    priceUnit === `per ${animal.weightUnit}`
-  ) {
-    price = animal.price * Number(animal.averageWeight ?? 0);
-    priceString = `Estimated weight: ${
-      Number(animal.averageWeight ?? 0) * quantity
-    } ${String(animal.weightUnit ?? "")
-      .replace("per ", "")
-      .toLowerCase()} - ${formatCurrency(price * Number(quantity))}.`;
-    price = price * quantity;
-  } else if (priceUnit === "per set") {
-    price = animal.price;
-    priceString = `Whole set at ${formatCurrency(price)}.`;
-  } else if (priceUnit === "per piece") {
-    price = animal.price * quantity;
-    priceString = `${quantity} ${formalizeText(animal.breed)} ${
+  let totalPrice = 0;
+
+  if (priceUnit === `per ${weightUnit}`) {
+    const totalWeight = avgWeight * quantity;
+    totalPrice = price * totalWeight;
+    priceString = `${quantity} ${formalizeText(
       animal.type
-    } at ${formatCurrency(price)}.`;
+    )} (${totalWeight}${weightUnit}) · ${formatCurrency(totalPrice)}`;
+  } else if (priceUnit === "per set") {
+    totalPrice = price * quantity;
+    priceString = `${quantity} set${
+      quantity !== 1 ? "s" : ""
+    } · ${formatCurrency(totalPrice)}`;
+  } else if (priceUnit === "per piece") {
+    totalPrice = price * quantity;
+    priceString = `${quantity} piece${
+      quantity !== 1 ? "s" : ""
+    } · ${formatCurrency(totalPrice)}`;
+  } else {
+    totalPrice = price;
+    priceString = `Fixed price · ${formatCurrency(totalPrice)}`;
   }
 
-  return { price: price, text: priceString };
+  return {
+    price: Math.round(totalPrice * 100) / 100, // Ensure 2 decimal places
+    text: priceString,
+    unit: priceUnit,
+  };
 }

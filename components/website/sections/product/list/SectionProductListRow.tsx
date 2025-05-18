@@ -1,5 +1,5 @@
 import RatingBar from '@/components/website/ratings/RatingBar'
-import { formalizeText, formatCurrency } from '@/lib/utils'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import { SquareUserIcon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -49,7 +49,7 @@ const SectionProductListRow = (props: Props) => {
                         </div>
                     </div>
                     <div className='text-xl mt-2 text-emerald-600 tracking-wide font-bold'>
-                        {formatCurrency(props.animal.price * totalQuantity * (props.animal.priceUnit === "per Kg" ? Number(props.animal.averageWeight) : 1))}
+                        {formatCurrency(calculatePricing(props.animal).price)}
                     </div>
                 </div>
             </div>
