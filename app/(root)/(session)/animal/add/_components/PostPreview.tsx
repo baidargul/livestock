@@ -72,7 +72,7 @@ const PostPreview = (props: Props) => {
                             {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
                             {props.animal.maleQuantityAvailable && props.animal.femaleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && props.animal.femaleQuantityAvailable > 0 && <label> and </label>} {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className='text-black/80 text-base'>{props.animal.femaleQuantityAvailable} Female</label>}
                             <label> {props.animal.breed} {props.animal.type}(s).</label>
-                            {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}s</label> in total.</div>}
+                            {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}</label> in total.</div>}
                             <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</label></div>
                             <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>
                             <div>{
