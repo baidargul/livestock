@@ -3,8 +3,8 @@ import BackNavigator from '@/components/controls/BackNavigator'
 import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Button from '@/components/ui/Button'
-import { formalizeText, formatCurrency } from '@/lib/utils'
-import { ArrowLeftCircleIcon, ClipboardCheckIcon, Trash2Icon } from 'lucide-react'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
+import { ArrowLeftCircleIcon, ClipboardCheckIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
@@ -85,11 +85,20 @@ const page = async (props: Props) => {
                 </div>
                 <div className='flex justify-evenly items-center my-4 w-full'>{
                     animal.deliveryOptions.map((option: any) => {
+                        const Icon = String(option).toLocaleLowerCase() === "self_pickup" ? SquareUserIcon : TruckIcon
                         return (
-                            <div key={option} className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Cargo delivery"}</div>
+                            <div key={option} className='flex gap-1 items-center'><Icon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Cargo delivery"}</div>
                         )
                     })
                 }</div>
+            </div>
+            <div className='px-4 my-2 flex flex-col gap-1 justify-end items-end'>
+                <div className='font-bold text-xl'>
+                    {calculatePricing(animal).text}
+                </div>
+                {/* <div className='select-none p-1 bg-green-100 rounded-md scale-75 origin-top-right border border-green-300 w-fit font-bold tracking-wider text-green-800'>
+                    {animal.priceUnit && <span className='text-base uppercase '>{`${animal.priceUnit === "per Set" ? "Whole set" : animal.priceUnit}`}</span>}
+                </div> */}
             </div>
             <div className='mb-2 px-4 flex justify-center items-center w-full'>
                 {/* <Button variant='btn-secondary' className='w-full mx-4'>Direct Engage</Button> */}
