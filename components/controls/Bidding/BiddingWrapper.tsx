@@ -87,7 +87,7 @@ const BiddingWrapper = (props: Props) => {
                         <Textbox label='Offer Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
                     </div>
                 </div>
-                <div className='w-full fixed bottom-0 left-0 p-1 px-2 gap-2 flex items-center'>
+                <div className='w-full fixed bottom-2 left-0 p-1 px-4 gap-2 flex items-center'>
                     <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
                     <Button onClick={handlePostOffer} className='w-full'>Place Offer</Button>
                 </div>
