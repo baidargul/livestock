@@ -1,8 +1,9 @@
 'use client'
+import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
 import { useSession } from '@/hooks/useSession'
-import { formalizeText, formatCurrency } from '@/lib/utils'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +24,10 @@ const BiddingWrapper = (props: Props) => {
         const rawUser = getUser();
         setUser(rawUser);
     }, []);
+
+    useEffect(() => {
+        setOfferValue(calculatePricing(props.animal).price)
+    }, [props.animal])
 
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
@@ -48,7 +53,7 @@ const BiddingWrapper = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed top-40 flex flex-col justify-between gap-2 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[80%] left-0 rounded-t-xl bg-white z-20 p-4`}>
+            <div className={`fixed bottom-0 flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[80%] left-0 rounded-t-xl bg-white z-20 p-4`}>
                 <div className='flex flex-col gap-2'>
                     <div>
                         <div className='text-xl font-semibold'>
@@ -68,20 +73,21 @@ const BiddingWrapper = (props: Props) => {
                         }
                     </div>
                     <div>
-                        {props.animal.priceUnit !== "per Set" && props.animal.priceUnit !== "per Kg" && <div>
+                        {/* {props.animal.priceUnit !== "per Set" && props.animal.priceUnit !== "per Kg" && <div>
                             <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                        </div>}
-                        {props.animal.priceUnit === "per Kg" && <div className='flex flex-col gap-1'>
+                        </div>} */}
+                        {/* {props.animal.priceUnit === "per Kg" && <div className='flex flex-col gap-1'>
                             <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
                             <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
                             <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                        </div>}
+                        </div>} */}
+                        <CalculatedDescription animal={props.animal} />
                     </div>
                     <div className='my-4'>
-                        <Textbox label='Offer Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center' />
+                        <Textbox label='Offer Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
                     </div>
                 </div>
-                <div className='w-full gap-2 mb-2 flex items-center'>
+                <div className='w-full fixed bottom-0 left-0 p-1 px-2 gap-2 flex items-center'>
                     <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
                     <Button onClick={handlePostOffer} className='w-full'>Place Offer</Button>
                 </div>
