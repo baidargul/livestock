@@ -23,6 +23,7 @@ const BiddingWrapper = (props: Props) => {
     useEffect(() => {
         const rawUser = getUser();
         setUser(rawUser);
+        setOfferValue(calculatePricing(props.animal).price)
     }, []);
 
     useEffect(() => {
