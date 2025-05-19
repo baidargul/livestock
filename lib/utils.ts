@@ -33,7 +33,7 @@ export function calculatePricing(animal: Animal) {
       animal.type
     )} (${totalWeight}${weightUnit}) · ${formatCurrency(totalPrice)}`;
   } else if (priceUnit === "per set") {
-    totalPrice = price * quantity;
+    totalPrice = price;
     priceString = `${quantity} set${
       quantity !== 1 ? "s" : ""
     } · ${formatCurrency(totalPrice)}`;

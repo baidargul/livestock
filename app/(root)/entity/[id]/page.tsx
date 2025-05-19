@@ -65,14 +65,6 @@ const page = async (props: Props) => {
             <div className='mt-40 p-4'>
                 <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
                 <p className='text-lg text-gray-600'>{animal.description}</p>
-                {/* {animal.priceUnit !== "per Set" && animal.priceUnit !== "per Kg" && <div>
-                    <div> {formalizeText(animal.breed)} {`${animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(animal.price ?? 0) * checkQuantity())}</span></div>
-                </div>} */}
-                {/* {animal.priceUnit === "per Kg" && <div className='flex flex-col gap-1'>
-                    <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{animal.averageWeight} {animal.weightUnit}</span></div>
-                    <div className=''>Price per {animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(animal.averageWeight) * Number(animal.price ?? 0))}</span></div>
-                    <div className=''> {formalizeText(animal.breed)} {`${animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(animal.averageWeight) * Number(animal.price ?? 0) * checkQuantity())}</span></div>
-                </div>} */}
                 <CalculatedDescription animal={animal} />
             </div>
             <div className='px-4 flex flex-col gap-4'>

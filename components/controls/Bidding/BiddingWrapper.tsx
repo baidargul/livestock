@@ -53,7 +53,7 @@ const BiddingWrapper = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed bottom-0 flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[80%] left-0 rounded-t-xl bg-white z-20 p-4`}>
+            <div className={`fixed bottom-0 flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[90%] left-0 rounded-t-xl bg-white z-20 p-4`}>
                 <div className='flex flex-col gap-2'>
                     <div>
                         <div className='text-xl font-semibold'>
