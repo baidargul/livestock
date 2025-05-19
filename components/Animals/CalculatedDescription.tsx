@@ -117,7 +117,7 @@ const PerSet = (animal: Animal) => {
                                     {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div>
                                         <span className="font-semibold">{animal.femaleQuantityAvailable}</span> Female
                                     </div>}
-                                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                                    {animal.ageUnit && animal.ageUnit.length > 0 && (animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
                                             Avg. age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
@@ -173,13 +173,13 @@ const PerPC = (animal: Animal) => {
                             <td className="py-2 pr-4 font-medium">Details</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
-                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div>
+                                    {animal?.maleQuantityAvailable !== 0 && <div>
                                         <span className="font-semibold">{animal.maleQuantityAvailable}</span> Male
                                     </div>}
-                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div>
+                                    {animal?.femaleQuantityAvailable !== 0 && <div>
                                         <span className="font-semibold">{animal.femaleQuantityAvailable}</span> Female
                                     </div>}
-                                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                                    {(animal?.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
                                             Age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>

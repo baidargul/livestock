@@ -92,7 +92,7 @@ const BiddingWrapper = (props: Props) => {
                     </div>
                     <div className=' flex items-center gap-2'>
                         <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
-                        <Button onClick={handlePostOffer} className='w-full'>Place Offer</Button>
+                        <Button onClick={handlePostOffer} disabled={offerValue === 0} className='w-full'>Place Offer</Button>
                     </div>
                 </div>
             </div>
