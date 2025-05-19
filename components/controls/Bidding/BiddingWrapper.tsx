@@ -3,7 +3,7 @@ import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
 import { useSession } from '@/hooks/useSession'
-import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
+import { calculatePricing, convertCurrencyToWords, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -88,6 +88,7 @@ const BiddingWrapper = (props: Props) => {
                 <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
                     <div className='my-4'>
                         <Textbox label='Offer Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
+                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
                     </div>
                     <div className=' flex items-center gap-2'>
                         <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
