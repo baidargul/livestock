@@ -59,7 +59,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
     }
 
     return (
-        <div className={`${loading ? "pointer-events-none opacity-20" : ""} fixed top-0 right-0 w-full h-full bg-white z-20 p-2 transition-all duration-200 ease-in-out ${isToggled ? "translate-x-0" : "translate-x-full"}`}>
+        <div className={`${loading ? "pointer-events-none opacity-0" : ""} fixed top-0 right-0 w-full h-full bg-white z-20 p-2 transition-all duration-200 ease-in-out ${isToggled ? "translate-x-0" : "translate-x-full"}`}>
             <div>
                 <div className='font-bold px-2 tracking-wider text-2xl flex justify-between items-center'>
                     <div>Menu</div>
