@@ -37,8 +37,8 @@ const SectionProductListRow = (props: Props) => {
                         <div className='font-medium'>{totalQuantity}</div> <div className='font-medium'>{`${formalizeText(props.animal?.type)} ${props.animal?.breed}`}</div>
                     </div>
                     <div>
-                        {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <span className='text-sm tracking-tight'>{props.animal?.maleQuantityAvailable} Male</span>}
-                        {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <span className='text-sm tracking-tight'> {props.animal?.femaleQuantityAvailable} Female</span>}
+                        {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable !== 0 && <span className='text-sm tracking-tight'>{props.animal?.maleQuantityAvailable} Male</span>}
+                        {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable !== 0 && <span className='text-sm tracking-tight'> {props.animal?.femaleQuantityAvailable} Female</span>}
                     </div>
                     <div className='flex gap-1 items-center my-2'>
                         <div className='font-medium w-[70%] tracking-tight text-base leading-4'>
