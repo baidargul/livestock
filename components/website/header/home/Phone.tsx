@@ -2,6 +2,7 @@ import React from 'react'
 import SiteLogo from '../../logo/SiteLogo'
 import UserProfileIcon from '../../profile/Icon'
 import ProductSearchBar from '../../searchbar/ProductSearchBar'
+import Username from './_components/Username'
 
 type Props = {}
 
@@ -12,8 +13,8 @@ const PhoneHeaderHome = (props: Props) => {
                 <div className='flex items-center gap-2'>
                     <SiteLogo />
                     <div className=''>
-                        <div className='heading2'>Hello, Mishra</div>
-                        <div className='subheading1 -mt-1'>Search your companion</div>
+                        <div className='heading2'><span className='tracking-tight'>Hello,</span> <Username /></div>
+                        <div className='subheading1 -mt-1'>Search for a new animal</div>
                     </div>
                 </div>
                 <div>

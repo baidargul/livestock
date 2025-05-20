@@ -4,7 +4,7 @@ import Textbox from '@/components/ui/Textbox'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     setStage: (val: signInStages) => void
@@ -13,11 +13,20 @@ type Props = {
 const SignIn = (props: Props) => {
     const setLoading = useLoader((state: any) => state.setLoading)
     const setUser = useSession((state: any) => state.setUser)
+    const getUser = useSession((state: any) => state.getUser)
     const router = useRouter();
     const [form, setForm] = useState({
         email: "",
         password: ""
     })
+
+    useEffect(() => {
+        const rawUser = getUser()
+        if (rawUser) {
+            setUser(rawUser)
+            router.push("/home")
+        }
+    }, [])
 
     const handleEmailChange = (val: string) => {
         setForm((prev) => ({ ...prev, email: val }))

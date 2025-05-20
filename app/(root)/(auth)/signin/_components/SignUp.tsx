@@ -5,7 +5,7 @@ import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
 import { LoaderState } from '@/types/useLoader'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     setStage: (val: signInStages) => void
@@ -14,12 +14,21 @@ type Props = {
 const SignUp = (props: Props) => {
     const setLoading = useLoader((state: LoaderState) => state.setLoading)
     const setUser = useSession((state: any) => state.setUser)
+    const getUser = useSession((state: any) => state.getUser)
     const router = useRouter();
     const form = {
         name: "",
         email: "",
         password: ""
     }
+
+    useEffect(() => {
+        const rawUser = getUser()
+        if (rawUser) {
+            setUser(rawUser)
+            router.push("/home")
+        }
+    }, [])
 
     const handleSignUp = async () => {
         if (!form.name || !form.email || !form.password) return

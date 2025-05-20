@@ -3,11 +3,11 @@ import { create } from "zustand";
 export const useSession = create((set) => ({
   user:
     typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("user") || "null")
+      ? JSON.parse(localStorage.getItem("session") || "null")
       : null,
   getUser: () => {
     if (typeof window === "undefined") return null;
-    return JSON.parse(localStorage.getItem("user") || "null");
+    return JSON.parse(localStorage.getItem("session") || "null");
   },
   logoutUser: () => {
     set({ user: null });
