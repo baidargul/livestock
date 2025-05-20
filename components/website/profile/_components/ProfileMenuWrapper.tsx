@@ -87,7 +87,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                         </div>
                     </div>
                     <div className='grid grid-cols-2 gap-2'>
-                        <div className='cursor-pointer mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
+                        <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
                             <Link href={'/animal/add'}>
                                 <div className='flex flex-col gap-2 items-start'>
                                     <div>
@@ -100,7 +100,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                 </div>
                             </Link>
                         </div>
-                        <div className='cursor-pointer mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
+                        <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
                             <Link href={'/home'}>
                                 <div className='flex flex-col gap-2 items-start'>
                                     <div>
