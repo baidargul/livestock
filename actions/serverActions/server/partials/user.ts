@@ -23,8 +23,6 @@ async function signup(name: string, email: string, password: string) {
         },
       });
 
-      console.log(newUser);
-
       response.status = 200;
       response.message = "User created successfully";
       response.data = newUser;
