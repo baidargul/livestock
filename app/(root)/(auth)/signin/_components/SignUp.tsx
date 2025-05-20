@@ -39,6 +39,9 @@ const SignUp = (props: Props) => {
             props.setStage("signin")
             router.push("/home")
 
+        } else if (response?.status === 402) {
+            alert("User with this email already exists")
+            props.setStage("signin")
         }
         setLoading(false)
     }

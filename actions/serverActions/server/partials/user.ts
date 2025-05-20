@@ -29,7 +29,7 @@ async function signup(name: string, email: string, password: string) {
       return response;
     } catch (e: any) {
       if (e.code === "P2002") {
-        response.status = 400;
+        response.status = 402;
         response.message = "User with this email already exists";
         response.data = null;
         return response;
