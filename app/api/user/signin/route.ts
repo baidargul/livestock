@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { actions } from "@/actions/serverActions/actions";
 import { NextRequest } from "next/server";
 
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
     response = await actions.server.user.signin(email, password);
     if (response.status === 200) {
       const sevenDaysUpFront = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      const token = await prisma?.sessions.create({
+      const token = await prisma.sessions.create({
         data: {
           userId: response.data.id,
           expiry: sevenDaysUpFront,
