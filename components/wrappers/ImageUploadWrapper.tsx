@@ -16,13 +16,12 @@ const ImageUploadWrapper = (props: Props) => {
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const selectedFiles = Array.from(e.target.files)
+            let selectedFiles = Array.from(e.target.files)
             if (props.limit && selectedFiles.length > props.limit) {
-                alert(`You can only upload ${props.limit} files only`)
-                return
+                selectedFiles = selectedFiles.slice(0, props.limit)
             }
             if (props.onChange) {
-                props.onChange(selectedFiles)
+                props.onChange(selectedFiles.slice(0, props.limit))
             }
         }
         if (txtRef.current) {
