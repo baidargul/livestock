@@ -37,7 +37,7 @@ const AddMedia = (props: Props) => {
             // Set into your animal state
             const prevAnimals = props.animal.images || []
             const newImages = [...prevAnimals, ...payloads]
-            props.setAnimal({ ...props.animal, images: newImages });
+            props.setAnimal({ ...props.animal, images: newImages.slice(0, 3) });
             setImages(payloads);
 
         } catch (error) {
