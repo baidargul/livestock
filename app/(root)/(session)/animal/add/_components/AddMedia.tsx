@@ -1,4 +1,5 @@
 import Button from '@/components/ui/Button'
+import SiteLogo from '@/components/website/logo/SiteLogo'
 import ImageUploadWrapper from '@/components/wrappers/ImageUploadWrapper'
 import { useLoader } from '@/hooks/useLoader'
 import { constructBase64Image, fileToPayload, ImagePayload } from '@/lib/image'
@@ -26,24 +27,24 @@ const AddMedia = (props: Props) => {
 
     const handleAddMedia = async (files: File[]) => {
         if (files.length > 3) {
-            alert("You can only upload 3 files")
-            return
-        } else {
-            setLoading(true)
-            try {
-                // Convert all files to payloads in parallel
-                const payloads = await Promise.all(files.map(fileToPayload));
-
-                // Set into your animal state
-                props.setAnimal({ ...props.animal, images: payloads });
-                setImages(payloads);
-
-            } catch (error) {
-                console.error("Error converting files:", error);
-                alert("There was an error processing your images. Please try again.");
-            }
-            setLoading(false)
+            files = files.slice(0, 3)
         }
+        setLoading(true)
+        try {
+            // Convert all files to payloads in parallel
+            const payloads = await Promise.all(files.map(fileToPayload));
+
+            // Set into your animal state
+            props.setAnimal({ ...props.animal, images: payloads });
+            setImages(payloads);
+
+        } catch (error) {
+            console.error("Error converting files:", error);
+            alert("There was an error processing your images. Please try again.");
+        }
+        setLoading(false)
+
+
     }
 
     const handleRemoveMedia = (index: number) => {
@@ -60,10 +61,11 @@ const AddMedia = (props: Props) => {
     return (
         <div className='w-full relative min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4 select-none'>
             <div className='text-xl font-semibold tracking-tight text-center'>Please select 3 images of {formalizeText(props.animal.breed)} {props.animal.type}</div>
-            {images.length !== 4 && <ImageUploadWrapper limit={4} onChange={handleAddMedia}>
-                <div className='p-2 bg-emerald-100 cursor-pointer border-emerald-400 flex flex-col justify-center items-center rounded-xl border' style={{ boxShadow: "0px 20px 14px -8px #98d3b5" }}>
-                    <FileImageIcon className='w-28 h-28 text-emerald-800' />
-                    <div className='text-xl font-bold font-sans text-emerald-800'>Select Images</div>
+            {images.length !== 4 && <ImageUploadWrapper limit={3} onChange={handleAddMedia}>
+                <div className='p-4 border border-zinc-200 px-6 cursor-pointer  flex flex-col justify-center items-center rounded-xl' style={{ boxShadow: "0px 20px 14px -8px #98d3b5" }}>
+                    <SiteLogo size="lg" />
+                    <div className='text-xl font-bold font-sans text-emerald-800 tracking-tight'>Select Images</div>
+                    <div className='text-sm'>You can add <span className='font-semibold'>3 images</span> per post.</div>
                 </div>
             </ImageUploadWrapper>}
             {images && images.length > 0 && <div className='flex flex-col gap-2 w-full'>
