@@ -1,6 +1,6 @@
 'use client'
 import { Animal } from '@prisma/client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SelectAnimal from './_components/SelectAnimal'
 import SelectBreed from './_components/SelectBreed'
 import SelectAgeGenderWeight from './_components/SelectAgeGenderWeight'
@@ -8,12 +8,34 @@ import AddMedia from './_components/AddMedia'
 import TitleAndDescription from './_components/TitleAndDescription'
 import PriceAndDelivery from './_components/PriceAndDelivery'
 import PostPreview from './_components/PostPreview'
+import { useSession } from '@/hooks/useSession'
+import { useRouter } from 'next/navigation'
+import { useLoader } from '@/hooks/useLoader'
 
 type Props = {}
 
 const page = (props: Props) => {
     const [animal, setAnimal] = useState<Animal | null>()
     const [currentScreen, setCurrentScreen] = useState(1)
+    const [user, setUser] = useState<any>(null)
+    const getuser = useSession((state: any) => state.getUser)
+    const setLoading = useLoader((state: any) => state.setLoading)
+
+    const router = useRouter()
+
+    useEffect(() => {
+        setLoading(true)
+        const rawUser = getuser()
+        if (rawUser) {
+            setUser(rawUser)
+        } else {
+            setUser(null)
+        }
+        if (!rawUser) {
+            router.push('/home')
+        }
+        setLoading(false)
+    }, [currentScreen, animal])
 
     const handleMoveNext = () => {
         setCurrentScreen((prev) => prev + 1)
