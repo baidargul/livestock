@@ -12,6 +12,41 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
+    if (!data.user.id) {
+      response.status = 400;
+      response.message = `Only logged in users can create posts`;
+      response.data = null;
+      return new Response(JSON.stringify(response));
+    }
+
+    const postUser = await prisma.user.findUnique({
+      where: {
+        id: data.user.id,
+      },
+      omit: {
+        password: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    //Check token also
+    const session = await actions.server.user.validateSession(data.user.token);
+    if (session.status !== 200) {
+      response.status = 402;
+      response.message = `Session expired, invalid session`;
+      response.data = null;
+      return new Response(JSON.stringify(response));
+    }
+
+    if (!postUser) {
+      response.status = 401;
+      response.message = `Invalid session user not found`;
+      response.data = null;
+      return new Response(JSON.stringify(response));
+    }
+
     const { images } = data;
     const uploads = await actions.server.images.uploadImages(images);
     if (uploads.status === 400) {
@@ -30,6 +65,7 @@ export async function POST(req: NextRequest) {
       maleQuantityAvailable: Number(data.maleQuantityAvailable) ?? 0,
       femaleQuantityAvailable: Number(data.femaleQuantityAvailable) ?? 0,
       price: Number(data.price) ?? 0,
+      userId: postUser?.id,
     };
 
     const animal = await prisma.animal.create({

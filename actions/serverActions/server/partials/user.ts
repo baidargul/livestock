@@ -114,8 +114,50 @@ async function signout(session: any) {
   }
 }
 
+async function validateSession(token: any) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const session = await prisma.sessions.findFirst({
+      where: {
+        id: token,
+      },
+    });
+
+    if (!session) {
+      response.status = 400;
+      response.message = "Invalid session";
+      response.data = null;
+      return response;
+    }
+
+    if (session.expiry < new Date()) {
+      response.status = 400;
+      response.message = "Session expired";
+      response.data = null;
+      return response;
+    }
+
+    response.status = 200;
+    response.message = "Session validated successfully";
+    response.data = session;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return new Response(JSON.stringify(response));
+  }
+}
+
 export const user = {
   signin,
   signup,
   signout,
+  validateSession,
 };

@@ -1,5 +1,7 @@
+import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import { useLoader } from '@/hooks/useLoader'
+import { useSession } from '@/hooks/useSession'
 import { constructBase64Image, ImagePayload } from '@/lib/image'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
@@ -18,6 +20,7 @@ type Props = {
 
 const PostPreview = (props: Props) => {
     const router = useRouter()
+    const logoutUser = useSession((state: any) => state.logoutUser)
     const [isPosting, setIsPosting] = useState(false)
     const setLoading = useLoader((state: any) => state.setLoading)
 
@@ -31,11 +34,22 @@ const PostPreview = (props: Props) => {
         setLoading(true)
         const data = {
             ...props.animal,
+            user: props.user,
         }
-        const response = await axios.post(`/api/post`, data)
+        const response: any = await actions.client.posts.createPost(data)
         if (response.status === 200) {
             router.push(`/home`)
-        } else {
+        } else if (response.status === 401) {
+            alert("Invalid user, please login again")
+            logoutUser()
+            router.push('/home')
+        } else if (response.status === 402) {
+            alert("Session expired, please login again")
+            logoutUser()
+            router.push('/home')
+        }
+        else {
+            alert(response.message)
             setIsPosting(false)
         }
         setLoading(false)
