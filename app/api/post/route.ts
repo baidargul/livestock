@@ -47,6 +47,9 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify(response));
     }
 
+    delete data.user;
+    delete data?.composing;
+
     const { images } = data;
     const uploads = await actions.server.images.uploadImages(images);
     if (uploads.status === 400) {
