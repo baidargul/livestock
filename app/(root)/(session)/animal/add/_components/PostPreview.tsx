@@ -40,12 +40,12 @@ const PostPreview = (props: Props) => {
         if (response.status === 200) {
             router.push(`/home`)
         } else if (response.status === 401) {
-            alert("Invalid user, please login again")
             logoutUser()
+            alert("Invalid user, please login again")
             router.push('/home')
         } else if (response.status === 402) {
-            alert("Session expired, please login again")
             logoutUser()
+            alert("Session expired, please login again")
             router.push('/home')
         }
         else {
