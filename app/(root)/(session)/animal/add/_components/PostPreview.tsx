@@ -38,6 +38,7 @@ const PostPreview = (props: Props) => {
         }
         const response: any = await actions.client.posts.createPost(data)
         if (response.status === 200) {
+            localStorage.removeItem('post')
             router.push(`/home`)
         } else if (response.status === 401) {
             await logoutUser()

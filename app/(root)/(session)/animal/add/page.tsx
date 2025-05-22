@@ -15,6 +15,7 @@ import { useLoader } from '@/hooks/useLoader'
 type Props = {}
 
 const page = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
     const [animal, setAnimal] = useState<Animal | null>()
     const [currentScreen, setCurrentScreen] = useState(1)
     const [user, setUser] = useState<any>(null)
@@ -24,17 +25,38 @@ const page = (props: Props) => {
     const router = useRouter()
 
     useEffect(() => {
-        setLoading(true)
-        const rawUser = getuser()
-        if (rawUser) {
-            setUser(rawUser)
-        } else {
-            setUser(null)
+        setIsMounted(true)
+    }, [])
+
+    useEffect(() => {
+        if (isMounted) {
+            setLoading(true)
+            const prevPost = localStorage.getItem('post')
+            if (prevPost) {
+                const parsedPost = JSON.parse(prevPost)
+                setAnimal(parsedPost)
+            }
+            setLoading(false)
         }
-        if (!rawUser) {
-            router.push('/home')
+    }, [isMounted])
+
+    useEffect(() => {
+        if (isMounted) {
+
+            setLoading(true)
+            const rawUser = getuser()
+            if (rawUser) {
+                setUser(rawUser)
+            } else {
+                setUser(null)
+            }
+            if (!rawUser) {
+                router.push('/home')
+            }
+            setLoading(false)
+            const rawPost = JSON.stringify({ ...animal, composing: true })
+            localStorage.setItem('post', rawPost)
         }
-        setLoading(false)
     }, [currentScreen, animal])
 
     const handleMoveNext = () => {
