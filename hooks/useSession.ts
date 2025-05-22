@@ -7,7 +7,12 @@ export const useSession = create((set) => ({
       : null,
   getUser: () => {
     if (typeof window === "undefined") return null;
-    return JSON.parse(localStorage.getItem("session") || "null");
+    const raw = JSON.parse(localStorage.getItem("session") || "null");
+    if (raw && raw.id) {
+      return raw;
+    } else {
+      return null;
+    }
   },
   logoutUser: () => {
     set({ user: null });

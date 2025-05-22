@@ -19,7 +19,7 @@ async function createPost(data: any) {
       Expires: "0",
     },
   });
-  return response;
+  return response.data;
 }
 
 export const posts = {

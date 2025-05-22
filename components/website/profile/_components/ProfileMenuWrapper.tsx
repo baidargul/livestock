@@ -76,7 +76,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                     </div>
                 </div>}
 
-                {user && <div className='flex flex-col'>
+                {user && user.id && <div className='flex flex-col'>
                     <div className='mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
                         <div className='flex gap-4 items-center'>
                             <Image src={images.chickens.covers[3]} width={40} height={40} layout='fixed' loading='lazy' quality={100} alt='janwarmarkaz' className='rounded-full object-cover w-10 h-10' onClick={() => handleToggleMenu(false)} />
