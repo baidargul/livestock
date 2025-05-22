@@ -42,7 +42,7 @@ const SectionProductListRow = (props: Props) => {
                     </div>
                     <div className='flex gap-1 items-center my-2'>
                         <div className='font-medium w-[70%] tracking-tight text-base leading-4'>
-                            Hamza poultry services & Farms
+                            {props.animal?.user?.name ?? "Hamza poultry services & Farms"}
                         </div>
                         <div>
                             <RatingBar readonly defaultRating={4} />
