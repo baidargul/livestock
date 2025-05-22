@@ -13,6 +13,7 @@ type Props = {
     moveBack: () => void
     setAnimal: (animal: any) => void
     animal: any
+    user: any
 }
 
 const PostPreview = (props: Props) => {
@@ -21,6 +22,11 @@ const PostPreview = (props: Props) => {
     const setLoading = useLoader((state: any) => state.setLoading)
 
     const handleHitApi = async () => {
+        if (!props.user.id) {
+            alert("Please login to create a post")
+            router.push('/home')
+            return
+        }
         setIsPosting(true)
         setLoading(true)
         const data = {
@@ -89,7 +95,7 @@ const PostPreview = (props: Props) => {
 
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4'>
-                <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting}>Go Back</Button>
+                <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting || !props.user.id}>Go Back</Button>
                 <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Yes Create Post</Button>
             </div>
         </div>
