@@ -8,7 +8,16 @@ async function listAll() {
     data: null as any,
   };
   try {
-    const all: any = await prisma.animal.findMany();
+    const all: any = await prisma.animal.findMany({
+      include: {
+        user: {
+          omit: {
+            password: true,
+            email: true,
+          },
+        },
+      },
+    });
     let animals: any = [];
     for (const animal of all) {
       // const images = await actions.server.images.fetchImages(animal.images);
@@ -45,6 +54,14 @@ async function list(val: any, key: string) {
     };
     const target: any = await prisma.animal.findFirst({
       where: { ...whereClause },
+      include: {
+        user: {
+          omit: {
+            password: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!target) {
