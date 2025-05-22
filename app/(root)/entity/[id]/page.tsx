@@ -10,6 +10,7 @@ import React from 'react'
 import prisma from '@/lib/prisma'
 import dynamic from 'next/dynamic'
 import CalculatedDescription from '@/components/Animals/CalculatedDescription'
+import Link from 'next/link'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -65,7 +66,7 @@ const page = async (props: Props) => {
             <div className='mt-40 p-4'>
                 {animal?.user.name && <div className='w-full mb-2 flex justify-end items-center'>
                     <Link href={`/user/profile/me`}>
-                    <label className='cursor-pointer select-none text-right tracking-widest text-sm border-b border-zinc-500 w-fit'>{formalizeText(animal?.user.name)}</label>
+                        <label className='cursor-pointer select-none text-right tracking-widest text-sm border-b border-zinc-500 w-fit'>{formalizeText(animal?.user.name)}</label>
                     </Link>
                 </div>}
                 <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
