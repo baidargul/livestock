@@ -36,6 +36,7 @@ const PostPreview = (props: Props) => {
             ...props.animal,
             user: props.user,
         }
+        delete data?.composing
         const response: any = await actions.client.posts.createPost(data)
         if (response.status === 200) {
             localStorage.removeItem('post')

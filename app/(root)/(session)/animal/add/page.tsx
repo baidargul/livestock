@@ -54,7 +54,7 @@ const page = (props: Props) => {
                 router.push('/home')
             }
             setLoading(false)
-            const rawPost = JSON.stringify({ ...animal, composing: true })
+            const rawPost = JSON.stringify(animal)
             localStorage.setItem('post', rawPost)
         }
     }, [currentScreen, animal])
