@@ -31,7 +31,7 @@ const SectionProductListRow = (props: Props) => {
                     </div>}
                     <Image src={props.animal?.images[0].image} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='min-w-32 w-40 h-40 select-none object-cover rounded-l-lg' />
                 </div>
-                <div className='p-2 pl-4 w-auto bg-zinc-50 border-r border-y border-zinc-200/40 rounded-r-xl'>
+                <div className='p-2 pl-4 w-full bg-zinc-50 border-r border-y border-zinc-200/40 rounded-r-xl'>
                     <div className='text-[1rem] transition-all duration-200 ease-in-out w-[90%] sm:w-auto sm:text-xl font-semibold truncate'>{props.animal?.title}</div>
                     <div className='flex subheading1 gap-1 items-center -mt-1'>
                         <div className='font-medium'>{totalQuantity}</div> <div className='font-medium'>{`${formalizeText(props.animal?.type)} ${props.animal?.breed}`}</div>
