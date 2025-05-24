@@ -6,6 +6,8 @@ import RatingBar from '@/components/website/ratings/RatingBar'
 import { StickyNoteIcon, TicketCheckIcon, TicketMinusIcon } from 'lucide-react'
 import prisma from '@/lib/prisma'
 import { actions } from '@/actions/serverActions/actions'
+import { formatCurrency } from '@/lib/utils'
+import Link from 'next/link'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -20,8 +22,10 @@ const page = async (props: Props) => {
     const { params } = props
     const { id } = await params
 
-    const response: any = await actions.server.user.list(id, 'id')
+    let response: any = await actions.server.user.list(id, 'id')
     const user = response.data as any
+    response = await actions.server.post.listAll(id, 'userId')
+    const animals = response.data as any[]
 
     return (
         <div className='relative w-full min-h-[100vh] select-none'>
@@ -61,8 +65,33 @@ const page = async (props: Props) => {
                         <span className='text-sm font-normal'>Animals listed</span>
                     </div>
                 </div>
+                <div className='border-t border-zinc-200 pt-4 mt-4'>
+                    <div className='text-xl tracking-tight py-2 mb-2 flex gap-2 items-center'> <StickyNoteIcon className='w-5 h-5 text-zinc-700' /> Listings</div>
+                    <div className=''>
+                        {
+                            animals.length > 0 ? (
+                                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+                                    {
+                                        animals.map((animal: any) => (
+                                            <Link href={`/entity/${animal.id}`} key={animal.id} className='p-2 bg-white shadow-sm cursor-pointer'>
+                                                <div >
+                                                    <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={300} alt={animal.name} layout='fixed' quality={70} className='w-full h-[200px] object-cover rounded-lg' />
+                                                    <div className='text-lg font-semibold'>{animal.title}</div>
+                                                    <div className='text -mt-1 tracking-tight'>{animal.description}</div>
+                                                    <div className='text-2xl font-semibold tracking-widest -mt-1 text-right text-emerald-600'>{formatCurrency(animal.price)}</div>
+                                                </div>
+                                            </Link>
+                                        ))
+                                    }
+                                </div>
+                            ) : (
+                                <div className='text-sm text-zinc-600'>No listings found</div>
+                            )
+                        }
+                    </div>
+                </div>
             </div>
-        </div>
+        </div >
     )
 }
 
