@@ -29,7 +29,13 @@ const FollowButton = (props: Props) => {
 
     useEffect(() => {
         if (currentUser) {
-            const isFollowing = currentUser.following.some((user: any) => user.id === props.targetUserId)
+            let isFollowing = false
+            for (const following of currentUser.following) {
+                if (following.id === props.targetUserId) {
+                    isFollowing = true
+                    break
+                }
+            }
             setFollowed(isFollowing)
         }
     }, [currentUser])
