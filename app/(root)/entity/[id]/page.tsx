@@ -65,7 +65,7 @@ const page = async (props: Props) => {
             </div>
             <div className='mt-40 p-4'>
                 {animal?.user.name && <div className='w-full mb-2 flex justify-end items-center'>
-                    <Link href={`/user/profile/me`}>
+                    <Link href={`/user/profile/${animal?.user.id}`} className='flex gap-2 items-center'>
                         <label className='cursor-pointer select-none text-right tracking-widest text-sm border-b border-zinc-500 w-fit'>{formalizeText(animal?.user.name)}</label>
                     </Link>
                 </div>}

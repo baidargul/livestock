@@ -8,15 +8,27 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
   name      String?
-  email     String?    @unique
+  email     String?     @unique
   password  String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   animals   Animal[] // Opposite relation field for linking animals
   sessions  Sessions[]
   bids      Bids[]
+  followers Following[] @relation("UserFollowers") // Users that follow this user
+  following Following[] @relation("UserFollowing") // Users this user follows
+
+  @@index([name]) // Index for efficient queries
+  @@index([createdAt]) // Index for efficient queries
+  @@index([updatedAt]) // Index for efficient queries
+  @@index([password]) // Index for efficient queries
+  @@index([name, email]) // Composite index for name and email
+  @@index([name, createdAt]) // Composite index for name and createdAt
+  @@index([name, updatedAt]) // Composite index for name and updatedAt
+  @@index([name, password]) // Composite index for name and password
+  @@map("users") // Map to a different collection name if needed
 }
 
 model Animal {
@@ -69,6 +81,17 @@ model Bids {
   user      User?    @relation(fields: [userId], references: [id])
   price     Float
   createdAt DateTime @default(now())
+}
+
+model Following {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @db.ObjectId // The user who is following
+  user        User?    @relation("UserFollowing", fields: [userId], references: [id])
+  followingId String?  @db.ObjectId // The user being followed
+  following   User?    @relation("UserFollowers", fields: [followingId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@map("following") // Map to a different collection name if needed
 }
 
 enum DeliveryOptions {

@@ -1,14 +1,28 @@
 import { images } from '@/consts/images'
 import Image from 'next/image'
 import React from 'react'
-import Username from './_components/Username'
 import FollowButton from '@/components/ui/FollowButton'
 import RatingBar from '@/components/website/ratings/RatingBar'
-import { StickyNoteIcon, TicketCheckIcon, TicketMinus, TicketMinusIcon } from 'lucide-react'
+import { StickyNoteIcon, TicketCheckIcon, TicketMinusIcon } from 'lucide-react'
+import prisma from '@/lib/prisma'
+import { actions } from '@/actions/serverActions/actions'
 
-type Props = {}
+type Props = {
+    params: Promise<{ id: string }>
+}
 
-const page = (props: Props) => {
+export async function generateStaticParams() {
+    const ids = await prisma.user.findMany({ select: { id: true } })
+    return ids.map(({ id }) => ({ id }))
+}
+
+const page = async (props: Props) => {
+    const { params } = props
+    const { id } = await params
+
+    const response: any = await actions.server.user.list(id, 'id')
+    const user = response.data as any
+
     return (
         <div className='relative w-full min-h-[100vh] select-none'>
             <div className='relative w-full h-[250px] mb-24'>
@@ -24,23 +38,27 @@ const page = (props: Props) => {
             </div>
             <div className='px-8 flex flex-col gap-4'>
                 <div className=''>
-                    <Username />
+                    <div className='text-2xl font-semibold'>{user?.name}</div>
+                    <div className='text-sm font-medium text-zinc-600'>{user?.email}</div>
                 </div>
                 <div>
                     <RatingBar readonly defaultRating={4.5} />
                 </div>
                 <div className='grid grid-cols-3 gap-2 w-full tracking-tight'>
                     <div className='text-center mr-auto flex flex-col justify-center items-center'>
-                        <TicketCheckIcon className='text-2xl text-emerald-700' />
+                        <TicketCheckIcon className='w-7 h-7 text-emerald-700' />
+                        <label className='text-zinc-800 text-2xl font-bold'>{user?.animals.length ?? 0}</label>
                         <span className='text-sm font-normal'>Deals closed</span>
                     </div>
                     <div className='text-center flex flex-col justify-center items-center'>
-                        <TicketMinusIcon className='text-2xl text-purple-500' />
+                        <TicketMinusIcon className='w-7 h-7 text-purple-500' />
+                        <label className='text-zinc-800 text-2xl font-bold'>{user?.animals.length ?? 0}</label>
                         <span className='text-sm font-normal'>Bids closed</span>
                     </div>
                     <div className='text-center ml-auto flex flex-col justify-center items-center'>
-                        <StickyNoteIcon className='text-2xl text-zinc-800' />
-                        <span className='text-sm font-normal'>Animals Listed</span>
+                        <StickyNoteIcon className='w-7 h-7 text-zinc-700' />
+                        <label className='text-zinc-800 text-2xl font-bold'>{user?.animals.length ?? 0}</label>
+                        <span className='text-sm font-normal'>Animals listed</span>
                     </div>
                 </div>
             </div>
