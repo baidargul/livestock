@@ -27,6 +27,13 @@ const FollowButton = (props: Props) => {
         setIsMounted(true)
     }, [])
 
+    useEffect(() => {
+        if (currentUser) {
+            const isFollowing = currentUser.following.some((user: any) => user.id === props.targetUserId)
+            setFollowed(isFollowing)
+        }
+    }, [currentUser])
+
     const handleClick = () => {
         handleFollowFunction()
     }
