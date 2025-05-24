@@ -1,4 +1,5 @@
 'use client'
+import { actions } from '@/actions/serverActions/actions'
 import { useSession } from '@/hooks/useSession'
 import { CheckIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -23,8 +24,25 @@ const FollowButton = (props: Props) => {
     }, [])
 
     const handleClick = () => {
-        setFollowed(!followed)
+        handleFollowFunction()
     }
+
+    const handleFollowFunction = async () => {
+        const response = await actions.client.user.followUser(props.targetUserId, currentUser?.id)
+        if (response.status === 200) {
+            setFollowed(!followed)
+        } else {
+            console.log(response)
+        }
+    }
+
+    // if (currentUser.id === props.targetUserId) {
+    //     return (
+    //         <div className='my-2'>
+
+    //         </div>
+    //     )
+    // }
 
 
     return (

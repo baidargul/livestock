@@ -23,6 +23,8 @@ const page = async (props: Props) => {
     const response: any = await actions.server.user.list(id, 'id')
     const user = response.data as any
 
+    console.log(user)
+
     return (
         <div className='relative w-full min-h-[100vh] select-none'>
             <div className='relative w-full h-[250px] mb-24'>

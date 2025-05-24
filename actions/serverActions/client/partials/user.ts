@@ -27,8 +27,19 @@ async function signout(session: any) {
   return response.data;
 }
 
+async function followUser(targetUserId: string, currentUserId: string) {
+  if (!targetUserId || !currentUserId) return null;
+  const data = {
+    targetUserId,
+    currentUserId,
+  };
+  const response = await axios.post(apiPath + "/follow", data);
+  return response.data;
+}
+
 export const user = {
   signin,
   signup,
   signout,
+  followUser,
 };

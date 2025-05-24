@@ -160,8 +160,6 @@ async function list(value: string, key: "id" | "email") {
     },
   };
 
-  console.log(data);
-
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -227,12 +225,76 @@ async function list(value: string, key: "id" | "email") {
   }
 }
 
-async function follow(followerId: string, followingId: string) {}
+async function follow(followerId: string, followingId: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const follower = await prisma.user.findFirst({
+      where: {
+        id: followerId,
+      },
+    });
+
+    const following = await prisma.user.findFirst({
+      where: {
+        id: followingId,
+      },
+    });
+
+    if (!follower || !following) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    const existingFollow = await prisma.following.findFirst({
+      where: {
+        userId: follower.id,
+        followingId: following.id,
+      },
+    });
+
+    if (existingFollow) {
+      await prisma.following.delete({
+        where: {
+          id: existingFollow.id,
+        },
+      });
+      response.status = 200;
+      response.message = "User unfollowed successfully";
+      response.data = null;
+      return response;
+    } else {
+      const follow = await prisma.following.create({
+        data: {
+          followingId: following.id,
+          userId: follower.id,
+        },
+      });
+      response.status = 200;
+      response.message = "User followed successfully";
+      response.data = follow;
+      return response;
+    }
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return new Response(JSON.stringify(response));
+  }
+}
 
 export const user = {
   signin,
   signup,
   signout,
   validateSession,
+  follow,
   list,
 };
