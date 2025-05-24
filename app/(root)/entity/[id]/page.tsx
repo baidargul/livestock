@@ -28,7 +28,6 @@ const page = async (props: Props) => {
 
     const response = await actions.server.post.list(id, 'id');
     const animal = response.data as any
-
     const checkQuantity = () => {
         const totalQuantity = Number(animal.maleQuantityAvailable || 0) + Number(animal.femaleQuantityAvailable || 0)
         return totalQuantity

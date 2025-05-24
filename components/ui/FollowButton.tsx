@@ -1,11 +1,26 @@
 'use client'
+import { useSession } from '@/hooks/useSession'
 import { CheckIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-type Props = {}
+type Props = {
+    targetUserId: string
+    targetFollowingList: any[]
+}
 
 const FollowButton = (props: Props) => {
     const [followed, setFollowed] = useState(false)
+    const [currentUser, setCurrentUser] = useState<any>(null)
+    const getUser = useSession((state: any) => state.getUser)
+
+    useEffect(() => {
+        const rawUser = getUser()
+        if (rawUser) {
+            setCurrentUser(rawUser)
+        } else {
+            setCurrentUser(null)
+        }
+    }, [])
 
     const handleClick = () => {
         setFollowed(!followed)
@@ -13,7 +28,7 @@ const FollowButton = (props: Props) => {
 
 
     return (
-        <button onClick={handleClick} className={`text-md p-2 px-4 cursor-pointer  ${followed ? 'bg-emerald-400 tracking-wide font-semibold' : 'hover:bg-emerald-200 bg-zinc-200'} w-fit transition-all duration-300 border-4 border-white rounded-lg tracking-wide`}>{followed ? <div className="flex gap-1 items-center"><CheckIcon className="w-4 h-4"/> <div>Following</div></div> : "Follow"}</button>
+        <button onClick={handleClick} className={`text-md p-2 px-4 cursor-pointer  ${followed ? 'bg-emerald-400 tracking-wide font-semibold' : 'hover:bg-emerald-200 bg-zinc-200'} w-fit transition-all duration-300 border-4 border-white rounded-lg tracking-wide`}>{followed ? <div className="flex gap-1 items-center"><CheckIcon className="w-4 h-4" /> <div>Following</div></div> : "Follow"}</button>
     )
 }
 

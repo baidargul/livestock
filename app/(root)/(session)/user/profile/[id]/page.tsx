@@ -30,7 +30,7 @@ const page = async (props: Props) => {
                 <div className='flex justify-between w-full px-8 items-center absolute z-10 bottom-[-75px]'>
                     <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-[120px] -ml-2 pointer-events-none select-none h-[120px] object-cover rounded-full border-6 border-white ' alt='janwarmarkaz' />
                     <div className='font-normal tracking-tight text-sm flex flex-col justify-end items-end gap-1'>
-                        <FollowButton />
+                        <FollowButton targetUserId={user?.id} targetFollowingList={user?.following} />
                         <div><span className='tracking-wide'>404 </span>posts <span className='tracking-wide'>1.6k </span>likes</div>
                     </div>
                 </div>

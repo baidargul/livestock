@@ -14,27 +14,21 @@ model User {
   password  String?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  animals   Animal[] // Opposite relation field for linking animals
-  sessions  Sessions[]
-  bids      Bids[]
+  animals   Animal[] // Relation to Animal
+  sessions  Sessions[] // Relation to Sessions
+  bids      Bids[] // Relation to Bids
   followers Following[] @relation("UserFollowers") // Users that follow this user
   following Following[] @relation("UserFollowing") // Users this user follows
 
   @@index([name]) // Index for efficient queries
-  @@index([createdAt]) // Index for efficient queries
-  @@index([updatedAt]) // Index for efficient queries
-  @@index([password]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email
-  @@index([name, createdAt]) // Composite index for name and createdAt
-  @@index([name, updatedAt]) // Composite index for name and updatedAt
-  @@index([name, password]) // Composite index for name and password
   @@map("users") // Map to a different collection name if needed
 }
 
 model Animal {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User?    @relation(fields: [userId], references: [id])
   userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -84,10 +78,10 @@ model Bids {
 }
 
 model Following {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String?  @db.ObjectId // The user who is following
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId // UUID ID
+  userId      String?  @db.ObjectId
   user        User?    @relation("UserFollowing", fields: [userId], references: [id])
-  followingId String?  @db.ObjectId // The user being followed
+  followingId String?  @db.ObjectId // ID of the user being followed
   following   User?    @relation("UserFollowers", fields: [followingId], references: [id])
   createdAt   DateTime @default(now())
 

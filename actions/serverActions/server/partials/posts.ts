@@ -52,6 +52,7 @@ async function list(val: any, key: string) {
     const whereClause = {
       [key]: val,
     };
+
     const target: any = await prisma.animal.findFirst({
       where: { ...whereClause },
       include: {

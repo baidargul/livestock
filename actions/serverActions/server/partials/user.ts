@@ -155,19 +155,22 @@ async function validateSession(token: any) {
 }
 async function list(value: string, key: "id" | "email") {
   const data = {
-    [key]: value,
+    where: {
+      [key]: value,
+    },
   };
+
+  console.log(data);
 
   const response = {
     status: 500,
     message: "Internal Server Error",
     data: null as any,
   };
-
   try {
     const user = await prisma.user.findFirst({
       where: {
-        ...data,
+        id: value,
       },
       select: {
         animals: true,
@@ -175,8 +178,32 @@ async function list(value: string, key: "id" | "email") {
         name: true,
         email: true,
         bids: true,
-        followers: true,
-        following: true,
+        followers: {
+          select: {
+            id: true,
+            followingId: true,
+            following: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        following: {
+          select: {
+            id: true,
+            followingId: true,
+            following: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
       },
     });
 
