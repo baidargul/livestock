@@ -14,6 +14,7 @@ const FollowButton = (props: Props) => {
     const [followed, setFollowed] = useState(false)
     const [currentUser, setCurrentUser] = useState<any>(null)
     const getUser = useSession((state: any) => state.getUser)
+    const setUser = useSession((state: any) => state.setUser)
 
     useEffect(() => {
         const rawUser = getUser()
@@ -34,6 +35,8 @@ const FollowButton = (props: Props) => {
         const response = await actions.client.user.followUser(props.targetUserId, currentUser?.id)
         if (response.status === 200) {
             setFollowed(!followed)
+            const newUser = currentUser ? { ...currentUser, ...response.data } : null
+            setUser(newUser)
         } else {
             console.log(response)
         }

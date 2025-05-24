@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { actions } from "../../actions";
 async function signup(name: string, email: string, password: string) {
   const response = {
     status: 500,
@@ -181,8 +182,6 @@ async function list(value: string, key: "id" | "email") {
             following: {
               select: {
                 id: true,
-                name: true,
-                email: true,
               },
             },
           },
@@ -194,8 +193,6 @@ async function list(value: string, key: "id" | "email") {
             following: {
               select: {
                 id: true,
-                name: true,
-                email: true,
               },
             },
           },
@@ -267,15 +264,18 @@ async function follow(followerId: string, followingId: string) {
       response.data = null;
       return response;
     } else {
-      const follow = await prisma.following.create({
+      await prisma.following.create({
         data: {
           followingId: following.id,
           userId: follower.id,
         },
       });
+
+      const latestUser: any = await actions.server.user.list(follower.id, "id");
+
       response.status = 200;
       response.message = "User followed successfully";
-      response.data = follow;
+      response.data = latestUser.data;
       return response;
     }
   } catch (error: any) {
