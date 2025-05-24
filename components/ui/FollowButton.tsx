@@ -10,6 +10,7 @@ type Props = {
 }
 
 const FollowButton = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
     const [followed, setFollowed] = useState(false)
     const [currentUser, setCurrentUser] = useState<any>(null)
     const getUser = useSession((state: any) => state.getUser)
@@ -21,6 +22,8 @@ const FollowButton = (props: Props) => {
         } else {
             setCurrentUser(null)
         }
+
+        setIsMounted(true)
     }, [])
 
     const handleClick = () => {
@@ -36,7 +39,7 @@ const FollowButton = (props: Props) => {
         }
     }
 
-    if (currentUser.id === props.targetUserId) {
+    if (currentUser?.id === props.targetUserId) {
         return (
             <div className='my-2'>
             </div>
@@ -45,7 +48,7 @@ const FollowButton = (props: Props) => {
 
 
     return (
-        <button onClick={handleClick} className={`text-md p-2 px-4 cursor-pointer  ${followed ? 'bg-emerald-400 tracking-wide font-semibold' : 'hover:bg-emerald-200 bg-zinc-200'} w-fit transition-all duration-300 border-4 border-white rounded-lg tracking-wide`}>{followed ? <div className="flex gap-1 items-center"><CheckIcon className="w-4 h-4" /> <div>Following</div></div> : "Follow"}</button>
+        isMounted && <button onClick={handleClick} className={`text-md p-2 px-4 cursor-pointer  ${followed ? 'bg-emerald-400 tracking-wide font-semibold' : 'hover:bg-emerald-200 bg-zinc-200'} w-fit transition-all duration-300 border-4 border-white rounded-lg tracking-wide`}>{followed ? <div className="flex gap-1 items-center"><CheckIcon className="w-4 h-4" /> <div>Following</div></div> : "Follow"}</button>
     )
 }
 

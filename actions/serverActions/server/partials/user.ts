@@ -167,9 +167,7 @@ async function list(value: string, key: "id" | "email") {
   };
   try {
     const user = await prisma.user.findFirst({
-      where: {
-        id: value,
-      },
+      ...data,
       select: {
         animals: true,
         id: true,
@@ -224,7 +222,6 @@ async function list(value: string, key: "id" | "email") {
     return new Response(JSON.stringify(response));
   }
 }
-
 async function follow(followerId: string, followingId: string) {
   const response = {
     status: 500,
