@@ -75,7 +75,7 @@ const page = async (props: Props) => {
                                         animals.map((animal: any) => (
                                             <Link href={`/entity/${animal.id}`} key={animal.id} className='p-2 bg-white shadow-sm cursor-pointer'>
                                                 <div >
-                                                    <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={300} alt={animal.name} layout='fixed' quality={70} className='w-full h-[200px] object-cover rounded-lg' />
+                                                    <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={300} alt={animal.title} layout='fixed' quality={70} className='w-full h-[200px] object-cover rounded-lg' />
                                                     <div className='text-lg font-semibold'>{animal.title}</div>
                                                     <div className='text -mt-1 tracking-tight'>{animal.description}</div>
                                                     <div className='text-2xl font-semibold tracking-widest -mt-1 text-right text-emerald-600'>{formatCurrency(animal.price)}</div>

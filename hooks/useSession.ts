@@ -20,6 +20,6 @@ export const useSession = create((set) => ({
   },
   setUser: (user: any) => {
     localStorage.setItem("session", JSON.stringify(user));
-    set({ user });
+    set({ user: user });
   },
 }));

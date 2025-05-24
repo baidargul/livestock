@@ -37,9 +37,20 @@ async function followUser(targetUserId: string, currentUserId: string) {
   return response.data;
 }
 
+async function isFollowing(targetUserId: string, currentUserId: string) {
+  if (!targetUserId || !currentUserId) return null;
+  const data = {
+    targetUserId,
+    currentUserId,
+  };
+  const response = await axios.post(apiPath + "/follow/isFollowing", data);
+  return response.data;
+}
+
 export const user = {
   signin,
   signup,
   signout,
+  isFollowing,
   followUser,
 };

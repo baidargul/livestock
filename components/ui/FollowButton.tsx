@@ -13,6 +13,7 @@ const FollowButton = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [followed, setFollowed] = useState(false)
     const [currentUser, setCurrentUser] = useState<any>(null)
+    const [isWorking, setIsWorking] = useState(false)
     const getUser = useSession((state: any) => state.getUser)
     const setUser = useSession((state: any) => state.setUser)
 
@@ -29,14 +30,7 @@ const FollowButton = (props: Props) => {
 
     useEffect(() => {
         if (currentUser) {
-            let isFollowing = false
-            for (const following of currentUser.following) {
-                if (following.id === props.targetUserId) {
-                    isFollowing = true
-                    break
-                }
-            }
-            setFollowed(isFollowing)
+            handleFunctionIsFollowing()
         }
     }, [currentUser])
 
@@ -44,7 +38,20 @@ const FollowButton = (props: Props) => {
         handleFollowFunction()
     }
 
+    const handleFunctionIsFollowing = async () => {
+        setIsWorking(true)
+        const response = await actions.client.user.isFollowing(props.targetUserId, currentUser?.id)
+        if (response.status === 200) {
+            setFollowed(response.data)
+        } else {
+            setFollowed(false)
+        }
+        setIsWorking(false)
+    }
+
     const handleFollowFunction = async () => {
+        if (props.targetUserId === currentUser?.id) return
+        setIsWorking(true)
         const response = await actions.client.user.followUser(props.targetUserId, currentUser?.id)
         if (response.status === 200) {
             setFollowed(!followed)
@@ -53,6 +60,7 @@ const FollowButton = (props: Props) => {
         } else {
             console.log(response)
         }
+        setIsWorking(false)
     }
 
     if (currentUser?.id === props.targetUserId) {
@@ -64,7 +72,7 @@ const FollowButton = (props: Props) => {
 
 
     return (
-        isMounted && <button onClick={handleClick} className={`text-md p-2 px-4 cursor-pointer  ${followed ? 'bg-emerald-400 tracking-wide font-semibold' : 'hover:bg-emerald-200 bg-zinc-200'} w-fit transition-all duration-300 border-4 border-white rounded-lg tracking-wide`}>{followed ? <div className="flex gap-1 items-center"><CheckIcon className="w-4 h-4" /> <div>Following</div></div> : "Follow"}</button>
+        isMounted && <button onClick={handleClick} className={`text-md p-2 px-4 cursor-pointer ${isWorking && "pointer-events-none"}  ${followed ? 'bg-emerald-400 tracking-wide font-semibold' : 'hover:bg-emerald-200 bg-zinc-200'} w-fit transition-all duration-300 border-4 border-white rounded-lg tracking-wide`}>{followed ? <div className="flex gap-1 items-center"><CheckIcon className="w-4 h-4" /> <div>Following</div></div> : isWorking ? "..." : "Follow"}</button>
     )
 }
 
