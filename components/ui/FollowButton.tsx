@@ -39,7 +39,6 @@ const FollowButton = (props: Props) => {
     if (currentUser.id === props.targetUserId) {
         return (
             <div className='my-2'>
-
             </div>
         )
     }
