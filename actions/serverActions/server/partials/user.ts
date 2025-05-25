@@ -24,6 +24,11 @@ async function signup(name: string, email: string, password: string) {
         },
       });
 
+      const profileImage = await actions.server.images.fetchImages(
+        newUser.profileImage ?? []
+      );
+      newUser.profileImage = profileImage;
+
       response.status = 200;
       response.message = "User created successfully";
       response.data = newUser;
@@ -66,7 +71,7 @@ async function signin(email: string, password: string) {
         email: email,
         password: password,
       },
-      select: { name: true, email: true, id: true },
+      select: { name: true, email: true, profileImage: true, id: true },
     });
 
     if (!isExits) {
@@ -75,6 +80,11 @@ async function signin(email: string, password: string) {
       response.data = null;
       return response;
     }
+
+    const profileImage = await actions.server.images.fetchImages(
+      isExits.profileImage ?? []
+    );
+    isExits.profileImage = profileImage;
 
     response.status = 200;
     response.message = "User logged in successfully";

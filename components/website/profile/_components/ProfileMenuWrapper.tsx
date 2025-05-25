@@ -78,13 +78,15 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
 
                 {user && user.id && <div className='flex flex-col'>
                     <div className='mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
-                        <div className='flex gap-4 items-center'>
-                            <Image src={images.chickens.covers[3]} width={40} height={40} layout='fixed' loading='lazy' quality={100} alt='janwarmarkaz' className='rounded-full object-cover w-10 h-10' onClick={() => handleToggleMenu(false)} />
-                            <div className=''>
-                                <div className='font-semibold text-xl tracking-wide'>{user?.name}</div>
-                                <div className='text-sm tracking-wide -mt-1 italic text-black/60'>{user?.email}</div>
+                        <Link href={user && user.id ? `/user/profile/${user.id}` : "#"}>
+                            <div className='flex gap-4 items-center'>
+                                <Image src={user.profileImage && user.profileImage.length > 0 ? user.profileImage[0].image : images.site.placeholders.userProfile} width={40} height={40} layout='fixed' loading='lazy' quality={100} alt='janwarmarkaz' className='rounded-full object-cover w-10 h-10' onClick={() => handleToggleMenu(false)} />
+                                <div className=''>
+                                    <div className='font-semibold text-xl tracking-wide'>{user?.name}</div>
+                                    <div className='text-sm tracking-wide -mt-1 italic text-black/60'>{user?.email}</div>
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
                     <div className='grid grid-cols-2 gap-2'>
                         <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
