@@ -176,6 +176,7 @@ async function list(value: string, key: "id" | "email") {
         email: true,
         bids: true,
         profileImage: true,
+        coverImage: true,
         followers: {
           select: {
             id: true,
@@ -208,8 +209,14 @@ async function list(value: string, key: "id" | "email") {
       return response;
     }
 
-    const image = await actions.server.images.fetchImages(user.profileImage);
-    user.profileImage = image;
+    const profileimage = await actions.server.images.fetchImages(
+      user.profileImage ?? []
+    );
+    const coverimage = await actions.server.images.fetchImages(
+      user.coverImage ?? []
+    );
+    user.profileImage = profileimage;
+    user.coverImage = coverimage;
 
     response.status = 200;
     response.message = "User fetched successfully";

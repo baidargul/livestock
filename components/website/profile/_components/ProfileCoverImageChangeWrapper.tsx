@@ -2,6 +2,7 @@
 import { actions } from '@/actions/serverActions/actions'
 import MediaViewer from '@/components/controls/MediaViewer'
 import ImageUploadWrapper from '@/components/wrappers/ImageUploadWrapper'
+import { images } from '@/consts/images'
 import { useSession } from '@/hooks/useSession'
 import { constructBase64Image, fileToPayload } from '@/lib/image'
 import { CameraIcon } from 'lucide-react'
@@ -14,7 +15,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const ProfileImageChangeWrapper = (props: Props) => {
+const ProfileCoverImageChangeWrapper = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [currentUser, setCurrentUser] = useState<any>(null)
     const getUser = useSession((state: any) => state.getUser)
@@ -33,13 +34,13 @@ const ProfileImageChangeWrapper = (props: Props) => {
         return props.children
     }
 
-    const handleProfileImageChange = async (files: File[]) => {
+    const handlecoverImageChange = async (files: File[]) => {
         try {
             const payloads = await Promise.all(files.map(fileToPayload));
             const image = constructBase64Image(payloads[0].base64, payloads[0].extension);
             props.setImage(image);
-            props.user.profileImage = image
-            const response = await actions.client.user.setProfileImage(currentUser?.id, payloads[0]);
+            props.user.coverImage = image
+            const response = await actions.client.user.setCoverImage(currentUser?.id, payloads[0]);
             if (response.status === 200) {
 
             }
@@ -51,11 +52,11 @@ const ProfileImageChangeWrapper = (props: Props) => {
 
     return (
         isMounted && <div className='w-full select-none relative flex justify-center group items-center'>
-            <ImageUploadWrapper limit={1} onChange={handleProfileImageChange}>
-                <CameraIcon width={40} height={40} className='absolute cursor-pointer left-8 bottom-3 drop-shadow-sm  text-white z-10' />
+            <ImageUploadWrapper limit={1} onChange={handlecoverImageChange}>
+                <CameraIcon width={40} height={40} className='absolute cursor-pointer right-2 bottom-3 drop-shadow-sm  text-white z-20' />
             </ImageUploadWrapper>
             <div className='w-full cursor-pointer'>
-                <MediaViewer image={props.user.profileImage[0]?.image ?? props.image}>
+                <MediaViewer image={props.image ?? images.chickens.covers[3]}>
                     {props.children}
                 </MediaViewer>
             </div>
@@ -63,4 +64,4 @@ const ProfileImageChangeWrapper = (props: Props) => {
     )
 }
 
-export default ProfileImageChangeWrapper
+export default ProfileCoverImageChangeWrapper

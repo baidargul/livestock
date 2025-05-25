@@ -11,6 +11,7 @@ import Link from 'next/link'
 import BackNavigator from '@/components/controls/BackNavigator'
 import ProfileImageChangeWrapper from '@/components/website/profile/_components/ProfileImageChangeWrapper'
 import ProfileImage from './_components/ProfileImage'
+import CoverImage from './_components/CoverImage'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -36,7 +37,8 @@ const page = async (props: Props) => {
                 <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                     <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
                 </BackNavigator>
-                <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-full h-[200px] pointer-events-none select-none object-cover' alt='janwarmarkaz' />
+                <CoverImage user={user} />
+                {/* <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-full h-[200px] pointer-events-none select-none object-cover' alt='janwarmarkaz' /> */}
                 <div className='flex justify-between w-full px-4 items-center absolute z-10 bottom-[-75px]'>
                     <ProfileImage user={user} />
                     <div className='font-normal tracking-tight text-sm flex flex-col justify-end items-end gap-1'>
@@ -44,7 +46,7 @@ const page = async (props: Props) => {
                         <div className='flex gap-1 items-center'><span className='tracking-wide'>{user?.animals.length ?? 0} </span>post{user?.animals.length > 1 ? 's' : ''} <CircleSmallIcon size={10} className='text-zinc-400' /><span className='tracking-wide'>{user?.followers.length ?? 0} </span>follower{user?.followers.length > 1 ? 's' : ''}</div>
                     </div>
                 </div>
-                <div className='absolute bottom-0 left-0 bg-gradient-to-t from-white to-transparent w-full h-[100px] select-none'></div>
+                <div className='absolute bottom-0 left-0 bg-gradient-to-t from-white to-transparent pointer-events-none w-full h-[100px] select-none'></div>
             </div>
             <div className='px-4 flex flex-col gap-4'>
                 <div className=''>

@@ -24,7 +24,7 @@ const ProfileImage = (props: Props) => {
     }, [props.user])
 
     return (
-        isMounted && <ProfileImageChangeWrapper user={props.user} image={props.user?.profileImage} setImage={setImage}>
+        isMounted && <ProfileImageChangeWrapper user={props.user} image={image} setImage={setImage}>
             <Image src={image} draggable={false} width={100} height={100} quality={100} className='w-[120px] -ml-2 pointer-events-none select-none h-[120px] object-cover rounded-full border-6 border-white ' alt='janwarmarkaz' />
         </ProfileImageChangeWrapper>
     )

@@ -54,6 +54,15 @@ async function setProfileImage(userId: string, image: any) {
   const response = await axios.post(apiPath + "/profileImage", data);
   return response.data;
 }
+async function setCoverImage(userId: string, image: any) {
+  if (!image) return null;
+  const data = {
+    userId,
+    image,
+  };
+  const response = await axios.post(apiPath + "/coverImage", data);
+  return response.data;
+}
 
 export const user = {
   signin,
@@ -62,4 +71,5 @@ export const user = {
   isFollowing,
   followUser,
   setProfileImage,
+  setCoverImage,
 };
