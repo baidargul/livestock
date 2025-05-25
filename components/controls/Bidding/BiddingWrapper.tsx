@@ -37,7 +37,7 @@ const BiddingWrapper = (props: Props) => {
         const response = await actions.client.posts.listBids(props.animal.id)
         if (response.status === 200) {
             setBids(response.data)
-            setOfferValue(response.data[0]?.price)
+            setOfferValue(response.data[response.data.length - 1]?.price)
         }
     }
 

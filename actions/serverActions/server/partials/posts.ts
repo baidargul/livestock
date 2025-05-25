@@ -229,7 +229,7 @@ async function listBids(postId: string) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
