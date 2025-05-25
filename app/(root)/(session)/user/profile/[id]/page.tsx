@@ -3,11 +3,12 @@ import Image from 'next/image'
 import React from 'react'
 import FollowButton from '@/components/ui/FollowButton'
 import RatingBar from '@/components/website/ratings/RatingBar'
-import { CircleSmallIcon, StickyNoteIcon, TicketCheckIcon, TicketMinusIcon, TicketPlusIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, CircleSmallIcon, StickyNoteIcon, TicketCheckIcon, TicketMinusIcon, TicketPlusIcon } from 'lucide-react'
 import prisma from '@/lib/prisma'
 import { actions } from '@/actions/serverActions/actions'
 import { formatCurrency } from '@/lib/utils'
 import Link from 'next/link'
+import BackNavigator from '@/components/controls/BackNavigator'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -30,6 +31,9 @@ const page = async (props: Props) => {
     return (
         <div className='relative w-full min-h-[100vh] select-none'>
             <div className='relative w-full h-[200px] mb-24'>
+                <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
+                    <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
+                </BackNavigator>
                 <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-full h-[200px] pointer-events-none select-none object-cover' alt='janwarmarkaz' />
                 <div className='flex justify-between w-full px-4 items-center absolute z-10 bottom-[-75px]'>
                     <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-[120px] -ml-2 pointer-events-none select-none h-[120px] object-cover rounded-full border-6 border-white ' alt='janwarmarkaz' />
@@ -72,7 +76,7 @@ const page = async (props: Props) => {
                             animals.length > 0 ? (
                                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
                                     {
-                                        animals.map((animal: any) => (
+                                        animals.slice(0, 4).map((animal: any) => (
                                             <Link href={`/entity/${animal.id}`} key={animal.id} className='p-2 bg-white shadow-sm cursor-pointer'>
                                                 <div >
                                                     <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={300} alt={animal.title} layout='fixed' quality={70} className='w-full h-[200px] object-cover rounded-lg' />
