@@ -22,7 +22,40 @@ async function createPost(data: any) {
   return response.data;
 }
 
+async function placeBid(userId: string, postId: string, amount: number) {
+  const response = await axios.post(
+    `/api/post/bid`,
+    {
+      userId,
+      postId,
+      amount,
+    },
+    {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    }
+  );
+  return response.data;
+}
+
+async function listBids(postId: string) {
+  const response = await axios.get(`/api/post/bid?postId=${postId}`, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+  });
+  return response.data;
+}
+
 export const posts = {
   createPost,
   removePost,
+  placeBid,
+  listBids,
 };

@@ -114,7 +114,6 @@ async function list(val: any, key: string) {
     return response;
   }
 }
-
 async function removePost(id: string) {
   const response = {
     status: 500,
@@ -149,9 +148,108 @@ async function removePost(id: string) {
     return response;
   }
 }
+async function placeBid(userId: string, postId: string, amount: number) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    const post = await prisma.animal.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      response.status = 400;
+      response.message = "Post not found";
+      response.data = null;
+      return response;
+    }
+
+    const bid = await prisma.bids.create({
+      data: {
+        userId,
+        animalId: postId,
+        price: amount,
+      },
+    });
+
+    let bids: any = await actions.server.post.listBids(postId);
+    if (bids.status === 200) {
+      bids = bids.data;
+    } else {
+      bids = [];
+    }
+
+    response.status = 200;
+    response.message = "Bid placed successfully";
+    response.data = bids;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR]: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+async function listBids(postId: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const bids = await prisma.bids.findMany({
+      where: {
+        animalId: postId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profileImage: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    response.status = 200;
+    response.message = "Bids fetched successfully";
+    response.data = bids;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR]: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
 
 export const post = {
   list,
   listAll,
   removePost,
+  placeBid,
+  listBids,
 };

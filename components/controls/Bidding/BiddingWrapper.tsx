@@ -1,4 +1,5 @@
 'use client'
+import { actions } from '@/actions/serverActions/actions'
 import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
@@ -17,6 +18,7 @@ const BiddingWrapper = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState(0)
     const [user, setUser] = useState<any>(null);
+    const [bids, setBids] = useState<any[]>([])
     const getUser = useSession((state: any) => state.getUser)
     const router = useRouter()
 
@@ -24,19 +26,23 @@ const BiddingWrapper = (props: Props) => {
         const rawUser = getUser();
         setUser(rawUser);
         setOfferValue(calculatePricing(props.animal).price)
+        fetchPastBids();
     }, []);
 
     useEffect(() => {
         setOfferValue(calculatePricing(props.animal).price)
     }, [props.animal])
 
-    const handleOpen = (val: boolean) => {
-        setIsOpen(val)
+    const fetchPastBids = async () => {
+        const response = await actions.client.posts.listBids(props.animal.id)
+        if (response.status === 200) {
+            setBids(response.data)
+            setOfferValue(response.data[0]?.price)
+        }
     }
 
-    const checkQuantity = () => {
-        const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
-        return totalQuantity
+    const handleOpen = (val: boolean) => {
+        setIsOpen(val)
     }
 
     const handleOfferChange = (val: string) => {
@@ -50,12 +56,18 @@ const BiddingWrapper = (props: Props) => {
             router.push("/signin")
             return
         }
+
+        const response = await actions.client.posts.placeBid(user.id, props.animal.id, offerValue)
+        if (response.status === 200) {
+            setOfferValue(0)
+            setBids(response.data)
+        }
     }
 
     return (
         <>
             <div className={`fixed bottom-0  flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[90%] left-0 rounded-t-xl bg-white z-20 p-4`}>
-                <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
+                {bids.length === 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
                     <div>
                         <div className='text-xl font-semibold'>
                             {props.animal.title}
@@ -74,20 +86,26 @@ const BiddingWrapper = (props: Props) => {
                         }
                     </div>
                     <div>
-                        {/* {props.animal.priceUnit !== "per Set" && props.animal.priceUnit !== "per Kg" && <div>
-                            <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                        </div>} */}
-                        {/* {props.animal.priceUnit === "per Kg" && <div className='flex flex-col gap-1'>
-                            <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
-                            <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
-                            <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                        </div>} */}
                         <CalculatedDescription animal={props.animal} />
                     </div>
-                </div>
+                </div>}
+                {bids.length > 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
+                    <div className='text-xl font-semibold'>Bids</div>
+                    {
+                        bids.length > 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
+
+                            {bids.map((bid: any, index: number) => (
+                                <div key={index} className='flex items-center justify-between p-2 border-b border-gray-200'>
+                                    <div className='text-sm'>{bid.user.name}</div>
+                                    <div className={`text-lg ${index === 0 && "font-bold bg-emerald-50 px-2 rounded border border-emerald-100 -mr-2"}`}>{formatCurrency(bid.price)}</div>
+                                </div>
+                            ))}
+                        </div>
+                    }
+                </div>}
                 <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
                     <div className='my-4'>
-                        <Textbox label='Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
+                        <Textbox label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
                         <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
                     </div>
                     <div className=' flex items-center gap-2'>
@@ -95,7 +113,7 @@ const BiddingWrapper = (props: Props) => {
                         <Button onClick={handlePostOffer} disabled={offerValue === 0} className='w-full'>Place Offer</Button>
                     </div>
                 </div>
-            </div>
+            </div >
             <div onClick={() => handleOpen(true)} className='w-full'>
                 {props.children}
             </div>
