@@ -93,6 +93,15 @@ async function list(val: any, key: string) {
     const images = await actions.server.images.fetchImages(target.images);
     const animal = { ...target, images };
 
+    const profileImage = await actions.server.images.fetchImages(
+      animal.user.profileImage
+    );
+    animal.user.profileImage = profileImage;
+    const coverImage = await actions.server.images.fetchImages(
+      animal.user.coverImage
+    );
+    animal.user.coverImage = coverImage;
+
     response.status = 200;
     response.message = "Animal fetched successfully";
     response.data = animal;
