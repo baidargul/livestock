@@ -175,6 +175,7 @@ async function list(value: string, key: "id" | "email") {
         name: true,
         email: true,
         bids: true,
+        profileImage: true,
         followers: {
           select: {
             id: true,
@@ -206,6 +207,9 @@ async function list(value: string, key: "id" | "email") {
       response.data = null;
       return response;
     }
+
+    const image = await actions.server.images.fetchImages(user.profileImage);
+    user.profileImage = image;
 
     response.status = 200;
     response.message = "User fetched successfully";
@@ -286,7 +290,6 @@ async function follow(followerId: string, followingId: string) {
     return new Response(JSON.stringify(response));
   }
 }
-
 async function isFollowing(userId: string, targetUserId: string) {
   const response = {
     status: 500,

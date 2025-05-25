@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  name      String?
-  email     String?     @unique
-  password  String?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  animals   Animal[] // Relation to Animal
-  sessions  Sessions[] // Relation to Sessions
-  bids      Bids[] // Relation to Bids
-  followers Following[] @relation("UserFollowers") // Users that follow this user
-  following Following[] @relation("UserFollowing") // Users this user follows
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  name         String?
+  email        String?     @unique
+  password     String?
+  profileImage Json?
+  coverImage   Json?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  animals      Animal[] // Relation to Animal
+  sessions     Sessions[] // Relation to Sessions
+  bids         Bids[] // Relation to Bids
+  followers    Following[] @relation("UserFollowers") // Users that follow this user
+  following    Following[] @relation("UserFollowing") // Users this user follows
 
   @@index([name]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email

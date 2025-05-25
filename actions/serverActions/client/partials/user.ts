@@ -36,7 +36,6 @@ async function followUser(targetUserId: string, currentUserId: string) {
   const response = await axios.post(apiPath + "/follow", data);
   return response.data;
 }
-
 async function isFollowing(targetUserId: string, currentUserId: string) {
   if (!targetUserId || !currentUserId) return null;
   const data = {
@@ -46,6 +45,15 @@ async function isFollowing(targetUserId: string, currentUserId: string) {
   const response = await axios.post(apiPath + "/follow/isFollowing", data);
   return response.data;
 }
+async function setProfileImage(userId: string, image: any) {
+  if (!image) return null;
+  const data = {
+    userId,
+    image,
+  };
+  const response = await axios.post(apiPath + "/profileImage", data);
+  return response.data;
+}
 
 export const user = {
   signin,
@@ -53,4 +61,5 @@ export const user = {
   signout,
   isFollowing,
   followUser,
+  setProfileImage,
 };

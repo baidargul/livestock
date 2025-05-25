@@ -9,6 +9,8 @@ import { actions } from '@/actions/serverActions/actions'
 import { formatCurrency } from '@/lib/utils'
 import Link from 'next/link'
 import BackNavigator from '@/components/controls/BackNavigator'
+import ProfileImageChangeWrapper from '@/components/website/profile/_components/ProfileImageChangeWrapper'
+import ProfileImage from './_components/ProfileImage'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -36,7 +38,7 @@ const page = async (props: Props) => {
                 </BackNavigator>
                 <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-full h-[200px] pointer-events-none select-none object-cover' alt='janwarmarkaz' />
                 <div className='flex justify-between w-full px-4 items-center absolute z-10 bottom-[-75px]'>
-                    <Image src={images.chickens.covers[3]} draggable={false} width={100} height={100} quality={100} className='w-[120px] -ml-2 pointer-events-none select-none h-[120px] object-cover rounded-full border-6 border-white ' alt='janwarmarkaz' />
+                    <ProfileImage user={user} />
                     <div className='font-normal tracking-tight text-sm flex flex-col justify-end items-end gap-1'>
                         <FollowButton targetUserId={user?.id} targetFollowingList={user?.following} />
                         <div className='flex gap-1 items-center'><span className='tracking-wide'>{user?.animals.length ?? 0} </span>post{user?.animals.length > 1 ? 's' : ''} <CircleSmallIcon size={10} className='text-zinc-400' /><span className='tracking-wide'>{user?.followers.length ?? 0} </span>follower{user?.followers.length > 1 ? 's' : ''}</div>

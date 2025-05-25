@@ -31,7 +31,7 @@ const ImageUploadWrapper = (props: Props) => {
 
     return (
         <div onClick={handleClick} >
-            <input ref={txtRef} onChange={handleChange} type="file" accept="image/*" multiple className='hidden' id='image-upload' />
+            <input ref={txtRef} onChange={handleChange} type="file" accept="image/*" multiple={props.limit === 1 ? false : true} className='hidden' id='image-upload' />
             <div>{props.children}</div>
         </div>
     )

@@ -45,8 +45,6 @@ const AddMedia = (props: Props) => {
             alert("There was an error processing your images. Please try again.");
         }
         setLoading(false)
-
-
     }
 
     const handleRemoveMedia = (index: number) => {
