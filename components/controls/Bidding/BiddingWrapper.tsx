@@ -1,8 +1,10 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
 import CalculatedDescription from '@/components/Animals/CalculatedDescription'
+import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
+import { images } from '@/consts/images'
 import { useSession } from '@/hooks/useSession'
 import { calculatePricing, convertCurrencyToWords, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
@@ -94,12 +96,18 @@ const BiddingWrapper = (props: Props) => {
                     {
                         bids.length > 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
 
-                            {bids.map((bid: any, index: number) => (
-                                <div key={index} className='flex items-center justify-between p-2 border-b border-gray-200'>
-                                    <div className='text-sm'>{bid.user.name}</div>
-                                    <div className={`text-lg ${index === 0 && "font-bold bg-emerald-50 px-2 rounded border border-emerald-100 -mr-2"}`}>{formatCurrency(bid.price)}</div>
-                                </div>
-                            ))}
+                            {bids.map((bid: any, index: number) => {
+                                const image = bid.user.profileImage && bid.user.profileImage.length > 0 ? bid.user.profileImage[0].image : images.site.placeholders.userProfile;
+                                return (
+                                    <div key={index} className='flex items-center justify-between p-1 text-sm overflow-hidden border-b border-gray-200'>
+                                        <div className='flex items-center gap-2'>
+                                            <Image src={image} width={50} height={50} className='w-6 h-6 rounded-full object-cover border border-emerald-800/10 drop-shadow-[2px]' alt={`${bid.user.name}'s profile picture`} />
+                                            <div className={` ${index === bids.length - 1 ? "text-lg" : "text-sm"} `}>{bid.user.id === props.animal.userId ? bid.user.name : "You"} {bid.user.id === props.animal.userId && <span className=' ml-2 scale-[.4] origin-top-left p-1 bg-zinc-100 text-zinc-600 rounded text-xs border border-zinc-200'>{bid.user.id === props.animal.userId ? "Seller" : "Buyer"}</span>}</div>
+                                        </div>
+                                        <div className={`${index === bids.length - 1 && "font-bold text-lg  bg-emerald-50 px-2 rounded border border-emerald-100 -mr-1"}`}>{formatCurrency(bid.price)}</div>
+                                    </div>
+                                )
+                            })}
                         </div>
                     }
                 </div>}

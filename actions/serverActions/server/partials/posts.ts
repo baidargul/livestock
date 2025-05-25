@@ -215,7 +215,7 @@ async function listBids(postId: string) {
     data: null as any,
   };
   try {
-    const bids = await prisma.bids.findMany({
+    let bids: any = await prisma.bids.findMany({
       where: {
         animalId: postId,
       },
@@ -232,6 +232,17 @@ async function listBids(postId: string) {
         createdAt: "asc",
       },
     });
+
+    if (bids && bids.length > 0) {
+      let raw = [];
+      for (const bid of bids) {
+        const profileImage = await actions.server.images.fetchImages(
+          (bid.user && bid.user.profileImage) ?? []
+        );
+        raw.push({ ...bid, user: { ...bid.user, profileImage } });
+      }
+      bids = raw;
+    }
 
     response.status = 200;
     response.message = "Bids fetched successfully";
