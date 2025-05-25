@@ -1,12 +1,26 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Onboarding from './Onboarding'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
+import { useLoader } from '@/hooks/useLoader'
+import { useSession } from '@/hooks/useSession'
+import { useRouter } from 'next/router'
 
 type Props = {}
 const Client = (props: Props) => {
     const [stage, setStage] = useState<signInStages>("onboarding")
+    const setUser = useSession((state: any) => state.setUser)
+    const getUser = useSession((state: any) => state.getUser)
+    const router = useRouter();
+
+    useEffect(() => {
+        const rawUser = getUser()
+        if (rawUser) {
+            setUser(rawUser)
+            router.push("/home")
+        }
+    }, [])
 
     const handleStageChange = (val: signInStages) => {
         setStage(val)
