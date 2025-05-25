@@ -92,7 +92,7 @@ const BiddingWrapper = (props: Props) => {
                     </div>
                 </div>}
                 {bids.length > 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
-                    <div className='text-xl font-semibold'>Bids</div>
+                    <div className='text-xl font-semibold flex justify-between items-center my-4 mt-2'><div>Bargain window</div><div className='text-sm tracking-wide'><div>{formatCurrency(calculatePricing(props.animal).price)} / <span className='p-1 px-2 bg-amber-100 rounded-md'>{bids[bids.length - 1]?.price}</span></div></div></div>
                     {
                         bids.length > 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
 
