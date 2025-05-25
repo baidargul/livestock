@@ -1,5 +1,6 @@
 'use client'
 import ProfileImageChangeWrapper from '@/components/website/profile/_components/ProfileImageChangeWrapper'
+import { images } from '@/consts/images'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
@@ -16,10 +17,10 @@ const ProfileImage = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (props.user?.profileImage) {
+        if (props.user?.profileImage && props.user.profileImage.length > 0) {
             setImage(props.user.profileImage[0]?.image);
         } else {
-            setImage(null);
+            setImage(images.site.placeholders.userProfile);
         }
     }, [props.user])
 

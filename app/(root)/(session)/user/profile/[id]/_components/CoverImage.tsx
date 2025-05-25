@@ -17,10 +17,10 @@ const CoverImage = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (props.user?.coverImage) {
+        if (props.user?.coverImage && props.user.coverImage.length > 0) {
             setImage(props.user.coverImage[0]?.image);
         } else {
-            setImage(null);
+            setImage(images.site.placeholders.userCover);
         }
     }, [props.user])
 

@@ -47,6 +47,12 @@ export const images = {
       desktopIcon: desktopIcon,
       mobileIcon: mobileIcon,
     },
+    placeholders: {
+      userProfile: "/placeholders/userprofile.gif",
+      userCover: "/placeholders/cover.png",
+      animal: "/placeholders/animalprofile.gif",
+      animalCover: "/placeholders/cover.png",
+    },
   },
   chickens: {
     covers: {
