@@ -12,6 +12,20 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
+    const user = await prisma.user.findUnique({
+      where: { id: data.userId },
+      select: { id: true, profileImage: true },
+    });
+
+    if (!user) {
+      response.status = 404;
+      response.message = `User with ID ${data.userId} not found`;
+      response.data = null;
+      return new Response(JSON.stringify(response));
+    }
+
+    await actions.server.images.deleteImages(user.profileImage ?? ([] as any));
+
     const uploads = await actions.server.images.uploadImages([data.image]);
     if (uploads.status === 400) {
       response.status = 400;
