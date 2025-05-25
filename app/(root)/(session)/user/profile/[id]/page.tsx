@@ -1,3 +1,6 @@
+// 1️⃣ Force the page to be dynamic on every request
+export const dynamic = "force-dynamic";
+
 import { images } from '@/consts/images'
 import Image from 'next/image'
 import React from 'react'
