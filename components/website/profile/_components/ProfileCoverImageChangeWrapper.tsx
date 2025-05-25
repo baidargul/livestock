@@ -42,7 +42,7 @@ const ProfileCoverImageChangeWrapper = (props: Props) => {
             props.user.coverImage = image
             const response = await actions.client.user.setCoverImage(currentUser?.id, payloads[0]);
             if (response.status === 200) {
-
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error converting files:", error);

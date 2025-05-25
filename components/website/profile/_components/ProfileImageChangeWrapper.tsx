@@ -41,7 +41,7 @@ const ProfileImageChangeWrapper = (props: Props) => {
             props.user.profileImage = image
             const response = await actions.client.user.setProfileImage(currentUser?.id, payloads[0]);
             if (response.status === 200) {
-
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error converting files:", error);
