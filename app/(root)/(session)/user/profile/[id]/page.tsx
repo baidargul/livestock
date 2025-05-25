@@ -65,8 +65,8 @@ const page = async (props: Props) => {
                         <span className='text-sm font-normal'>Animals listed</span>
                     </div>
                 </div>
-                <div className='border-t border-zinc-200 pt-4 mt-4'>
-                    <div className='text-xl tracking-tight py-2 mb-2 flex gap-2 items-center'> <StickyNoteIcon className='w-5 h-5 text-zinc-700' /> Listings</div>
+                <div className='border-t border-zinc-200 pt-2 mb-4'>
+                    <div className='text-xl tracking-tight py-2 mb-2 flex gap-2 items-center'> <TicketPlusIcon className='w-5 h-5 mt-1 text-zinc-700' /> Listings</div>
                     <div className=''>
                         {
                             animals.length > 0 ? (
