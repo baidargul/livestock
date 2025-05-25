@@ -30,11 +30,6 @@ const page = async (props: Props) => {
 
     const response = await actions.server.post.list(id, 'id');
     const animal = response.data as any
-    const checkQuantity = () => {
-        const totalQuantity = Number(animal.maleQuantityAvailable || 0) + Number(animal.femaleQuantityAvailable || 0)
-        return totalQuantity
-    }
-
     return (
         animal && <div className='relative w-full min-h-[100vh]'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
