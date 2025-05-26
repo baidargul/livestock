@@ -9,7 +9,7 @@ import { useSession } from '@/hooks/useSession'
 import { calculatePricing, convertCurrencyToWords, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
@@ -22,7 +22,14 @@ const BiddingWrapper = (props: Props) => {
     const [user, setUser] = useState<any>(null);
     const [bids, setBids] = useState<any[]>([])
     const getUser = useSession((state: any) => state.getUser)
+    const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter()
+
+    useEffect(() => {
+        if (scrollHookRef.current) {
+            scrollHookRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [bids])
 
     useEffect(() => {
         const rawUser = getUser();
@@ -96,27 +103,34 @@ const BiddingWrapper = (props: Props) => {
                         <div>Bargain window</div>
                         <div className='text-sm tracking-wide'>
                             <div>
-                                <span className='p-1 px-2 bg-amber-100 rounded-md'>{bids[bids.length - 1]?.price}</span> / {formatCurrency(calculatePricing(props.animal).price)}
+                                <span className='p-1 px-2 bg-amber-100 rounded-md'>{formatCurrency(bids[bids.length - 1]?.price)}</span> / {formatCurrency(calculatePricing(props.animal).price)}
                             </div>
                         </div>
                     </div>
-                    {
-                        bids.length > 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
+                    <div className='overflow-y-auto h-[80%] pb-32 pr-2'>
 
-                            {bids.map((bid: any, index: number) => {
-                                const image = bid.user.profileImage && bid.user.profileImage.length > 0 ? bid.user.profileImage[0].image : images.site.placeholders.userProfile;
-                                return (
-                                    <div key={index} className={`flex items-center justify-between p-1 text-sm overflow-hidden ${index <= bids.length - 3 && "opacity-60"} border-b border-gray-200`}>
-                                        <div className='flex items-center gap-2'>
-                                            <Image src={image} width={50} height={50} className='w-6 h-6 rounded-full object-cover border border-emerald-800/10 drop-shadow-[2px]' alt={`${bid.user.name}'s profile picture`} />
-                                            <div className={` ${index === bids.length - 1 ? "text-lg" : "text-sm"} `}>{bid.user.id === props.animal.userId ? bid.user.name : "You"} {bid.user.id === props.animal.userId && <span className=' ml-2 scale-[.4] origin-top-left p-1 bg-zinc-100 text-zinc-600 rounded text-xs border border-zinc-200'>{bid.user.id === props.animal.userId ? "Seller" : "Buyer"}</span>}</div>
+                        {
+                            bids.length > 0 && <div className='flex flex-col gap-2'>
+
+                                {bids.map((bid: any, index: number) => {
+                                    const image = bid.user.profileImage && bid.user.profileImage.length > 0 ? bid.user.profileImage[0].image : images.site.placeholders.userProfile;
+                                    return (
+                                        <div key={index} className={`flex items-center justify-between text-sm overflow-hidden ${index <= bids.length - 3 ? "opacity-60" : "p-1 "} border-b border-gray-200`}>
+                                            <div className='flex items-center gap-2'>
+                                                <Image src={image} width={50} height={50} className='w-6 h-6 rounded-full object-cover border border-emerald-800/10 drop-shadow-[2px]' alt={`${bid.user.name}'s profile picture`} />
+                                                <div>
+                                                    <div className={` ${index === bids.length - 1 ? "text-lg" : "text-sm"} `}>{bid.user.id === props.animal.userId ? bid.user.name : "You"}</div>
+                                                    <p className='tracking-tight text-xs scale-75 origin-top-left'>{new Date(bid.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "numeric", hour12: true })}</p>
+                                                </div>
+                                            </div>
+                                            <div className={`${index === bids.length - 1 && "font-bold text-lg  bg-emerald-50 px-2 rounded border border-emerald-100 -mr-1"}`}>{formatCurrency(bid.price)}</div>
                                         </div>
-                                        <div className={`${index === bids.length - 1 && "font-bold text-lg  bg-emerald-50 px-2 rounded border border-emerald-100 -mr-1"}`}>{formatCurrency(bid.price)}</div>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    }
+                                    )
+                                })}
+                                <div ref={scrollHookRef} id={`scrollhook`}></div>
+                            </div>
+                        }
+                    </div>
                 </div>}
                 <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
                     <div className='my-4'>
