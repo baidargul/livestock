@@ -7,6 +7,7 @@ import Textbox from '@/components/ui/Textbox'
 import { images } from '@/consts/images'
 import { useSession } from '@/hooks/useSession'
 import { calculatePricing, convertCurrencyToWords, formalizeText, formatCurrency } from '@/lib/utils'
+import { useSocket } from '@/socket-client/SocketWrapper'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
@@ -24,6 +25,21 @@ const BiddingWrapper = (props: Props) => {
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter()
+    const socket = useSocket()
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("join-bidroom", ({ room, userId }) => {
+                if (room === props.animal.id) {
+                    socket.emit("join-bidroom", { room, userId });
+                    console.info(`💻 User ${userId} joined bidroom: ${room}`);
+                }
+            });
+            socket.on("user-joined-bidroom", (message) => {
+                console.info(message);
+            });
+        }
+    }, [socket])
 
     useEffect(() => {
         if (scrollHookRef.current) {
@@ -74,6 +90,7 @@ const BiddingWrapper = (props: Props) => {
     }
 
     return (
+
         <>
             <div className={`fixed bottom-0 select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[90%] left-0 rounded-t-xl bg-white z-20 p-4`}>
                 {bids.length === 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>

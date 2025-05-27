@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
     "local-origin.dev",
     "*.local-origin.dev",
     "192.168.100.96",
+    //all
+    "*",
   ],
 };
 
