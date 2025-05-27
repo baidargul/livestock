@@ -111,11 +111,10 @@ const BiddingWrapper = (props: Props) => {
 
                         {
                             bids.length > 0 && <div className='flex flex-col gap-2'>
-
                                 {bids.map((bid: any, index: number) => {
                                     const image = bid.user.profileImage && bid.user.profileImage.length > 0 ? bid.user.profileImage[0].image : images.site.placeholders.userProfile;
                                     return (
-                                        <div key={index} className={`flex items-center justify-between text-sm overflow-hidden ${index <= bids.length - 3 ? "opacity-60" : "p-1 "} border-b border-gray-200`}>
+                                        <div key={index} className={`flex items-center justify-between text-sm overflow-hidden ${index <= bids.length - 2 ? "opacity-60 grayscale" : "p-1 "} border-b border-gray-200`}>
                                             <div className='flex items-center gap-2'>
                                                 <Image src={image} width={50} height={50} className='w-6 h-6 rounded-full object-cover border border-emerald-800/10 drop-shadow-[2px]' alt={`${bid.user.name}'s profile picture`} />
                                                 <div>
