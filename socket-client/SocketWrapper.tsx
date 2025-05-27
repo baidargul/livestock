@@ -39,8 +39,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 // Custom hook to access the socket instance
 export const useSocket = () => {
     const context = useContext(SocketContext);
-    if (!context) {
-        throw new Error("useSocket must be used within a SocketProvider");
-    }
-    return context;
+    // if (!context) {
+    //     throw new Error("useSocket must be used within a SocketProvider");
+    // }
+    return context ?? null; // Return null if context is not available
 };

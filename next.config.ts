@@ -22,13 +22,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: [
-    "local-origin.dev",
-    "*.local-origin.dev",
-    "192.168.100.96",
-    //all
-    "*",
-  ],
+  // allowedDevOrigins: ["*"],
 };
 
 export default nextConfig;

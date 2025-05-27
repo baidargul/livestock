@@ -15,20 +15,22 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.info(
-      `💻 A user connected: ${socket.id} @ ${Date.now().toString()}`
+      `💻 A user connected: ${
+        socket.id
+      } @ ${`${new Date().toDateString()} - ${new Date().toTimeString()}`}`
     );
 
     socket.on("join-bidroom", ({ room, userId }) => {
       socket.join(room);
       console.info(`💻 User ${userId} joined bidroom: ${room}`);
-      socket
-        .to(room)
-        .emit("user-joined-bidroom", `User ${userId} has joined the room.`);
+      socket.to(room).emit("user-joined-bidroom", userId);
     });
 
     socket.on("disconnect", () => {
       console.info(
-        `💻 A user disconnected: ${socket.id} @ ${Date.now().toString()}`
+        `💻 A user disconnected: ${
+          socket.id
+        } @ ${`${new Date().toDateString()} - ${new Date().toTimeString()}`}`
       );
     });
 
