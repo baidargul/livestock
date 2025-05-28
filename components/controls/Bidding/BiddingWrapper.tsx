@@ -1,7 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
 import CalculatedDescription from '@/components/Animals/CalculatedDescription'
-import Tag from '@/components/general/Tags/Tag'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
 import { images } from '@/consts/images'
@@ -29,17 +28,11 @@ const BiddingWrapper = (props: Props) => {
     })
     const [isSocketConnected, setIsSocketConnected] = useState(false);
     const router = useRouter()
-    const socket = user ? useSocket() : null; // Use the socket only if user is available
+    const socket = useSocket()
 
     useEffect(() => {
         if (socket && user) {
             setIsSocketConnected(true);
-            socket.on("join-bidroom", ({ room, userId }) => {
-                if (room === props.animal.id) {
-                    socket.emit("join-bidroom", { room, userId });
-                    console.info(`💻 User ${userId} joined bidroom: ${room}`);
-                }
-            });
             socket.on("user-joined-bidroom", (room) => {
                 console.info(`💻 User joined bidroom: ${room.key}`);
                 if (room.authorId === user.id) {
@@ -52,7 +45,6 @@ const BiddingWrapper = (props: Props) => {
 
         return () => {
             if (socket) {
-                socket.off("join-bidroom");
                 socket.off("user-joined-bidroom");
             }
         }
@@ -61,12 +53,6 @@ const BiddingWrapper = (props: Props) => {
     useEffect(() => {
         if (scrollHookRef.current) {
             scrollHookRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        if (bids.length > 0) {
-            if (socket && user) {
-                socket.emit("join-bidroom", { room: props.animal.id, userId: user?.id });
-            }
         }
     }, [bids])
 
@@ -98,13 +84,8 @@ const BiddingWrapper = (props: Props) => {
         setOfferValue(offer)
     }
 
-    const handlePostOffer = async () => {
-        if (!user) {
-            alert("Please sign in to place a bid")
-            router.push("/signin")
-            return
-        }
-
+    const handleCreateBidRoom = async () => {
+        handleOpen(true);
         if (socket && user) {
             const room = {
                 animalId: props.animal.id,
@@ -112,9 +93,19 @@ const BiddingWrapper = (props: Props) => {
                 authorId: props.animal.userId,
                 key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
             }
-            socket.emit("join-bidroom", room);
-            console.info(`💻 User ${user.id} joined bidroom: ${room.key}`);
+
+            socket.emit("join-bidroom", { room });
         }
+    }
+
+    const handlePostOffer = async () => {
+        if (!user) {
+            alert("Please sign in to place a bid")
+            router.push("/signin")
+            return
+        }
+
+
 
         // const response = await actions.client.posts.placeBid(user.id, props.animal.id, offerValue)
         // if (response.status === 200) {
@@ -123,7 +114,7 @@ const BiddingWrapper = (props: Props) => {
         // }
     }
 
-    if (!isSocketConnected) {
+    if (!socket) {
         return <div>Connecting to bidding service...</div>;
     }
 
@@ -196,7 +187,7 @@ const BiddingWrapper = (props: Props) => {
                     </div>
                 </div>
             </div >
-            <div onClick={() => handleOpen(true)} className='w-full'>
+            <div onClick={handleCreateBidRoom} className='w-full'>
                 {props.children}
             </div>
             <div onClick={() => handleOpen(false)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>

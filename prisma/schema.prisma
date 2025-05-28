@@ -8,19 +8,22 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  name         String?
-  email        String?     @unique
-  password     String?
-  profileImage Json?
-  coverImage   Json?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  animals      Animal[] // Relation to Animal
-  sessions     Sessions[] // Relation to Sessions
-  bids         Bids[] // Relation to Bids
-  followers    Following[] @relation("UserFollowers") // Users that follow this user
-  following    Following[] @relation("UserFollowing") // Users this user follows
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?     @unique
+  password      String?
+  profileImage  Json?
+  coverImage    Json?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  connectionIds String[]    @default([])
+  animals       Animal[] // Relation to Animal
+  sessions      Sessions[] // Relation to Sessions
+  bids          Bids[] // Relation to Bids
+  followers     Following[] @relation("UserFollowers") // Users that follow this user
+  following     Following[] @relation("UserFollowing") // Users this user follows
+  bidRooms      BidRoom[] // Relation to BidRoom
+  bidRoomAuthor BidRoom[]   @relation("BidRoomAuthor") // Rooms created by this user
 
   @@index([name]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email
@@ -56,7 +59,8 @@ model Animal {
   bids                    Bids[]
 
   // Media
-  images Json // JSON field to store an array of objects
+  images  Json // JSON field to store an array of objects
+  BidRoom BidRoom[]
 
   @@index([type, breed, price]) // Index for efficient queries
 }
@@ -76,6 +80,18 @@ model Bids {
   userId    String?  @db.ObjectId
   user      User?    @relation(fields: [userId], references: [id])
   price     Float
+  createdAt DateTime @default(now())
+}
+
+model BidRoom {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String?  @unique
+  animalId  String?  @db.ObjectId
+  animal    Animal?  @relation(fields: [animalId], references: [id])
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  authorId  String?  @db.ObjectId // ID of the user who created the room
+  author    User?    @relation("BidRoomAuthor", fields: [authorId], references: [id])
   createdAt DateTime @default(now())
 }
 

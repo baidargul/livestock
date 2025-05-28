@@ -1,13 +1,11 @@
 "use client";
 
+import { useSession } from "@/hooks/useSession";
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { io, Socket } from "socket.io-client";
 
 // Create a context for the socket instance
 const SocketContext = createContext<Socket | null>(null);
-
-// Initialize the socket instance
-export const socket = io(); // Add your server URL here if required, e.g., io("http://localhost:3000");
 
 // SocketProvider Props
 interface SocketProviderProps {
@@ -16,18 +14,38 @@ interface SocketProviderProps {
 
 // Create a provider to wrap the application
 export const SocketProvider = ({ children }: SocketProviderProps) => {
+    const [user, setUser] = useState<any>(null);
+    const getUser = useSession((state: any) => state.getUser);
     const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
 
     useEffect(() => {
-        // Set the socket instance once the component mounts
-        setSocketInstance(socket);
+        const rawUser = getUser();
+        setUser(rawUser);
+    }, [])
 
-        // Clean up on unmount
+    useEffect(() => {
+        let socket: any = null
+        if (user) {
+            let socket = io({
+                query: {
+                    userId: user.id, // Send user details as query
+                },
+            });
+
+            setSocketInstance(socket);
+        } else {
+            setSocketInstance(null);
+        }
+
+        console.info("Socket connection established.");
+
         return () => {
-            socket.disconnect();
+            if (socket) {
+                socket.disconnect();
+                console.info("Socket connection closed.");
+            }
         };
-    }, []);
-
+    }, [user]);
 
     return (
         <SocketContext.Provider value={socketInstance}>
@@ -39,8 +57,5 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 // Custom hook to access the socket instance
 export const useSocket = () => {
     const context = useContext(SocketContext);
-    // if (!context) {
-    //     throw new Error("useSocket must be used within a SocketProvider");
-    // }
     return context ?? null; // Return null if context is not available
 };

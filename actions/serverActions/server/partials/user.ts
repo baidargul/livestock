@@ -50,7 +50,6 @@ async function signup(name: string, email: string, password: string) {
     return new Response(JSON.stringify(response));
   }
 }
-
 async function signin(email: string, password: string) {
   const response = {
     status: 500,
@@ -98,7 +97,6 @@ async function signin(email: string, password: string) {
     return new Response(JSON.stringify(response));
   }
 }
-
 async function signout(session: any) {
   const response = {
     status: 500,
