@@ -61,7 +61,11 @@ async function uploadImages(images: ImagePayload[]) {
 }
 
 async function fetchImages(images: any) {
-  let rawImages = [];
+  const isInDevelopment = process.env.NODE_ENV === "development";
+  let rawImages: any = [];
+  if (isInDevelopment) {
+    return rawImages;
+  }
   for (const img of images) {
     try {
       const imageURL = `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`;

@@ -40,7 +40,7 @@ const page = async (props: Props) => {
             </DeleteProductWrapper>
             <div className='relative'>
                 <Image
-                    src={animal.images[0].image}
+                    src={animal.images.length > 0 ? animal.images[0].image : images.chickens.images[1]}
                     draggable={false}
                     priority
                     layout="fixed"
