@@ -17,20 +17,20 @@ app.prepare().then(() => {
     console.info(
       `💻 A user connected: ${
         socket.id
-      } @ ${`${new Date().toDateString()} - ${new Date().toTimeString()}`}`
+      } @ ${`${new Date().toDateString()} - ${new Date().toLocaleTimeString()}`}`
     );
 
     socket.on("join-bidroom", ({ room, userId }) => {
-      socket.join(room);
-      console.info(`💻 User ${userId} joined bidroom: ${room}`);
-      socket.to(room).emit("user-joined-bidroom", userId);
+      socket.join(room.key);
+      console.info(`💻 User ${userId} joined bidroom: ${room.key}`);
+      socket.to(room).emit("user-joined-bidroom", room);
     });
 
     socket.on("disconnect", () => {
       console.info(
         `💻 A user disconnected: ${
           socket.id
-        } @ ${`${new Date().toDateString()} - ${new Date().toTimeString()}`}`
+        } @ ${`${new Date().toDateString()} - ${new Date().toLocaleTimeString()}`}`
       );
     });
 

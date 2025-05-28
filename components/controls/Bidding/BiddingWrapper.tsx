@@ -29,10 +29,10 @@ const BiddingWrapper = (props: Props) => {
     })
     const [isSocketConnected, setIsSocketConnected] = useState(false);
     const router = useRouter()
-    const socket = useSocket()
+    const socket = user ? useSocket() : null; // Use the socket only if user is available
 
     useEffect(() => {
-        if (socket) {
+        if (socket && user) {
             setIsSocketConnected(true);
             socket.on("join-bidroom", ({ room, userId }) => {
                 if (room === props.animal.id) {
@@ -40,12 +40,13 @@ const BiddingWrapper = (props: Props) => {
                     console.info(`💻 User ${userId} joined bidroom: ${room}`);
                 }
             });
-            socket.on("user-joined-bidroom", (message) => {
-                console.info(`💻 User joined bidroom: ${message}`);
-                setSocketState((prevState) => ({
-                    ...prevState,
-                    isSellerConnected: props.animal.userId === message ? true : false,
-                }));
+            socket.on("user-joined-bidroom", (room) => {
+                console.info(`💻 User joined bidroom: ${room.key}`);
+                if (room.authorId === user.id) {
+                    console.log(`Buyer connected ${room.key}`)
+                } else if (room.userId === user.id) {
+                    console.log(`You've connected to the bidding room ${room.key}`)
+                }
             });
         }
 
@@ -104,11 +105,22 @@ const BiddingWrapper = (props: Props) => {
             return
         }
 
-        const response = await actions.client.posts.placeBid(user.id, props.animal.id, offerValue)
-        if (response.status === 200) {
-            setOfferValue(0)
-            setBids(response.data)
+        if (socket && user) {
+            const room = {
+                animalId: props.animal.id,
+                userId: user.id,
+                authorId: props.animal.userId,
+                key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
+            }
+            socket.emit("join-bidroom", room);
+            console.info(`💻 User ${user.id} joined bidroom: ${room.key}`);
         }
+
+        // const response = await actions.client.posts.placeBid(user.id, props.animal.id, offerValue)
+        // if (response.status === 200) {
+        //     setOfferValue(0)
+        //     setBids(response.data)
+        // }
     }
 
     if (!isSocketConnected) {
