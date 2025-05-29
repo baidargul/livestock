@@ -24,7 +24,7 @@ const BiddingWrapper = (props: Props) => {
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const [socketState, setSocketState] = useState({
-        isSellerConnected: false,
+        isOtherUserConnected: false,
     })
     const [isSocketConnected, setIsSocketConnected] = useState(false);
     const router = useRouter()
@@ -33,19 +33,41 @@ const BiddingWrapper = (props: Props) => {
     useEffect(() => {
         if (socket && user) {
             setIsSocketConnected(true);
-            socket.on("user-joined-bidroom", (room) => {
-                console.info(`💻 User joined bidroom: ${room.key}`);
-                if (room.authorId === user.id) {
-                    console.log(`Buyer connected ${room.key}`)
-                } else if (room.userId === user.id) {
-                    console.log(`You've connected to the bidding room ${room.key}`)
+            socket.on("user-joined-bidroom", ({ room, userId }) => {
+                if (userId === user.id) {
+                    handleOpen(true);
                 }
+                if (props.animal.userId === user.id) { // I am the author
+                    if (room.activeUsers.length > 1) {
+                        setSocketState({ ...socketState, isOtherUserConnected: true });
+                    } else {
+                        setSocketState({ ...socketState, isOtherUserConnected: false });
+                    }
+                } else {
+                    setSocketState({ ...socketState, isOtherUserConnected: room.activeUsers.includes(props.animal.userId) });
+                }
+                console.info(`💻 User '${userId}' joined bidroom: ${room.key}`);
             });
+
+            socket.on("user-left-bidroom", ({ room, userId }) => {
+                if (props.animal.userId === user.id) { // I am the author
+                    if (room.activeUsers.length > 1) {
+                        setSocketState({ ...socketState, isOtherUserConnected: true });
+                    } else {
+                        setSocketState({ ...socketState, isOtherUserConnected: false });
+                    }
+                } else {
+                    setSocketState({ ...socketState, isOtherUserConnected: room.activeUsers.includes(props.animal.userId) });
+                }
+                console.log(`${userId} left the room`)
+                console.log(room)
+            })
         }
 
         return () => {
             if (socket) {
                 socket.off("user-joined-bidroom");
+                socket.off("user-left-bidroom")
             }
         }
     }, [socket])
@@ -85,16 +107,38 @@ const BiddingWrapper = (props: Props) => {
     }
 
     const handleCreateBidRoom = async () => {
-        handleOpen(true);
         if (socket && user) {
             const room = {
                 animalId: props.animal.id,
-                userId: user.id,
                 authorId: props.animal.userId,
-                key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
+                key: `${props.animal.id}-${props.animal.userId}`,
             }
 
-            socket.emit("join-bidroom", { room });
+            socket.emit("join-bidroom", { room, userId: user.id });
+        }
+    }
+
+    const handleCloseBidRoom = async () => {
+        if (socket) {
+            const room = {
+                animalId: props.animal.id,
+                authorId: props.animal.userId,
+                key: `${props.animal.id}-${props.animal.userId}`,
+            }
+            socket.emit("close-bidroom", { room });
+        }
+        handleOpen(false);
+    }
+
+    const handleLeaveRoom = async () => {
+        if (socket) {
+            const room = {
+                animalId: props.animal.id,
+                authorId: props.animal.userId,
+                key: `${props.animal.id}-${props.animal.userId}`,
+            }
+            socket.emit("leave-bidroom", { room, userId: user.id });
+            handleOpen(false);
         }
     }
 
@@ -145,7 +189,7 @@ const BiddingWrapper = (props: Props) => {
                 </div>}
                 {bids.length > 0 && <div className='flex flex-col gap-2 h-full overflow-y-auto'>
                     <div className='text-xl font-semibold flex justify-between items-center my-4 mt-2'>
-                        <div>{socketState.isSellerConnected ? "🟢" : "🟠"} Bargain window</div>
+                        <div>{socketState.isOtherUserConnected ? "🟢" : "🟠"} Bargain window</div>
                         <div className='text-sm tracking-wide'>
                             <div>
                                 <span className='p-1 px-2 bg-amber-100 rounded-md'>{formatCurrency(bids[bids.length - 1]?.price)}</span> / {formatCurrency(calculatePricing(props.animal).price)}
@@ -182,7 +226,7 @@ const BiddingWrapper = (props: Props) => {
                         <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
                     </div>
                     <div className=' flex items-center gap-2'>
-                        <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
+                        <Button onClick={handleLeaveRoom} className='w-full' variant='btn-secondary'>Cancel</Button>
                         <Button onClick={handlePostOffer} disabled={offerValue === 0} className='w-full'>Place Offer</Button>
                     </div>
                 </div>

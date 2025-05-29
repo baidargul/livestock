@@ -7,7 +7,7 @@ export type RoomType = {
   animalId: string;
 };
 
-async function createBidRoom(room: RoomType) {
+async function createBidRoom(room: RoomType, userId: string) {
   const response = {
     status: 500,
     message: "Failed to create bid room",
@@ -15,17 +15,17 @@ async function createBidRoom(room: RoomType) {
   } as any;
 
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: room.userId,
-      },
-    });
+    // const user = await prisma.user.findUnique({
+    //   where: {
+    //     id: room.userId,
+    //   },
+    // });
 
-    if (!user) {
-      response.status = 404;
-      response.message = `User that requested the bid room does not exist.`;
-      return response;
-    }
+    // if (!user) {
+    //   response.status = 404;
+    //   response.message = `User that requested the bid room does not exist.`;
+    //   return response;
+    // }
 
     const postUser = await prisma.user.findUnique({
       where: {
@@ -58,9 +58,21 @@ async function createBidRoom(room: RoomType) {
     });
 
     if (existingRoom) {
+      const allExceptThis = existingRoom.activeUsers.filter(
+        (user) => user !== userId
+      );
+      const newUsers = [...allExceptThis, userId];
+      const updated = await prisma.bidRoom.update({
+        where: {
+          id: existingRoom.id,
+        },
+        data: {
+          activeUsers: newUsers,
+        },
+      });
       response.status = 201;
       response.message = "Bid room already exists.";
-      response.data = existingRoom;
+      response.data = updated;
       return response;
     }
 
@@ -68,8 +80,9 @@ async function createBidRoom(room: RoomType) {
       data: {
         key: room.key,
         authorId: room.authorId,
-        userId: room.userId,
+        // userId: room.userId,
         animalId: room.animalId,
+        activeUsers: [userId],
       },
     });
 
@@ -152,9 +165,52 @@ async function list(value: string, key: "id" | "key") {
     return response;
   }
 }
+async function leaveBidRoom(room: RoomType, userId: string) {
+  const response = {
+    status: 500,
+    message: "Failed to leave bid room",
+    data: null,
+  } as any;
+
+  try {
+    const existingRoom = await prisma.bidRoom.findUnique({
+      where: {
+        key: room.key,
+      },
+    });
+
+    if (!existingRoom) {
+      response.status = 404;
+      response.message = `Bid room does not exist.`;
+      return response;
+    }
+
+    const newUsers = existingRoom.activeUsers.filter((user) => user !== userId);
+
+    const updated = await prisma.bidRoom.update({
+      where: {
+        id: existingRoom.id,
+      },
+      data: {
+        activeUsers: newUsers,
+      },
+    });
+
+    response.status = 200;
+    response.message = "Bid room left successfully.";
+    response.data = updated;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    return response;
+  }
+}
 
 export const bidRoom = {
   list,
   createBidRoom,
   closeBidRoom,
+  leaveBidRoom,
 };

@@ -31,14 +31,37 @@ app.prepare().then(() => {
       } @ ${`${new Date().toDateString()} - ${new Date().toLocaleTimeString()}`}`
     );
 
-    socket.on("join-bidroom", async ({ room }) => {
+    socket.on("close-bidroom", async ({ room }) => {
       if (room && room.key) {
-        console.log(`Attempting to join room: ${room.key}`);
+        console.log(`Attempting to close room: ${room.key}`);
+        try {
+          const res = await fetch(
+            `${route}/api/rooms?value=${room.key}&key=key`,
+            {
+              method: "DELETE",
+            }
+          );
+          const data = await res.json();
+          if (data.status === 200) {
+            socket.rooms.forEach((room) => socket.leave(room));
+            console.log(`💻 Room closed successfully`);
+            console.log(data.data);
+          } else {
+            console.error(`Error: ${data.message}`);
+          }
+        } catch (error) {
+          console.error(`Failed to process room close:`, error);
+        }
+      }
+    });
+    socket.on("join-bidroom", async ({ room, userId }) => {
+      if (room && room.key) {
+        console.log(`${userId} attempting to join room: ${room.key}`);
         try {
           const res = await fetch(`${route}/api/rooms/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ room }),
+            body: JSON.stringify({ room, userId }),
           });
 
           const data = await res.json();
@@ -50,7 +73,10 @@ app.prepare().then(() => {
             socket.join(room.key);
             // Using io to broadcast all members in the room also the sender
             // we use socket only when to emit all except the sender
-            io.to(room.key).emit("user-joined-bidroom", room);
+            io.to(room.key).emit("user-joined-bidroom", {
+              room: data.data,
+              userId: userId,
+            });
           } else {
             console.error(`Error: ${data.message}`);
           }
@@ -61,7 +87,25 @@ app.prepare().then(() => {
         console.error("Room key is missing or invalid");
       }
     });
-
+    socket.on("leave-bidroom", async ({ room, userId }) => {
+      if (room && room.key) {
+        console.log(`${userId} attempting to leave room: ${room.key}`);
+        const res = await fetch(`${route}/api/rooms`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ room, userId }),
+        });
+        const data = await res.json();
+        if (data.status === 200) {
+          socket.rooms.forEach(() => socket.leave(room.key));
+          console.log(`💻 Room left successfully`);
+          io.to(room.key).emit("user-left-bidroom", {
+            room: data.data,
+            userId: userId,
+          });
+        }
+      }
+    });
     socket.on("disconnect", () => {
       fetch(`${route}/api/user/connections?connectionId=${socket.id}`, {
         method: "DELETE",
