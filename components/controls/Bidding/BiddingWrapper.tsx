@@ -23,16 +23,15 @@ const BiddingWrapper = (props: Props) => {
     const [bids, setBids] = useState<any[]>([])
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
+    const [workingForRoom, setWorkingForRoom] = useState(false)
     const [socketState, setSocketState] = useState({
         isOtherUserConnected: false,
     })
-    const [isSocketConnected, setIsSocketConnected] = useState(false);
     const router = useRouter()
     const socket = useSocket()
 
     useEffect(() => {
         if (socket && user) {
-            setIsSocketConnected(true);
             socket.on("user-joined-bidroom", ({ room, userId }) => {
                 if (userId === user.id) {
                     handleOpen(true);
@@ -107,6 +106,7 @@ const BiddingWrapper = (props: Props) => {
     }
 
     const handleCreateBidRoom = async () => {
+        setWorkingForRoom(true)
         if (socket && user) {
             const room = {
                 animalId: props.animal.id,
@@ -116,6 +116,7 @@ const BiddingWrapper = (props: Props) => {
 
             socket.emit("join-bidroom", { room, userId: user.id });
         }
+        setWorkingForRoom(false)
     }
 
     const handleCloseBidRoom = async () => {
@@ -131,6 +132,7 @@ const BiddingWrapper = (props: Props) => {
     }
 
     const handleLeaveRoom = async () => {
+        setWorkingForRoom(true)
         if (socket) {
             const room = {
                 animalId: props.animal.id,
@@ -140,6 +142,7 @@ const BiddingWrapper = (props: Props) => {
             socket.emit("leave-bidroom", { room, userId: user.id });
             handleOpen(false);
         }
+        setWorkingForRoom(false)
     }
 
     const handlePostOffer = async () => {
@@ -232,7 +235,7 @@ const BiddingWrapper = (props: Props) => {
                 </div>
             </div >
             <div onClick={handleCreateBidRoom} className='w-full'>
-                {props.children}
+                {workingForRoom ? <Button disabled className='w-full'>...</Button> : props.animal.userId === user.id ? <Button className='w-full'>See Bids</Button> : props.children}
             </div>
             <div onClick={() => handleOpen(false)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>
