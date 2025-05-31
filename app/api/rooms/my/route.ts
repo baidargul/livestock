@@ -10,6 +10,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const userId = new URL(req.url).searchParams.get("userId");
+    const animalId = new URL(req.url).searchParams.get("animalId");
+
     if (!userId) {
       response.status = 400;
       response.message = "Missing required fields: userId";
@@ -17,7 +19,11 @@ export async function GET(req: NextRequest) {
       return new Response(JSON.stringify(response));
     }
 
-    response = await actions.server.bidRoom.listByUser(userId);
+    if (!animalId) {
+      response = await actions.server.bidRoom.listByUser(userId);
+    } else {
+      response = await actions.server.bidRoom.listByUser(userId, animalId);
+    }
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

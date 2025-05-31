@@ -174,7 +174,7 @@ async function list(value: string, key: "id" | "key") {
     return response;
   }
 }
-async function listByUser(userId: string) {
+async function listByUser(userId: string, animalId?: string) {
   const response = {
     status: 500,
     message: "Failed to list bid rooms by user id",
@@ -187,16 +187,23 @@ async function listByUser(userId: string) {
       },
     });
 
+    let whereClause: any = {
+      userId: userId,
+    };
+
+    if (animalId) {
+      whereClause = { ...whereClause, animalId: animalId };
+    }
+
     if (!user) {
       response.status = 404;
       response.message = `User with ID ${userId} not found`;
       response.data = null;
       return new Response(JSON.stringify(response));
     }
+
     const otherRooms = await prisma.bidRoom.findMany({
-      where: {
-        userId: userId,
-      },
+      where: whereClause,
       include: {
         bids: {
           include: {
@@ -209,9 +216,7 @@ async function listByUser(userId: string) {
       },
     });
     const myRooms = await prisma.bidRoom.findMany({
-      where: {
-        authorId: userId,
-      },
+      where: whereClause,
       include: {
         bids: {
           include: {
