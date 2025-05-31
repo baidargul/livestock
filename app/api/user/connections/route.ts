@@ -1,3 +1,4 @@
+import { actions } from "@/actions/serverActions/actions";
 import prisma from "@/lib/prisma";
 import { NextRequest } from "next/server";
 
@@ -109,9 +110,12 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
+    //Remove user from All active bidding rooms
+    actions.server.bidRoom.leaveAllBidRooms(user.id);
+
     response.status = 200;
     response.message = "User disconnected successfully";
-    response.data = null;
+    response.data = user;
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

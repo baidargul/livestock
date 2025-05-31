@@ -75,12 +75,14 @@ model Sessions {
 
 model Bids {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  animalId  String?  @db.ObjectId
-  animal    Animal?  @relation(fields: [animalId], references: [id])
+  bidRoomId String?  @db.ObjectId
   userId    String?  @db.ObjectId
   user      User?    @relation(fields: [userId], references: [id])
   price     Float
   createdAt DateTime @default(now())
+  Animal    Animal?  @relation(fields: [animalId], references: [id])
+  animalId  String?  @db.ObjectId
+  BidRoom   BidRoom? @relation(fields: [bidRoomId], references: [id])
 }
 
 model BidRoom {
@@ -93,6 +95,7 @@ model BidRoom {
   authorId    String?  @db.ObjectId // ID of the user who created the room
   author      User?    @relation("BidRoomAuthor", fields: [authorId], references: [id])
   activeUsers String[]
+  bids        Bids[]
   createdAt   DateTime @default(now())
 }
 

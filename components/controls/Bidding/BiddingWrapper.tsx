@@ -33,6 +33,7 @@ const BiddingWrapper = (props: Props) => {
     useEffect(() => {
         if (socket && user) {
             socket.on("user-joined-bidroom", ({ room, userId }) => {
+                console.log(userId)
                 if (userId === user.id) {
                     handleOpen(true);
                 }
@@ -50,8 +51,12 @@ const BiddingWrapper = (props: Props) => {
 
             socket.on("user-left-bidroom", ({ room, userId }) => {
                 if (props.animal.userId === user.id) { // I am the author
-                    if (room.activeUsers.length > 1) {
-                        setSocketState({ ...socketState, isOtherUserConnected: true });
+                    if (room) {
+                        if (room.activeUsers.length > 1) {
+                            setSocketState({ ...socketState, isOtherUserConnected: true });
+                        } else {
+                            setSocketState({ ...socketState, isOtherUserConnected: false });
+                        }
                     } else {
                         setSocketState({ ...socketState, isOtherUserConnected: false });
                     }
@@ -111,7 +116,8 @@ const BiddingWrapper = (props: Props) => {
             const room = {
                 animalId: props.animal.id,
                 authorId: props.animal.userId,
-                key: `${props.animal.id}-${props.animal.userId}`,
+                userId: user.id,
+                key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
             }
 
             socket.emit("join-bidroom", { room, userId: user.id });
@@ -124,7 +130,8 @@ const BiddingWrapper = (props: Props) => {
             const room = {
                 animalId: props.animal.id,
                 authorId: props.animal.userId,
-                key: `${props.animal.id}-${props.animal.userId}`,
+                userId: user.id,
+                key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
             }
             socket.emit("close-bidroom", { room });
         }
@@ -137,7 +144,8 @@ const BiddingWrapper = (props: Props) => {
             const room = {
                 animalId: props.animal.id,
                 authorId: props.animal.userId,
-                key: `${props.animal.id}-${props.animal.userId}`,
+                userId: user.id,
+                key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
             }
             socket.emit("leave-bidroom", { room, userId: user.id });
             handleOpen(false);
@@ -235,7 +243,7 @@ const BiddingWrapper = (props: Props) => {
                 </div>
             </div >
             <div onClick={handleCreateBidRoom} className='w-full'>
-                {workingForRoom ? <Button disabled className='w-full'>...</Button> : props.animal.userId === user.id ? <Button className='w-full'>See Bids</Button> : props.children}
+                {workingForRoom ? <Button disabled className='w-full'>...</Button> : props.animal.userId === user?.id ? <Button className='w-full'>See Bids</Button> : props.children}
             </div>
             <div onClick={() => handleOpen(false)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>

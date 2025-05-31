@@ -106,10 +106,18 @@ app.prepare().then(() => {
         }
       }
     });
-    socket.on("disconnect", () => {
-      fetch(`${route}/api/user/connections?connectionId=${socket.id}`, {
-        method: "DELETE",
-      });
+    socket.on("disconnect", async () => {
+      const response = await fetch(
+        `${route}/api/user/connections?connectionId=${socket.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await response.json();
+
+      if (data.status === 200) {
+        io.emit("user-left-bidroom", { room: null, userId: data.data.id });
+      }
       console.info(
         `💻 A user disconnected: ${
           socket.id
