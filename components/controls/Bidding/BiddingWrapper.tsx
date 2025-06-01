@@ -139,13 +139,12 @@ const BiddingWrapper = (props: Props) => {
 
     const handleCloseBidRoom = async () => {
         if (socket) {
-            const room = {
-                animalId: props.animal.id,
-                authorId: props.animal.userId,
-                userId: user.id,
-                key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
+            if (activeBidRoom) {
+                const room = {
+                    ...activeBidRoom
+                }
+                socket.emit("close-bidroom", { room });
             }
-            socket.emit("close-bidroom", { room });
         }
         handleOpen(false);
     }
