@@ -198,12 +198,6 @@ const BiddingWrapper = (props: Props) => {
                 setOfferValue(0)
             }
         }
-
-        // const response = await actions.client.posts.placeBid(user.id, props.animal.id, offerValue)
-        // if (response.status === 200) {
-        //     setOfferValue(0)
-        //     setBids(response.data)
-        // }
     }
 
     const handlePlaceOfferKeyDown = (e: any) => {
