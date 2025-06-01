@@ -54,7 +54,21 @@ async function createBidRoom(room: RoomType, userId: string) {
     const existingRoom = await prisma.bidRoom.findUnique({
       where: {
         key: room.key,
-        userId: userId,
+      },
+      include: {
+        bids: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
@@ -66,10 +80,24 @@ async function createBidRoom(room: RoomType, userId: string) {
       const updated = await prisma.bidRoom.update({
         where: {
           id: existingRoom.id,
-          userId: userId,
         },
         data: {
           activeUsers: newUsers,
+        },
+        include: {
+          bids: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
       response.status = 201;
@@ -85,6 +113,21 @@ async function createBidRoom(room: RoomType, userId: string) {
         userId: room.userId,
         animalId: room.animalId,
         activeUsers: [userId],
+      },
+      include: {
+        bids: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
@@ -210,17 +253,50 @@ async function listByUser(userId: string, animalId?: string) {
             user: true,
           },
         },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
       },
     });
+
+    whereClause = {
+      authorId: userId,
+    };
+
+    if (animalId) {
+      whereClause = { ...whereClause, animalId: animalId };
+    }
+
     const myRooms = await prisma.bidRoom.findMany({
       where: whereClause,
       include: {
         bids: {
           include: {
             user: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
           },
         },
       },
@@ -258,7 +334,6 @@ async function leaveBidRoom(room: RoomType, userId: string) {
     const existingRoom = await prisma.bidRoom.findUnique({
       where: {
         key: room.key,
-        userId: userId,
       },
     });
 
@@ -273,10 +348,28 @@ async function leaveBidRoom(room: RoomType, userId: string) {
     const updated = await prisma.bidRoom.update({
       where: {
         id: existingRoom.id,
-        userId: userId,
       },
       data: {
         activeUsers: newUsers,
+      },
+      include: {
+        bids: {
+          include: {
+            user: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
@@ -321,6 +414,25 @@ async function leaveAllBidRooms(userId: string) {
         },
         data: {
           activeUsers: newUsers,
+        },
+        include: {
+          bids: {
+            include: {
+              user: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
     }

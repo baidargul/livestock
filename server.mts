@@ -103,6 +103,8 @@ app.prepare().then(() => {
             room: data.data,
             userId: userId,
           });
+        } else {
+          console.error(`Error: ${data.message}`);
         }
       }
     });
