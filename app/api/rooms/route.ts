@@ -73,7 +73,7 @@ export async function PATCH(req: NextRequest) {
     return new Response(JSON.stringify(response));
   }
 }
-export async function UPDATE(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   let response = {
     status: 500,
     message: "Internal Server Error",
