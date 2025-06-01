@@ -56,7 +56,6 @@ model Animal {
   deliveryOptions         DeliveryOptions[]
   title                   String?
   description             String?
-  bids                    Bids[]
 
   // Media
   images  Json // JSON field to store an array of objects
@@ -80,8 +79,6 @@ model Bids {
   user      User?    @relation(fields: [userId], references: [id])
   price     Float
   createdAt DateTime @default(now())
-  Animal    Animal?  @relation(fields: [animalId], references: [id])
-  animalId  String?  @db.ObjectId
   BidRoom   BidRoom? @relation(fields: [bidRoomId], references: [id])
 }
 

@@ -148,7 +148,7 @@ async function removePost(id: string) {
     return response;
   }
 }
-async function placeBid(userId: string, postId: string, amount: number) {
+async function placeBid(roomKey: string, userId: string, amount: number) {
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -168,15 +168,22 @@ async function placeBid(userId: string, postId: string, amount: number) {
       return response;
     }
 
-    const post = await prisma.animal.findUnique({
+    const room = await prisma.bidRoom.findFirst({
       where: {
-        id: postId,
+        key: roomKey,
       },
     });
 
-    if (!post) {
+    if (!room) {
       response.status = 400;
-      response.message = "Post not found";
+      response.message = `Room not found, or closed.`;
+      response.data = null;
+      return response;
+    }
+
+    if (room.userId !== userId && room.authorId !== userId) {
+      response.status = 400;
+      response.message = `You're not allowed to bid on this room.`;
       response.data = null;
       return response;
     }
@@ -184,21 +191,16 @@ async function placeBid(userId: string, postId: string, amount: number) {
     const bid = await prisma.bids.create({
       data: {
         userId,
-        animalId: postId,
+        bidRoomId: room.id,
         price: amount,
       },
     });
 
-    let bids: any = await actions.server.post.listBids(postId);
-    if (bids.status === 200) {
-      bids = bids.data;
-    } else {
-      bids = [];
-    }
+    let bidRoom: any = await actions.server.bidRoom.list(roomKey, "key");
 
     response.status = 200;
     response.message = "Bid placed successfully";
-    response.data = bids;
+    response.data = bidRoom.data;
     return response;
   } catch (error: any) {
     console.log(`[SERVER ERROR]: ${error.message}`);
@@ -208,7 +210,7 @@ async function placeBid(userId: string, postId: string, amount: number) {
     return response;
   }
 }
-async function listBids(postId: string) {
+async function listBids(roomId: string) {
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -217,14 +219,13 @@ async function listBids(postId: string) {
   try {
     let bids: any = await prisma.bids.findMany({
       where: {
-        animalId: postId,
+        bidRoomId: roomId,
       },
       include: {
         user: {
           select: {
             id: true,
             name: true,
-            profileImage: true,
           },
         },
       },

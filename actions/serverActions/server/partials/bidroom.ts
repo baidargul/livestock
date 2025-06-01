@@ -56,7 +56,19 @@ async function createBidRoom(room: RoomType, userId: string) {
         key: room.key,
       },
       include: {
-        bids: true,
+        bids: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
         user: {
           select: {
             id: true,
@@ -85,7 +97,19 @@ async function createBidRoom(room: RoomType, userId: string) {
           activeUsers: newUsers,
         },
         include: {
-          bids: true,
+          bids: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
           user: {
             select: {
               id: true,
@@ -115,7 +139,19 @@ async function createBidRoom(room: RoomType, userId: string) {
         activeUsers: [userId],
       },
       include: {
-        bids: true,
+        bids: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
         user: {
           select: {
             id: true,
@@ -187,24 +223,38 @@ async function list(value: string, key: "id" | "key") {
   } as any;
 
   try {
-    const rooms = await prisma.bidRoom.findMany({
+    const rooms = await prisma.bidRoom.findFirst({
       where: {
         [key]: value,
       },
       include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         bids: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
           },
         },
       },
     });
-
-    if (rooms.length === 0) {
-      response.status = 404;
-      response.message = `No bid rooms found.`;
-      return response;
-    }
 
     response.status = 200;
     response.message = "Bid rooms listed successfully.";
@@ -250,7 +300,15 @@ async function listByUser(userId: string, animalId?: string) {
       include: {
         bids: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
           },
         },
         user: {
@@ -267,7 +325,7 @@ async function listByUser(userId: string, animalId?: string) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
@@ -284,7 +342,15 @@ async function listByUser(userId: string, animalId?: string) {
       include: {
         bids: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
           },
         },
         user: {
@@ -301,7 +367,7 @@ async function listByUser(userId: string, animalId?: string) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
@@ -355,7 +421,15 @@ async function leaveBidRoom(room: RoomType, userId: string) {
       include: {
         bids: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
           },
         },
         user: {
@@ -418,7 +492,15 @@ async function leaveAllBidRooms(userId: string) {
         include: {
           bids: {
             include: {
-              user: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
             },
           },
           user: {

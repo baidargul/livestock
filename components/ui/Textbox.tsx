@@ -9,6 +9,7 @@ type Props = {
     disabled?: boolean
     value?: string | number
     onChange?: (val: string) => void
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
     className?: string
     labelClassName?: string
 }
@@ -30,6 +31,18 @@ const Textbox = (props: Props) => {
         }
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (props.onKeyDown) {
+            props.onKeyDown(e)
+        }
+
+        if (e.key === "Enter") {
+            if (txtRef.current) {
+                txtRef.current.select()
+            }
+        }
+    }
+
     const handleOnFocus = () => {
         if (txtRef.current) {
             txtRef.current.select()
@@ -39,7 +52,7 @@ const Textbox = (props: Props) => {
     return (
         <div className='flex flex-col gap-1'>
             {props.label && props.label.length > 0 && <label className={`label ${props.labelClassName}`}>{props.label}</label>}
-            <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} className={`textbox w-full focus-within:tracking-wide ${props.className}`} onChange={handleChange} onFocus={handleOnFocus} value={value} />
+            <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} className={`textbox w-full focus-within:tracking-wide ${props.className}`} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={handleOnFocus} value={value} />
         </div>
     )
 }

@@ -31,27 +31,26 @@ app.prepare().then(() => {
       } @ ${`${new Date().toDateString()} - ${new Date().toLocaleTimeString()}`}`
     );
 
-    socket.on("close-bidroom", async ({ room }) => {
-      if (room && room.key) {
-        console.log(`Attempting to close room: ${room.key}`);
-        try {
-          const res = await fetch(
-            `${route}/api/rooms?value=${room.key}&key=key`,
-            {
-              method: "DELETE",
-            }
-          );
-          const data = await res.json();
-          if (data.status === 200) {
-            socket.rooms.forEach((room) => socket.leave(room));
-            console.log(`💻 Room closed successfully`);
-            console.log(data.data);
-          } else {
-            console.error(`Error: ${data.message}`);
-          }
-        } catch (error) {
-          console.error(`Failed to process room close:`, error);
+    socket.on("place-bid", async ({ roomKey, userId, amount }) => {
+      console.log(
+        `'${userId}' want to placebid of ${amount} in room: ${roomKey}`
+      );
+      try {
+        const res = await fetch(`${route}/api/rooms/bid`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomKey, userId, amount: amount }),
+        });
+        const data = await res.json();
+        if (data.status === 200) {
+          console.log(`💻 Bid placed successfully`);
+          socket.join(roomKey);
+          io.to(roomKey).emit("bid-placed", { bidRoom: data.data });
+        } else {
+          console.error(data.message);
         }
+      } catch (error) {
+        console.error(`Error: ${error}`);
       }
     });
     socket.on("join-bidroom", async ({ room, userId }) => {
@@ -108,6 +107,29 @@ app.prepare().then(() => {
         }
       }
     });
+    socket.on("close-bidroom", async ({ room }) => {
+      if (room && room.key) {
+        console.log(`Attempting to close room: ${room.key}`);
+        try {
+          const res = await fetch(
+            `${route}/api/rooms?value=${room.key}&key=key`,
+            {
+              method: "DELETE",
+            }
+          );
+          const data = await res.json();
+          if (data.status === 200) {
+            socket.rooms.forEach((room) => socket.leave(room));
+            console.log(`💻 Room closed successfully`);
+            console.log(data.data);
+          } else {
+            console.error(`Error: ${data.message}`);
+          }
+        } catch (error) {
+          console.error(`Failed to process room close:`, error);
+        }
+      }
+    });
     socket.on("disconnect", async () => {
       const response = await fetch(
         `${route}/api/user/connections?connectionId=${socket.id}`,
@@ -126,7 +148,6 @@ app.prepare().then(() => {
         } @ ${`${new Date().toDateString()} - ${new Date().toLocaleTimeString()}`}`
       );
     });
-
     // Add more event listeners as needed
   });
 

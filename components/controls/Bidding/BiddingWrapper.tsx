@@ -22,12 +22,11 @@ const BiddingWrapper = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState(0)
     const [user, setUser] = useState<any>(null);
-    const [bids, setBids] = useState<any[]>([])
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const [workingForRoom, setWorkingForRoom] = useState(false)
     const [bidRooms, setBidRooms] = useState<any[]>([])
-    const [activeBidRoom, setAciveBidRoom] = useState<any>(null)
+    const [activeBidRoom, setActiveBidRoom] = useState<any>(null)
     const [socketState, setSocketState] = useState({
         isOtherUserConnected: false,
     })
@@ -43,7 +42,7 @@ const BiddingWrapper = (props: Props) => {
                 // console.log(room)
                 if (userId === user.id) {
                     handleOpen(true);
-                    setAciveBidRoom(room)
+                    setActiveBidRoom(room)
                 }
                 if (isAuthor) {
                     if (room.activeUsers.length > 1) {
@@ -56,7 +55,6 @@ const BiddingWrapper = (props: Props) => {
                 }
                 // console.info(`💻 User '${userId}' joined bidroom: ${room.key}`);
             });
-
             socket.on("user-left-bidroom", ({ room, userId }) => {
                 if (isAuthor) {
                     if (room) {
@@ -70,9 +68,15 @@ const BiddingWrapper = (props: Props) => {
                     }
 
                 } else {
-                    setSocketState({ ...socketState, isOtherUserConnected: room.activeUsers.includes(props.animal.userId) });
+                    setSocketState({ ...socketState, isOtherUserConnected: room.activeUsers?.includes(props.animal.userId) });
                 }
                 // console.log(`${userId} left the room`)
+            })
+            socket.on("bid-placed", ({ bidRoom }) => {
+                const newBids = bidRoom.bids.slice(-10);
+                // if (activeBidRoom) {
+                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
+                // }
             })
         }
 
@@ -80,6 +84,7 @@ const BiddingWrapper = (props: Props) => {
             if (socket) {
                 socket.off("user-joined-bidroom");
                 socket.off("user-left-bidroom")
+                socket.off("bid-placed")
             }
         }
     }, [socket])
@@ -88,12 +93,22 @@ const BiddingWrapper = (props: Props) => {
         if (scrollHookRef.current) {
             scrollHookRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [bids])
+
+        if (activeBidRoom && activeBidRoom.bids.length > 0) {
+            const lastBid = activeBidRoom.bids[activeBidRoom.bids.length - 1]
+            setOfferValue(lastBid.price)
+        }
+
+    }, [activeBidRoom])
 
     useEffect(() => {
         const rawUser = getUser();
         setUser(rawUser);
-        setOfferValue(calculatePricing(props.animal).price)
+        if (!activeBidRoom) {
+            setOfferValue(calculatePricing(props.animal).price)
+        } else {
+            setOfferValue(activeBidRoom.bids[activeBidRoom.bids.length - 1].price)
+        }
     }, []);
 
     useEffect(() => {
@@ -161,7 +176,7 @@ const BiddingWrapper = (props: Props) => {
                 };
                 socket.emit("leave-bidroom", { room, userId: user.id });
             }
-            setAciveBidRoom(null);
+            setActiveBidRoom(null);
         } else {
             handleOpen(false);
         }
@@ -174,8 +189,15 @@ const BiddingWrapper = (props: Props) => {
             router.push("/signin")
             return
         }
+        if (offerValue <= 0) return
 
 
+        if (activeBidRoom) {
+            if (socket && user) {
+                socket.emit("place-bid", { roomKey: activeBidRoom.key, userId: user.id, amount: offerValue });
+                setOfferValue(0)
+            }
+        }
 
         // const response = await actions.client.posts.placeBid(user.id, props.animal.id, offerValue)
         // if (response.status === 200) {
@@ -184,10 +206,15 @@ const BiddingWrapper = (props: Props) => {
         // }
     }
 
+    const handlePlaceOfferKeyDown = (e: any) => {
+        if (e.key === "Enter") {
+            handlePostOffer()
+        }
+    }
+
     if (!socket) {
         return <div>Connecting to bidding service...</div>;
     }
-
 
     return (
         <>
@@ -214,35 +241,38 @@ const BiddingWrapper = (props: Props) => {
                         <CalculatedDescription animal={props.animal} />
                     </div>
                 </div>}
-                {activeBidRoom && <div className='flex flex-col gap-2 h-full overflow-y-auto'>
-                    <div className='text-xl font-semibold flex justify-between items-center my-4 mt-2'>
-                        <div>{socketState.isOtherUserConnected ? "🟢" : "🟠"} {isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}</div>
-                        <div className='text-sm tracking-wide'>
-                            {bids.length > 0 && <div>
-                                <span className='p-1 px-2 bg-amber-100 rounded-md'>{formatCurrency(bids.length > 0 && bids[bids.length - 1]?.price)}</span> / {formatCurrency(calculatePricing(props.animal).price)}
-                            </div>}
+                <div className='flex flex-col gap-4'>
+                    {activeBidRoom && <div className=''>
+                        <div className='text-xl font-semibold flex justify-between items-center mt-1'>
+                            <div>{socketState.isOtherUserConnected ? "🟢" : "🟠"} {isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}</div>
+                            <div className='text-sm tracking-wide'>
+                                {activeBidRoom.bids.length > 0 && <div>
+                                    <span className='p-1 px-2 bg-amber-100 rounded-md'>{formatCurrency(activeBidRoom.bids.length > 0 && activeBidRoom.bids[activeBidRoom.bids.length - 1]?.price)}</span> / {formatCurrency(calculatePricing(props.animal).price)}
+                                </div>}
+                            </div>
                         </div>
+                    </div>}
+                    <div className='overflow-y-auto h-full max-h-[400px]'>
+                        {!activeBidRoom && <Rooms rooms={bidRooms} socket={socket} currentUser={user} />}
+                        {
+                            activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
+                                return (
+                                    <div onClick={() => setOfferValue(bid.price)} key={`${bid.id}-${index}`} className={`p-2  ${user.id === bid.userId ? "bg-gradient-to-r from-emerald-100 to-transparent" : "bg-gradient-to-l from-amber-100 to-transparent"} flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}>
+                                        <div className='tracking-tight'>{user.id === bid.userId ? "You" : bid.user.name}</div> <div className={`tracking-wide ${index === activeBidRoom.bids.length - 1 && "text-emerald-700 font-bold"}`}>{formatCurrency(bid.price)}</div>
+                                    </div>
+                                )
+                            })
+                        }
+                        <div ref={scrollHookRef}></div>
                     </div>
-                </div>}
-                <div className='overflow-y-auto h-[80%] pb-32'>
-                    {!activeBidRoom && <Rooms rooms={bidRooms} socket={socket} currentUser={user} />}
-                    {
-                        activeBidRoom && activeBidRoom?.bids?.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
-                            return (
-                                <div key={`${bid.id}-${index}`} className='p-2 border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer'>
-                                    {bid.user.name} {bid.price}
-                                </div>
-                            )
-                        })
-                    }
                 </div>
                 <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
                     {isAuthor && activeBidRoom && bidRooms.length > 0 && <div className='my-4'>
-                        <Textbox label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
+                        <Textbox onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
                         <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
                     </div>}
                     {!isAuthor && activeBidRoom && <div className='my-4'>
-                        <Textbox label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
+                        <Textbox onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
                         <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
                     </div>}
                     <div className=' flex items-center gap-2'>
