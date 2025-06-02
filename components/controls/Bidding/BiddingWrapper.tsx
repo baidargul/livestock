@@ -34,15 +34,14 @@ const BiddingWrapper = (props: Props) => {
     const socket = useSocket()
     const isAuthor = user ? props.animal.userId === user.id : false
 
-
     useEffect(() => {
         if (socket && user) {
             fetchBidRoomsForThisAnimal()
             socket.on("user-joined-bidroom", ({ room, userId }) => {
-                // console.log(room)
                 if (userId === user.id) {
                     handleOpen(true);
-                    setActiveBidRoom(room)
+                    const theRoom = { ...room, bids: bidsReverse(room.bids) }
+                    setActiveBidRoom(theRoom)
                 }
                 if (isAuthor) {
                     if (room.activeUsers.length > 1) {
@@ -56,6 +55,7 @@ const BiddingWrapper = (props: Props) => {
                 // console.info(`💻 User '${userId}' joined bidroom: ${room.key}`);
             });
             socket.on("user-left-bidroom", ({ room, userId }) => {
+                room.bids = bidsReverse(room.bids)
                 if (isAuthor) {
                     if (room) {
                         if (room.activeUsers.length > 1) {
@@ -73,10 +73,8 @@ const BiddingWrapper = (props: Props) => {
                 // console.log(`${userId} left the room`)
             })
             socket.on("bid-placed", ({ bidRoom }) => {
-                const newBids = bidRoom.bids.slice(-10);
-                // if (activeBidRoom) {
+                const newBids = bidsReverse(bidRoom.bids)
                 setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
-                // }
             })
         }
 
@@ -119,7 +117,13 @@ const BiddingWrapper = (props: Props) => {
         if (user && props.animal.userId === user.id) {
             const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
             if (response.status === 200) {
-                setBidRooms(response.data.myRooms)
+
+                let theRooms = []
+                for (const theRoom of response.data.myRooms) {
+                    theRoom.bids = bidsReverse(theRoom.bids)
+                    theRooms.push(theRoom)
+                }
+                setBidRooms(theRooms)
             }
         }
     }
@@ -284,3 +288,11 @@ const BiddingWrapper = (props: Props) => {
 }
 
 export default BiddingWrapper
+
+export function bidsReverse(bids: any[]) {
+    let bidsCopy = []
+    for (let i = bids.length - 1; i >= 0; i--) {
+        bidsCopy.push(bids[i])
+    }
+    return bidsCopy
+}

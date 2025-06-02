@@ -57,6 +57,7 @@ async function createBidRoom(room: RoomType, userId: string) {
       },
       include: {
         bids: {
+          take: 5,
           include: {
             user: {
               select: {
@@ -66,7 +67,7 @@ async function createBidRoom(room: RoomType, userId: string) {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         user: {
@@ -98,6 +99,7 @@ async function createBidRoom(room: RoomType, userId: string) {
         },
         include: {
           bids: {
+            take: 5,
             include: {
               user: {
                 select: {
@@ -107,7 +109,7 @@ async function createBidRoom(room: RoomType, userId: string) {
               },
             },
             orderBy: {
-              createdAt: "asc",
+              createdAt: "desc",
             },
           },
           user: {
@@ -140,6 +142,7 @@ async function createBidRoom(room: RoomType, userId: string) {
       },
       include: {
         bids: {
+          take: 5,
           include: {
             user: {
               select: {
@@ -149,7 +152,7 @@ async function createBidRoom(room: RoomType, userId: string) {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         user: {
@@ -215,12 +218,20 @@ async function closeBidRoom(value: string, key: "id" | "key") {
     return response;
   }
 }
-async function list(value: string, key: "id" | "key") {
+async function list(value: string, key: "id" | "key", bidLimit?: number) {
   const response = {
     status: 500,
     message: "Failed to list bid rooms",
     data: null,
   } as any;
+
+  let extraClause = {};
+  if (bidLimit) {
+    extraClause = {
+      ...extraClause,
+      take: bidLimit,
+    };
+  }
 
   try {
     const rooms = await prisma.bidRoom.findFirst({
@@ -241,6 +252,7 @@ async function list(value: string, key: "id" | "key") {
           },
         },
         bids: {
+          ...extraClause,
           include: {
             user: {
               select: {
@@ -250,7 +262,7 @@ async function list(value: string, key: "id" | "key") {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
       },
@@ -267,12 +279,25 @@ async function list(value: string, key: "id" | "key") {
     return response;
   }
 }
-async function listByUser(userId: string, animalId?: string) {
+async function listByUser(
+  userId: string,
+  animalId?: string,
+  bidLimit?: number
+) {
   const response = {
     status: 500,
     message: "Failed to list bid rooms by user id",
     data: null,
   } as any;
+
+  let extraClause = {};
+  if (bidLimit) {
+    extraClause = {
+      ...extraClause,
+      take: bidLimit,
+    };
+  }
+
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -299,6 +324,7 @@ async function listByUser(userId: string, animalId?: string) {
       where: whereClause,
       include: {
         bids: {
+          ...extraClause,
           include: {
             user: {
               select: {
@@ -308,7 +334,7 @@ async function listByUser(userId: string, animalId?: string) {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         user: {
@@ -325,7 +351,7 @@ async function listByUser(userId: string, animalId?: string) {
         },
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
@@ -341,6 +367,7 @@ async function listByUser(userId: string, animalId?: string) {
       where: whereClause,
       include: {
         bids: {
+          ...extraClause,
           include: {
             user: {
               select: {
@@ -350,7 +377,7 @@ async function listByUser(userId: string, animalId?: string) {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         user: {
@@ -367,7 +394,7 @@ async function listByUser(userId: string, animalId?: string) {
         },
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
@@ -420,6 +447,7 @@ async function leaveBidRoom(room: RoomType, userId: string) {
       },
       include: {
         bids: {
+          take: 5,
           include: {
             user: {
               select: {
@@ -429,7 +457,7 @@ async function leaveBidRoom(room: RoomType, userId: string) {
             },
           },
           orderBy: {
-            createdAt: "asc",
+            createdAt: "desc",
           },
         },
         user: {
@@ -491,6 +519,7 @@ async function leaveAllBidRooms(userId: string) {
         },
         include: {
           bids: {
+            take: 5,
             include: {
               user: {
                 select: {
@@ -500,7 +529,7 @@ async function leaveAllBidRooms(userId: string) {
               },
             },
             orderBy: {
-              createdAt: "asc",
+              createdAt: "desc",
             },
           },
           user: {

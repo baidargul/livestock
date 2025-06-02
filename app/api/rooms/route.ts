@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       return new Response(JSON.stringify(response));
     }
 
-    response = await actions.server.bidRoom.list(value, key as "id" | "key");
+    response = await actions.server.bidRoom.list(value, key as "id" | "key", 5);
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

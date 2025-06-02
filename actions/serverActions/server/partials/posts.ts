@@ -196,7 +196,7 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
       },
     });
 
-    let bidRoom: any = await actions.server.bidRoom.list(roomKey, "key");
+    let bidRoom: any = await actions.server.bidRoom.list(roomKey, "key", 5);
 
     response.status = 200;
     response.message = "Bid placed successfully";
@@ -230,7 +230,7 @@ async function listBids(roomId: string) {
         },
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 

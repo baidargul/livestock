@@ -20,9 +20,9 @@ export async function GET(req: NextRequest) {
     }
 
     if (!animalId) {
-      response = await actions.server.bidRoom.listByUser(userId);
+      response = await actions.server.bidRoom.listByUser(userId, undefined, 5);
     } else {
-      response = await actions.server.bidRoom.listByUser(userId, animalId);
+      response = await actions.server.bidRoom.listByUser(userId, animalId, 5);
     }
     return new Response(JSON.stringify(response));
   } catch (error: any) {
