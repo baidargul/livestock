@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { actions } from "../../actions";
 
 export type RoomType = {
   key: string;
@@ -560,6 +561,70 @@ async function leaveAllBidRooms(userId: string) {
   }
 }
 
+async function lockBidAsFinalOffer(roomId: string, userId: string) {
+  const response = {
+    status: 500,
+    message: "Failed to lock bid as final offer",
+    data: null,
+  } as any;
+
+  try {
+    const existingRoom = await prisma.bidRoom.findUnique({
+      where: {
+        id: roomId,
+      },
+      include: {
+        bids: {
+          take: 1,
+          where: {
+            userId: userId,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+
+    if (!existingRoom) {
+      response.status = 404;
+      response.message = `You cannot lock this room`;
+      return response;
+    }
+
+    await prisma.bids.update({
+      where: {
+        id: existingRoom.bids[0].id,
+        userId: userId,
+        bidRoomId: roomId,
+      },
+      data: {
+        isFinalOffer: true,
+      },
+    });
+
+    const room = await actions.server.bidRoom.list(roomId, "id", 5);
+
+    response.status = 200;
+    response.message = "Bid locked as final offer successfully.";
+    response.data = room;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    return response;
+  }
+}
+
 export const bidRoom = {
   list,
   listByUser,
@@ -567,4 +632,5 @@ export const bidRoom = {
   closeBidRoom,
   leaveBidRoom,
   leaveAllBidRooms,
+  lockBidAsFinalOffer,
 };

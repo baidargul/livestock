@@ -53,6 +53,31 @@ app.prepare().then(() => {
         console.error(`Error: ${error}`);
       }
     });
+    socket.on("lock-bid-as-final-offer", async ({ roomId, userId }) => {
+      console.log(
+        `'${userId}' want to lock bid as final offer in room: ${roomId}`
+      );
+      try {
+        const res = await fetch(`${route}/api/rooms/bid/lock`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomId, userId }),
+        });
+        const data = await res.json();
+        if (data.status === 200) {
+          console.log(`💻 Last Bid locked as final offer successfully`);
+          socket.join(data.data.key);
+          io.to(data.data.key).emit("bid-locked-as-final-offer", {
+            room: data.data.data,
+            userId: userId,
+          });
+        } else {
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error(`Error: ${error}`);
+      }
+    });
     socket.on("join-bidroom", async ({ room, userId }) => {
       if (room && room.key) {
         console.log(`${userId} attempting to join room: ${room.key}`);

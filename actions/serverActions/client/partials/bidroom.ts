@@ -19,9 +19,20 @@ async function listByUser(userId: string, animalId?: string) {
   );
   return response.data;
 }
+
+async function lockBidAsFinalOffer(roomId: string, userId: string) {
+  const data = {
+    roomId,
+    userId,
+  };
+  const response = await axios.post(`/api/rooms/bid/lock`, data);
+  return response.data;
+}
+
 export const bidRoom = {
   list,
   listByUser,
   createBidRoom,
   closeBidRoom,
+  lockBidAsFinalOffer,
 };
