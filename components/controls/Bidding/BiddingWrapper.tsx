@@ -317,7 +317,7 @@ const BiddingWrapper = (props: Props) => {
                         {
                             finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
                                 return (
-                                    <div key={`${bid.id}-${index}`} className='p-4 bg-white rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
+                                    <div key={`${bid.id}-${index}`} className='p-4 bg-white cursor-pointer hover:bg-emerald-50 rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
                                         <div>{bid.user.id === user.id ? "You" : bid.user.name}</div>
                                         <div className='text-2xl tracking-wide'>{formatCurrency(bid.price)}</div>
                                     </div>
