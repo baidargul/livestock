@@ -24,6 +24,7 @@
     "socket.io-client": "^4.8.1",
     "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
+    "cross-env": "^7.0.3",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -31,7 +32,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "cross-env": "^7.0.3",
     "prisma": "^6.6.0",
     "tailwindcss": "^4",
     "typescript": "^5"
