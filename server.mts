@@ -53,6 +53,31 @@ app.prepare().then(() => {
         console.error(`Error: ${error}`);
       }
     });
+    socket.on("close-deal", async ({ room, userId, bid }) => {
+      console.log(
+        `'${userId}' want to close deal in room: ${room.key} at ${bid.price}`
+      );
+      try {
+        const res = await fetch(`${route}/api/rooms/bid/close`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ room, userId, bid }),
+        });
+        const data = await res.json();
+        if (data.status === 200) {
+          console.log(`💻 Deal closed successfully`);
+          socket.join(room.key);
+          io.to(room.key).emit("deal-closed", {
+            room: data.data.room,
+            bid: data.data.bid,
+          });
+        } else {
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error(`Error: ${error}`);
+      }
+    });
     socket.on("lock-bid-as-final-offer", async ({ roomId, userId }) => {
       console.log(
         `'${userId}' want to lock bid as final offer in room: ${roomId}`

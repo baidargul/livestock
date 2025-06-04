@@ -20,6 +20,7 @@ type Props = {
 }
 
 const BiddingWrapper = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState(0)
     const [user, setUser] = useState<any>(null);
@@ -31,6 +32,7 @@ const BiddingWrapper = (props: Props) => {
     const [isLocked, setIsLocked] = useState(false)
     const [hasOtherUserLocked, setHasOtherUserLocked] = useState(false)
     const [finalBids, setFinalBids] = useState<any[]>([])
+    const [selectedBid, setSelectedBid] = useState<any>(null)
     const [socketState, setSocketState] = useState({
         isOtherUserConnected: false,
     })
@@ -83,17 +85,23 @@ const BiddingWrapper = (props: Props) => {
                 const newBids = bidsReverse(room.bids)
                 setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
             })
+            socket.on("deal-closed", ({ room, bid }) => {
+                const newBids = bidsReverse(room.bids)
+                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
+                setSelectedBid(bid)
+            })
         }
 
         return () => {
-            if (socket) {
-                socket.off("user-joined-bidroom");
-                socket.off("user-left-bidroom")
-                socket.off("bid-placed")
-                socket.off("bid-locked-as-final-offer")
-            }
+            socket?.off("user-joined-bidroom");
+            socket?.off("user-left-bidroom")
+            socket?.off("bid-placed")
+            socket?.off("bid-locked-as-final-offer")
+            socket?.off("deal-closed")
         }
     }, [socket])
+
+
     useEffect(() => {
         if (scrollHookRef.current) {
             scrollHookRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -120,21 +128,34 @@ const BiddingWrapper = (props: Props) => {
                 bids = [bids[authorIndex], ...bids.slice(0, authorIndex), ...bids.slice(authorIndex + 1)]
             }
             setFinalBids(bids)
+            if (activeBidRoom.closedAt) {
+                const bid = activeBidRoom.bids.find((bid: any) => bid.price === activeBidRoom.closedAmount)
+                setSelectedBid(bid)
+            }
         }
 
     }, [activeBidRoom])
+
+
     useEffect(() => {
         const rawUser = getUser();
         setUser(rawUser);
-        if (!activeBidRoom) {
-            setOfferValue(calculatePricing(props.animal).price)
-        } else {
-            setOfferValue(activeBidRoom.bids[activeBidRoom.bids.length - 1].price)
+        setIsMounted(true);
+        if (isMounted) {
+            if (!activeBidRoom) {
+                setOfferValue(calculatePricing(props.animal).price)
+            } else {
+                setOfferValue(activeBidRoom.bids[activeBidRoom.bids.length - 1].price)
+            }
         }
-    }, []);
+    }, [isMounted]);
+
+
     useEffect(() => {
         setOfferValue(calculatePricing(props.animal).price)
     }, [props.animal])
+
+
     const fetchBidRoomsForThisAnimal = async () => {
         if (user && props.animal.userId === user.id) {
             const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
@@ -236,6 +257,17 @@ const BiddingWrapper = (props: Props) => {
         return <div>Connecting to bidding service...</div>;
     }
 
+    const handleCloseDeal = (bid: any) => {
+        if (activeBidRoom) {
+            if (socket && user) {
+                //only author can close the deal
+                if (isAuthor) {
+                    socket.emit("close-deal", { room: activeBidRoom, userId: user.id, bid });
+                }
+            }
+        }
+    }
+
     return (
         <>
             <div className={`fixed bottom-0 select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[90%] left-0 rounded-t-xl bg-white z-20 p-4`}>
@@ -313,11 +345,11 @@ const BiddingWrapper = (props: Props) => {
                 </div>}
                 {/* AUTHOR WILL NOW TAKE FINAL DECISION */}
                 {
-                    isLocked && isAuthor && <div className='grid grid-cols-2 place-items-center gap-2'>
+                    isLocked && isAuthor && !activeBidRoom.closedAt && <div className='grid grid-cols-2 place-items-center gap-2'>
                         {
                             finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
                                 return (
-                                    <div key={`${bid.id}-${index}`} className='p-4 bg-white cursor-pointer hover:bg-emerald-50 rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
+                                    <div onClick={() => handleCloseDeal(bid)} key={`${bid.id}-${index}`} className='p-4 bg-white cursor-pointer hover:bg-emerald-50 rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
                                         <div>{bid.user.id === user.id ? "You" : bid.user.name}</div>
                                         <div className='text-2xl tracking-wide'>{formatCurrency(bid.price)}</div>
                                     </div>
@@ -326,8 +358,9 @@ const BiddingWrapper = (props: Props) => {
                         }
                     </div>
                 }
+                {/* USER WILL WAIT FOR AUTHOR SELECTION */}
                 {
-                    isLocked && !isAuthor && <div>
+                    isLocked && !isAuthor && !activeBidRoom.closedAt && <div>
                         <div className='my-4 text-center'>⚠️ Your final offer has been placed, Please wait for the author to make the final decision.</div>
                         <div className='grid grid-cols-2 place-items-center gap-2 pointer-events-none'>
                             {
@@ -341,6 +374,22 @@ const BiddingWrapper = (props: Props) => {
                                 })
                             }
                         </div>
+                    </div>
+                }
+                {/* AUTHOR HAS DECIDED */}
+                {
+                    isLocked && selectedBid && activeBidRoom.closedAt && <div className='my-2'>
+                        <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
+                        <div className='text-center tracking-wide'>
+                            {isAuthor
+                                ? (selectedBid.userId === user.id
+                                    ? 'You have rejected the offer.'
+                                    : 'You have accepted the offer.')
+                                : (selectedBid.userId === user.id
+                                    ? 'Your offer has been accepted.'
+                                    : 'Your offer has been rejected.')}
+                        </div>
+
                     </div>
                 }
             </div >

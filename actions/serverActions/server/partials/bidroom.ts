@@ -219,6 +219,87 @@ async function closeBidRoom(value: string, key: "id" | "key") {
     return response;
   }
 }
+
+async function closeDeal(room: any, userId: string, bid: any) {
+  const response = {
+    status: 500,
+    message: "Failed to close deal",
+    data: null,
+  } as any;
+
+  try {
+    const activeRoom = await prisma.bidRoom.findUnique({
+      where: {
+        id: room.id,
+      },
+    });
+
+    if (!activeRoom) {
+      response.status = 404;
+      response.message = `Bid room does not exist.`;
+      return response;
+    }
+
+    if (activeRoom.closedAt || activeRoom.closedAmount) {
+      response.status = 404;
+      response.message = `Bid room has already been closed.`;
+      return response;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      response.status = 404;
+      response.message = `User does not exist.`;
+      return response;
+    }
+
+    if (activeRoom.userId !== userId && activeRoom.authorId !== userId) {
+      response.status = 404;
+      response.message = `You are not authorized to close this deal.`;
+      return response;
+    }
+
+    const selectedBid = await prisma.bids.findUnique({
+      where: {
+        id: bid.id,
+      },
+    });
+
+    if (!selectedBid) {
+      response.status = 404;
+      response.message = `Bid does not exist.`;
+      return response;
+    }
+
+    await prisma.bidRoom.update({
+      where: {
+        id: room.id,
+      },
+      data: {
+        closedAt: new Date(),
+        closedAmount: selectedBid.price ?? 0,
+      },
+    });
+
+    let theRoom = await actions.server.bidRoom.list(room.id, "id");
+    theRoom = theRoom.data;
+
+    response.status = 200;
+    response.message = "Deal closed successfully.";
+    response.data = { room: theRoom, bid: selectedBid };
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    return response;
+  }
+}
 async function list(value: string, key: "id" | "key", bidLimit?: number) {
   const response = {
     status: 500,
@@ -629,6 +710,7 @@ export const bidRoom = {
   list,
   listByUser,
   createBidRoom,
+  closeDeal,
   closeBidRoom,
   leaveBidRoom,
   leaveAllBidRooms,
