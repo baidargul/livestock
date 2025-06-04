@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/lib/utils";
+import { ChartCandlestick, ChartCandlestickIcon, HandshakeIcon } from "lucide-react";
 import React from "react";
 
 type Props = {
@@ -25,9 +27,9 @@ const Rooms = (props: Props) => {
       <div
         key={`${bid.id}-${index}`}
         onClick={() => handleJoinRoom(bid)}
-        className="p-2 border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer"
+        className="p-2 flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer"
       >
-        {bid.user.name} {bid.bids.length > 0 && bid.bids[bid.length - 1]?.price}
+        <div className="flex gap-1 items-center">{bid.closedAt ? <HandshakeIcon size={16} className="text-emerald-700" /> : <ChartCandlestickIcon className="text-amber-700" size={16} />}{bid.user.name}</div><div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.bids.length > 0 && formatCurrency(bid.bids[bid.bids.length - 1].price ?? 0)}</div>
       </div>
     );
   });
