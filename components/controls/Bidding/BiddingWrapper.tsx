@@ -206,7 +206,7 @@ const BiddingWrapper = (props: Props) => {
         }
         handleOpen(false);
     }
-    const handleLeaveRoom = async () => {
+    const handleLeaveRoom = async (force?: boolean) => {
         setWorkingForRoom(true);
         if (activeBidRoom) {
             if (socket) {
@@ -221,6 +221,10 @@ const BiddingWrapper = (props: Props) => {
             setActiveBidRoom(null);
         } else {
             handleOpen(false);
+        }
+        if (force) {
+            handleOpen(false);
+            setActiveBidRoom(null);
         }
         setWorkingForRoom(false);
     }
@@ -304,7 +308,7 @@ const BiddingWrapper = (props: Props) => {
                             </div>
                         </div>
                     </div>}
-                    <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked ? "none" : "auto" }}>
+                    <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
                         {!activeBidRoom && <Rooms rooms={bidRooms} socket={socket} currentUser={user} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
@@ -345,7 +349,7 @@ const BiddingWrapper = (props: Props) => {
                 </div>}
                 {/* AUTHOR WILL NOW TAKE FINAL DECISION */}
                 {
-                    isLocked && isAuthor && !activeBidRoom.closedAt && <div className='grid grid-cols-2 place-items-center gap-2'>
+                    isLocked && isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div className='grid grid-cols-2 place-items-center gap-2'>
                         {
                             finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
                                 return (
@@ -360,7 +364,7 @@ const BiddingWrapper = (props: Props) => {
                 }
                 {/* USER WILL WAIT FOR AUTHOR SELECTION */}
                 {
-                    isLocked && !isAuthor && !activeBidRoom.closedAt && <div>
+                    isLocked && !isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div>
                         <div className='my-4 text-center'>⚠️ Your final offer has been placed, Please wait for the author to make the final decision.</div>
                         <div className='grid grid-cols-2 place-items-center gap-2 pointer-events-none'>
                             {
@@ -378,7 +382,7 @@ const BiddingWrapper = (props: Props) => {
                 }
                 {/* AUTHOR HAS DECIDED */}
                 {
-                    isLocked && selectedBid && activeBidRoom.closedAt && <div className='my-2'>
+                    isLocked && selectedBid && activeBidRoom && activeBidRoom.closedAt && <div className='my-2'>
                         <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
                         <div className='text-center tracking-wide'>
                             {isAuthor
@@ -396,7 +400,7 @@ const BiddingWrapper = (props: Props) => {
             <div onClick={handleCreateBidRoom} className='w-full'>
                 {workingForRoom ? <Button disabled className='w-full'>...</Button> : isAuthor ? <Button className='w-full'>{bidRooms.length > 0 ? `(${bidRooms.length} active offer${bidRooms.length > 0 && "s"})` : "No active bids"}</Button> : props.children}
             </div>
-            <div onClick={() => handleOpen(false)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
+            <div onClick={() => handleLeaveRoom(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>
     )
 }
