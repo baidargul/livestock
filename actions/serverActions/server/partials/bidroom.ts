@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
+import { user } from "./user";
 
 export type RoomType = {
   key: string;
@@ -64,6 +65,7 @@ async function createBidRoom(room: RoomType, userId: string) {
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
           },
@@ -75,12 +77,14 @@ async function createBidRoom(room: RoomType, userId: string) {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         author: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
       },
@@ -106,6 +110,7 @@ async function createBidRoom(room: RoomType, userId: string) {
                 select: {
                   id: true,
                   name: true,
+                  connectionIds: true,
                 },
               },
             },
@@ -117,12 +122,14 @@ async function createBidRoom(room: RoomType, userId: string) {
             select: {
               id: true,
               name: true,
+              connectionIds: true,
             },
           },
           author: {
             select: {
               id: true,
               name: true,
+              connectionIds: true,
             },
           },
         },
@@ -149,6 +156,7 @@ async function createBidRoom(room: RoomType, userId: string) {
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
           },
@@ -160,12 +168,14 @@ async function createBidRoom(room: RoomType, userId: string) {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         author: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
       },
@@ -321,16 +331,19 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
         [key]: value,
       },
       include: {
+        animal: true,
         user: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         author: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         bids: {
@@ -340,8 +353,10 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
+            BidRoom: true,
           },
           orderBy: {
             createdAt: "desc",
@@ -412,6 +427,7 @@ async function listByUser(
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
           },
@@ -423,12 +439,14 @@ async function listByUser(
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         author: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
       },
@@ -455,6 +473,7 @@ async function listByUser(
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
           },
@@ -466,12 +485,14 @@ async function listByUser(
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         author: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
       },
@@ -535,6 +556,7 @@ async function leaveBidRoom(room: RoomType, userId: string) {
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
           },
@@ -546,12 +568,14 @@ async function leaveBidRoom(room: RoomType, userId: string) {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
         author: {
           select: {
             id: true,
             name: true,
+            connectionIds: true,
           },
         },
       },
@@ -607,6 +631,7 @@ async function leaveAllBidRooms(userId: string) {
                 select: {
                   id: true,
                   name: true,
+                  connectionIds: true,
                 },
               },
             },
@@ -618,12 +643,14 @@ async function leaveAllBidRooms(userId: string) {
             select: {
               id: true,
               name: true,
+              connectionIds: true,
             },
           },
           author: {
             select: {
               id: true,
               name: true,
+              connectionIds: true,
             },
           },
         },
@@ -641,7 +668,6 @@ async function leaveAllBidRooms(userId: string) {
     return response;
   }
 }
-
 async function lockBidAsFinalOffer(roomId: string, userId: string) {
   const response = {
     status: 500,
@@ -665,6 +691,7 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
               select: {
                 id: true,
                 name: true,
+                connectionIds: true,
               },
             },
           },
@@ -706,6 +733,41 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
   }
 }
 
+async function bidSeen(bidId: string) {
+  const response = {
+    status: 500,
+    message: "Failed to lock bid as final offer",
+    data: null,
+  } as any;
+
+  try {
+    const bid = await prisma.bids.update({
+      where: {
+        id: bidId,
+      },
+      data: {
+        isSeen: true,
+      },
+    });
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: bid.userId ?? "",
+      },
+    });
+
+    response.status = 200;
+    response.message = "Bid seen successfully.";
+    response.data = user?.connectionIds;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    return response;
+  }
+}
+
 export const bidRoom = {
   list,
   listByUser,
@@ -715,4 +777,5 @@ export const bidRoom = {
   leaveBidRoom,
   leaveAllBidRooms,
   lockBidAsFinalOffer,
+  bidSeen,
 };

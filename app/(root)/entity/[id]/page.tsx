@@ -13,6 +13,7 @@ import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 import Link from 'next/link'
 import RatingBar from '@/components/website/ratings/RatingBar'
 import { images } from '@/consts/images'
+import PhoneFooter from '@/components/website/footer/Phone'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -105,6 +106,7 @@ const page = async (props: Props) => {
                 </BiddingWrapper>
                 {/* <Button className='w-full mx-4'>Buy Now</Button> */}
             </div>
+            <PhoneFooter />
         </div >
     )
 }

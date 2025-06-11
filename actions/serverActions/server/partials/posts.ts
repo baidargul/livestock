@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
-import { Animal } from "@prisma/client";
 async function listAll(value?: string, key?: string) {
   const response = {
     status: 500,

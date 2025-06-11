@@ -185,6 +185,7 @@ async function list(value: string, key: "id" | "email") {
         bids: true,
         profileImage: true,
         coverImage: true,
+        connectionIds: true,
         followers: {
           select: {
             id: true,

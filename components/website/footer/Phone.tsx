@@ -2,6 +2,7 @@ import { CompassIcon, HouseIcon, ShoppingBagIcon, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import ProfileMenuWrapper from '../profile/_components/ProfileMenuWrapper'
+import RoomsWrapper from './_components/RoomsWrapper'
 
 type Props = {}
 
@@ -14,7 +15,9 @@ const PhoneFooter = (props: Props) => {
             <Link href={'/nearby'}>
                 <CompassIcon />
             </Link>
-            <ShoppingBagIcon />
+            <RoomsWrapper>
+                <ShoppingBagIcon />
+            </RoomsWrapper>
             <ProfileMenuWrapper>
                 <UserIcon />
             </ProfileMenuWrapper>

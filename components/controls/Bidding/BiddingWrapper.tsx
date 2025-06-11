@@ -12,7 +12,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 import Rooms from './_components/Rooms'
-import { LockIcon, LockOpenIcon } from 'lucide-react'
+import { CheckCheckIcon, LockIcon, LockOpenIcon } from 'lucide-react'
+import BidRow from './_components/BidRow'
 
 type Props = {
     children: React.ReactNode
@@ -78,8 +79,10 @@ const BiddingWrapper = (props: Props) => {
                 // console.log(`${userId} left the room`)
             })
             socket.on("bid-placed", ({ bidRoom }) => {
-                const newBids = bidsReverse(bidRoom.bids)
-                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
+                if (bidRoom) {
+                    const newBids = bidsReverse(bidRoom.bids)
+                    setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
+                }
             })
             socket.on("bid-locked-as-final-offer", ({ room, userId }) => {
                 const newBids = bidsReverse(room.bids)
@@ -90,6 +93,10 @@ const BiddingWrapper = (props: Props) => {
                 setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
                 setSelectedBid(bid)
             })
+            socket.on("message-is-seen", ({ room, bidId }) => {
+                const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid)
+                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
+            })
         }
 
         return () => {
@@ -97,6 +104,7 @@ const BiddingWrapper = (props: Props) => {
             socket?.off("user-left-bidroom")
             socket?.off("bid-placed")
             socket?.off("bid-locked-as-final-offer")
+            socket?.off("message-is-seen")
             socket?.off("deal-closed")
         }
     }, [socket])
@@ -272,9 +280,13 @@ const BiddingWrapper = (props: Props) => {
         }
     }
 
+    const handleMessageSeen = () => {
+
+    }
+
     return (
         <>
-            <div className={`fixed bottom-0 select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[90%] left-0 rounded-t-xl bg-white z-20 p-4`}>
+            <div className={`fixed bottom-14 select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[80%] left-0 rounded-t-xl bg-white z-20 p-4`}>
                 {!activeBidRoom && bidRooms.length === 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
                     <div>
                         <div className='text-xl font-semibold'>
@@ -313,9 +325,7 @@ const BiddingWrapper = (props: Props) => {
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
-                                    <div onClick={() => { !isLocked && setOfferValue(bid.price) }} key={`${bid.id}-${index}`} className={`p-2  ${user.id === bid.userId ? "bg-gradient-to-r from-emerald-100 to-transparent" : "bg-gradient-to-l from-amber-100 to-transparent"} flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}>
-                                        <div className='tracking-tight'> {user.id === bid.userId ? "You" : bid.user.name}</div> <div className={`tracking-wide flex gap-1 items-center justify-center ${index === activeBidRoom.bids.length - 1 && "text-emerald-700 font-bold"}`}> {bid?.isFinalOffer && <LockIcon size={15} className='text-amber-700' />} {formatCurrency(bid.price)}</div>
-                                    </div>
+                                    <BidRow index={index} activeBidRoom={activeBidRoom} setOfferValue={setOfferValue} user={user} bid={bid} key={`${bid.id}-${index}`} isLocked={isLocked} socket={socket} />
                                 )
                             })
                         }

@@ -46,6 +46,13 @@ app.prepare().then(() => {
           console.log(`💻 Bid placed successfully`);
           socket.join(roomKey);
           io.to(roomKey).emit("bid-placed", { bidRoom: data.data });
+          for (const ids of data.data.author.connectionIds as string[]) {
+            console.log(`telling ${ids} about this`);
+            io.to(ids).emit("bid-placed", {
+              room: data.data,
+              userId: userId,
+            });
+          }
         } else {
           console.error(data.message);
         }
@@ -71,6 +78,13 @@ app.prepare().then(() => {
             room: data.data.room,
             bid: data.data.bid,
           });
+          for (const ids of data.data.author.connectionIds as string[]) {
+            console.log(`telling ${ids} about this`);
+            io.to(ids).emit("deal-closed", {
+              room: data.data,
+              userId: userId,
+            });
+          }
         } else {
           console.error(data.message);
         }
@@ -96,6 +110,44 @@ app.prepare().then(() => {
             room: data.data.data,
             userId: userId,
           });
+          for (const ids of data.data.author.connectionIds as string[]) {
+            console.log(`telling ${ids} about this`);
+            io.to(ids).emit("bid-locked-as-final-offer", {
+              room: data.data,
+              userId: userId,
+            });
+          }
+        } else {
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error(`Error: ${error}`);
+      }
+    });
+    socket.on("message-seen", async ({ bidId, room }) => {
+      console.log(`Message seen: ${bidId} in Room ${room.key}`);
+      try {
+        const res = await fetch(`${route}/api/rooms/bid/seen`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bidId }),
+        });
+        const data = await res.json();
+        if (data.status === 200) {
+          socket.join(room.key);
+          io.to(room.key).emit("message-is-seen", {
+            room: room,
+            bidId: bidId,
+          });
+          if (data.data.connectionIds) {
+            for (const ids of data.data.connectionIds as string[]) {
+              console.log(`telling ${ids} about this`);
+              io.to(ids).emit("message-is-seen", {
+                room: room,
+                bidId: bidId,
+              });
+            }
+          }
         } else {
           console.error(data.message);
         }
@@ -126,6 +178,15 @@ app.prepare().then(() => {
               room: data.data,
               userId: userId,
             });
+
+            //telling about this to all the instances of this author
+            for (const ids of data.data.author.connectionIds as string[]) {
+              console.log(`telling ${ids} about this`);
+              io.to(ids).emit("user-joined-bidroom", {
+                room: data.data,
+                userId: userId,
+              });
+            }
           } else {
             console.error(`Error: ${data.message}`);
           }
@@ -152,6 +213,15 @@ app.prepare().then(() => {
             room: data.data,
             userId: userId,
           });
+
+          //telling about this to all the instances of this author
+          for (const ids of data.data.author.connectionIds as string[]) {
+            console.log(`telling ${ids} about this`);
+            io.to(ids).emit("user-left-bidroom", {
+              room: data.data,
+              userId: userId,
+            });
+          }
         } else {
           console.error(`Error: ${data.message}`);
         }
