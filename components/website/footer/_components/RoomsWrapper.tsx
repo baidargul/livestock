@@ -1,5 +1,6 @@
 'use client'
 import { useRooms } from '@/hooks/useRooms'
+import { useSession } from '@/hooks/useSession'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
@@ -8,6 +9,8 @@ type Props = {
 
 const RoomsWrapper = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
+    const [user, setUser] = useState<any>(null)
+    const getUser = useSession((state: any) => state.getUser)
     const [myUnreadBids, setMyUnreadBids] = useState(0)
     const [otherUnreadBids, setOtherUnreadBids] = useState(0)
     const rooms = useRooms((state: any) => state.rooms);
@@ -17,27 +20,36 @@ const RoomsWrapper = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        const calculateUnreadBids = () => {
-            let count = 0
-            rooms.myRooms.forEach((room: any) => {
-                room.bids.forEach((bid: any) => {
-                    if (bid.isSeen === false) {
-                        count = count + 1
-                    }
-                })
-            })
-            setMyUnreadBids(count)
-            count = 0
-            rooms.otherRooms.forEach((room: any) => {
-                room.bids.forEach((bid: any) => {
-                    if (bid.isSeen === false) {
-                        count = count + 1
-                    }
-                })
-            })
-            setOtherUnreadBids(count)
+        if (isMounted) {
+            const rawUser = getUser()
+            setUser(rawUser)
         }
-        calculateUnreadBids()
+    }, [isMounted])
+
+    useEffect(() => {
+        if (user) {
+            const calculateUnreadBids = () => {
+                let count = 0
+                rooms.myRooms.forEach((room: any) => {
+                    room.bids.forEach((bid: any) => {
+                        if (bid.isSeen === false && bid.userId !== user.id) {
+                            count = count + 1
+                        }
+                    })
+                })
+                setMyUnreadBids(count)
+                count = 0
+                rooms.otherRooms.forEach((room: any) => {
+                    room.bids.forEach((bid: any) => {
+                        if (bid.isSeen === false && bid.userId !== user.id) {
+                            count = count + 1
+                        }
+                    })
+                })
+                setOtherUnreadBids(count)
+            }
+            calculateUnreadBids()
+        }
 
     }, [rooms])
 
