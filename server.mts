@@ -45,8 +45,18 @@ app.prepare().then(() => {
         if (data.status === 200) {
           console.log(`💻 Bid placed successfully`);
           socket.join(roomKey);
-          io.to(roomKey).emit("bid-placed", { bidRoom: data.data });
+          io.to(roomKey).emit("bid-placed", {
+            room: data.data,
+            userId: userId,
+          });
           for (const ids of data.data.author.connectionIds as string[]) {
+            console.log(`telling ${ids} about this`);
+            io.to(ids).emit("bid-placed", {
+              room: data.data,
+              userId: userId,
+            });
+          }
+          for (const ids of data.data.user.connectionIds as string[]) {
             console.log(`telling ${ids} about this`);
             io.to(ids).emit("bid-placed", {
               room: data.data,

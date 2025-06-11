@@ -78,10 +78,11 @@ const BiddingWrapper = (props: Props) => {
                 }
                 // console.log(`${userId} left the room`)
             })
-            socket.on("bid-placed", ({ bidRoom }) => {
-                if (bidRoom) {
-                    const newBids = bidsReverse(bidRoom.bids)
-                    setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
+            socket.on("bid-placed", ({ room, userId }) => {
+                if (room) {
+                    const newBids = bidsReverse(room.bids)
+                    let newRoom = { ...room, bids: newBids }
+                    setActiveBidRoom(room)
                 }
             })
             socket.on("bid-locked-as-final-offer", ({ room, userId }) => {

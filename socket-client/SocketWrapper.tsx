@@ -41,11 +41,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             socket.on("user-left-bidroom", ({ room, userId }) => {
                 rooms.removeRoom(room.key, user)
             })
-            socket.on("bid-placed", ({ bidRoom }) => {
-                if (bidRoom) {
-                    let newBids = bidsReverse(bidRoom.bids)
-                    bidRoom.bids = newBids
-                    rooms.addRoom(bidRoom, user)
+            socket.on("bid-placed", ({ room, userId }) => {
+                if (room) {
+                    let newBids = bidsReverse(room.bids)
+                    room.bids = newBids
+                    rooms.addRoom(room, user)
                 }
             })
             socket.on("bid-locked-as-final-offer", ({ room, userId }) => {

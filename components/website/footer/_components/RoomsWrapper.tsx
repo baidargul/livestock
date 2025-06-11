@@ -57,8 +57,6 @@ const RoomsWrapper = (props: Props) => {
         return props.children
     }
 
-    console.log(rooms)
-
     return (
         isMounted && <div className='relative flex items-center'>
             {myUnreadBids > 0 && <div className='absolute bg-emerald-500 drop-shadow-sm border-2 border-white text-white  font-semibold -top-2 -right-2 text-xs w-5 h-5 text-center flex items-center justify-center rounded-full '>{myUnreadBids}</div>}
