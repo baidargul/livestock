@@ -16,11 +16,12 @@ const SignUp = (props: Props) => {
     const setUser = useSession((state: any) => state.setUser)
     const getUser = useSession((state: any) => state.getUser)
     const router = useRouter();
-    const form = {
+    const [form, setForm] = useState({
         name: "",
         email: "",
         password: ""
-    }
+
+    })
 
     useEffect(() => {
         const rawUser = getUser()
@@ -46,6 +47,18 @@ const SignUp = (props: Props) => {
         setLoading(false)
     }
 
+    const handleNameChange = (val: string) => {
+        setForm((prev) => ({ ...prev, name: val }))
+    }
+
+    const handleEmailChange = (val: string) => {
+        setForm((prev) => ({ ...prev, email: val }))
+    }
+
+    const handlePasswordChange = (val: string) => {
+        setForm((prev) => ({ ...prev, password: val }))
+    }
+
 
     return (
         <div className='flex flex-col gap-4'>
@@ -53,9 +66,9 @@ const SignUp = (props: Props) => {
                 <h1 className='heading1 text-primary font-bold'>Create a new account</h1>
             </div>
             <div className='flex flex-col gap-1'>
-                <Textbox label='Name:' value={form.name} onChange={(val: string) => form.name = val} placeholder='Muhammad Usman' />
-                <Textbox label='Email:' value={form.email} onChange={(val: string) => form.email = val} placeholder='musmanjamil@gmail.com' />
-                <Textbox label='Password:' value={form.password} onChange={(val: string) => form.password = val} placeholder='1234' type='password' />
+                <Textbox label='Name:' value={form.name} onChange={handleNameChange} placeholder='Muhammad Usman' />
+                <Textbox label='Email:' value={form.email} onChange={handleEmailChange} placeholder='musmanjamil@gmail.com' />
+                <Textbox label='Password:' value={form.password} onChange={handlePasswordChange} placeholder='1234' type='password' />
             </div>
             <div className='flex justify-between items-center'>
                 <label onClick={() => props.setStage("signin")} className='text-primary text-sm border-b border-red-600 cursor-pointer'>Sign In</label>
