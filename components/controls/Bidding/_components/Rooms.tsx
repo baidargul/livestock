@@ -6,6 +6,7 @@ type Props = {
   currentUser: any
   socket: any
   rooms: any[];
+  setExpectedKey: any
 };
 
 const Rooms = (props: Props) => {
@@ -19,6 +20,7 @@ const Rooms = (props: Props) => {
         key: `${bidRoom.key}`,
       }
       props.socket.emit("join-bidroom", { room, userId: props.currentUser.id });
+      props.setExpectedKey(room.key)
     }
   }
 

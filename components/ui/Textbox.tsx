@@ -16,16 +16,8 @@ type Props = {
 
 const Textbox = (props: Props) => {
     const txtRef: any = useRef(null)
-    const [value, setValue] = useState<string | number>("")
-
-    useEffect(() => {
-        if (props.value) {
-            setValue(props.value)
-        }
-    }, [props.value])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value)
         if (props.onChange) {
             props.onChange(e.target.value)
         }
@@ -52,7 +44,7 @@ const Textbox = (props: Props) => {
     return (
         <div className='flex flex-col gap-1'>
             {props.label && props.label.length > 0 && <label className={`label ${props.labelClassName}`}>{props.label}</label>}
-            <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} className={`textbox w-full focus-within:tracking-wide ${props.className}`} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={handleOnFocus} value={value} />
+            <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} className={`textbox w-full focus-within:tracking-wide ${props.className}`} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={handleOnFocus} value={props.value ?? ""} />
         </div>
     )
 }

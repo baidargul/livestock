@@ -49,15 +49,23 @@ app.prepare().then(() => {
             room: data.data,
             userId: userId,
           });
+          // Explicitly notify the bidding user
+          socket.emit("bid-placed", {
+            room: data.data,
+            userId: userId,
+          });
+          console.log(`socket rooms ->: ${[...socket.rooms].map((r) => r)}`);
+          console.log(`telling room: ${roomKey} about this`);
+          console.log(`current socket id: ${socket.id}`);
           for (const ids of data.data.author.connectionIds as string[]) {
-            console.log(`telling ${ids} about this`);
+            console.log(`telling ${ids} as author about this`);
             io.to(ids).emit("bid-placed", {
               room: data.data,
               userId: userId,
             });
           }
           for (const ids of data.data.user.connectionIds as string[]) {
-            console.log(`telling ${ids} about this`);
+            console.log(`telling ${ids} as user about this`);
             io.to(ids).emit("bid-placed", {
               room: data.data,
               userId: userId,
@@ -182,8 +190,13 @@ app.prepare().then(() => {
 
             // Join the room
             socket.join(room.key);
+            socket.emit(room.key, {
+              room: data.data,
+              userId: userId,
+            });
             // Using io to broadcast all members in the room also the sender
             // we use socket only when to emit all except the sender
+
             io.to(room.key).emit("user-joined-bidroom", {
               room: data.data,
               userId: userId,
@@ -191,6 +204,14 @@ app.prepare().then(() => {
 
             //telling about this to all the instances of this author
             for (const ids of data.data.author.connectionIds as string[]) {
+              console.log(`telling ${ids} about this`);
+              io.to(ids).emit("user-joined-bidroom", {
+                room: data.data,
+                userId: userId,
+              });
+            }
+            //telling about this to all the instances of this user
+            for (const ids of data.data.user.connectionIds as string[]) {
               console.log(`telling ${ids} about this`);
               io.to(ids).emit("user-joined-bidroom", {
                 room: data.data,

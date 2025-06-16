@@ -14,10 +14,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import Rooms from './_components/Rooms'
 import { CheckCheckIcon, LockIcon, LockOpenIcon } from 'lucide-react'
 import BidRow from './_components/BidRow'
+import { useRooms } from '@/hooks/useRooms'
+import { Bids } from '@prisma/client'
 
 type Props = {
     children: React.ReactNode
     animal: any
+    staticStyle?: boolean
+    allowJoinRoomImmediately?: boolean
+    room?: any
 }
 
 const BiddingWrapper = (props: Props) => {
@@ -32,6 +37,7 @@ const BiddingWrapper = (props: Props) => {
     const [activeBidRoom, setActiveBidRoom] = useState<any>(null)
     const [isLocked, setIsLocked] = useState(false)
     const [hasOtherUserLocked, setHasOtherUserLocked] = useState(false)
+    const [tempMessageOnHold, setTempMessageOnHold] = useState<Bids | null>(null)
     const [finalBids, setFinalBids] = useState<any[]>([])
     const [selectedBid, setSelectedBid] = useState<any>(null)
     const [socketState, setSocketState] = useState({
@@ -40,76 +46,41 @@ const BiddingWrapper = (props: Props) => {
     const router = useRouter()
     const socket = useSocket()
     const isAuthor = user ? props.animal.userId === user.id : false
+    const [expectedKey, setExpectedKey] = useState(``)
+    const rooms = useRooms((state: any) => state.rooms)
+
+    useEffect(() => {
+        if (user) {
+            let room: any = null;
+            rooms.myRooms.find((r: any) => {
+                if (r.key === expectedKey) {
+                    room = r
+                }
+            })
+
+            if (!room) {
+                rooms.otherRooms.find((r: any) => {
+                    if (r.key === expectedKey) {
+                        room = r
+                    }
+                })
+            }
+            if (room && room.key) {
+                setActiveBidRoom(room)
+                setExpectedKey(room.key)
+            } else {
+                setActiveBidRoom(null)
+                setExpectedKey(`${props.animal.id}-${props.animal.userId}-${user.id}`)
+            }
+        }
+        setTempMessageOnHold(null)
+    }, [rooms])
 
     useEffect(() => {
         if (socket && user) {
             fetchBidRoomsForThisAnimal()
-            socket.on("user-joined-bidroom", ({ room, userId }) => {
-                if (userId === user.id) {
-                    handleOpen(true);
-                    const theRoom = { ...room, bids: bidsReverse(room.bids) }
-                    setActiveBidRoom(theRoom)
-                }
-                if (isAuthor) {
-                    if (room.activeUsers.length > 1) {
-                        setSocketState({ ...socketState, isOtherUserConnected: true });
-                    } else {
-                        setSocketState({ ...socketState, isOtherUserConnected: false });
-                    }
-                } else {
-                    setSocketState({ ...socketState, isOtherUserConnected: room.activeUsers.includes(props.animal.userId) });
-                }
-                // console.info(`💻 User '${userId}' joined bidroom: ${room.key}`);
-            });
-            socket.on("user-left-bidroom", ({ room, userId }) => {
-                if (isAuthor) {
-                    if (room) {
-                        if (room.activeUsers.length > 1) {
-                            setSocketState({ ...socketState, isOtherUserConnected: true });
-                        } else {
-                            setSocketState({ ...socketState, isOtherUserConnected: false });
-                        }
-                    } else {
-                        setSocketState({ ...socketState, isOtherUserConnected: false });
-                    }
-
-                } else {
-                    setSocketState({ ...socketState, isOtherUserConnected: room.activeUsers?.includes(props.animal.userId) });
-                }
-                // console.log(`${userId} left the room`)
-            })
-            socket.on("bid-placed", ({ room, userId }) => {
-                if (room) {
-                    const newBids = bidsReverse(room.bids)
-                    let newRoom = { ...room, bids: newBids }
-                    setActiveBidRoom(room)
-                }
-            })
-            socket.on("bid-locked-as-final-offer", ({ room, userId }) => {
-                const newBids = bidsReverse(room.bids)
-                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
-            })
-            socket.on("deal-closed", ({ room, bid }) => {
-                const newBids = bidsReverse(room.bids)
-                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
-                setSelectedBid(bid)
-            })
-            socket.on("message-is-seen", ({ room, bidId }) => {
-                const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid)
-                setActiveBidRoom((prev: any) => { return { ...prev, bids: newBids } })
-            })
-        }
-
-        return () => {
-            socket?.off("user-joined-bidroom");
-            socket?.off("user-left-bidroom")
-            socket?.off("bid-placed")
-            socket?.off("bid-locked-as-final-offer")
-            socket?.off("message-is-seen")
-            socket?.off("deal-closed")
         }
     }, [socket])
-
 
     useEffect(() => {
         if (scrollHookRef.current) {
@@ -122,6 +93,22 @@ const BiddingWrapper = (props: Props) => {
         }
 
         if (activeBidRoom) {
+            let isThisActiveUser = activeBidRoom.activeUsers.includes(user.id)
+            if (isThisActiveUser) {
+                handleOpen(true);
+            }
+
+            if (isAuthor) {
+                if (activeBidRoom.activeUsers.length > 1) {
+                    setSocketState({ ...socketState, isOtherUserConnected: true });
+                } else {
+                    setSocketState({ ...socketState, isOtherUserConnected: false });
+                }
+            } else {
+                setSocketState({ ...socketState, isOtherUserConnected: activeBidRoom.activeUsers.includes(props.animal.userId) });
+            }
+
+
             let bids = []
             for (const bid of activeBidRoom?.bids) {
                 if (bid.userId === user.id && bid.isFinalOffer) {
@@ -188,8 +175,20 @@ const BiddingWrapper = (props: Props) => {
     }
     const handleCreateBidRoom = async () => {
         setWorkingForRoom(true)
-        if (props.animal.userId === user.id) {
+        if (isAuthor) {
             handleOpen(true)
+            if (props.allowJoinRoomImmediately) {
+                if (socket && user) {
+                    const room = {
+                        animalId: props.room.animalId,
+                        authorId: props.room.authorId,
+                        userId: props.room.userId,
+                        key: `${props.room.animalId}-${props.room.authorId}-${props.room.userId}`,
+                    }
+
+                    socket.emit("join-bidroom", { room, userId: user.id });
+                }
+            }
         } else {
             if (socket && user) {
                 const room = {
@@ -249,6 +248,7 @@ const BiddingWrapper = (props: Props) => {
         if (activeBidRoom) {
             if (socket && user) {
                 socket.emit("place-bid", { roomKey: activeBidRoom.key, userId: user.id, amount: offerValue });
+                setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: offerValue, createdAt: new Date(), isSeen: false, isFinalOffer: false })
                 setOfferValue(0)
             }
         }
@@ -296,6 +296,7 @@ const BiddingWrapper = (props: Props) => {
                     <div className='flex flex-wrap gap-2'>
                         {
                             props.animal.images && props.animal.images.length > 0 && props.animal.images.map((image: any, index: number) => {
+                                if (!image.image) return null
                                 return (
                                     <Image src={image.image} width={100} height={100} layout='fixed' priority key={index} className=' rounded-md object-contain border border-emerald-800/10 drop-shadow-[2px]' alt={`${props.animal.title}, ${props.animal.type} - ${props.animal.breed}`} />
                                 )
@@ -318,13 +319,20 @@ const BiddingWrapper = (props: Props) => {
                         </div>
                     </div>}
                     <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={bidRooms} socket={socket} currentUser={user} />}
+                        {!activeBidRoom && <Rooms rooms={bidRooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
                                     <BidRow index={index} activeBidRoom={activeBidRoom} setOfferValue={setOfferValue} user={user} bid={bid} key={`${bid.id}-${index}`} isLocked={isLocked} socket={socket} />
                                 )
                             })
+                        }
+                        {
+                            tempMessageOnHold && (
+                                <div key={tempMessageOnHold.id} className='animate-pulse text-zinc-700 opacity-90'>
+                                    <BidRow index={-1} activeBidRoom={activeBidRoom} setOfferValue={setOfferValue} user={user} bid={tempMessageOnHold} key={`${tempMessageOnHold.id}`} isLocked={isLocked} socket={socket} />
+                                </div>
+                            )
                         }
                         {activeBidRoom && activeBidRoom.bids.length > 0 && <div className='mt-4 flex justify-center items-center'>
                             <div className='flex justify-center items-center gap-2'>
@@ -405,7 +413,8 @@ const BiddingWrapper = (props: Props) => {
                 }
             </div >
             <div onClick={handleCreateBidRoom} className='w-full'>
-                {workingForRoom ? <Button disabled className='w-full'>...</Button> : isAuthor ? <Button className='w-full'>{bidRooms.length > 0 ? `(${bidRooms.length} active offer${bidRooms.length > 0 && "s"})` : "No active bids"}</Button> : props.children}
+                {props.staticStyle && props.children}
+                {!props.staticStyle && workingForRoom ? <Button disabled className='w-full'>...</Button> : isAuthor ? !props.staticStyle && <Button className='w-full'>{bidRooms.length > 0 ? `(${bidRooms.length} active offer${bidRooms.length > 0 && "s"})` : "No active bids"}</Button> : props.children}
             </div>
             <div onClick={() => handleLeaveRoom(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>

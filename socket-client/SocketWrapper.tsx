@@ -16,6 +16,7 @@ interface SocketProviderProps {
 
 // Create a provider to wrap the application
 export const SocketProvider = ({ children }: SocketProviderProps) => {
+    const [isMounted, setIsMounted] = useState(false);
     const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser);
     const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
@@ -24,67 +25,72 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     useEffect(() => {
         const rawUser = getUser();
         setUser(rawUser);
+        setIsMounted(true);
     }, [])
 
     useEffect(() => {
-        let socket: any = null
-        if (user) {
-            let socket = io({
-                query: {
-                    userId: user.id, // Send user details as query
-                },
-            });
+        if (isMounted) {
+            let socket: any = null
+            if (user) {
+                let socket = io({
+                    query: {
+                        userId: user.id, // Send user details as query
+                    },
+                });
 
-            socket.on("user-joined-bidroom", ({ room, userId }: any) => {
-                rooms.addRoom(room, user)
-            });
-            socket.on("user-left-bidroom", ({ room, userId }) => {
-                rooms.removeRoom(room.key, user)
-            })
-            socket.on("bid-placed", ({ room, userId }) => {
-                if (room) {
+                socket.on("user-joined-bidroom", ({ room, userId }: any) => {
+                    console.log(`user-joined-bidroom`)
                     let newBids = bidsReverse(room.bids)
                     room.bids = newBids
                     rooms.addRoom(room, user)
-                }
-            })
-            socket.on("bid-locked-as-final-offer", ({ room, userId }) => {
-                let newBids = bidsReverse(room.bids)
-                room.bids = newBids
-                rooms.addRoom(room, user)
-            })
-            socket.on("deal-closed", ({ room, bid }) => {
-                let newBids = bidsReverse(room.bids)
-                room.bids = newBids
-                rooms.addRoom(room, user)
-            })
-            socket.on("message-is-seen", ({ room, bidId }) => {
-                const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid)
-                room.bids = newBids
-                rooms.addRoom(room, user)
-            })
-            setSocketInstance(socket);
-        } else {
-            setSocketInstance(null);
-        }
-
-        console.info("Socket connection established.");
-
-
-        return () => {
-            if (socket) {
-                socket.disconnect();
-                console.info("Socket connection closed.");
-                socket?.off("user-joined-bidroom");
-                socket?.off("user-left-bidroom")
-                socket?.off("bid-placed")
-                socket?.off("bid-locked-as-final-offer")
-                socket?.off("deal-closed")
-                socket?.off("message-is-seen")
+                });
+                socket.on("user-left-bidroom", ({ room, userId }) => {
+                    if (room) {
+                        rooms.removeRoom(room.key, user)
+                    }
+                })
+                socket.on("bid-placed", ({ room, userId }) => {
+                    if (room) {
+                        let newBids = bidsReverse(room.bids)
+                        room.bids = newBids
+                        rooms.addRoom(room, user)
+                    }
+                })
+                socket.on("bid-locked-as-final-offer", ({ room, userId }) => {
+                    let newBids = bidsReverse(room.bids)
+                    room.bids = newBids
+                    rooms.addRoom(room, user)
+                })
+                socket.on("deal-closed", ({ room, bid }) => {
+                    let newBids = bidsReverse(room.bids)
+                    room.bids = newBids
+                    rooms.addRoom(room, user)
+                })
+                socket.on("message-is-seen", ({ room, bidId }) => {
+                    const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid)
+                    room.bids = newBids
+                    rooms.addRoom(room, user)
+                })
+                setSocketInstance(socket);
+            } else {
                 setSocketInstance(null);
             }
-        };
-    }, [user]);
+
+            return () => {
+                if (socket) {
+                    socket.disconnect();
+                    console.info("Socket connection closed.");
+                    socket?.off("user-joined-bidroom");
+                    socket?.off("user-left-bidroom")
+                    socket?.off("bid-placed")
+                    socket?.off("bid-locked-as-final-offer")
+                    socket?.off("deal-closed")
+                    socket?.off("message-is-seen")
+                    setSocketInstance(null);
+                }
+            };
+        }
+    }, [user, isMounted]);
 
     return (
         <SocketContext.Provider value={socketInstance}>

@@ -58,6 +58,7 @@ async function createBidRoom(room: RoomType, userId: string) {
         key: room.key,
       },
       include: {
+        animal: true,
         bids: {
           take: 5,
           include: {
@@ -103,6 +104,7 @@ async function createBidRoom(room: RoomType, userId: string) {
           activeUsers: newUsers,
         },
         include: {
+          animal: true,
           bids: {
             take: 5,
             include: {
@@ -149,6 +151,7 @@ async function createBidRoom(room: RoomType, userId: string) {
         activeUsers: [userId],
       },
       include: {
+        animal: true,
         bids: {
           take: 5,
           include: {
@@ -420,6 +423,7 @@ async function listByUser(
     const otherRooms = await prisma.bidRoom.findMany({
       where: whereClause,
       include: {
+        animal: true,
         bids: {
           ...extraClause,
           include: {
@@ -466,6 +470,7 @@ async function listByUser(
     const myRooms = await prisma.bidRoom.findMany({
       where: whereClause,
       include: {
+        animal: true,
         bids: {
           ...extraClause,
           include: {
