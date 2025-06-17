@@ -128,10 +128,17 @@ app.prepare().then(() => {
             room: data.data.data,
             userId: userId,
           });
-          for (const ids of data.data.author.connectionIds as string[]) {
-            console.log(`telling ${ids} about this`);
+          for (const ids of data.data.data.author.connectionIds as string[]) {
+            console.log(`telling author ${ids} about this`);
             io.to(ids).emit("bid-locked-as-final-offer", {
-              room: data.data,
+              room: data.data.data,
+              userId: userId,
+            });
+          }
+          for (const ids of data.data.data.user.connectionIds as string[]) {
+            console.log(`telling user ${ids} about this`);
+            io.to(ids).emit("bid-locked-as-final-offer", {
+              room: data.data.data,
               userId: userId,
             });
           }
