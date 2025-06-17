@@ -46,7 +46,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                 });
                 socket.on("user-left-bidroom", ({ room, userId }) => {
                     if (room) {
-                        rooms.removeRoom(room.key, user)
+                        let newBids = bidsReverse(room.bids)
+                        room.bids = newBids
+                        rooms.addRoom(room, user)
+                        // rooms.removeRoom(room.key, user)
                     }
                 })
                 socket.on("bid-placed", ({ room, userId }) => {

@@ -62,8 +62,8 @@ const BidRow = (props: Props) => {
             }}
             key={`${props.bid.id}-${props.index}`}
             className={`p-2 relative ${props.user.id === props.bid.userId
-                ? "bg-gradient-to-r from-emerald-100 to-transparent"
-                : "bg-gradient-to-l from-amber-100 to-transparent"
+                ? "bg-zinc-100"
+                : ""
                 } flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}
         >
             <div className="tracking-tight">

@@ -254,7 +254,14 @@ app.prepare().then(() => {
 
           //telling about this to all the instances of this author
           for (const ids of data.data.author.connectionIds as string[]) {
-            console.log(`telling ${ids} about this`);
+            console.log(`telling author ${ids} about this`);
+            io.to(ids).emit("user-left-bidroom", {
+              room: data.data,
+              userId: userId,
+            });
+          }
+          for (const ids of data.data.user.connectionIds as string[]) {
+            console.log(`telling user ${ids} about this`);
             io.to(ids).emit("user-left-bidroom", {
               room: data.data,
               userId: userId,
