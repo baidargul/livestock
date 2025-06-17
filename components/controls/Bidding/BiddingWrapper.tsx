@@ -34,7 +34,7 @@ const BiddingWrapper = (props: Props) => {
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const [workingForRoom, setWorkingForRoom] = useState(false)
-    const [bidRooms, setBidRooms] = useState<any[]>([])
+    // const [bidRooms, setBidRooms] = useState<any[]>([])
     const [activeBidRoom, setActiveBidRoom] = useState<any>(null)
     const [isLocked, setIsLocked] = useState(false)
     const [hasOtherUserLocked, setHasOtherUserLocked] = useState(false)
@@ -157,18 +157,18 @@ const BiddingWrapper = (props: Props) => {
 
 
     const fetchBidRoomsForThisAnimal = async () => {
-        if (user && props.animal.userId === user.id) {
-            const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
-            if (response.status === 200) {
+        // if (user && props.animal.userId === user.id) {
+        //     const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
+        //     if (response.status === 200) {
 
-                let theRooms = []
-                for (const theRoom of response.data.myRooms) {
-                    theRoom.bids = bidsReverse(theRoom.bids)
-                    theRooms.push(theRoom)
-                }
-                setBidRooms(theRooms)
-            }
-        }
+        //         let theRooms = []
+        //         for (const theRoom of response.data.myRooms) {
+        //             theRoom.bids = bidsReverse(theRoom.bids)
+        //             theRooms.push(theRoom)
+        //         }
+        //         setBidRooms(theRooms)
+        //     }
+        // }
     }
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
@@ -289,7 +289,7 @@ const BiddingWrapper = (props: Props) => {
     return (
         <>
             <div className={`fixed bottom-14 select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 h-[80%] left-0 rounded-t-xl bg-white z-20 p-4`}>
-                {!activeBidRoom && bidRooms.length === 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
+                {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
                     <div>
                         <div className='text-xl font-semibold'>
                             {props.animal.title}
@@ -324,7 +324,7 @@ const BiddingWrapper = (props: Props) => {
                         </div>
                     </div>}
                     <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={bidRooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} />}
+                        {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
@@ -354,7 +354,7 @@ const BiddingWrapper = (props: Props) => {
                 </div>
                 {/* ALLOW BIDDING */}
                 {!isLocked && <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
-                    {isAuthor && activeBidRoom && bidRooms.length > 0 && <div className='my-4'>
+                    {isAuthor && activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length > 0 && <div className='my-4'>
                         <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
                         <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
                     </div>}
@@ -421,7 +421,7 @@ const BiddingWrapper = (props: Props) => {
             </div >
             <div onClick={handleCreateBidRoom} className='w-full'>
                 {props.staticStyle && props.children}
-                {!props.staticStyle && workingForRoom ? <Button disabled className='w-full'>...</Button> : isAuthor ? !props.staticStyle && <Button className='w-full'>{bidRooms.length > 0 ? `(${bidRooms.length} active offer${bidRooms.length > 0 && "s"})` : "No active bids"}</Button> : props.children}
+                {!props.staticStyle && workingForRoom ? <Button disabled className='w-full'>...</Button> : isAuthor ? !props.staticStyle && <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${[...rooms.myRooms, ...rooms.otherRooms].length} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button> : props.children}
             </div>
             <div onClick={() => handleLeaveRoom(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>

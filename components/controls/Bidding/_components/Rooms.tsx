@@ -1,15 +1,22 @@
 import { formatCurrency } from "@/lib/utils";
 import { ChartCandlestick, ChartCandlestickIcon, HandshakeIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   currentUser: any
   socket: any
-  rooms: any[];
+  rooms: any
   setExpectedKey: any
 };
 
 const Rooms = (props: Props) => {
+  const [rooms, setRooms] = useState<any>([])
+
+  useEffect(() => {
+    if (props.rooms) {
+      setRooms([...props.rooms.myRooms, ...props.rooms.otherRooms])
+    }
+  }, [props.rooms])
 
   const handleJoinRoom = (bidRoom: any) => {
     if (props.currentUser && props.socket) {
@@ -24,7 +31,7 @@ const Rooms = (props: Props) => {
     }
   }
 
-  return props.rooms.map((bid: any, index: number) => {
+  return rooms && rooms.map((bid: any, index: number) => {
     return (
       <div
         key={`${bid.id}-${index}`}
