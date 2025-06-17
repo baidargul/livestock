@@ -29,6 +29,7 @@ const BiddingWrapper = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState(0)
+    const [myLastOffer, setMyLastOffer] = useState(0)
     const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
@@ -248,6 +249,7 @@ const BiddingWrapper = (props: Props) => {
         if (activeBidRoom) {
             if (socket && user) {
                 socket.emit("place-bid", { roomKey: activeBidRoom.key, userId: user.id, amount: offerValue });
+                setMyLastOffer(offerValue)
                 setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: offerValue, createdAt: new Date(), isSeen: false, isFinalOffer: false })
                 setOfferValue(0)
             }
@@ -340,7 +342,7 @@ const BiddingWrapper = (props: Props) => {
                                     <LockIcon size={23} className='text-amber-700' />
                                 </div>}
                                 {!isLocked && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm'>
-                                    <LockOpenIcon size={15} /> Lock as <span className='tracking-wide font-semibold'>Final Offer</span>
+                                    <LockOpenIcon size={15} /> Lock <span className='tracking-wide'>{formatCurrency(myLastOffer)}</span> as <span className='tracking-wide font-semibold'>Final Offer</span>
                                 </div>}
                             </div>
                         </div>}
@@ -367,6 +369,7 @@ const BiddingWrapper = (props: Props) => {
                     isLocked && isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div className='grid grid-cols-2 place-items-center gap-2'>
                         {
                             finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
+                                if (!bid) return
                                 return (
                                     <div onClick={() => handleCloseDeal(bid)} key={`${bid.id}-${index}`} className='p-4 bg-white cursor-pointer hover:bg-emerald-50 rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
                                         <div>{bid.user.id === user.id ? "You" : bid.user.name}</div>
@@ -384,6 +387,7 @@ const BiddingWrapper = (props: Props) => {
                         <div className='grid grid-cols-2 place-items-center gap-2 pointer-events-none'>
                             {
                                 finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
+                                    if (!bid) return
                                     return (
                                         <div key={`${bid.id}-${index}`} className='p-2 bg-white rounded py-2 w-full flex flex-col justify-center items-center'>
                                             <div className='text-sm'>{bid.user.id === user.id ? "You" : bid.user.name}</div>

@@ -12,18 +12,20 @@ const Room = (props: Props) => {
     const animal = props.room.animal
 
     useEffect(() => {
-        const calculateUnreadBids = () => {
-            let count = 0
-            props.room.bids.forEach((bid: any) => {
-                if (bid.isSeen === false && bid.userId !== props.user.id) {
-                    count = count + 1
-                }
-            })
-            setUnreadBids(count)
-        }
+        if (props.user) {
 
-        calculateUnreadBids()
-    }, [props.room])
+            const calculateUnreadBids = () => {
+                let count = 0
+                props.room.bids.forEach((bid: any) => {
+                    if (bid.isSeen === false && bid.userId !== props.user.id) {
+                        count = count + 1
+                    }
+                })
+                setUnreadBids(count)
+            }
+            calculateUnreadBids()
+        }
+    }, [props.room, props.user])
 
 
     return (
