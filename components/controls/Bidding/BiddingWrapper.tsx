@@ -111,6 +111,7 @@ const BiddingWrapper = (props: Props) => {
 
 
             let bids = []
+            let thisUserLastBidValue = 0
             for (const bid of activeBidRoom?.bids) {
                 if (bid.userId === user.id && bid.isFinalOffer) {
                     bids.push(bid)
@@ -119,12 +120,14 @@ const BiddingWrapper = (props: Props) => {
                     bids.push(bid)
                     setHasOtherUserLocked(true)
                 }
+                if (bid.userId === user.id) thisUserLastBidValue = bid.price
             }
             if (bids.length > 0) {
                 const authorIndex = bids.findIndex((bid: any) => bid.userId === props.animal.userId)
                 bids = [bids[authorIndex], ...bids.slice(0, authorIndex), ...bids.slice(authorIndex + 1)]
             }
             setFinalBids(bids)
+            setMyLastOffer(thisUserLastBidValue)
             if (activeBidRoom.closedAt) {
                 const bid = activeBidRoom.bids.find((bid: any) => bid.price === activeBidRoom.closedAmount)
                 setSelectedBid(bid)
@@ -341,7 +344,7 @@ const BiddingWrapper = (props: Props) => {
                                 {isLocked && <div className='flex gap-1 items-center p-2 rounded-full bg-amber-200 border-2 border-amber-300'>
                                     <LockIcon size={23} className='text-amber-700' />
                                 </div>}
-                                {!isLocked && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm'>
+                                {!isLocked && myLastOffer > 0 && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm'>
                                     <LockOpenIcon size={15} /> Lock <span className='tracking-wide'>{formatCurrency(myLastOffer)}</span> as <span className='tracking-wide font-semibold'>Final Offer</span>
                                 </div>}
                             </div>

@@ -67,7 +67,7 @@ const BidRow = (props: Props) => {
                 } flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}
         >
             <div className="tracking-tight">
-                {props.user.id === props.bid.userId ? "You" : props.user.name}
+                {props.user.id === props.bid.userId ? "You" : props.bid.user.name}
             </div>
             <div
                 className={`tracking-wide flex gap-1 items-center justify-center ${props.index === props.activeBidRoom.bids.length - 1 && "text-emerald-700 font-bold"
