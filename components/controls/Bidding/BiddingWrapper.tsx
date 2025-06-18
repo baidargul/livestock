@@ -49,6 +49,7 @@ const BiddingWrapper = (props: Props) => {
     const isAuthor = user ? props.animal.userId === user.id : false
     const [expectedKey, setExpectedKey] = useState(``)
     const rooms = useRooms((state: any) => state.rooms)
+    const addRoom = useRooms((state: any) => state.addRoom)
 
     useEffect(() => {
         if (user) {
@@ -157,18 +158,16 @@ const BiddingWrapper = (props: Props) => {
 
 
     const fetchBidRoomsForThisAnimal = async () => {
-        // if (user && props.animal.userId === user.id) {
-        //     const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
-        //     if (response.status === 200) {
+        if (user && props.animal.userId === user.id) {
+            const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
+            if (response.status === 200) {
 
-        //         let theRooms = []
-        //         for (const theRoom of response.data.myRooms) {
-        //             theRoom.bids = bidsReverse(theRoom.bids)
-        //             theRooms.push(theRoom)
-        //         }
-        //         setBidRooms(theRooms)
-        //     }
-        // }
+                for (const theRoom of response.data.myRooms) {
+                    theRoom.bids = bidsReverse(theRoom.bids)
+                    addRoom(theRoom, user)
+                }
+            }
+        }
     }
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
