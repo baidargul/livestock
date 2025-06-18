@@ -12,7 +12,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 import Rooms from './_components/Rooms'
-import { CheckCheckIcon, LockIcon, LockOpenIcon } from 'lucide-react'
+import { CheckCheckIcon, ChevronLeftIcon, LockIcon, LockOpenIcon } from 'lucide-react'
 import BidRow from './_components/BidRow'
 import { useRooms } from '@/hooks/useRooms'
 import { Bids } from '@prisma/client'
@@ -229,6 +229,7 @@ const BiddingWrapper = (props: Props) => {
                     key: activeBidRoom.key,
                 };
                 socket.emit("leave-bidroom", { room, userId: user.id });
+                setExpectedKey(``);
             }
             setActiveBidRoom(null);
         } else {
@@ -315,7 +316,10 @@ const BiddingWrapper = (props: Props) => {
                 <div className='flex flex-col gap-4'>
                     {activeBidRoom && <div className=''>
                         <div className='text-xl font-semibold flex justify-between items-center mt-1'>
-                            <div className='flex items-center gap-1'>{socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div>{isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{isAuthor ? "Buyer" : "Seller"}</div></div></div>
+                            <div className='flex items-center gap-1'>
+                                <div><ChevronLeftIcon onClick={() => handleLeaveRoom(!isAuthor)} className='w-6 h-6 cursor-pointer' /></div>
+                                <div className='flex items-center gap-1'>{socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div>{isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{isAuthor ? "Buyer" : "Seller"}</div></div></div>
+                            </div>
                             <div className='text-sm tracking-wide'>
                                 {activeBidRoom.bids.length > 0 && <div>
                                     <span className='p-1 px-2 bg-amber-100 rounded-md'>{formatCurrency(activeBidRoom.bids.length > 0 && activeBidRoom.bids[activeBidRoom.bids.length - 1]?.price)}</span> / {formatCurrency(calculatePricing(props.animal).price)}
