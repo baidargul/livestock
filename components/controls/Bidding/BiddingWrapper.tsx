@@ -158,14 +158,15 @@ const BiddingWrapper = (props: Props) => {
 
 
     const fetchBidRoomsForThisAnimal = async () => {
-        if (user && props.animal.userId === user.id) {
-            const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
-            if (response.status === 200) {
-
-                for (const theRoom of response.data.myRooms) {
-                    theRoom.bids = bidsReverse(theRoom.bids)
-                    addRoom(theRoom, user)
-                }
+        const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
+        if (response.status === 200) {
+            for (const theRoom of response.data.myRooms) {
+                theRoom.bids = bidsReverse(theRoom.bids)
+                addRoom(theRoom, user)
+            }
+            for (const theRoom of response.data.otherRooms) {
+                theRoom.bids = bidsReverse(theRoom.bids)
+                addRoom(theRoom, user)
             }
         }
     }
