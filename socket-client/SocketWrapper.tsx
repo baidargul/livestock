@@ -39,7 +39,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                 });
 
                 socket.on("user-joined-bidroom", ({ room, userId }: any) => {
-                    console.log(`user-joined-bidroom`)
                     let newBids = bidsReverse(room.bids)
                     room.bids = newBids
                     rooms.addRoom(room, user)
