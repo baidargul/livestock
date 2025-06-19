@@ -83,14 +83,6 @@ const PostPreview = (props: Props) => {
                             {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}</label> in total.</div>}
                             <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</label></div>
                             <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>
-                            <div>{
-                                props.animal?.deliveryOptions?.map((option: any) => {
-                                    return (
-                                        <div key={option} className='flex gap-1 items-center'><ClipboardCheckIcon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Seller delivery"}</div>
-                                    )
-                                })
-                            }</div>
-                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(Number(props.animal.price * (props.animal.priceUnit === "per Kg" ? Number(totalQuantity * props.animal.averageWeight) : props.animal.priceUnit === "per Set" ? 1 : checkQuantity())))} <span className='text-base'>{`/${props.animal.priceUnit}`}</span></div>
                         </div>}
                     </div>
                 </div>

@@ -7,6 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Demands {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic Info
+  type          String
+  breed         String
+  averageAge    Float? // Age in years or months, adjust accordingly
+  ageUnit       String?
+  averageWeight Float? // Weight in kilograms or pounds
+  weightUnit    String?
+  colorMarkings String? // Optional: Color and specific markings
+
+  // Commercial Info
+  maleQuantityAvailable   Int?
+  femaleQuantityAvailable Int?
+  city                    String
+  province                String
+}
+
 model User {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
@@ -24,6 +47,7 @@ model User {
   following     Following[] @relation("UserFollowing") // Users this user follows
   bidRooms      BidRoom[] // Relation to BidRoom
   bidRoomAuthor BidRoom[]   @relation("BidRoomAuthor") // Rooms created by this user
+  demands       Demands[]
 
   @@index([name]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email
