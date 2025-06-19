@@ -35,9 +35,11 @@ const PostPreview = (props: Props) => {
         const data = {
             ...props.animal,
             user: props.user,
+            userId: props.user.id
         }
         delete data?.composing
-        const response: any = await actions.client.posts.createPost(data)
+        delete data?.user
+        const response: any = await actions.client.demand.createDemand(data)
         if (response.status === 200) {
             localStorage.removeItem('post')
             router.push(`/home`)
