@@ -11,6 +11,15 @@ async function createDemand(data: any) {
   return response.data;
 }
 
+async function list(id: string) {}
+
+async function listAll() {
+  const response = await axios.get(`/api/demand`);
+  return response.data;
+}
+
 export const demand = {
+  list,
+  listAll,
   createDemand,
 };

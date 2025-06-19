@@ -1,4 +1,5 @@
 import SectionCategoryBar from '@/components/website/sections/category/SectionCategoryBar'
+import DemandRowLite from '@/components/website/sections/demands/list/DemandRowLite'
 import SectionLandingPageImage from '@/components/website/sections/landingpage/LandingPageImage'
 import SectionProductListRow from '@/components/website/sections/product/list/SectionProductListRow'
 import React from 'react'
@@ -33,7 +34,7 @@ const page = async (props: Props) => {
         <div className='px-4 flex flex-col gap-2 items-start w-full'>
             <SectionLandingPageImage />
             <SectionCategoryBar value={selectedCategoryFilter as string} />
-            <div className='py-4 flex w-full flex-col gap-4'>
+            <div className='py-4 pb-2 flex w-full flex-col gap-4'>
                 {
                     animals.map((animal: any) => {
                         if (selectedCategoryFilter && String(selectedCategoryFilter).length > 0) {
@@ -43,6 +44,7 @@ const page = async (props: Props) => {
                     })
                 }
             </div>
+            <DemandRowLite />
         </div>
     )
 }
