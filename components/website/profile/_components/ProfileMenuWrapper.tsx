@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import SiteLogo from '../../logo/SiteLogo'
+import DemandRowLite from '../../sections/demands/list/DemandRowLite'
 
 type Props = {
     children: React.ReactNode
@@ -76,7 +77,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                     </div>
                 </div>}
 
-                {user && user.id && <div className='flex flex-col'>
+                {user && user.id && <div className='flex flex-col gap-2'>
                     <div className='mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
                         <Link href={user && user.id ? `/user/profile/${user.id}` : "#"}>
                             <div className='flex gap-4 items-center'>
@@ -87,6 +88,9 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                 </div>
                             </div>
                         </Link>
+                    </div>
+                    <div className='w-full -mb-4'>
+                        <DemandRowLite />
                     </div>
                     <div className='grid grid-cols-2 gap-2 mt-5'>
                         <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>

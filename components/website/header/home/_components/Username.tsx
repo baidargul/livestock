@@ -14,7 +14,7 @@ const Username = (props: Props) => {
     }, []);
 
     return (
-        <span className='tracking-wide'>{user?.name ?? ""}</span>
+        <span className='tracking-wide text-wrap'>{user?.name ?? ""}</span>
     )
 }
 
