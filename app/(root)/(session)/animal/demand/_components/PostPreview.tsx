@@ -41,7 +41,7 @@ const PostPreview = (props: Props) => {
         delete data?.user
         const response: any = await actions.client.demand.createDemand(data)
         if (response.status === 200) {
-            localStorage.removeItem('post')
+            localStorage.removeItem('demand')
             router.push(`/home`)
         } else if (response.status === 401) {
             await logoutUser()
