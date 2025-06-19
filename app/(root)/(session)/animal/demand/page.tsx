@@ -31,7 +31,7 @@ const page = (props: Props) => {
     useEffect(() => {
         if (isMounted) {
             setLoading(true)
-            const prevPost = localStorage.getItem('post')
+            const prevPost = localStorage.getItem('demand')
             if (prevPost) {
                 const parsedPost = JSON.parse(prevPost)
                 setAnimal(parsedPost)
@@ -55,7 +55,7 @@ const page = (props: Props) => {
             }
             setLoading(false)
             const rawPost = JSON.stringify(animal)
-            localStorage.setItem('post', rawPost)
+            localStorage.setItem('demand', rawPost)
         }
     }, [currentScreen, animal])
 
@@ -72,9 +72,9 @@ const page = (props: Props) => {
         2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
         3: <TitleAndDescription moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
         4: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        5: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        6: <PriceAndDelivery moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        7: <PostPreview moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} user={user} />,
+        // 5: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        // 5: <PriceAndDelivery moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        5: <PostPreview moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} user={user} />,
     }
 
 

@@ -89,7 +89,7 @@ const PriceAndDelivery = (props: Props) => {
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
-            <div className='text-xl font-semibold tracking-tight text-center'>{`Commericial Information`}</div>
+            <div className='text-xl font-semibold tracking-tight text-center'>{`Your budget`}</div>
             <div className='w-full flex flex-col items-start p-4 gap-4'>
                 <div className='flex flex-col gap-2'>
                     <div className='relative flex items-center'>

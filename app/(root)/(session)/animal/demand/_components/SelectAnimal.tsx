@@ -83,7 +83,7 @@ const SelectAnimal = (props: Props) => {
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
-            <div className='text-xl font-semibold tracking-tight text-center'>Select the animal you wish to sell</div>
+            <div className='text-xl font-semibold tracking-tight text-center'>Select the animal you want to buy</div>
             <div className='flex flex-wrap items-center justify-center gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
                 {
                     animals.map((animal: any) => {
