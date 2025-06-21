@@ -26,6 +26,12 @@ const page = (props: Props) => {
 
     useEffect(() => {
         setIsMounted(true)
+
+        return () => {
+            setAnimal(null)
+            setCurrentScreen(1)
+            setUser(null)
+        }
     }, [])
 
     useEffect(() => {
