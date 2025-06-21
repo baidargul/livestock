@@ -52,7 +52,7 @@ async function listAll(value?: string, key?: string) {
     response.data = animals;
     return response;
   } catch (error: any) {
-    console.log(`[SERVER ERROR]: ${error.message}`);
+    console.log(`[SERVER ERROR] @POST LIST ALL: ${error.message}`);
     response.status = 500;
     response.message = error.message;
     response.data = null;
@@ -106,7 +106,7 @@ async function list(val: any, key: string) {
     response.data = animal;
     return response;
   } catch (error: any) {
-    console.log(`[SERVER ERROR]: ${error.message}`);
+    console.log(`[SERVER ERROR @POST LIST]: ${error.message}`);
     response.status = 500;
     response.message = error.message;
     response.data = null;
@@ -140,7 +140,7 @@ async function removePost(id: string) {
     response.data = deletedPost;
     return response;
   } catch (error: any) {
-    console.log(`[SERVER ERROR]: ${error.message}`);
+    console.log(`[SERVER ERROR] @POST REMOVE: ${error.message}`);
     response.status = 500;
     response.message = error.message;
     response.data = null;
@@ -202,7 +202,7 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
     response.data = bidRoom.data;
     return response;
   } catch (error: any) {
-    console.log(`[SERVER ERROR]: ${error.message}`);
+    console.log(`[SERVER ERROR] @PLACE BID: ${error.message}`);
     response.status = 500;
     response.message = error.message;
     response.data = null;
@@ -249,7 +249,7 @@ async function listBids(roomId: string) {
     response.data = bids;
     return response;
   } catch (error: any) {
-    console.log(`[SERVER ERROR]: ${error.message}`);
+    console.log(`[SERVER ERROR] @LIST BIDS: ${error.message}`);
     response.status = 500;
     response.message = error.message;
     response.data = null;

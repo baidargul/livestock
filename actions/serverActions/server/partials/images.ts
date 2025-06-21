@@ -64,25 +64,33 @@ async function fetchImages(images: any) {
   const isInDevelopment = process.env.NODE_ENV === "development";
   let rawImages: any = [];
   if (isInDevelopment) {
+    console.info(`💡 IN DEVELOPMENT MODE`);
     return rawImages;
   }
-  for (const img of images) {
-    try {
-      const imageURL = `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`;
-      const response = await fetch(imageURL);
 
-      const contentType = response.headers.get("Content-Type");
-      const imageBuffer = await response.arrayBuffer();
+  if (images && images.length > 0) {
+    for (const img of images) {
+      try {
+        const imageURL = `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`;
+        const response = await fetch(imageURL);
 
-      // Dynamically assign the correct MIME type
-      const image = `data:${contentType};base64,${Buffer.from(
-        imageBuffer
-      ).toString("base64")}`;
-      rawImages.push({ name: img.Key, image });
-    } catch (error) {
-      console.error(`Error fetching image ${img.Key}:`, error);
+        const contentType = response.headers.get("Content-Type");
+        const imageBuffer = await response.arrayBuffer();
+
+        // Dynamically assign the correct MIME type
+        const image = `data:${contentType};base64,${Buffer.from(
+          imageBuffer
+        ).toString("base64")}`;
+        rawImages.push({ name: img.Key, image });
+      } catch (error) {
+        console.error(
+          ` @FUN FETCH IMAGES: Error fetching image ${img.Key}:`,
+          error
+        );
+      }
     }
   }
+
   return rawImages;
 }
 
