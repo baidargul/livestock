@@ -11,6 +11,7 @@ import RatingBar from '@/components/website/ratings/RatingBar'
 import { images } from '@/consts/images'
 import PhoneFooter from '@/components/website/footer/Phone'
 import DeleteDemandWrapper from '@/components/controls/DeleteDemandWrapper'
+import Button from '@/components/ui/Button'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -57,7 +58,7 @@ const page = async (props: Props) => {
                     </div>
                 </div>
             </div>
-            <div className='mt-10 p-4'>
+            <div className='mt-20 p-4'>
                 <h2 className='text-2xl font-bold text-gray-800'>{totalQuantity} {formalizeText(demand.breed)} {demand.type}</h2>
                 <div className='flex gap-1 items-center'>
                     <div className='text-lg text-gray-600 flex gap-1 items-center'>
@@ -78,6 +79,9 @@ const page = async (props: Props) => {
                     {demand.averageWeight > 0 && (
                         <span>Weight should be minimum {demand.averageWeight} {demand.weightUnit}</span>
                     )}
+                </div>
+                <div className='w-full mt-4'>
+                    <Button className='w-full'>Fullfill this demand</Button>
                 </div>
             </div>
             <PhoneFooter />
