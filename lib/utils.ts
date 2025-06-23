@@ -261,3 +261,18 @@ export function convertCurrencyToWords(
     .replace(/(\D) (\d)/g, "$1$2") // Fix spacing before numbers
     .trim();
 }
+
+export function formatDate(
+  date: Date | string,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    ...options,
+  });
+}

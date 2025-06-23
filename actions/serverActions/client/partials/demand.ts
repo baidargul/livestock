@@ -11,10 +11,30 @@ async function createDemand(data: any) {
   return response.data;
 }
 
-async function list(id: string) {}
+async function list(id: string) {
+  const response = await axios.get(`/api/demand?id=${id}`, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+  });
+  return response.data;
+}
 
 async function listAll() {
   const response = await axios.get(`/api/demand`);
+  return response.data;
+}
+
+async function removeDemand(id: string) {
+  const response = await axios.delete(`/api/demand?id=${id}`, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+  });
   return response.data;
 }
 
@@ -22,4 +42,5 @@ export const demand = {
   list,
   listAll,
   createDemand,
+  removeDemand,
 };
