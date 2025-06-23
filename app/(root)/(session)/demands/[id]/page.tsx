@@ -12,6 +12,7 @@ import { images } from '@/consts/images'
 import PhoneFooter from '@/components/website/footer/Phone'
 import DeleteDemandWrapper from '@/components/controls/DeleteDemandWrapper'
 import Button from '@/components/ui/Button'
+import FullfilmentWrapper from '@/components/controls/Fullfilment/FullfilmentWrapper'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -81,7 +82,9 @@ const page = async (props: Props) => {
                     )}
                 </div>
                 <div className='w-full mt-4'>
-                    <Button className='w-full'>Fullfill this demand</Button>
+                    <FullfilmentWrapper>
+                        <Button className='w-full'>Fullfill this demand</Button>
+                    </FullfilmentWrapper>
                 </div>
             </div>
             <PhoneFooter />
