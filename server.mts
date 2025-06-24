@@ -180,14 +180,14 @@ app.prepare().then(() => {
         console.error(`Error: ${error}`);
       }
     });
-    socket.on("join-bidroom", async ({ room, userId }) => {
+    socket.on("join-bidroom", async ({ room, userId, demandId }) => {
       if (room && room.key) {
         console.log(`${userId} attempting to join room: ${room.key}`);
         try {
           const res = await fetch(`${route}/api/rooms/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ room, userId }),
+            body: JSON.stringify({ room, userId, demandId }),
           });
 
           const data = await res.json();

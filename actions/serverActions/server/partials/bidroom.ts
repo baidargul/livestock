@@ -9,7 +9,11 @@ export type RoomType = {
   animalId: string;
 };
 
-async function createBidRoom(room: RoomType, userId: string) {
+async function createBidRoom(
+  room: RoomType,
+  userId: string,
+  demandId?: string
+) {
   const response = {
     status: 500,
     message: "Failed to create bid room",
@@ -51,6 +55,20 @@ async function createBidRoom(room: RoomType, userId: string) {
       response.status = 404;
       response.message = `Animal does not exist.`;
       return response;
+    }
+
+    if (demandId) {
+      const demand = await prisma.demands.findUnique({
+        where: {
+          id: demandId,
+        },
+      });
+
+      if (!demand) {
+        response.status = 404;
+        response.message = `Demand does not exist.`;
+        return response;
+      }
     }
 
     const isExists = await prisma.bidRoom.findUnique({
@@ -99,6 +117,7 @@ async function createBidRoom(room: RoomType, userId: string) {
           userId: room.userId,
           animalId: room.animalId,
           activeUsers: [userId],
+          demandId: demandId ?? null,
         },
       });
 

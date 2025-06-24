@@ -117,6 +117,7 @@ model BidRoom {
   user         User?     @relation(fields: [userId], references: [id])
   authorId     String?   @db.ObjectId // ID of the user who created the room
   author       User?     @relation("BidRoomAuthor", fields: [authorId], references: [id])
+  demandId     String?   @db.ObjectId
   activeUsers  String[]
   bids         Bids[]
   createdAt    DateTime  @default(now())
