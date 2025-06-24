@@ -161,10 +161,20 @@ export async function GET(req: NextRequest) {
   };
 
   try {
-    const animals = await actions.server.post.listAll();
-    response.status = animals.status;
-    response.message = animals.message;
-    response.data = animals.data;
+    const userId = new URL(req.url).searchParams.get("userId");
+
+    if (userId) {
+      const animals = await actions.server.post.listAll(userId, `userId`);
+      response.status = animals.status;
+      response.message = animals.message;
+      response.data = animals.data;
+    } else {
+      const animals = await actions.server.post.listAll();
+      response.status = animals.status;
+      response.message = animals.message;
+      response.data = animals.data;
+    }
+
     return new Response(JSON.stringify(response), {
       headers: {
         "Cache-Control":

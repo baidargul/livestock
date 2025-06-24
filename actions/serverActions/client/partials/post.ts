@@ -42,6 +42,17 @@ async function placeBid(userId: string, postId: string, amount: number) {
   return response.data;
 }
 
+async function listByUser(userId: string) {
+  const response = await axios.get(`/api/post?userId=${userId}`, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+  });
+  return response.data;
+}
+
 async function listBids(postId: string) {
   const response = await axios.get(`/api/post/bid?postId=${postId}`, {
     headers: {
@@ -58,4 +69,5 @@ export const posts = {
   removePost,
   placeBid,
   listBids,
+  listByUser,
 };
