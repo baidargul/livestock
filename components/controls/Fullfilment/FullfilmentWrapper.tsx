@@ -9,6 +9,7 @@ import { formatCurrency } from '@/lib/utils';
 import { useSocket } from '@/socket-client/SocketWrapper';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 type Props = {
@@ -26,6 +27,7 @@ const FullfilmentWrapper = (props: Props) => {
     const [currentSelection, setCurrentSelection] = useState<number>(-1);
     const getUser = useSession((state: any) => state.getUser);
     const setLoading = useLoader((state: any) => state.setLoading);
+    const router = useRouter();
     const socket = useSocket()
 
     useEffect(() => {
@@ -111,6 +113,7 @@ const FullfilmentWrapper = (props: Props) => {
             }
             socket.emit("join-bidroom", { room, userId: user.id, demandId: props.demand.id });
             setIsOpen(false);
+            router.push(`/entity/${animal.id}`);
         }
         setLoading(false);
     }

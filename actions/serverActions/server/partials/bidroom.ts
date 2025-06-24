@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
 import { user } from "./user";
+import { calculatePricing } from "@/lib/utils";
 
 export type RoomType = {
   key: string;
@@ -129,7 +130,7 @@ async function createBidRoom(
 
       await prisma.bids.create({
         data: {
-          price: animal.price,
+          price: calculatePricing(animal).price,
           bidRoomId: newRoom.id,
           userId: animal.userId,
         },
