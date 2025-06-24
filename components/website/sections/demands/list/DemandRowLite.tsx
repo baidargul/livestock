@@ -4,29 +4,40 @@ import React, { useEffect, useState } from 'react'
 import DemandLite from './DemandLite'
 import Reels from '@/components/animation-wrappers/Reels'
 import { TrendingUpIcon } from 'lucide-react'
+import { useSession } from '@/hooks/useSession'
 
 type Props = {}
 
 const DemandRowLite = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [demands, setDemands] = useState<any>([])
+    const [user, setUser] = useState<any>(null)
+    const getUser = useSession((state: any) => state.getUser)
 
     useEffect(() => {
         setIsMounted(true)
+
+        return () => {
+            setIsMounted(false)
+            setDemands([])
+            setUser(null)
+        }
     }, [])
 
     useEffect(() => {
         if (isMounted) {
-            fetchDemands()
+            const rawUser = getUser()
+            setUser(rawUser)
+            fetchDemands(rawUser)
         }
     }, [isMounted])
 
-    const fetchDemands = async () => {
+    const fetchDemands = async (user: any) => {
         const response = await actions.client.demand.listAll()
         if (response.status === 200) {
             const raw = []
             for (const demand of response.data) {
-                raw.push(<DemandLite key={demand.id} demand={demand} />)
+                raw.push(<DemandLite key={demand.id} demand={demand} user={user} />)
             }
             setDemands(raw)
         } else {

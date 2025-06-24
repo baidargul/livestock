@@ -6,12 +6,14 @@ import { images } from '@/consts/images';
 import { useLoader } from '@/hooks/useLoader';
 import { useSession } from '@/hooks/useSession';
 import { formatCurrency } from '@/lib/utils';
+import { useSocket } from '@/socket-client/SocketWrapper';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 
 type Props = {
     children?: React.ReactNode;
+    demand: any;
 }
 
 const FullfilmentWrapper = (props: Props) => {
@@ -24,6 +26,7 @@ const FullfilmentWrapper = (props: Props) => {
     const [currentSelection, setCurrentSelection] = useState<number>(-1);
     const getUser = useSession((state: any) => state.getUser);
     const setLoading = useLoader((state: any) => state.setLoading);
+    const socket = useSocket()
 
     useEffect(() => {
         setIsMounted(true);
@@ -83,9 +86,33 @@ const FullfilmentWrapper = (props: Props) => {
         setSearchCriteria(e);
     }
 
-
     if (!isMounted) {
         return props.children || <></>;
+    }
+
+    const handleFulFilRequest = async () => {
+        if (currentSelection === -1) {
+            return;
+        }
+
+        if (props.demand.userId === user.id) {
+            alert("You cannot fulfill your own demand.");
+            return;
+        }
+
+        setLoading(true);
+        const animal = filteredPosts[currentSelection];
+        if (socket && user) {
+            const room = {
+                animalId: animal.id,
+                authorId: animal.userId,
+                userId: user.id,
+                key: `${animal.id}-${animal.userId}-${user.id}`,
+            }
+            socket.emit("join-bidroom", { room, userId: user.id });
+            setIsOpen(false);
+        }
+        setLoading(false);
     }
 
     return (
@@ -130,7 +157,7 @@ const FullfilmentWrapper = (props: Props) => {
                     }
                     <div className='grid grid-cols-2 w-full gap-2 mt-3'>
                         <Button onClick={() => handleLeaveRoom(true)} variant='btn-secondary' className='w-full'>Cancel</Button>
-                        <Button className='w-full' disabled={currentSelection === -1} >Select</Button>
+                        <Button onClick={handleFulFilRequest} className='w-full' disabled={currentSelection === -1} >Select</Button>
                     </div>
                 </div>
             </div>

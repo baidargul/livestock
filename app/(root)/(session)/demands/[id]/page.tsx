@@ -82,7 +82,7 @@ const page = async (props: Props) => {
                     )}
                 </div>
                 <div className='w-full mt-4'>
-                    <FullfilmentWrapper>
+                    <FullfilmentWrapper demand={demand}>
                         <Button className='w-full'>Fullfill this demand</Button>
                     </FullfilmentWrapper>
                 </div>
