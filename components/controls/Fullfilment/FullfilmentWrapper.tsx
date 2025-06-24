@@ -89,7 +89,7 @@ const FullfilmentWrapper = (props: Props) => {
                         filteredPosts.length > 0 ? (
                             <div className='grid grid-cols-2 gap-2 w-full overflow-y-auto h-[60%] pb-10'>
                                 {
-                                    filteredPosts.map((animal: any) => {
+                                    filteredPosts.map((animal: any, index: number) => {
 
                                         if (searchCriteria.length > 0) {
                                             const isExists =
@@ -104,7 +104,7 @@ const FullfilmentWrapper = (props: Props) => {
                                         }
 
                                         return (
-                                            <div className='drop-shadow-sm bg-white rounded-md p-2 cursor-pointer'>
+                                            <div key={`${animal.id}-${index}`} className='drop-shadow-sm bg-white rounded-md p-2 cursor-pointer'>
                                                 <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={200} alt={animal.title} layout='fixed' quality={70} className='w-full h-[100px] object-cover rounded-lg' />
                                                 <div className='text-lg font-semibold'>{animal.title}</div>
                                                 <div className='text -mt-1 tracking-tight'>{animal.description}</div>
@@ -119,7 +119,7 @@ const FullfilmentWrapper = (props: Props) => {
                         )
                     }
                     <div className='grid grid-cols-2 w-full gap-2 mt-3'>
-                        <Button variant='btn-secondary' className='w-full'>Cancel</Button>
+                        <Button onClick={() => handleLeaveRoom(true)} variant='btn-secondary' className='w-full'>Cancel</Button>
                         <Button className='w-full'>Select</Button>
                     </div>
                 </div>
