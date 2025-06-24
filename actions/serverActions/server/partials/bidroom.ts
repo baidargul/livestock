@@ -53,6 +53,70 @@ async function createBidRoom(room: RoomType, userId: string) {
       return response;
     }
 
+    const isExists = await prisma.bidRoom.findUnique({
+      where: {
+        key: room.key,
+      },
+      include: {
+        animal: true,
+        bids: {
+          take: 5,
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                connectionIds: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            connectionIds: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            connectionIds: true,
+          },
+        },
+      },
+    });
+
+    if (!isExists) {
+      const newRoom = await prisma.bidRoom.create({
+        data: {
+          key: room.key,
+          authorId: room.authorId,
+          userId: room.userId,
+          animalId: room.animalId,
+          activeUsers: [userId],
+        },
+      });
+
+      if (!newRoom) {
+        response.status = 500;
+        response.message = "Failed to create bid room.";
+        return response;
+      }
+
+      await prisma.bids.create({
+        data: {
+          price: animal.price,
+          bidRoomId: newRoom.id,
+          userId: animal.userId,
+        },
+      });
+    }
+
     const existingRoom = await prisma.bidRoom.findUnique({
       where: {
         key: room.key,
@@ -91,64 +155,22 @@ async function createBidRoom(room: RoomType, userId: string) {
       },
     });
 
-    if (existingRoom) {
-      const allExceptThis = existingRoom.activeUsers.filter(
-        (user) => user !== userId
-      );
-      const newUsers = [...allExceptThis, userId];
-      const updated = await prisma.bidRoom.update({
-        where: {
-          id: existingRoom.id,
-        },
-        data: {
-          activeUsers: newUsers,
-        },
-        include: {
-          animal: true,
-          bids: {
-            take: 5,
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  connectionIds: true,
-                },
-              },
-            },
-            orderBy: {
-              createdAt: "desc",
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              name: true,
-              connectionIds: true,
-            },
-          },
-          author: {
-            select: {
-              id: true,
-              name: true,
-              connectionIds: true,
-            },
-          },
-        },
-      });
-      response.status = 201;
-      response.message = "Bid room already exists.";
-      response.data = updated;
+    if (!existingRoom) {
+      response.status = 404;
+      response.message = `Bid room does not exist.`;
       return response;
     }
 
-    const newRoom = await prisma.bidRoom.create({
+    const allExceptThis = existingRoom.activeUsers.filter(
+      (user) => user !== userId
+    );
+    const newUsers = [...allExceptThis, userId];
+    const updated = await prisma.bidRoom.update({
+      where: {
+        id: existingRoom.id,
+      },
       data: {
-        key: room.key,
-        authorId: room.authorId,
-        userId: room.userId,
-        animalId: room.animalId,
-        activeUsers: [userId],
+        activeUsers: newUsers,
       },
       include: {
         animal: true,
@@ -186,7 +208,7 @@ async function createBidRoom(room: RoomType, userId: string) {
 
     response.status = 200;
     response.message = "Bid room created successfully.";
-    response.data = newRoom;
+    response.data = updated;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
