@@ -21,6 +21,7 @@ const FullfilmentWrapper = (props: Props) => {
     const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
     const [searchCriteria, setSearchCriteria] = useState<string>('');
     const [user, setUser] = useState<any>(null);
+    const [currentSelection, setCurrentSelection] = useState<number>(-1);
     const getUser = useSession((state: any) => state.getUser);
     const setLoading = useLoader((state: any) => state.setLoading);
 
@@ -69,6 +70,14 @@ const FullfilmentWrapper = (props: Props) => {
         setIsOpen(!isOpen);
     }
 
+    const handleSelect = (index: number) => {
+        if (currentSelection === index) {
+            setCurrentSelection(-1);
+            return;
+        }
+        setCurrentSelection(index);
+    }
+
     const handleSearchCriteria = (e: string) => {
         setSearchCriteria(e);
     }
@@ -104,7 +113,7 @@ const FullfilmentWrapper = (props: Props) => {
                                         }
 
                                         return (
-                                            <div key={`${animal.id}-${index}`} className='drop-shadow-sm bg-white rounded-md p-2 cursor-pointer'>
+                                            <div onClick={() => handleSelect(index)} key={`${animal.id}-${index}`} className={`drop-shadow-sm ${index === currentSelection ? "bg-emerald-50" : "bg-white"}  rounded-md p-2 cursor-pointer`}>
                                                 <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={200} alt={animal.title} layout='fixed' quality={70} className='w-full h-[100px] object-cover rounded-lg' />
                                                 <div className='text-lg font-semibold'>{animal.title}</div>
                                                 <div className='text -mt-1 tracking-tight'>{animal.description}</div>
@@ -120,7 +129,7 @@ const FullfilmentWrapper = (props: Props) => {
                     }
                     <div className='grid grid-cols-2 w-full gap-2 mt-3'>
                         <Button onClick={() => handleLeaveRoom(true)} variant='btn-secondary' className='w-full'>Cancel</Button>
-                        <Button className='w-full'>Select</Button>
+                        <Button className='w-full' disabled={currentSelection === -1} >Select</Button>
                     </div>
                 </div>
             </div>
