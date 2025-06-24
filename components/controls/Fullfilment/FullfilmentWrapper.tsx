@@ -55,6 +55,7 @@ const FullfilmentWrapper = (props: Props) => {
         if (response.status === 200) {
             setPosts(response.data);
             setFilteredPosts(response.data);
+            setCurrentSelection(-1);
         } else {
             console.error("Failed to fetch user posts:", response);
             return [];
