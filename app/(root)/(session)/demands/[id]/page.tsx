@@ -1,18 +1,16 @@
 import { actions } from '@/actions/serverActions/actions'
 import BackNavigator from '@/components/controls/BackNavigator'
-import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import { formalizeText, formatDate, } from '@/lib/utils'
-import { ArrowLeftCircleIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
-import Link from 'next/link'
-import RatingBar from '@/components/website/ratings/RatingBar'
 import { images } from '@/consts/images'
 import PhoneFooter from '@/components/website/footer/Phone'
 import DeleteDemandWrapper from '@/components/controls/DeleteDemandWrapper'
 import Button from '@/components/ui/Button'
 import FullfilmentWrapper from '@/components/controls/Fullfilment/FullfilmentWrapper'
+import FulFilmentUserProtection from './_components/FulFilmentUserProtection'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -28,7 +26,6 @@ const page = async (props: Props) => {
     const { id } = await params
     const response = await actions.server.demand.list(id, 'id');
     const demand = response.data as any
-
     const totalQuantity = Number(demand.maleQuantityAvailable ?? 0) + Number(demand.femaleQuantityAvailable ?? 0)
 
     return (
@@ -82,9 +79,11 @@ const page = async (props: Props) => {
                     )}
                 </div>
                 <div className='w-full mt-4'>
-                    <FullfilmentWrapper demand={demand}>
-                        <Button className='w-full'>Fullfill this demand</Button>
-                    </FullfilmentWrapper>
+                    <FulFilmentUserProtection demand={demand}>
+                        <FullfilmentWrapper demand={demand}>
+                            <Button className='w-full'>Fullfill this demand</Button>
+                        </FullfilmentWrapper>
+                    </FulFilmentUserProtection>
                 </div>
             </div>
             <PhoneFooter />

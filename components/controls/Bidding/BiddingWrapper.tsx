@@ -318,11 +318,16 @@ const BiddingWrapper = (props: Props) => {
                         <div className='text-xl font-semibold flex justify-between items-center mt-1'>
                             <div className='flex items-center gap-1'>
                                 <div><ChevronLeftIcon onClick={() => handleLeaveRoom(!isAuthor)} className='w-6 h-6 cursor-pointer' /></div>
-                                <div className='flex items-center gap-1'>{socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div>{isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{isAuthor ? "Buyer" : "Seller"}</div></div></div>
+                                <div className='flex items-center gap-1'>{socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div className='line-clamp-1'>{isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{isAuthor ? "Buyer" : "Seller"}</div></div></div>
                             </div>
-                            <div className='text-sm tracking-wide'>
+                            <div className='text-sm tracking-wide text-nowrap'>
                                 {activeBidRoom.bids.length > 0 && <div>
-                                    <span className='p-1 px-2 bg-amber-100 rounded-md'>{formatCurrency(activeBidRoom.bids.length > 0 && activeBidRoom.bids[activeBidRoom.bids.length - 1]?.price)}</span> / {formatCurrency(calculatePricing(props.animal).price)}
+                                    <div className='p-1 px-2 text-center bg-amber-100 rounded-md'>
+                                        {formatCurrency(activeBidRoom.bids.length > 0 && activeBidRoom.bids[activeBidRoom.bids.length - 1]?.price)}
+                                    </div>
+                                    <div className='p-1 px-2 text-center border-t pt-1 border-zinc-300'>
+                                        {formatCurrency(calculatePricing(props.animal).price)}
+                                    </div>
                                 </div>}
                             </div>
                         </div>

@@ -32,7 +32,7 @@ const Room = (props: Props) => {
         <BiddingWrapper animal={animal} room={props.room} staticStyle allowJoinRoomImmediately>
             <div className='grid grid-cols-2 w-full cursor-pointer hover:bg-emerald-50'>
                 <div>
-                    <div className='font-semibold tracking-tight leading-tight text-xl'><span className='font-normal'>{Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable)} x</span> {formalizeText(animal.type)} {animal.breed}</div>
+                    <div className='font-semibold tracking-tight leading-tight text-xl'><span className='font-normal'>{Number(animal.maleQuantityAvailable ?? 0) + Number(animal.femaleQuantityAvailable ?? 0)} x</span> {formalizeText(animal.type)} {animal.breed}</div>
                     <div className='px-1'>
                         <div className='text-sm tracking-tight italic'>{formalizeText(animal.title)}</div>
                     </div>
