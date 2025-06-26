@@ -423,8 +423,8 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
 }
 async function listByUser(
   userId: string,
-  animalId?: string,
-  bidLimit?: number
+  animalId?: any,
+  bidLimit?: number | null
 ) {
   const response = {
     status: 500,

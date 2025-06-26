@@ -16,6 +16,7 @@ const RoomsWrapper = (props: Props) => {
     const [myUnreadBids, setMyUnreadBids] = useState(0)
     const [otherUnreadBids, setOtherUnreadBids] = useState(0)
     const rooms = useRooms((state: any) => state.rooms);
+    const getLatestRooms = useRooms((state: any) => state.getLatestRooms);
 
     useEffect(() => {
         setIsMounted(true)

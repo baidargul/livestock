@@ -13,9 +13,9 @@ async function closeBidRoom(value: string, key: "id" | "key") {
   const response = await axios.delete(`/api/rooms?id=${value}&key=${key}`);
   return response;
 }
-async function listByUser(userId: string, animalId?: string) {
+async function listByUser(userId: string, animalId?: any, limit: number = 5) {
   const response = await axios.get(
-    `/api/rooms/my?userId=${userId}&animalId=${animalId ?? undefined}`
+    `/api/rooms/my?userId=${userId}&animalId=${animalId}&limit=${limit}`
   );
   return response.data;
 }

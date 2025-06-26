@@ -1,3 +1,5 @@
+import { actions } from "@/actions/serverActions/actions";
+import axios from "axios";
 import { create } from "zustand";
 
 interface Room {
@@ -19,6 +21,7 @@ interface RoomsState {
   getRooms: () => { myRooms: Room[]; otherRooms: Room[] }; // Function to retrieve all rooms
   addRoom: (room: Room, currentUser: User) => void; // Function to add a room
   removeRoom: (roomKey: string) => void; // Function to remove a room by key
+  getLatestRooms: (userId: string) => Promise<void>; // Function to fetch the latest rooms for a user
 }
 
 export const useRooms: any = create<RoomsState>()((set) => ({
@@ -90,5 +93,17 @@ export const useRooms: any = create<RoomsState>()((set) => ({
         },
       };
     });
+  },
+  getLatestRooms: async (userId: string) => {
+    const response = await actions.client.bidRoom.listByUser(userId, null, 5);
+    if (response.status === 200) {
+      const { myRooms, otherRooms } = response.data;
+      set({
+        rooms: {
+          myRooms: myRooms || [],
+          otherRooms: otherRooms || [],
+        },
+      });
+    }
   },
 }));

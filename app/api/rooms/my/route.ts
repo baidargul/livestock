@@ -10,7 +10,10 @@ export async function GET(req: NextRequest) {
 
   try {
     const userId = new URL(req.url).searchParams.get("userId");
-    const animalId = new URL(req.url).searchParams.get("animalId");
+    const animalId =
+      new URL(req.url).searchParams.get("animalId") === "null"
+        ? null
+        : new URL(req.url).searchParams.get("animalId");
 
     if (!userId) {
       response.status = 400;
@@ -20,7 +23,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (!animalId) {
-      response = await actions.server.bidRoom.listByUser(userId, undefined, 5);
+      response = await actions.server.bidRoom.listByUser(userId, null, 5);
     } else {
       response = await actions.server.bidRoom.listByUser(userId, animalId, 5);
     }

@@ -26,7 +26,7 @@ const FulFilmentUserProtection = (props: Props) => {
             if (rawuser && rawuser.id !== props.demand.userId) {
                 setValidatingPreviousState(true)
                 const hasPlacedOffer = async () => {
-                    const response = await actions.client.demand.hasUserPostedOffer(rawuser.id, props.demand.id)
+                    const response = await actions.client.demand.hasUserPostedOffer(props.demand.userId, props.demand.id)
                     console.log(response)
                     if (response.status === 200) {
                         setHasPlacedOffer(response.data)
