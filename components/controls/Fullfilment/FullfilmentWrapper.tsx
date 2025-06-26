@@ -108,8 +108,8 @@ const FullfilmentWrapper = (props: Props) => {
             const room = {
                 animalId: animal.id,
                 authorId: animal.userId,
-                userId: props.demand.userId,
-                key: `${animal.id}-${animal.userId}-${props.demand.userId}`,
+                userId: user.id,
+                key: `${animal.id}-${animal.userId}-${user.id}`,
             }
             socket.emit("join-bidroom", { room, userId: user.id, demandId: props.demand.id });
             setIsOpen(false);

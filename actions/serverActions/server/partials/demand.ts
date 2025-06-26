@@ -122,9 +122,38 @@ async function removeDemand(id: string) {
   }
 }
 
+async function hasUserPostedOffer(userId: string, demandId: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const room = await prisma.bidRoom.findFirst({
+      where: {
+        userId: userId,
+        demandId: demandId,
+      },
+    });
+
+    response.status = 200;
+    response.message = room ? "User has placed an offer." : "No offer placed";
+    response.data = room ? true : false;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const demand = {
   list,
   listAll,
   createDemand,
   removeDemand,
+  hasUserPostedOffer,
 };

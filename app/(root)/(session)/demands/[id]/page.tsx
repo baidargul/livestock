@@ -58,6 +58,7 @@ const page = async (props: Props) => {
             </div>
             <div className='mt-20 p-4'>
                 <h2 className='text-2xl font-bold text-gray-800'>{totalQuantity} {formalizeText(demand.breed)} {demand.type}</h2>
+                <div>{demand.user?.name}</div>
                 <div className='flex gap-1 items-center'>
                     <div className='text-lg text-gray-600 flex gap-1 items-center'>
                         {demand.maleQuantityAvailable && demand.maleQuantityAvailable > 0 && <div>
