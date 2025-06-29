@@ -435,6 +435,7 @@ const BiddingWrapper = (props: Props) => {
                 {!props.staticStyle && isAuthor ?
                     <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${[...rooms.myRooms, ...rooms.otherRooms].length} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
                     : null}
+                {!props.staticStyle && !isAuthor ? props.children : null}
             </div>
             <div onClick={() => handleLeaveRoom(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>

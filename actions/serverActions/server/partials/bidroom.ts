@@ -766,6 +766,22 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
       },
     });
 
+    const offers = await prisma.bids.findMany({
+      where: {
+        bidRoomId: roomId,
+        isFinalOffer: true,
+      },
+      include: {
+        user: true,
+        BidRoom: true,
+      },
+    });
+
+    if (offers.length > 1) {
+      const targetBid = offers.find((offer) => offer.userId !== userId);
+      await closeDeal(existingRoom, userId, targetBid);
+    }
+
     const room = await actions.server.bidRoom.list(roomId, "id", 5);
 
     response.status = 200;
