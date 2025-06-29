@@ -38,10 +38,11 @@ const FulFilmentUserProtection = (props: Props) => {
 
                 hasPlacedOffer()
             }
-
             setUser(rawuser)
         }
     }, [isMounted])
+
+    console.log(props.demand)
 
     if (user && user.id === props.demand.userId && isMounted) {
         return (

@@ -39,6 +39,7 @@ const Room = (props: Props) => {
                 </div>
                 <div className='ml-auto '>
                     <div className='text-sm px-1 tracking-tight text-emerald-600 bg-emerald-50 p-1 rounded w-fit h-fit'>{unreadBids} new bid{unreadBids > 1 ? 's' : ''}</div>
+                    {props.room.demandId && props.room.demandId.length > 0 && <div className='p-1 px-2 bg-zinc-300 rounded text-xs scale-90 origin-top-left'>demand</div>}
                 </div>
             </div>
         </BiddingWrapper>

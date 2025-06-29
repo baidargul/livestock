@@ -34,6 +34,8 @@ const BiddingWrapper = (props: Props) => {
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const [workingForRoom, setWorkingForRoom] = useState(false)
+    console.log(`props.staticStyle`)
+    console.log(props.staticStyle)
     // const [bidRooms, setBidRooms] = useState<any[]>([])
     const [activeBidRoom, setActiveBidRoom] = useState<any>(null)
     const [isLocked, setIsLocked] = useState(false)
@@ -333,7 +335,7 @@ const BiddingWrapper = (props: Props) => {
                         </div>
                     </div>}
                     <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} />}
+                        {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
@@ -430,7 +432,9 @@ const BiddingWrapper = (props: Props) => {
             </div >
             <div onClick={handleCreateBidRoom} className='w-full'>
                 {props.staticStyle && props.children}
-                {!props.staticStyle && workingForRoom ? <Button disabled className='w-full'>...</Button> : isAuthor ? !props.staticStyle && <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${[...rooms.myRooms, ...rooms.otherRooms].length} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button> : props.children}
+                {!props.staticStyle && isAuthor ?
+                    <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${[...rooms.myRooms, ...rooms.otherRooms].length} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
+                    : null}
             </div>
             <div onClick={() => handleLeaveRoom(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>
