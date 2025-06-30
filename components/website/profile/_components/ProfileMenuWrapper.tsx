@@ -3,13 +3,13 @@ import { actions } from '@/actions/serverActions/actions'
 import { images } from '@/consts/images'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
-import { CrossIcon, List, PlusCircleIcon, TrendingUpIcon, X } from 'lucide-react'
+import { List, PlusCircleIcon, TrendingUpIcon, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import SiteLogo from '../../logo/SiteLogo'
 import DemandRowLite from '../../sections/demands/list/DemandRowLite'
+import { useRouter } from 'next/navigation'
 
 type Props = {
     children: React.ReactNode
@@ -17,9 +17,31 @@ type Props = {
 
 const ProfileMenuWrapper = (props: Props) => {
     const [isToggled, setIsToggled] = useState(false)
+    const [user, setUser] = useState<any>(null);
+    const [isMounted, setIsMounted] = useState(false)
+    const getUser = useSession((state: any) => state.getUser);
+    const router = useRouter();
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
+    useEffect(() => {
+        if (isMounted) {
+            const rawUser = getUser();
+            setUser(rawUser);
+        }
+    }, [isMounted])
 
     const handleToggleMenu = (val: boolean) => {
-        setIsToggled(val)
+        if (isMounted) {
+            if (user) {
+                setIsToggled(val)
+            } else {
+                setIsToggled(false)
+                router.push("/signin")
+            }
+        }
     }
 
     return (
@@ -27,28 +49,22 @@ const ProfileMenuWrapper = (props: Props) => {
             <div onClick={() => handleToggleMenu(true)} className='cursor-pointer'>
                 {props.children}
             </div>
-            <MenuWrapper handleToggleMenu={handleToggleMenu} isToggled={isToggled} />
+            <MenuWrapper handleToggleMenu={handleToggleMenu} isToggled={isToggled} user={user} />
         </div>
     )
 }
 
 export default ProfileMenuWrapper
 
-const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
-    const [user, setUser] = useState<any>(null);
-    const getUser = useSession((state: any) => state.getUser);
+const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
     const logoutUser = useSession((state: any) => state.logoutUser);
     const setLoading = useLoader((state: any) => state.setLoading)
     const loading = useLoader((state: any) => state.loading)
     const router = useRouter();
 
-    useEffect(() => {
-        const rawUser = getUser();
-        setUser(rawUser);
-    }, [])
-
     const handleLoggout = async () => {
         setLoading(true)
+        handleToggleMenu(false)
         const response = await actions.client.user.signout({ token: user?.token });
         if (response.status === 200) {
             logoutUser();
