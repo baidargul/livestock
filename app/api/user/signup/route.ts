@@ -19,9 +19,16 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify(response));
     }
 
-    const { name, email, password } = data;
+    const { name, email, password, province, city, phone } = data;
 
-    response = await actions.server.user.signup(name, email, password);
+    response = await actions.server.user.signup(
+      name,
+      email,
+      password,
+      province,
+      city,
+      phone
+    );
     if (response.status === 200) {
       const sevenDaysUpFront = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
       const token = await prisma.sessions.create({

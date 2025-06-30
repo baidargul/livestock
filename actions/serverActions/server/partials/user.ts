@@ -1,6 +1,13 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
-async function signup(name: string, email: string, password: string) {
+async function signup(
+  name: string,
+  email: string,
+  password: string,
+  province?: string,
+  city?: string,
+  phone?: string
+) {
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -18,7 +25,7 @@ async function signup(name: string, email: string, password: string) {
     console.time("creating user");
     try {
       const newUser = await prisma.user.create({
-        data: { name, email, password },
+        data: { name, email, password, province, city, phone },
         omit: {
           password: true,
         },

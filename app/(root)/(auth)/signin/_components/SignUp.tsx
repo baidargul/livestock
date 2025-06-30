@@ -19,8 +19,10 @@ const SignUp = (props: Props) => {
     const [form, setForm] = useState({
         name: "",
         email: "",
-        password: ""
-
+        password: "",
+        province: "",
+        city: "",
+        phone: "",
     })
 
     useEffect(() => {
@@ -34,7 +36,7 @@ const SignUp = (props: Props) => {
     const handleSignUp = async () => {
         if (!form.name || !form.email || !form.password) return
         setLoading(true)
-        const response = await actions.client.user.signup(form.name, form.email, form.password)
+        const response = await actions.client.user.signup(form.name, form.email, form.password, form.province, form.city, form.phone)
         if (response?.status === 200) {
             setUser(response.data)
             props.setStage("signin")
@@ -59,6 +61,17 @@ const SignUp = (props: Props) => {
         setForm((prev) => ({ ...prev, password: val }))
     }
 
+    const handleProvinceChange = (val: string) => {
+        setForm((prev) => ({ ...prev, province: val }))
+    }
+
+    const handleCityChange = (val: string) => {
+        setForm((prev) => ({ ...prev, city: val }))
+    }
+
+    const handlePhoneChange = (val: string) => {
+        setForm((prev) => ({ ...prev, phone: val }))
+    }
 
     return (
         <div className='flex flex-col gap-4'>
@@ -68,6 +81,9 @@ const SignUp = (props: Props) => {
             <div className='flex flex-col gap-1'>
                 <Textbox label='Name:' value={form.name} onChange={handleNameChange} placeholder='Muhammad Usman' />
                 <Textbox label='Email:' value={form.email} onChange={handleEmailChange} placeholder='musmanjamil@gmail.com' />
+                <Textbox label='Phone:' value={form.phone} onChange={handlePhoneChange} placeholder='03' type='text' />
+                <Textbox label='Province:' value={form.province} onChange={handleProvinceChange} placeholder='Punjab' type='text' />
+                <Textbox label='City:' value={form.city} onChange={handleCityChange} placeholder='Multan' type='text' />
                 <Textbox label='Password:' value={form.password} onChange={handlePasswordChange} placeholder='1234' type='password' />
             </div>
             <div className='flex justify-between items-center'>

@@ -16,7 +16,7 @@ type Props = {}
 
 const page = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
-    const [animal, setAnimal] = useState<Animal | null>()
+    const [animal, setAnimal] = useState<Animal | any | null>()
     const [currentScreen, setCurrentScreen] = useState(1)
     const [user, setUser] = useState<any>(null)
     const getuser = useSession((state: any) => state.getUser)
@@ -65,11 +65,24 @@ const page = (props: Props) => {
         }
     }, [currentScreen, animal])
 
+    const autoFill = () => {
+        if (user) {
+            let autoDetails = { province: user?.province, city: user?.city, }
+            if (!animal.province && !animal.city) {
+                setAnimal({ ...animal, ...autoDetails, })
+            } else {
+                setAnimal({ ...autoDetails, ...animal, })
+            }
+        }
+    }
+
     const handleMoveNext = () => {
+        autoFill()
         setCurrentScreen((prev) => prev + 1)
     }
 
     const handleMoveBack = () => {
+        autoFill()
         setCurrentScreen((prev) => prev - 1)
     }
 
