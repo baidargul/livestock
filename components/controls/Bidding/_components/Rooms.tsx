@@ -1,4 +1,5 @@
 import { formalizeText, formatCurrency } from "@/lib/utils";
+import { serialize } from "bson";
 import { ChartCandlestick, ChartCandlestickIcon, HandshakeIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -28,7 +29,7 @@ const Rooms = (props: Props) => {
         userId: bidRoom.userId,
         key: `${bidRoom.key}`,
       }
-      props.socket.emit("join-bidroom", { room, userId: props.currentUser.id });
+      props.socket.emit("join-bidroom", serialize({ room, userId: props.currentUser.id }));
       props.setExpectedKey(room.key)
     }
   }

@@ -1,5 +1,6 @@
 'use client'
 import { formatCurrency } from '@/lib/utils';
+import { serialize } from 'bson';
 import { CheckCheckIcon, LockIcon } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -51,7 +52,7 @@ const BidRow = (props: Props) => {
 
     const handleMessageSeen = (bidId: string) => {
         const socket = props.socket
-        socket.emit("message-seen", { bidId, room: props.activeBidRoom });
+        socket.emit("message-seen", serialize({ bidId, room: props.activeBidRoom }));
     };
 
     return (

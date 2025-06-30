@@ -7,6 +7,7 @@ import { useLoader } from '@/hooks/useLoader';
 import { useSession } from '@/hooks/useSession';
 import { formatCurrency } from '@/lib/utils';
 import { useSocket } from '@/socket-client/SocketWrapper';
+import { serialize } from 'bson';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -111,7 +112,7 @@ const FullfilmentWrapper = (props: Props) => {
                 userId: props.demand.userId,
                 key: `${animal.id}-${animal.userId}-${props.demand.userId}`,
             }
-            socket.emit("join-bidroom", { room, userId: user.id, demandId: props.demand.id });
+            socket.emit("join-bidroom", serialize({ room, userId: user.id, demandId: props.demand.id }));
             setIsOpen(false);
             router.push(`/entity/${animal.id}`);
         }

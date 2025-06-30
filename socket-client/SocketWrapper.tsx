@@ -3,6 +3,7 @@
 import { bidsReverse } from "@/components/controls/Bidding/BiddingWrapper";
 import { useRooms } from "@/hooks/useRooms";
 import { useSession } from "@/hooks/useSession";
+import { deserialize } from "bson";
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -38,12 +39,14 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     },
                 });
 
-                socket.on("user-joined-bidroom", ({ room, userId }: any) => {
+                socket.on("user-joined-bidroom", (binaryData) => {
+                    const { room, userId }: any = deserialize(binaryData)
                     let newBids = bidsReverse(room.bids)
                     room.bids = newBids
                     rooms.addRoom(room, user)
                 });
-                socket.on("user-left-bidroom", ({ room, userId }) => {
+                socket.on("user-left-bidroom", (binaryData) => {
+                    const { room, userId } = deserialize(binaryData);
                     if (room) {
                         let newBids = bidsReverse(room.bids)
                         room.bids = newBids
@@ -51,24 +54,28 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                         // rooms.removeRoom(room.key, user)
                     }
                 })
-                socket.on("bid-placed", ({ room, userId }) => {
+                socket.on("bid-placed", (binaryData) => {
+                    const { room, userId } = deserialize(binaryData);
                     if (room) {
                         let newBids = bidsReverse(room.bids)
                         room.bids = newBids
                         rooms.addRoom(room, user)
                     }
                 })
-                socket.on("bid-locked-as-final-offer", ({ room, userId }) => {
+                socket.on("bid-locked-as-final-offer", (binaryData) => {
+                    const { room, userId } = deserialize(binaryData);
                     let newBids = bidsReverse(room.bids)
                     room.bids = newBids
                     rooms.addRoom(room, user)
                 })
-                socket.on("deal-closed", ({ room, bid }) => {
+                socket.on("deal-closed", (binaryData) => {
+                    const { room, bid } = deserialize(binaryData);
                     let newBids = bidsReverse(room.bids)
                     room.bids = newBids
                     rooms.addRoom(room, user)
                 })
-                socket.on("message-is-seen", ({ room, bidId }) => {
+                socket.on("message-is-seen", (binaryData) => {
+                    const { room, bidId } = deserialize(binaryData);
                     const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid)
                     room.bids = newBids
                     rooms.addRoom(room, user)

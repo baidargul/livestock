@@ -16,6 +16,7 @@ import { CheckCheckIcon, ChevronLeftIcon, LockIcon, LockOpenIcon } from 'lucide-
 import BidRow from './_components/BidRow'
 import { useRooms } from '@/hooks/useRooms'
 import { Bids } from '@prisma/client'
+import { serialize } from 'bson'
 
 type Props = {
     children: React.ReactNode
@@ -192,7 +193,7 @@ const BiddingWrapper = (props: Props) => {
                         key: `${props.room.animalId}-${props.room.authorId}-${props.room.userId}`,
                     }
 
-                    socket.emit("join-bidroom", { room, userId: user.id });
+                    socket.emit("join-bidroom", serialize({ room, userId: user.id }));
                 }
             }
         } else {
@@ -204,7 +205,7 @@ const BiddingWrapper = (props: Props) => {
                     key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
                 }
 
-                socket.emit("join-bidroom", { room, userId: user.id });
+                socket.emit("join-bidroom", serialize({ room, userId: user.id }));
             }
         }
         setWorkingForRoom(false)
@@ -215,7 +216,7 @@ const BiddingWrapper = (props: Props) => {
                 const room = {
                     ...activeBidRoom
                 }
-                socket.emit("close-bidroom", { room });
+                socket.emit("close-bidroom", serialize({ room }));
             }
         }
         handleOpen(false);
@@ -230,7 +231,7 @@ const BiddingWrapper = (props: Props) => {
                     userId: activeBidRoom.userId,
                     key: activeBidRoom.key,
                 };
-                socket.emit("leave-bidroom", { room, userId: user.id });
+                socket.emit("leave-bidroom", serialize({ room, userId: user.id }));
                 setExpectedKey(``);
             }
             setActiveBidRoom(null);
@@ -254,7 +255,7 @@ const BiddingWrapper = (props: Props) => {
 
         if (activeBidRoom) {
             if (socket && user) {
-                socket.emit("place-bid", { roomKey: activeBidRoom.key, userId: user.id, amount: offerValue });
+                socket.emit("place-bid", serialize({ roomKey: activeBidRoom.key, userId: user.id, amount: offerValue }));
                 setMyLastOffer(offerValue)
                 setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: offerValue, createdAt: new Date(), isSeen: false, isFinalOffer: false })
                 setOfferValue(0)
@@ -269,7 +270,7 @@ const BiddingWrapper = (props: Props) => {
     const handleLockThisAsMyFinalOffer = async () => {
         if (activeBidRoom) {
             if (socket && user) {
-                socket.emit("lock-bid-as-final-offer", { roomId: activeBidRoom.id, userId: user.id });
+                socket.emit("lock-bid-as-final-offer", serialize({ roomId: activeBidRoom.id, userId: user.id }));
             }
         }
     }
@@ -283,7 +284,7 @@ const BiddingWrapper = (props: Props) => {
             if (socket && user) {
                 //only author can close the deal
                 if (isAuthor) {
-                    socket.emit("close-deal", { room: activeBidRoom, userId: user.id, bid });
+                    socket.emit("close-deal", serialize({ room: activeBidRoom, userId: user.id, bid }));
                 }
             }
         }
