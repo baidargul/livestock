@@ -35,6 +35,9 @@ model User {
   name          String?
   email         String?     @unique
   password      String?
+  province      String?
+  city          String?
+  phone         String?
   profileImage  Json?
   coverImage    Json?
   createdAt     DateTime    @default(now())
