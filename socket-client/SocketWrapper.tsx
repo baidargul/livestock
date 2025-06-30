@@ -33,7 +33,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         if (isMounted) {
             let socket: any = null
             if (user) {
-                let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com:28635', {
+                let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com', {
                     query: {
                         userId: user.id, // Send user details as query
                     },
