@@ -38,7 +38,7 @@ const Rooms = (props: Props) => {
 
   return props.animal && <div>
     <div className="mb-5">
-      <div className="tracking-tight text-xl">Please select a room for</div>
+      {rooms && rooms?.length > 0 && <div className="tracking-tight text-xl">Please select a room for</div>}
       {props.animal && <Link href={`/entity/${props.animal.id}`} className="underline underline-offset-6 text-emerald-700">{formalizeText(props.animal.type)} {props.animal.breed} x {totalQuantity} @ {formatCurrency(props.animal.price)}</Link>}
     </div>
     {rooms && rooms.map((bid: any, index: number) => {
