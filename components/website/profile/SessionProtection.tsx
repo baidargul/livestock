@@ -6,14 +6,14 @@ type Props = {}
 
 const SessionProtection = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
+    const [user, setUser] = useState<any>(null)
     const getUser = useSession((state: any) => state.getUser)
 
     useEffect(() => {
         if (isMounted) {
             const rawUser = getUser()
-            if (rawUser) {
-                window.location.replace("/home")
-            }
+            setUser(rawUser)
+            window.location.replace("/home")
         }
 
     }, [isMounted])
@@ -23,7 +23,7 @@ const SessionProtection = (props: Props) => {
     }, [])
 
     return (
-        <></>
+        <span className='font-bold tracking-wide'>{user?.name ? user.name : "man"}</span>
     )
 }
 

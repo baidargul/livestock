@@ -31,7 +31,6 @@ const DeleteProductWrapper = (props: Props) => {
         if (isAuthor) {
             setLoading(true)
             const response = await actions.client.posts.removePost(props.id)
-            console.log(response)
             if (response.status === 200) {
                 if (props.onComplete) {
                     props.onComplete()
