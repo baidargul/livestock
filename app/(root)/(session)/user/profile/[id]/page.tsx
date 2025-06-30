@@ -55,6 +55,7 @@ const page = async (props: Props) => {
                 <div className=''>
                     <div className='text-2xl font-semibold'>{user?.name}</div>
                     <div className='text-sm font-medium text-zinc-600'>{user?.email}</div>
+                    <div className='text-sm font-medium text-zinc-600'>{`${user?.city ? `${user?.city}, ` : ""}`} {`${user?.province ? `${user?.province}, ` : ""}`} {`${user?.phone ? `${user?.phone}. ` : ""}`}</div>
                 </div>
                 <div>
                     <RatingBar readonly defaultRating={4.5} />
