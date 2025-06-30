@@ -23,7 +23,7 @@ const DeleteProductWrapper = (props: Props) => {
         if (isMounted) {
             const rawUser = getUser()
             setUser(rawUser)
-            setIsAuthor(rawUser.id === props.authorId)
+            setIsAuthor(rawUser?.id === props.authorId)
         }
     }, [isMounted])
 
