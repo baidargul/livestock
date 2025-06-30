@@ -1,6 +1,7 @@
 "use client";
 
 import { bidsReverse } from "@/components/controls/Bidding/BiddingWrapper";
+import { useLoader } from "@/hooks/useLoader";
 import { useRooms } from "@/hooks/useRooms";
 import { useSession } from "@/hooks/useSession";
 import { deserialize } from "bson";
@@ -21,6 +22,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser);
     const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
+    const setLoading = useLoader((state: any) => state.setLoading)
     const rooms = useRooms()
 
     useEffect(() => {
@@ -67,6 +69,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     let newBids = bidsReverse(room.bids)
                     room.bids = newBids
                     rooms.addRoom(room, user)
+                    setLoading(false)
                 })
                 socket.on("deal-closed", (binaryData) => {
                     const { room, bid } = deserialize(binaryData);

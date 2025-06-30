@@ -17,6 +17,7 @@ import BidRow from './_components/BidRow'
 import { useRooms } from '@/hooks/useRooms'
 import { Bids } from '@prisma/client'
 import { serialize } from 'bson'
+import { useLoader } from '@/hooks/useLoader'
 
 type Props = {
     children: React.ReactNode
@@ -35,9 +36,6 @@ const BiddingWrapper = (props: Props) => {
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
     const [workingForRoom, setWorkingForRoom] = useState(false)
-    console.log(`props.staticStyle`)
-    console.log(props.staticStyle)
-    // const [bidRooms, setBidRooms] = useState<any[]>([])
     const [activeBidRoom, setActiveBidRoom] = useState<any>(null)
     const [isLocked, setIsLocked] = useState(false)
     const [hasOtherUserLocked, setHasOtherUserLocked] = useState(false)
@@ -53,6 +51,7 @@ const BiddingWrapper = (props: Props) => {
     const [expectedKey, setExpectedKey] = useState(``)
     const rooms = useRooms((state: any) => state.rooms)
     const addRoom = useRooms((state: any) => state.addRoom)
+    const setLoading = useLoader((state: any) => state.setLoading)
 
     useEffect(() => {
         if (user) {
@@ -268,8 +267,10 @@ const BiddingWrapper = (props: Props) => {
         }
     }
     const handleLockThisAsMyFinalOffer = async () => {
+
         if (activeBidRoom) {
             if (socket && user) {
+                setLoading(true)
                 socket.emit("lock-bid-as-final-offer", serialize({ roomId: activeBidRoom.id, userId: user.id }));
             }
         }
@@ -353,10 +354,10 @@ const BiddingWrapper = (props: Props) => {
                         }
                         {activeBidRoom && activeBidRoom.bids.length > 0 && <div className='mt-4 flex justify-center items-center'>
                             <div className='flex justify-center items-center gap-2'>
-                                {isLocked && <div className='flex gap-1 items-center p-2 rounded-full bg-amber-200 border-2 border-amber-300'>
+                                {isLocked && <div className='flex gap-1 items-center p-2 rounded-full bg-amber-200 border-2 border-amber-300 active:scale-75 transition-all duration-300 ease-in-out'>
                                     <LockIcon size={23} className='text-amber-700' />
                                 </div>}
-                                {!isLocked && myLastOffer > 0 && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm'>
+                                {!isLocked && myLastOffer > 0 && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm active:scale-75 transition-all duration-300 ease-in-out'>
                                     <LockOpenIcon size={15} /> Lock <span className='tracking-wide'>{formatCurrency(myLastOffer)}</span> as <span className='tracking-wide font-semibold'>Final Offer</span>
                                 </div>}
                             </div>

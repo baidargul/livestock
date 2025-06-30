@@ -27,7 +27,7 @@ const Loading = (props: Props) => {
 
     return (
         <>
-            {loading && <div className='fixed z-50 flex inset-0 w-full h-full bg-red-200/80 pointer-events-none justify-center items-center cursor-not-allowed' >
+            {loading && <div className='fixed z-50 flex inset-0 w-full h-full bg-red-200/80 pointer-events-none justify-center items-center cursor-not-allowed' style={{ zIndex: 999 }} >
                 <div className='text-red-600 font-bold tracking-wide bg-gradient-to-b from-red-100 via-white to-red-100 p-10 px-14 rounded-xl' style={{ boxShadow: "0px 3px 4px 0px #71141987" }}>
                     <Image src={images.site.logo.desktopIcon} width={100} height={100} quality={10} alt='logo' className={`w-32 h-32 mx-auto transition-all duration-200 ease-in-out ${rotate}`} />
                     <div className={`${translate} ${rotate} duration-300 text-center ease-in-out transition-all`}>
