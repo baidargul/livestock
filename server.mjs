@@ -14,6 +14,11 @@ app.prepare().then(() => {
   const httpServer = createServer(handle);
   const io = new Server(httpServer);
 
+  fetch(`${route}/api/rooms/connections/`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+
   setInterval(() => {
     const used = process.memoryUsage();
     console.log(`SOCKET MEMORY: ${Math.round(used.rss / 1024 / 1024)}MB`);
