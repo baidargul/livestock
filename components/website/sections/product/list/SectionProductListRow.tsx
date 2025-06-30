@@ -12,7 +12,7 @@ type Props = {
 
 const SectionProductListRow = (props: Props) => {
 
-    const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
+    const totalQuantity = Number(props.animal?.maleQuantityAvailable || 0) + Number(props.animal?.femaleQuantityAvailable || 0)
 
     const sellerCargo = props.animal?.deliveryOptions.includes("SELLER_DELIVERY")
     const selfPickup = props.animal?.deliveryOptions.includes("SELF_PICKUP")
@@ -37,8 +37,8 @@ const SectionProductListRow = (props: Props) => {
                         <div className='font-medium'>{totalQuantity}</div> <div className='font-medium'>{`${formalizeText(props.animal?.type)} ${props.animal?.breed}`}</div>
                     </div>
                     <div>
-                        {Number(props.animal.maleQuantityAvailable ?? 0) > 0 && <span className='text-sm tracking-tight'>{props.animal.maleQuantityAvailable} Male</span>}
-                        {Number(props.animal.femaleQuantityAvailable ?? 0) > 0 && <span className='text-sm tracking-tight'> {props.animal.femaleQuantityAvailable} Female</span>}
+                        {Number(props.animal?.maleQuantityAvailable ?? 0) > 0 && <span className='text-sm tracking-tight'>{props.animal?.maleQuantityAvailable} Male</span>}
+                        {Number(props.animal?.femaleQuantityAvailable ?? 0) > 0 && <span className='text-sm tracking-tight'> {props.animal?.femaleQuantityAvailable} Female</span>}
                     </div>
                     <div className='flex gap-1 items-center my-2'>
                         <div className='font-medium w-[70%] tracking-tight text-base text-balance leading-4'>
