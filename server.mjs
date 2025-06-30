@@ -63,14 +63,6 @@ app.prepare().then(() => {
         const data = await res.json();
         if (data.status === 200) {
           socket.join(roomKey);
-          io.to(roomKey).emit(
-            "bid-placed",
-            serialize({
-              room: data.data,
-              userId: userId,
-            })
-          );
-          // Explicitly notify the bidding user
           socket.emit(
             "bid-placed",
             serialize({
@@ -79,7 +71,7 @@ app.prepare().then(() => {
             })
           );
           for (const ids of data.data.author.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
               "bid-placed",
               serialize({
                 room: data.data,
@@ -88,7 +80,7 @@ app.prepare().then(() => {
             );
           }
           for (const ids of data.data.user.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
               "bid-placed",
               serialize({
                 room: data.data,
@@ -113,16 +105,17 @@ app.prepare().then(() => {
         });
         const data = await res.json();
         if (data.status === 200) {
-          socket.join(room.key);
-          io.to(room.key).emit(
-            "deal-closed",
-            serialize({
-              room: data.data.room,
-              bid: data.data.bid,
-            })
-          );
           for (const ids of data.data.author.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
+              "deal-closed",
+              serialize({
+                room: data.data,
+                userId: userId,
+              })
+            );
+          }
+          for (const ids of data.data.user.connectionIds) {
+            io.to(ids).emit(
               "deal-closed",
               serialize({
                 room: data.data,
@@ -147,16 +140,8 @@ app.prepare().then(() => {
         });
         const data = await res.json();
         if (data.status === 200) {
-          socket.join(data.data.key);
-          io.to(data.data.key).emit(
-            "bid-locked-as-final-offer",
-            serialize({
-              room: data.data.data,
-              userId: userId,
-            })
-          );
           for (const ids of data.data.data.author.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
               "bid-locked-as-final-offer",
               serialize({
                 room: data.data.data,
@@ -165,7 +150,7 @@ app.prepare().then(() => {
             );
           }
           for (const ids of data.data.data.user.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
               "bid-locked-as-final-offer",
               serialize({
                 room: data.data.data,
@@ -228,29 +213,9 @@ app.prepare().then(() => {
 
           const data = await res.json();
           if (data.status === 200 || data.status === 201) {
-            // Join the room
-            socket.join(room.key);
-            socket.emit(
-              room.key,
-              serialize({
-                room: data.data,
-                userId: userId,
-              })
-            );
-            // Using io to broadcast all members in the room also the sender
-            // we use socket only when to emit all except the sender
-
-            io.to(room.key).emit(
-              "user-joined-bidroom",
-              serialize({
-                room: data.data,
-                userId: userId,
-              })
-            );
-
             //telling about this to all the instances of this author
             for (const ids of data.data.author.connectionIds) {
-              socket.to(ids).emit(
+              io.to(ids).emit(
                 "user-joined-bidroom",
                 serialize({
                   room: data.data,
@@ -260,7 +225,7 @@ app.prepare().then(() => {
             }
             //telling about this to all the instances of this user
             for (const ids of data.data.user.connectionIds) {
-              socket.to(ids).emit(
+              io.to(ids).emit(
                 "user-joined-bidroom",
                 serialize({
                   room: data.data,
@@ -289,17 +254,9 @@ app.prepare().then(() => {
         const data = await res.json();
         if (data.status === 200) {
           socket.rooms.forEach(() => socket.leave(room.key));
-          io.to(room.key).emit(
-            "user-left-bidroom",
-            serialize({
-              room: data.data,
-              userId: userId,
-            })
-          );
-
           //telling about this to all the instances of this author
           for (const ids of data.data.author.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
               "user-left-bidroom",
               serialize({
                 room: data.data,
@@ -308,7 +265,7 @@ app.prepare().then(() => {
             );
           }
           for (const ids of data.data.user.connectionIds) {
-            socket.to(ids).emit(
+            io.to(ids).emit(
               "user-left-bidroom",
               serialize({
                 room: data.data,
