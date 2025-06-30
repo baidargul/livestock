@@ -15,6 +15,7 @@ import BackNavigator from '@/components/controls/BackNavigator'
 import ProfileImageChangeWrapper from '@/components/website/profile/_components/ProfileImageChangeWrapper'
 import ProfileImage from './_components/ProfileImage'
 import CoverImage from './_components/CoverImage'
+import PersonalDetailsProtector from './_components/PersonalDetailsProtector';
 
 type Props = {
     params: Promise<{ id: string }>
@@ -54,8 +55,11 @@ const page = async (props: Props) => {
             <div className='px-4 flex flex-col gap-4'>
                 <div className=''>
                     <div className='text-2xl font-semibold'>{user?.name}</div>
-                    <div className='text-sm font-medium text-zinc-600'>{user?.email}</div>
-                    <div className='text-sm font-medium text-zinc-600'>{`${user?.city ? `${user?.city}, ` : ""}`} {`${user?.province ? `${user?.province}, ` : ""}`} {`${user?.phone ? `${user?.phone}. ` : ""}`}</div>
+                    <PersonalDetailsProtector userId={user?.id}>
+                        <div className='text-sm font-medium text-zinc-600'>{user?.email}</div>
+                        <div className='text-sm font-medium text-zinc-600'>{`${user?.city ? `${user?.city}, ` : ""}`} {`${user?.province ? `${user?.province}, ` : ""}`} {`${user?.phone ? `${user?.phone}. ` : ""}`}</div>
+                        <div className='text-sm font-medium text-zinc-600 underline w-fit cursor-pointer'>Edit profile</div>
+                    </PersonalDetailsProtector>
                 </div>
                 <div>
                     <RatingBar readonly defaultRating={4.5} />
