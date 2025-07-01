@@ -88,17 +88,27 @@ async function list(val: any, key: string) {
       response.data = null;
       return response;
     }
+    let images = [];
+    let profileImage: any = [];
+    let coverImage = [];
+    let animal = { ...target };
+    const isInDevelopment = process.env.NODE_ENV === "development";
+    if (!isInDevelopment) {
+      Promise.all([
+        (images = await actions.server.images.fetchImages(target.images)),
+      ]);
+      animal = { ...target, images };
+      animal.user.profileImage = profileImage;
+      Promise.all([
+        (profileImage = await actions.server.images.fetchImages(
+          animal.user.profileImage
+        )),
+        (coverImage = await actions.server.images.fetchImages(
+          animal.user.coverImage
+        )),
+      ]);
+    }
 
-    const images = await actions.server.images.fetchImages(target.images);
-    const animal = { ...target, images };
-
-    const profileImage = await actions.server.images.fetchImages(
-      animal.user.profileImage
-    );
-    animal.user.profileImage = profileImage;
-    const coverImage = await actions.server.images.fetchImages(
-      animal.user.coverImage
-    );
     animal.user.coverImage = coverImage;
 
     response.status = 200;

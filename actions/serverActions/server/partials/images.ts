@@ -64,7 +64,7 @@ async function fetchImages(images: any) {
   const isInDevelopment = process.env.NODE_ENV === "development";
   let rawImages: any = [];
   if (isInDevelopment) {
-    console.info(`💡 IN DEVELOPMENT MODE`);
+    console.info(`[CLOUDFLARE BYPASS]::💡 IN DEVELOPMENT MODE`);
     return rawImages;
   }
 
