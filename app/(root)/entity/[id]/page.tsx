@@ -101,11 +101,9 @@ const page = async (props: Props) => {
                 </div> */}
             </div>
             <div className='mb-2 px-4 flex justify-center items-center w-full'>
-                <BiddingWrapper animal={animal}>
-                    <BidProtection animalId={animal?.id}>
-                        <Button className='w-full'>Buy Now</Button>
-                    </BidProtection>
-                </BiddingWrapper>
+                <BidProtection animal={animal}>
+                    <Button className='w-full'>Buy Now</Button>
+                </BidProtection>
             </div>
             <PhoneFooter />
         </div >

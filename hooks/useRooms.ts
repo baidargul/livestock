@@ -110,8 +110,6 @@ export const useRooms: any = create<RoomsState>()((set) => ({
   find: (animalId: string, id: string, key: "userId" | "authorId") => {
     const { rooms } = useRooms.getState();
     const mergedRooms = [...rooms.myRooms, ...rooms.otherRooms];
-    console.log(`mergedRooms`);
-    console.log(mergedRooms);
     return mergedRooms.find(
       (room) => room[key] === id && room.animalId === animalId
     );
