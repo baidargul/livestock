@@ -290,7 +290,7 @@ const BiddingWrapper = (props: Props) => {
         }
     }
 
-    const ThisUserAlreadyWonTheOffer = activeBidRoom?.userId === user?.id && activeBidRoom?.userOfferAccepted === true
+    const ThisUserAlreadyWonTheOffer = user?.id === activeBidRoom?.userId ? activeBidRoom?.userOfferAccepted : false
 
     return (
         <>

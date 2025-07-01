@@ -331,30 +331,6 @@ async function closeDeal(room: any, userId: string, bid: any) {
       return response;
     }
 
-    const offers = await prisma.bids.findMany({
-      where: {
-        bidRoomId: activeRoom.id,
-        isFinalOffer: true,
-      },
-      include: {
-        user: true,
-        BidRoom: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 2,
-    });
-
-    let hasUserWonTheDeal = false;
-    if (offers.length > 1) {
-      const targetBid = offers.find((offer) => offer.userId !== userId);
-      const userBid = offers.find((offer) => offer.userId === userId);
-      if (targetBid && userBid) {
-        if (targetBid.price === userBid.price) hasUserWonTheDeal = true;
-      }
-    }
-
     await prisma.bidRoom.update({
       where: {
         id: room.id,
@@ -362,7 +338,7 @@ async function closeDeal(room: any, userId: string, bid: any) {
       data: {
         closedAt: new Date(),
         closedAmount: selectedBid.price ?? 0,
-        userOfferAccepted: hasUserWonTheDeal,
+        userOfferAccepted: selectedBid.userId !== activeRoom.authorId,
       },
     });
 
@@ -809,15 +785,15 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
       take: 2,
     });
 
-    if (offers.length > 1) {
-      const userOffer = offers.find((offer) => offer.userId === userId);
-      const otherUserOffer = offers.find((offer) => offer.userId !== userId);
-      if (userOffer && otherUserOffer) {
-        if (userOffer.price === otherUserOffer.price) {
-          await closeDeal(existingRoom, userId, otherUserOffer);
-        }
-      }
-    }
+    // if (offers.length > 1) {
+    //   const userOffer = offers.find((offer) => offer.userId === userId);
+    //   const otherUserOffer = offers.find((offer) => offer.userId !== userId);
+    //   if (userOffer && otherUserOffer) {
+    //     if (userOffer.price === otherUserOffer.price) {
+    //       await closeDeal(existingRoom, userId, otherUserOffer);
+    //     }
+    //   }
+    // }
 
     const room = await actions.server.bidRoom.list(roomId, "id", 5);
 
