@@ -40,7 +40,7 @@ const page = async (props: Props) => {
             </DeleteProductWrapper>
             <div className='relative'>
                 <Image
-                    src={animal.images.length > 0 ? animal.images[0].image : images.chickens.images[1]}
+                    src={animal.images.length > 0 ? animal.images[0].image ? animal.images[0].image : images.chickens.images[1] : images.chickens.images[1]}
                     draggable={false}
                     priority
                     layout="fixed"
@@ -77,19 +77,19 @@ const page = async (props: Props) => {
             </div>
             <div className='px-4 flex flex-col gap-4'>
                 <div className='flex flex-wrap justify-start items-start gap-2'>
-                    {animal.images.map((item: any) => {
+                    {animal.images.map((item: any, index: number) => {
                         return (
-                            <MediaViewer key={item.name} image={item.image}>
-                                <Image src={item.image} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover object-left-center rounded-xl cursor-pointer' />
+                            <MediaViewer key={`${item.name}-${index}`} image={item.image}>
+                                <Image src={item.image ? item.image : images.chickens.images[1]} alt='hen' width={100} height={100} quality={60} loading='lazy' layout='fixed' className='w-24 h-14 object-cover object-left-center rounded-xl cursor-pointer' />
                             </MediaViewer>
                         )
                     })}
                 </div>
                 <div className='flex justify-evenly items-center my-4 w-full'>{
-                    animal.deliveryOptions.map((option: any) => {
+                    animal.deliveryOptions.map((option: any, index: number) => {
                         const Icon = String(option).toLocaleLowerCase() === "self_pickup" ? SquareUserIcon : TruckIcon
                         return (
-                            <div key={option} className='flex gap-1 items-center'><Icon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Cargo delivery"}</div>
+                            <div key={`${option}-${index}`} className='flex gap-1 items-center'><Icon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Cargo delivery"}</div>
                         )
                     })
                 }</div>
