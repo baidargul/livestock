@@ -70,7 +70,6 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
             logoutUser();
             router.push("/");
         } else {
-            console.log(response);
         }
         setLoading(false)
     }

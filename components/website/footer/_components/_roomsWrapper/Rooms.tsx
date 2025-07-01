@@ -8,7 +8,6 @@ type Props = {
 
 const Rooms = (props: Props) => {
 
-    console.log(props.rooms)
 
     return (
         <div className='flex flex-col gap-2 text-black'>

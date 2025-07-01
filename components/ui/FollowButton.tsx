@@ -58,7 +58,6 @@ const FollowButton = (props: Props) => {
             const newUser = currentUser ? { ...currentUser, ...response.data } : null
             setUser(newUser)
         } else {
-            console.log(response)
         }
         setIsWorking(false)
     }
