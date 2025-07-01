@@ -30,8 +30,8 @@ type Props = {
 const BiddingWrapper = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
-    const [offerValue, setOfferValue] = useState(0)
-    const [myLastOffer, setMyLastOffer] = useState(0)
+    const [offerValue, setOfferValue] = useState<string | number>(0)
+    const [myLastOffer, setMyLastOffer] = useState<string | number>(0)
     const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
@@ -175,8 +175,8 @@ const BiddingWrapper = (props: Props) => {
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
     }
-    const handleOfferChange = (val: string) => {
-        const offer = Number(val)
+    const handleOfferChange = (val: string | number) => {
+        const offer = String(val).length > 0 ? Number(val) : val
         setOfferValue(offer)
     }
     const handleCreateBidRoom = async () => {
@@ -249,14 +249,14 @@ const BiddingWrapper = (props: Props) => {
             router.push("/signin")
             return
         }
-        if (offerValue <= 0) return
+        if (Number(offerValue) <= 0) return
 
 
         if (activeBidRoom) {
             if (socket && user) {
                 socket.emit("place-bid", serialize({ roomKey: activeBidRoom.key, userId: user.id, amount: offerValue }));
                 setMyLastOffer(offerValue)
-                setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: offerValue, createdAt: new Date(), isSeen: false, isFinalOffer: false })
+                setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: Number(offerValue), createdAt: new Date(), isSeen: false, isFinalOffer: false })
                 setOfferValue(0)
             }
         }
@@ -359,8 +359,8 @@ const BiddingWrapper = (props: Props) => {
                                 {isLocked && <div className='flex gap-1 items-center p-2 rounded-full bg-amber-200 border-2 border-amber-300 active:scale-75 transition-all duration-300 ease-in-out'>
                                     <LockIcon size={23} className='text-amber-700' />
                                 </div>}
-                                {!isLocked && myLastOffer > 0 && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm active:scale-75 transition-all duration-300 ease-in-out'>
-                                    <LockOpenIcon size={15} /> Lock <span className='tracking-wide'>{formatCurrency(myLastOffer)}</span> as <span className='tracking-wide font-semibold'>Final Offer</span>
+                                {!isLocked && Number(myLastOffer) > 0 && <div onClick={handleLockThisAsMyFinalOffer} className='cursor-pointer flex gap-1 items-center p-1 bg-amber-100 border-2 border-amber-300 rounded text-sm active:scale-75 transition-all duration-300 ease-in-out'>
+                                    <LockOpenIcon size={15} /> Lock <span className='tracking-wide'>{formatCurrency(Number(myLastOffer))}</span> as <span className='tracking-wide font-semibold'>Final Offer</span>
                                 </div>}
                             </div>
                         </div>}
@@ -371,11 +371,11 @@ const BiddingWrapper = (props: Props) => {
                 {!isLocked && <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
                     {isAuthor && activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length > 0 && <div className='my-4'>
                         <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
-                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
+                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(Number(offerValue)))}</div>
                     </div>}
                     {!isAuthor && activeBidRoom && <div className='my-4'>
                         <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
-                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(offerValue))}</div>
+                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(Number(offerValue)))}</div>
                     </div>}
                     <div className=' flex items-center gap-2'>
                         <Button onClick={() => handleLeaveRoom(!isAuthor)} className='w-full' variant='btn-secondary'>{!activeBidRoom ? "Close" : "Cancel"}</Button>
