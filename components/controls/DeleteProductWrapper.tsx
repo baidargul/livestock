@@ -7,7 +7,7 @@ import React, { use, useEffect, useState } from 'react'
 type Props = {
     children: React.ReactNode
     id: string
-    authorId: string
+    animal: any
     onComplete?: () => void
 }
 
@@ -23,9 +23,10 @@ const DeleteProductWrapper = (props: Props) => {
         if (isMounted) {
             const rawUser = getUser()
             setUser(rawUser)
-            setIsAuthor(rawUser?.id === props.authorId)
+            setIsAuthor(rawUser?.id === props.animal.userId)
         }
     }, [isMounted])
+
 
     const handleDelete = async () => {
         if (isAuthor) {
