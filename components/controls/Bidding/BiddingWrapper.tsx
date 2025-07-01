@@ -208,17 +208,7 @@ const BiddingWrapper = (props: Props) => {
         }
         setWorkingForRoom(false)
     }
-    const handleCloseBidRoom = async () => {
-        if (socket) {
-            if (activeBidRoom) {
-                const room = {
-                    ...activeBidRoom
-                }
-                socket.emit("close-bidroom", serialize({ room }));
-            }
-        }
-        handleOpen(false);
-    }
+
     const handleLeaveRoom = async (force?: boolean) => {
         setWorkingForRoom(true);
         if (activeBidRoom) {

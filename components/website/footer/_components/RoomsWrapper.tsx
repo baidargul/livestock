@@ -65,8 +65,6 @@ const RoomsWrapper = (props: Props) => {
         setIsToggled(toggle)
     }
 
-    console.log(rooms)
-
     return (
         isMounted && <>
             <RoomListContainer isToggled={isToggled} handleToggleMenu={handleToggle} rooms={rooms} user={user} />

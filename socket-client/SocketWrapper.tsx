@@ -41,7 +41,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                         userId: user.id, // Send user details as query
                     },
                 });
-
                 socket.on("user-joined-bidroom", (binaryData) => {
                     const { room, userId }: any = deserialize(binaryData)
                     let newBids = bidsReverse(room.bids)
@@ -85,6 +84,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     room.bids = newBids
                     rooms.addRoom(room, user)
                 })
+                socket.on("room-closed", (binaryData) => {
+                    const { room, userId } = deserialize(binaryData);
+                    if (room) {
+                        rooms.removeRoom(room.key)
+                    }
+                })
                 setSocketInstance(socket);
             } else {
                 setSocketInstance(null);
@@ -99,6 +104,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     socket?.off("bid-placed")
                     socket?.off("bid-locked-as-final-offer")
                     socket?.off("deal-closed")
+                    socket?.off("room-closed")
                     socket?.off("message-is-seen")
                     setSocketInstance(null);
                 }

@@ -294,17 +294,35 @@ app.prepare().then(() => {
       }
     });
     socket.on("close-bidroom", async (binaryData) => {
-      const { room } = deserialize(binaryData);
+      const { room, userId } = deserialize(binaryData);
       if (room && room.key) {
         try {
           const res = await fetch(
-            `${route}/api/rooms?value=${room.key}&key=key`,
+            `${route}/api/rooms?value=${room.key}&key=key&userId=${userId}`,
             {
               method: "DELETE",
             }
           );
           const data = await res.json();
           if (data.status === 200) {
+            socket.emit(
+              "room-closed",
+              serialize({
+                room: data.data,
+                userId: userId,
+              })
+            );
+            const userConnections = data.data.user.connectionIds;
+            const authorConnections = data.data.author.connectionIds;
+            [...userConnections, ...authorConnections].forEach((id) => {
+              io.to(id).emit(
+                "room-closed",
+                serialize({
+                  room: data.data,
+                  userId: userId,
+                })
+              );
+            });
             socket.rooms.forEach((room) => socket.leave(room));
           } else {
             console.error(`Error: ${data.message}`);

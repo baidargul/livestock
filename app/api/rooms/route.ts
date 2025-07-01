@@ -108,6 +108,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const value = new URL(req.url).searchParams.get("value");
     const key = new URL(req.url).searchParams.get("key");
+    const userId = new URL(req.url).searchParams.get("userId");
 
     if (!value || !key) {
       response.status = 400;
@@ -118,7 +119,8 @@ export async function DELETE(req: NextRequest) {
 
     response = await actions.server.bidRoom.closeBidRoom(
       value,
-      key as "id" | "key"
+      key as "id" | "key",
+      userId ?? ""
     );
     return new Response(JSON.stringify(response));
   } catch (error: any) {

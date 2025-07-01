@@ -237,7 +237,7 @@ async function createBidRoom(
     return response;
   }
 }
-async function closeBidRoom(value: string, key: "id" | "key") {
+async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
   const response = {
     status: 500,
     message: "Failed to close bid room",
@@ -249,6 +249,18 @@ async function closeBidRoom(value: string, key: "id" | "key") {
       where: {
         [key]: value,
       },
+      include: {
+        user: {
+          select: {
+            connectionIds: true,
+          },
+        },
+        author: {
+          select: {
+            connectionIds: true,
+          },
+        },
+      },
     });
 
     if (!existingRoom) {
@@ -257,15 +269,20 @@ async function closeBidRoom(value: string, key: "id" | "key") {
       return response;
     }
 
-    const room = await prisma.bidRoom.delete({
-      where: {
-        id: existingRoom.id,
-      },
-    });
+    Promise.all([
+      await prisma.bids.deleteMany({
+        where: { OR: [{ bidRoomId: null }, { bidRoomId: existingRoom.id }] },
+      }),
+      await prisma.bidRoom.delete({
+        where: {
+          id: existingRoom.id,
+        },
+      }),
+    ]);
 
     response.status = 200;
     response.message = "Bid room closed successfully.";
-    response.data = room;
+    response.data = existingRoom;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

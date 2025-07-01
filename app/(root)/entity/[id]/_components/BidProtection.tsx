@@ -4,6 +4,8 @@ import Button from '@/components/ui/Button'
 import { useRooms } from '@/hooks/useRooms'
 import { useSession } from '@/hooks/useSession'
 import { formatCurrency } from '@/lib/utils'
+import { useSocket } from '@/socket-client/SocketWrapper'
+import { serialize } from 'bson'
 import { ChartCandlestickIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -20,6 +22,7 @@ const BidProtection = (props: Props) => {
     const getUser = useSession((state: any) => state.getUser)
     const rooms = useRooms((state: any) => state.rooms)
     const find = useRooms((state: any) => state.find)
+    const socket = useSocket()
 
     useEffect(() => {
         setIsMounted(true)
@@ -37,12 +40,18 @@ const BidProtection = (props: Props) => {
     useEffect(() => {
         if (rooms && user) {
             const room = find(props.animal.id, user.id, "userId")
-            if (room) {
-                setRoom(room)
-                setBid(room.bids[room.bids.length - 1])
-            }
+            setRoom(room)
+            setBid(room ? room.bids[room.bids.length - 1] : null)
         }
     }, [rooms, user])
+
+    const handleCloseBidRoom = async () => {
+        if (socket) {
+            if (room && user) {
+                socket.emit("close-bidroom", serialize({ room, userId: user.id }));
+            }
+        }
+    }
 
     if (!user && !bid && !room) {
         return (
@@ -60,7 +69,7 @@ const BidProtection = (props: Props) => {
                 </div>
                 <div className='w-full flex flex-col gap-2'>
                     <Button variant='btn-primary' className='w-full'>Proceed to Pay</Button>
-                    <Button variant='btn-secondary' className='w-full'>Withdraw Deal</Button>
+                    <Button variant='btn-secondary' onClick={handleCloseBidRoom} className='w-full'>Withdraw Deal</Button>
                 </div>
             </div>
         )
@@ -72,7 +81,7 @@ const BidProtection = (props: Props) => {
                     You have lost the deal at <br />{formatCurrency(room?.closedAmount ?? 0)}
                 </div>
                 <div className='w-full flex flex-col gap-2'>
-                    <Button variant='btn-secondary' className='w-full'>Withdraw</Button>
+                    <Button variant='btn-secondary' onClick={handleCloseBidRoom} className='w-full'>Withdraw</Button>
                 </div>
             </div>
         )
