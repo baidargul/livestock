@@ -46,7 +46,7 @@ const DemandRowLite = (props: Props) => {
     }
 
     return (
-        isMounted &&
+        isMounted && demands && demands.length > 0 &&
         <div className="w-full mb-2">
             <div className='mb-2 font-semibold tracking-tight flex gap-1 items-center'>Demands <TrendingUpIcon size={16} className='mt-1' /></div>
             <div className='w-full relative pt-2'>
