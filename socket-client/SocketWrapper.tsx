@@ -74,9 +74,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                 })
                 socket.on("deal-closed", (binaryData) => {
                     const { room, bid } = deserialize(binaryData);
-                    let newBids = bidsReverse(room.bids)
-                    room.bids = newBids
-                    rooms.addRoom(room, user)
+                    const rawRoom = { ...room.room }
+                    let newBids = bidsReverse(rawRoom.bids)
+                    rawRoom.bids = newBids
+                    rooms.addRoom(rawRoom, user)
                 })
                 socket.on("message-is-seen", (binaryData) => {
                     const { room, bidId } = deserialize(binaryData);

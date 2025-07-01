@@ -105,6 +105,21 @@ app.prepare().then(() => {
         });
         const data = await res.json();
         if (data.status === 200) {
+          socket.join(room.key);
+          socket.emit(
+            "deal-closed",
+            serialize({
+              room: data.data,
+              userId: userId,
+            })
+          );
+          socket.to(room.key).emit(
+            "deal-closed",
+            serialize({
+              room: data.data,
+              userId: userId,
+            })
+          );
           for (const ids of data.data.author.connectionIds) {
             io.to(ids).emit(
               "deal-closed",
