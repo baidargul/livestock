@@ -191,7 +191,6 @@ const BiddingWrapper = (props: Props) => {
                         userId: props.room.userId,
                         key: `${props.room.animalId}-${props.room.authorId}-${props.room.userId}`,
                     }
-
                     socket.emit("join-bidroom", serialize({ room, userId: user.id }));
                 }
             }
