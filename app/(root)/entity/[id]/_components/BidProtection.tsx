@@ -58,8 +58,9 @@ const BidProtection = (props: Props) => {
                 <div className='text-2xl text-center p-2 px-4 text-emerald-700'>
                     You have won the deal at <br />{formatCurrency(room?.closedAmount ?? 0)}
                 </div>
-                <div className='w-full'>
+                <div className='w-full flex flex-col gap-2'>
                     <Button variant='btn-primary' className='w-full'>Proceed to Pay</Button>
+                    <Button variant='btn-secondary' className='w-full'>Withdraw Deal</Button>
                 </div>
             </div>
         )
@@ -69,6 +70,9 @@ const BidProtection = (props: Props) => {
             <div className='w-full mb-4'>
                 <div className='text-2xl text-center p-2 px-4 text-amber-700'>
                     You have lost the deal at <br />{formatCurrency(room?.closedAmount ?? 0)}
+                </div>
+                <div className='w-full flex flex-col gap-2'>
+                    <Button variant='btn-secondary' className='w-full'>Withdraw</Button>
                 </div>
             </div>
         )
