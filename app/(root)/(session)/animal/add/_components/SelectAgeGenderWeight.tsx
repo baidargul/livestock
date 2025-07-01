@@ -69,7 +69,7 @@ const SelectAgeGenderWeight = (props: Props) => {
     const handleWeightChange = (val: string) => {
         props.setAnimal((prev: any) => ({ ...prev, averageWeight: Number(val) }))
     }
-    const handleAgeChange = (val: string) => {
+    const handleAgeChange = (val: string | number) => {
         props.setAnimal((prev: any) => ({ ...prev, averageAge: Number(val) }))
     }
 
@@ -102,9 +102,9 @@ const SelectAgeGenderWeight = (props: Props) => {
                 {/* <Radiogroup options={["Male", "Female"]} onChange={handleGenderChange} value={props.animal.gender} label='Gender' /> */}
                 <div className='flex flex-col gap-4'>
                     <div className='flex gap-4'>
-                        <Textbox label='Male quantity' type='number' labelClassName='text-nowrap' value={Number(props.animal.maleQuantityAvailable) ?? 1} onChange={(val: string) => handleQuantityChange(val, 'maleQuantityAvailable')} />
+                        <Textbox label='Male quantity' type='number' labelClassName='text-nowrap' value={Number(props.animal.maleQuantityAvailable) ?? 1} onChange={(val: string | number) => handleQuantityChange(val, 'maleQuantityAvailable')} />
                         {/* <Textbox label='Mix' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} /> */}
-                        <Textbox label='Female quantity' type='number' labelClassName='text-nowrap' value={Number(props.animal.femaleQuantityAvailable) ?? 1} onChange={(val: string) => handleQuantityChange(val, 'femaleQuantityAvailable')} />
+                        <Textbox label='Female quantity' type='number' labelClassName='text-nowrap' value={Number(props.animal.femaleQuantityAvailable) ?? 1} onChange={(val: string | number) => handleQuantityChange(val, 'femaleQuantityAvailable')} />
                     </div>
                     {/* <div className={`flex flex-col gap-2`}>
                             <Checkbox onChange={handleAllowMinimumChange} value={props.animal.isQuantityNegotiable ?? false} label='کم سے کم کتنی تعداد؟' />

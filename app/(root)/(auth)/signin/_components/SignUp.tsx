@@ -49,28 +49,28 @@ const SignUp = (props: Props) => {
         setLoading(false)
     }
 
-    const handleNameChange = (val: string) => {
-        setForm((prev) => ({ ...prev, name: val }))
+    const handleNameChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, name: `${val}` }))
     }
 
-    const handleEmailChange = (val: string) => {
-        setForm((prev) => ({ ...prev, email: val }))
+    const handleEmailChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, email: `${val}` }))
     }
 
-    const handlePasswordChange = (val: string) => {
-        setForm((prev) => ({ ...prev, password: val }))
+    const handlePasswordChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, password: `${val}` }))
     }
 
-    const handleProvinceChange = (val: string) => {
-        setForm((prev) => ({ ...prev, province: val }))
+    const handleProvinceChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, province: `${val}` }))
     }
 
-    const handleCityChange = (val: string) => {
-        setForm((prev) => ({ ...prev, city: val }))
+    const handleCityChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, city: `${val}` }))
     }
 
-    const handlePhoneChange = (val: string) => {
-        setForm((prev) => ({ ...prev, phone: val }))
+    const handlePhoneChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, phone: `${val}` }))
     }
 
     return (

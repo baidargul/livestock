@@ -28,12 +28,12 @@ const SignIn = (props: Props) => {
         }
     }, [])
 
-    const handleEmailChange = (val: string) => {
-        setForm((prev) => ({ ...prev, email: val }))
+    const handleEmailChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, email: `${val}` }))
     }
 
-    const handlePasswordChange = (val: string) => {
-        setForm((prev) => ({ ...prev, password: val }))
+    const handlePasswordChange = (val: string | number) => {
+        setForm((prev) => ({ ...prev, password: `${val}` }))
     }
 
     const handleSubmit = async () => {

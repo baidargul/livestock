@@ -8,7 +8,7 @@ type Props = {
     placeholder?: string
     disabled?: boolean
     value?: string | number
-    onChange?: (val: string | number) => void
+    onChange?: (val: string) => void
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
     className?: string
     labelClassName?: string
