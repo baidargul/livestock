@@ -14,6 +14,7 @@ import Link from 'next/link'
 import RatingBar from '@/components/website/ratings/RatingBar'
 import { images } from '@/consts/images'
 import PhoneFooter from '@/components/website/footer/Phone'
+import BidProtection from './_components/BidProtection'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -100,11 +101,11 @@ const page = async (props: Props) => {
                 </div> */}
             </div>
             <div className='mb-2 px-4 flex justify-center items-center w-full'>
-                {/* <Button variant='btn-secondary' className='w-full mx-4'>Direct Engage</Button> */}
                 <BiddingWrapper animal={animal}>
-                    <Button className='w-full'>Buy Now</Button>
+                    <BidProtection animalId={animal?.id}>
+                        <Button className='w-full'>Buy Now</Button>
+                    </BidProtection>
                 </BiddingWrapper>
-                {/* <Button className='w-full mx-4'>Buy Now</Button> */}
             </div>
             <PhoneFooter />
         </div >

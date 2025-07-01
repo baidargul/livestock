@@ -22,6 +22,7 @@ interface RoomsState {
   addRoom: (room: Room, currentUser: User) => void; // Function to add a room
   removeRoom: (roomKey: string) => void; // Function to remove a room by key
   getLatestRooms: (userId: string) => Promise<void>; // Function to fetch the latest rooms for a user
+  find: (animalId: string, id: string, key: "userId" | "authorId") => any;
 }
 
 export const useRooms: any = create<RoomsState>()((set) => ({
@@ -105,5 +106,14 @@ export const useRooms: any = create<RoomsState>()((set) => ({
         },
       });
     }
+  },
+  find: (animalId: string, id: string, key: "userId" | "authorId") => {
+    const { rooms } = useRooms.getState();
+    const mergedRooms = [...rooms.myRooms, ...rooms.otherRooms];
+    console.log(`mergedRooms`);
+    console.log(mergedRooms);
+    return mergedRooms.find(
+      (room) => room[key] === id && room.animalId === animalId
+    );
   },
 }));
