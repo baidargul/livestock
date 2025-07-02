@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Room from './Room'
 import { ChevronDown, ChevronLeftIcon } from 'lucide-react'
 
@@ -10,6 +10,20 @@ type Props = {
 
 const Rooms = (props: Props) => {
     const [currentSection, setCurrentSection] = useState<"" | "myRooms" | "otherRooms">("")
+
+    useEffect(() => {
+        if (props.rooms) {
+            if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length > 0) {
+                setCurrentSection("")
+            } else if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length === 0) {
+                setCurrentSection("myRooms")
+            } else if (props.rooms.myRooms.length === 0 && props.rooms.otherRooms.length > 0) {
+                setCurrentSection("otherRooms")
+            } else {
+                setCurrentSection("")
+            }
+        }
+    }, [])
 
     const handleSelectSection = (section: "" | "myRooms" | "otherRooms") => {
         if (currentSection === section) {
