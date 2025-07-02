@@ -29,7 +29,7 @@ const SectionProductListRow = (props: Props) => {
                             <SquareUserIcon size={20} />
                         </div>}
                     </div>}
-                    {props.animal?.city && props.animal?.province && props.animal?.city.length > 0 && props.animal?.province.length > 0 && <div className='absolute z-20 text-white group-hover:opacity-0 transition-all duration-300 ease-in-out text-center tracking-tight bottom-2 left-0 text-xs p-1 bg-gradient-to-r from-black to-transparent'>{formalizeText(props.animal?.city)}, {formalizeText(props.animal?.province)}</div>}
+                    {props.animal?.city && props.animal?.province && props.animal?.city.length > 0 && props.animal?.province.length > 0 && <div className='absolute z-20 text-white group-hover:opacity-0 transition-all duration-300 ease-in-out text-center tracking-tight bottom-2 left-0 pl-2 text-xs p-1 bg-gradient-to-r from-black to-transparent'>{formalizeText(props.animal?.city)}, {formalizeText(props.animal?.province)}</div>}
                     <div className='bg-gradient-to-t from-black/50 to-transparent w-full h-[40%] absolute bottom-0 left-0'></div>
                     <Image src={props.animal?.images[0].image} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[200px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                 </div>
