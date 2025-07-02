@@ -11,19 +11,21 @@ type Props = {
 const Rooms = (props: Props) => {
     const [currentSection, setCurrentSection] = useState<"" | "myRooms" | "otherRooms">("")
 
-    useEffect(() => {
-        if (props.rooms) {
-            if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length > 0) {
-                setCurrentSection("")
-            } else if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length === 0) {
-                setCurrentSection("myRooms")
-            } else if (props.rooms.myRooms.length === 0 && props.rooms.otherRooms.length > 0) {
-                setCurrentSection("otherRooms")
-            } else {
-                setCurrentSection("")
-            }
+    const autoSize = () => {
+        if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length > 0) {
+            setCurrentSection("")
+        } else if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length === 0) {
+            setCurrentSection("myRooms")
+        } else if (props.rooms.myRooms.length === 0 && props.rooms.otherRooms.length > 0) {
+            setCurrentSection("otherRooms")
+        } else {
+            setCurrentSection("")
         }
-    }, [])
+    }
+
+    useEffect(() => {
+        autoSize()
+    }, [props.rooms])
 
     const handleSelectSection = (section: "" | "myRooms" | "otherRooms") => {
         if (currentSection === section) {
