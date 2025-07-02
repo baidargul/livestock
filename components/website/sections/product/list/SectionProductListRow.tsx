@@ -29,30 +29,29 @@ const SectionProductListRow = (props: Props) => {
                             <SquareUserIcon size={20} />
                         </div>}
                     </div>}
-                    {props.animal?.city && props.animal?.province && props.animal?.city.length > 0 && props.animal?.province.length > 0 && <div className='absolute z-20 text-white group-hover:opacity-0 transition-all duration-300 ease-in-out text-center tracking-tight bottom-2 left-0 pl-2 text-xs p-1 bg-gradient-to-r from-black to-transparent'>{formalizeText(props.animal?.city)}, {formalizeText(props.animal?.province)}</div>}
                     <div className='bg-gradient-to-t from-black/50 to-transparent w-full h-[40%] absolute bottom-0 left-0'></div>
                     <Image src={props.animal?.images[0].image} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[200px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                 </div>
                 <div className='w-full pt-4'>
                     <div className='transition-all duration-200 ease-in-out w-[90%] sm:w-auto text-xl font-semibold line-clamp-1 text-balance'>{formalizeText(props.animal?.title)}</div>
-                    <div className='flex subheading1 gap-1 items-center -mt-1'>
-                        <div className='tracking-wide'>{totalQuantity}</div> <div className=''>{`${formalizeText(props.animal?.type)} ${props.animal?.breed}`}</div>
+                    <div className='leading-3 text-sm text-zinc-700'>
+                        <span className='underline underline-offset-4 uppercase'>
+                            <span className='tracking-widest'>{totalQuantity}</span> <span className=''>{`${props.animal?.breed} ${formalizeText(props.animal?.type).slice(0, props.animal?.type.length - 1)}`}</span>
+                        </span>
                     </div>
                     <div className='tracking-widest'>
                         {Number(props.animal?.maleQuantityAvailable ?? 0) > 0 && <span className='text-sm'>{props.animal?.maleQuantityAvailable} Male</span>}
                         {Number(props.animal?.femaleQuantityAvailable ?? 0) > 0 && <span className='text-sm'> {props.animal?.femaleQuantityAvailable} Female</span>}
                     </div>
                     {props.animal?.user?.name && props.animal?.user?.name.length > 0 && <div className='flex flex-col gap-1 my-2'>
-                        <div className='font-medium text-zinc-700 tracking-tight text-base text-balance leading-4'>
+                        {/* <div className='font-medium text-zinc-800 tracking-tight text-base text-balance leading-4 -mb-1'>
                             {props.animal?.user?.name}
-                        </div>
-                        <div>
-                            <RatingBar readonly defaultRating={4} />
-                        </div>
+                        </div> */}
+                        {props.animal?.city && props.animal?.province && props.animal?.city.length > 0 && props.animal?.province.length > 0 && <div className='text-xs text-zinc-700 tracking-tight'>{formalizeText(props.animal?.city)}, {formalizeText(props.animal?.province)}</div>}
                     </div>}
                 </div>
             </div>
-            <div className='text-2xl sm:text-xl md:text-lg text-nowrap text-right text-emerald-600 tracking-wide font-bold'>
+            <div className='text-2xl sm:text-xl md:text-lg text-nowrap text-left text-emerald-600 tracking-wide font-bold'>
                 {formatCurrency(calculatePricing(props.animal).price)}
             </div>
         </Link >
