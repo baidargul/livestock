@@ -45,13 +45,18 @@ const BiddingWrapper = (props: Props) => {
     const [socketState, setSocketState] = useState({
         isOtherUserConnected: false,
     })
+    const [socket, setSocket] = useState<any>(null)
     const router = useRouter()
-    const socket = useSocket()
+    const rawSocket = useSocket()
     const isAuthor = user ? props.animal.userId === user.id : false
     const [expectedKey, setExpectedKey] = useState(``)
     const rooms = useRooms((state: any) => state.rooms)
     const addRoom = useRooms((state: any) => state.addRoom)
     const setLoading = useLoader((state: any) => state.setLoading)
+
+    if (rawSocket && !socket) {
+        setSocket(rawSocket)
+    }
 
     useEffect(() => {
         if (user) {
@@ -180,7 +185,7 @@ const BiddingWrapper = (props: Props) => {
         setOfferValue(offer)
     }
     const handleCreateBidRoom = async () => {
-        setWorkingForRoom(true)
+        setLoading(true)
         if (isAuthor) {
             handleOpen(true)
             if (props.allowJoinRoomImmediately) {
@@ -206,7 +211,7 @@ const BiddingWrapper = (props: Props) => {
                 socket.emit("join-bidroom", serialize({ room, userId: user.id }));
             }
         }
-        setWorkingForRoom(false)
+        setLoading(false)
     }
 
     const handleLeaveRoom = async (force?: boolean) => {
