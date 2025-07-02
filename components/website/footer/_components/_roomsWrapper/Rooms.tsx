@@ -27,10 +27,8 @@ const Rooms = (props: Props) => {
 
     const handleSelectSection = (section: "" | "myRooms" | "otherRooms") => {
         if (currentSection === section) {
-            console.log(`section is ''`)
             setCurrentSection("")
         } else {
-            console.log(`section is ${section}`)
             setCurrentSection(section)
         }
     }
