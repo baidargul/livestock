@@ -47,7 +47,7 @@ const Rooms = (props: Props) => {
             <section style={{ height: currentSection === "otherRooms" ? "85%" : currentSection === "myRooms" ? "0px" : "50%" }} className='p-2 border-b border-zinc-400 bg-gradient-to-b from-zinc-100 to-transparent cursor-pointer transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
                 {props.rooms && props.rooms.otherRooms.length > 0 &&
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2'>
-                        {[...props.rooms.otherRooms, ...props.rooms.otherRooms, ...props.rooms.otherRooms].map((room: any, index: number) => {
+                        {props.rooms.otherRooms.map((room: any, index: number) => {
                             return (
                                 <Room room={room} key={`${room.key}-${index}`} user={props.user} />
                             )
