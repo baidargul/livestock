@@ -18,6 +18,8 @@ import { useRooms } from '@/hooks/useRooms'
 import { Bids } from '@prisma/client'
 import { serialize } from 'bson'
 import { useLoader } from '@/hooks/useLoader'
+import GeneralBasicInformation from './_components/GeneralBasicInformation'
+import TheActualBidRoom from './_components/TheActualBidRoom'
 
 type Props = {
     children: React.ReactNode
@@ -60,7 +62,7 @@ const BiddingWrapper = (props: Props) => {
     }
 
     useEffect(() => {
-        if (user) {
+        if (isMounted && user) {
             let room: any = null;
             let activeBidders = 0
             rooms.myRooms.find((r: any) => {
@@ -84,6 +86,19 @@ const BiddingWrapper = (props: Props) => {
             }
 
             setThisRoomActiveBidders(activeBidders)
+
+            if (props.allowJoinRoomImmediately) {
+                // const immediateRoom = {
+                //     animalId: props.room.animalId,
+                //     authorId: props.room.authorId,
+                //     userId: props.room.userId,
+                //     key: `${props.room.key}`,
+                // }
+                // socket.emit("join-bidroom", serialize({ room: immediateRoom, userId: user.id }));
+                // setExpectedKey(props.room.key)
+                // handleCreateBidRoom()
+            }
+
             if (room && room.key) {
                 setActiveBidRoom(room)
                 setExpectedKey(room.key)
@@ -167,6 +182,7 @@ const BiddingWrapper = (props: Props) => {
             }
         }
     }, [isMounted]);
+
 
 
     useEffect(() => {
@@ -295,53 +311,12 @@ const BiddingWrapper = (props: Props) => {
         }
     }
 
-    const ThisUserAlreadyWonTheOffer = user?.id === activeBidRoom?.userId ? activeBidRoom?.userOfferAccepted : false
-
     return (
         <>
             <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
-                {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <div className='flex flex-col gap-2 overflow-y-auto h-[80%]'>
-                    <div>
-                        <div className='text-xl font-semibold'>
-                            {props.animal.title}
-                        </div>
-                        <div>
-                            {props.animal.description}
-                        </div>
-                    </div>
-                    <div className='flex flex-wrap gap-2'>
-                        {
-                            props.animal.images && props.animal.images.length > 0 && props.animal.images.map((image: any, index: number) => {
-                                if (!image.image) return null
-                                return (
-                                    <Image src={image.image} width={100} height={100} layout='fixed' priority key={index} className=' rounded-md object-contain border border-emerald-800/10 drop-shadow-[2px]' alt={`${props.animal.title}, ${props.animal.type} - ${props.animal.breed}`} />
-                                )
-                            })
-                        }
-                    </div>
-                    <div>
-                        <CalculatedDescription animal={props.animal} />
-                    </div>
-                </div>}
+                {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <GeneralBasicInformation animal={props.animal} />}
                 <div className='flex flex-col gap-4'>
-                    {activeBidRoom && <div className=''>
-                        <div className='text-xl font-semibold flex justify-between items-center mt-1'>
-                            <div className='flex items-center gap-1'>
-                                <div><ChevronLeftIcon onClick={() => handleLeaveRoom(!isAuthor)} className='w-6 h-6 cursor-pointer' /></div>
-                                <div className='flex items-center gap-1'>{socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div className='line-clamp-1'>{isAuthor ? activeBidRoom.user.name : activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{isAuthor ? "Buyer" : "Seller"}</div></div></div>
-                            </div>
-                            <div className='text-sm tracking-wide text-nowrap'>
-                                {activeBidRoom.bids.length > 0 && <div>
-                                    <div className='p-1 px-2 text-center bg-amber-100 rounded-md'>
-                                        {formatCurrency(activeBidRoom.bids.length > 0 && activeBidRoom.bids[activeBidRoom.bids.length - 1]?.price)}
-                                    </div>
-                                    <div className='p-1 px-2 text-center border-t pt-1 border-zinc-300'>
-                                        {formatCurrency(calculatePricing(props.animal).price)}
-                                    </div>
-                                </div>}
-                            </div>
-                        </div>
-                    </div>}
+                    {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={props.animal} />}
                     <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
                         {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
