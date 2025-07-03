@@ -87,18 +87,6 @@ const BiddingWrapper = (props: Props) => {
 
             setThisRoomActiveBidders(activeBidders)
 
-            if (props.allowJoinRoomImmediately) {
-                // const immediateRoom = {
-                //     animalId: props.room.animalId,
-                //     authorId: props.room.authorId,
-                //     userId: props.room.userId,
-                //     key: `${props.room.key}`,
-                // }
-                // socket.emit("join-bidroom", serialize({ room: immediateRoom, userId: user.id }));
-                // setExpectedKey(props.room.key)
-                // handleCreateBidRoom()
-            }
-
             if (room && room.key) {
                 setActiveBidRoom(room)
                 setExpectedKey(room.key)

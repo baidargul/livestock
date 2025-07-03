@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Room from './Room'
 import { ChevronDown, ChevronLeftIcon } from 'lucide-react'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 
 type Props = {
     rooms: any
@@ -35,6 +36,15 @@ const Rooms = (props: Props) => {
         }
     }
 
+    const groupByAnimal = (rooms: any) => {
+        const groupedRooms = rooms.reduce((acc: any, room: any) => {
+            acc[room.animalId] = acc[room.animalId] || { rooms: [], animal: null };
+            acc[room.animalId].animal = room.animal;
+            acc[room.animalId].rooms.push(room);
+            return acc;
+        }, {});
+        return Object.values(groupedRooms);
+    }
     return (
         <div className='w-full h-full'>
             <div onClick={() => handleSelectSection("myRooms")} className='flex p-2 justify-between items-center bg-zinc-100'>
@@ -45,9 +55,23 @@ const Rooms = (props: Props) => {
                 {props.rooms && props.rooms.myRooms.length > 0 &&
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2'>
                         {
-                            props.rooms.myRooms.map((room: any, index: number) => {
+                            groupByAnimal(props.rooms.myRooms).map((group: any, index: number) => {
                                 return (
-                                    <Room room={room} key={`${room.key}-${index}`} user={props.user} />
+                                    <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
+                                        <div className='flex justify-between items-center'>
+                                            <div className='text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
+                                            <div className='text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                        </div>
+                                        <div>
+                                            {
+                                                group.rooms.map((room: any, index: number) => {
+                                                    return (
+                                                        <Room room={room} key={`${room.key}-${index}`} user={props.user} />
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </div>
                                 )
                             })
                         }
