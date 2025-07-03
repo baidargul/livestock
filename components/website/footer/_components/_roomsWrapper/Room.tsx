@@ -30,7 +30,7 @@ const Room = (props: Props) => {
     }, [props.room, props.user])
 
     return (
-        animal && <BiddingWrapper animal={animal} room={props.room} staticStyle allowJoinRoomImmediately>
+        animal && props.user && <BiddingWrapper animal={animal} room={props.room} staticStyle allowJoinRoomImmediately>
             <div className='grid grid-cols-2 gap-2 w-full cursor-pointer py-2 bg-white p-2 rounded-md drop-shadow-sm border border-zinc-200'>
                 <div>
                     {/* <Image src={animal.images.length > 0 ? animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[100px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' /> */}

@@ -40,6 +40,7 @@ const BiddingWrapper = (props: Props) => {
     const [isLocked, setIsLocked] = useState(false)
     const [hasOtherUserLocked, setHasOtherUserLocked] = useState(false)
     const [tempMessageOnHold, setTempMessageOnHold] = useState<Bids | null>(null)
+    const [thisRoomActiveBiders, setThisRoomActiveBidders] = useState(0)
     const [finalBids, setFinalBids] = useState<any[]>([])
     const [selectedBid, setSelectedBid] = useState<any>(null)
     const [socketState, setSocketState] = useState({
@@ -61,7 +62,11 @@ const BiddingWrapper = (props: Props) => {
     useEffect(() => {
         if (user) {
             let room: any = null;
+            let activeBidders = 0
             rooms.myRooms.find((r: any) => {
+                if (r.animalId === props.animal.id) {
+                    activeBidders = activeBidders + 1
+                }
                 if (r.key === expectedKey) {
                     room = r
                 }
@@ -69,11 +74,16 @@ const BiddingWrapper = (props: Props) => {
 
             if (!room) {
                 rooms.otherRooms.find((r: any) => {
+                    if (r.animalId === props.animal.id) {
+                        activeBidders = activeBidders + 1
+                    }
                     if (r.key === expectedKey) {
                         room = r
                     }
                 })
             }
+
+            setThisRoomActiveBidders(activeBidders)
             if (room && room.key) {
                 setActiveBidRoom(room)
                 setExpectedKey(room.key)
@@ -431,7 +441,7 @@ const BiddingWrapper = (props: Props) => {
             <div onClick={handleCreateBidRoom} className='w-full'>
                 {props.staticStyle && props.children}
                 {!props.staticStyle && isAuthor ?
-                    <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${[...rooms.myRooms, ...rooms.otherRooms].length} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
+                    <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${thisRoomActiveBiders} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
                     : null}
                 {!props.staticStyle && !isAuthor ? props.children : null}
             </div>

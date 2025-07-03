@@ -17,7 +17,13 @@ const Rooms = (props: Props) => {
   const [rooms, setRooms] = useState<any>([])
   useEffect(() => {
     if (props.rooms) {
-      setRooms([...props.rooms.myRooms, ...props.rooms.otherRooms])
+      setRooms([...props.rooms.myRooms, ...props.rooms.otherRooms].map((r: any) => {
+        if (props.animal.id === r.animalId) {
+          return r
+        } else {
+          return null
+        }
+      }))
     }
   }, [props.rooms])
 
@@ -42,6 +48,8 @@ const Rooms = (props: Props) => {
       {props.animal && <Link href={`/entity/${props.animal.id}`} className="underline underline-offset-6 text-emerald-700">{formalizeText(props.animal.type)} {props.animal.breed} x {totalQuantity} @ {formatCurrency(props.animal.price)}</Link>}
     </div>
     {rooms && rooms.map((bid: any, index: number) => {
+
+      if (!bid) return
 
       if (props.isStaticStyle) {
         if (bid.animalId !== props.animal.id) {
