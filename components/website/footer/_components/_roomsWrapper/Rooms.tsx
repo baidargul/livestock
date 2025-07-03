@@ -74,7 +74,7 @@ const Rooms = (props: Props) => {
                 <ChevronLeftIcon size={20} className={`transition-all duration-300 ease-in-out ${currentSection === "myRooms" ? "-rotate-90" : ""}`} />
             </div>
             <section style={{ height: currentSection === "myRooms" ? "90%" : currentSection === "otherRooms" ? "0px" : "50%" }} className='p-2 cursor-pointer border-b border-zinc-400 mb-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
-                {props.rooms && props.rooms.myRooms.length > 0 &&
+                {myRooms.length > 0 &&
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             myRooms.map((group: any, index: number) => {
@@ -116,7 +116,7 @@ const Rooms = (props: Props) => {
                 <ChevronLeftIcon size={20} className={`transition-all duration-300 ease-in-out ${currentSection === "otherRooms" ? "-rotate-90" : ""}`} />
             </div>
             <section style={{ height: currentSection === "otherRooms" ? "85%" : currentSection === "myRooms" ? "0px" : "50%" }} className='p-2 border-b border-zinc-400 bg-gradient-to-b from-zinc-100 to-transparent cursor-pointer transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
-                {props.rooms && props.rooms.otherRooms.length > 0 &&
+                {otherRooms.length > 0 &&
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             otherRooms.map((group: any, index: number) => {
