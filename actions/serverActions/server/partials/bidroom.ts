@@ -673,7 +673,7 @@ async function leaveBidRoom(room: RoomType, userId: string) {
       },
     });
 
-    updated = await actions.server.bidRoom.list(updated.id, "id", 0);
+    updated = await actions.server.bidRoom.list(existingRoom.id, "id", 0);
 
     response.status = 200;
     response.message = "Bid room left successfully.";

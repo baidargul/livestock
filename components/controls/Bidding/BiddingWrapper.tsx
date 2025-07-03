@@ -37,7 +37,6 @@ const BiddingWrapper = (props: Props) => {
     const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser)
     const scrollHookRef = useRef<HTMLDivElement | null>(null);
-    const [workingForRoom, setWorkingForRoom] = useState(false)
     const [activeBidRoom, setActiveBidRoom] = useState<any>(null)
     const [isLocked, setIsLocked] = useState(false)
     const [hasOtherUserLocked, setHasOtherUserLocked] = useState(false)
@@ -199,7 +198,6 @@ const BiddingWrapper = (props: Props) => {
         setOfferValue(offer)
     }
     const handleCreateBidRoom = async () => {
-        setLoading(true)
         if (isAuthor) {
             handleOpen(true)
             if (props.allowJoinRoomImmediately) {
@@ -225,11 +223,9 @@ const BiddingWrapper = (props: Props) => {
                 socket.emit("join-bidroom", serialize({ room, userId: user.id }));
             }
         }
-        setLoading(false)
     }
 
     const handleLeaveRoom = async (force?: boolean) => {
-        setWorkingForRoom(true);
         if (activeBidRoom) {
             if (socket) {
                 const room = {
@@ -249,7 +245,6 @@ const BiddingWrapper = (props: Props) => {
             handleOpen(false);
             setActiveBidRoom(null);
         }
-        setWorkingForRoom(false);
     }
     const handlePostOffer = async () => {
         if (!user) {
@@ -306,7 +301,7 @@ const BiddingWrapper = (props: Props) => {
                 <div className='flex flex-col gap-4'>
                     {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={props.animal} />}
                     <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
+                        {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
@@ -401,7 +396,7 @@ const BiddingWrapper = (props: Props) => {
                     </div>
                 }
             </div >
-            <div onClick={handleCreateBidRoom} className='w-full'>
+            <div onClick={handleCreateBidRoom} className={`w-full ${isOpen && "pointer-events-none opacity-50 scale-75"} w-full transition-all duration-100 ease-in-out`}>
                 {props.staticStyle && props.children}
                 {!props.staticStyle && isAuthor ?
                     <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${thisRoomActiveBiders} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
