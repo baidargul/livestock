@@ -185,7 +185,7 @@ async function createBidRoom(
       (user) => user !== userId
     );
     const newUsers = [...allExceptThis, userId];
-    const updated = await prisma.bidRoom.update({
+    let updated: any = await prisma.bidRoom.update({
       where: {
         id: existingRoom.id,
       },
@@ -225,6 +225,18 @@ async function createBidRoom(
         },
       },
     });
+
+    const images = await actions.server.images.fetchImages(
+      updated.animal.images
+    );
+
+    updated = {
+      ...updated,
+      animal: {
+        ...updated.animal,
+        images: images,
+      },
+    };
 
     response.status = 200;
     response.message = "Bid room created successfully.";
@@ -389,7 +401,7 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
   }
 
   try {
-    const rooms = await prisma.bidRoom.findFirst({
+    let rooms: any = await prisma.bidRoom.findFirst({
       where: {
         [key]: value,
       },
@@ -427,6 +439,18 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
         },
       },
     });
+
+    const images = await actions.server.images.fetchImages(
+      rooms?.animal?.images
+    );
+
+    rooms = {
+      ...rooms,
+      animal: {
+        ...rooms.animal,
+        images,
+      },
+    };
 
     response.status = 200;
     response.message = "Bid rooms listed successfully.";
@@ -640,45 +664,16 @@ async function leaveBidRoom(room: RoomType, userId: string) {
 
     const newUsers = existingRoom.activeUsers.filter((user) => user !== userId);
 
-    const updated = await prisma.bidRoom.update({
+    let updated = await prisma.bidRoom.update({
       where: {
         id: existingRoom.id,
       },
       data: {
         activeUsers: newUsers,
       },
-      include: {
-        bids: {
-          take: 5,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                connectionIds: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-      },
     });
+
+    updated = await actions.server.bidRoom.list(updated.id, "id", 0);
 
     response.status = 200;
     response.message = "Bid room left successfully.";
