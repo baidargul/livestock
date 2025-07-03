@@ -85,7 +85,7 @@ const Rooms = (props: Props) => {
                                             <Image src={group.animal.images.length > 0 ? group.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                                             <div className='w-full overflow-y-auto h-[200px]'>
                                                 <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
-                                                    <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center  w-full'>
+                                                    <div className='flex flex-col items-start lg:flex-row justify-between sm:items-center  w-full'>
                                                         <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
                                                         <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
                                                     </div>
@@ -127,7 +127,7 @@ const Rooms = (props: Props) => {
                                             <Image src={group.animal.images.length > 0 ? group.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                                             <div className='w-full overflow-y-auto h-[200px]'>
                                                 <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
-                                                    <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center  w-full'>
+                                                    <div className='flex flex-col items-start lg:flex-row justify-between sm:items-center  w-full'>
                                                         <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
                                                         <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
                                                     </div>
