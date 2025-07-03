@@ -11,22 +11,28 @@ type Props = {
 }
 
 const Room = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
     const [unreadBids, setUnreadBids] = useState(0)
     const animal = props.room.animal
 
     useEffect(() => {
-        if (props.user) {
+        setIsMounted(true)
+    }, [])
 
-            const calculateUnreadBids = () => {
-                let count = 0
-                props.room.bids.forEach((bid: any) => {
-                    if (bid.isSeen === false && bid.userId !== props.user.id) {
-                        count = count + 1
-                    }
-                })
-                setUnreadBids(count)
+    useEffect(() => {
+        if (isMounted) {
+            if (props.user && props.room) {
+                const calculateUnreadBids = () => {
+                    let count = 0
+                    props.room.bids.forEach((bid: any) => {
+                        if (bid.isSeen === false && bid.userId !== props.user.id) {
+                            count = count + 1
+                        }
+                    })
+                    setUnreadBids(count)
+                }
+                calculateUnreadBids()
             }
-            calculateUnreadBids()
         }
     }, [props.room, props.user])
 

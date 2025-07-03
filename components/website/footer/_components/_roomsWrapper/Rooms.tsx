@@ -12,7 +12,11 @@ type Props = {
 }
 
 const Rooms = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
+    const [isReady, setIsReady] = useState(false)
     const [currentSection, setCurrentSection] = useState<"" | "myRooms" | "otherRooms">("")
+    const [myRooms, setMyRooms] = useState([])
+    const [otherRooms, setOtherRooms] = useState([])
 
     const autoSize = () => {
         if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length > 0) {
@@ -27,8 +31,23 @@ const Rooms = (props: Props) => {
     }
 
     useEffect(() => {
-        autoSize()
+        if (props.rooms) {
+            if (props.rooms.myRooms.length > 0) {
+                setMyRooms(groupByAnimal(props.rooms.myRooms))
+            }
+            if (props.rooms.otherRooms.length > 0) {
+                setOtherRooms(groupByAnimal(props.rooms.otherRooms))
+            }
+            setIsReady(true)
+        }
     }, [props.rooms])
+
+    useEffect(() => {
+        if (isReady) {
+            autoSize()
+            setIsMounted(true)
+        }
+    }, [isReady])
 
     const handleSelectSection = (section: "" | "myRooms" | "otherRooms") => {
         if (currentSection === section) {
@@ -45,10 +64,11 @@ const Rooms = (props: Props) => {
             acc[room.animalId].rooms.push(room);
             return acc;
         }, {});
-        return Object.values(groupedRooms);
+        return Object.values(groupedRooms) as any;
     }
+
     return (
-        <div className='w-full h-full text-zinc-700'>
+        isMounted && <div className='w-full h-full text-zinc-700'>
             <div onClick={() => handleSelectSection("myRooms")} className='flex p-2 justify-between items-center bg-zinc-100'>
                 <div className='text-zinc-700 font-semibold text-lg tracking-tight'>Selling</div>
                 <ChevronLeftIcon size={20} className={`transition-all duration-300 ease-in-out ${currentSection === "myRooms" ? "-rotate-90" : ""}`} />
@@ -57,7 +77,7 @@ const Rooms = (props: Props) => {
                 {props.rooms && props.rooms.myRooms.length > 0 &&
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
-                            groupByAnimal(props.rooms.myRooms).map((group: any, index: number) => {
+                            myRooms.map((group: any, index: number) => {
                                 const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
@@ -99,7 +119,7 @@ const Rooms = (props: Props) => {
                 {props.rooms && props.rooms.otherRooms.length > 0 &&
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
-                            groupByAnimal(props.rooms.otherRooms).map((group: any, index: number) => {
+                            otherRooms.map((group: any, index: number) => {
                                 const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
