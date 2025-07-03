@@ -78,7 +78,6 @@ const Rooms = (props: Props) => {
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             myRooms.map((group: any, index: number) => {
-                                console.log(group)
                                 const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
