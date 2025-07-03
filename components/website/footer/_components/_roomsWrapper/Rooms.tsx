@@ -48,7 +48,7 @@ const Rooms = (props: Props) => {
         return Object.values(groupedRooms);
     }
     return (
-        <div className='w-full h-full'>
+        <div className='w-full h-full text-zinc-700'>
             <div onClick={() => handleSelectSection("myRooms")} className='flex p-2 justify-between items-center bg-zinc-100'>
                 <div className='text-zinc-700 font-semibold text-lg tracking-tight'>Selling</div>
                 <ChevronLeftIcon size={20} className={`transition-all duration-300 ease-in-out ${currentSection === "myRooms" ? "-rotate-90" : ""}`} />
@@ -58,14 +58,20 @@ const Rooms = (props: Props) => {
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             groupByAnimal(props.rooms.myRooms).map((group: any, index: number) => {
+                                const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
                                         <div className='flex gap-2 items-start w-full'>
                                             <Image src={images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                                             <div className='w-full overflow-y-auto h-[200px]'>
-                                                <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center bg-white pb-2 w-full z-[1] sticky top-0'>
-                                                    <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
-                                                    <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                                <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
+                                                    <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center  w-full'>
+                                                        <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
+                                                        <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                                    </div>
+                                                    <div className='-mt-1 sm:-mt-1'>
+                                                        <div>{totalQuantity} {totalQuantity > 1 ? group.animal.type : group.animal.type.slice(0, group.animal.type.length - 1)}, {totalQuantity > 1 ? `${formatCurrency(group.animal.price)} each.` : `${formatCurrency(group.animal.price)}.`}</div>
+                                                    </div>
                                                 </div>
                                                 <div className='flex flex-col gap-1'>
                                                     {
@@ -94,14 +100,20 @@ const Rooms = (props: Props) => {
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             groupByAnimal(props.rooms.otherRooms).map((group: any, index: number) => {
+                                const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
                                         <div className='flex gap-2 items-start w-full'>
                                             <Image src={images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                                             <div className='w-full overflow-y-auto h-[200px]'>
-                                                <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center bg-white pb-2 w-full z-[1] sticky top-0'>
-                                                    <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
-                                                    <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                                <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
+                                                    <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center  w-full'>
+                                                        <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
+                                                        <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                                    </div>
+                                                    <div className='-mt-1 sm:-mt-1'>
+                                                        <div>{totalQuantity} {totalQuantity > 1 ? group.animal.type : group.animal.type.slice(0, group.animal.type.length - 1)}, {totalQuantity > 1 ? `${formatCurrency(group.animal.price)} each.` : `${formatCurrency(group.animal.price)}.`}</div>
+                                                    </div>
                                                 </div>
                                                 <div className='flex flex-col gap-1'>
                                                     {
