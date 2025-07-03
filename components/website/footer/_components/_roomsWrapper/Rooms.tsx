@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import Room from './Room'
 import { ChevronDown, ChevronLeftIcon } from 'lucide-react'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
+import Image from 'next/image'
+import { images } from '@/consts/images'
 
 type Props = {
     rooms: any
@@ -53,23 +55,28 @@ const Rooms = (props: Props) => {
             </div>
             <section style={{ height: currentSection === "myRooms" ? "90%" : currentSection === "otherRooms" ? "0px" : "50%" }} className='p-2 cursor-pointer border-b border-zinc-400 mb-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
                 {props.rooms && props.rooms.myRooms.length > 0 &&
-                    <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2'>
+                    <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             groupByAnimal(props.rooms.myRooms).map((group: any, index: number) => {
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
-                                        <div className='flex justify-between items-center'>
-                                            <div className='text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
-                                            <div className='text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
-                                        </div>
-                                        <div>
-                                            {
-                                                group.rooms.map((room: any, index: number) => {
-                                                    return (
-                                                        <Room room={room} key={`${room.key}-${index}`} user={props.user} />
-                                                    )
-                                                })
-                                            }
+                                        <div className='flex gap-2 items-start w-full'>
+                                            <Image src={images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
+                                            <div className='w-full overflow-y-auto h-[200px]'>
+                                                <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center bg-white pb-2 w-full z-[1] sticky top-0'>
+                                                    <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
+                                                    <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                                </div>
+                                                <div className='flex flex-col gap-1'>
+                                                    {
+                                                        group.rooms.map((room: any, index: number) => {
+                                                            return (
+                                                                <Room room={room} key={`${room.key}-${index}`} user={props.user} type='seller' />
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 )
@@ -84,12 +91,33 @@ const Rooms = (props: Props) => {
             </div>
             <section style={{ height: currentSection === "otherRooms" ? "85%" : currentSection === "myRooms" ? "0px" : "50%" }} className='p-2 border-b border-zinc-400 bg-gradient-to-b from-zinc-100 to-transparent cursor-pointer transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
                 {props.rooms && props.rooms.otherRooms.length > 0 &&
-                    <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2'>
-                        {props.rooms.otherRooms.map((room: any, index: number) => {
-                            return (
-                                <Room room={room} key={`${room.key}-${index}`} user={props.user} />
-                            )
-                        })}
+                    <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
+                        {
+                            groupByAnimal(props.rooms.otherRooms).map((group: any, index: number) => {
+                                return (
+                                    <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
+                                        <div className='flex gap-2 items-start w-full'>
+                                            <Image src={images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
+                                            <div className='w-full overflow-y-auto h-[200px]'>
+                                                <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center bg-white pb-2 w-full z-[1] sticky top-0'>
+                                                    <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
+                                                    <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
+                                                </div>
+                                                <div className='flex flex-col gap-1'>
+                                                    {
+                                                        group.rooms.map((room: any, index: number) => {
+                                                            return (
+                                                                <Room room={room} key={`${room.key}-${index}`} user={props.user} type='buyer' />
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 }
             </section>
