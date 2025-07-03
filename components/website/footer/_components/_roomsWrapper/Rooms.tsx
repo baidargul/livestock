@@ -78,6 +78,7 @@ const Rooms = (props: Props) => {
                     <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
                         {
                             myRooms.map((group: any, index: number) => {
+                                console.log(group)
                                 const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
@@ -124,7 +125,7 @@ const Rooms = (props: Props) => {
                                 return (
                                     <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
                                         <div className='flex gap-2 items-start w-full'>
-                                            <Image src={images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
+                                            <Image src={group.animal.images.length > 0 ? group.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
                                             <div className='w-full overflow-y-auto h-[200px]'>
                                                 <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
                                                     <div className='flex flex-col items-start sm:flex-row justify-between sm:items-center  w-full'>
