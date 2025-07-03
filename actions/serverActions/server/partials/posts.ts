@@ -37,13 +37,7 @@ async function listAll(value?: string, key?: string) {
 
     let animals: any = [];
     for (const animal of all) {
-      // const images = await actions.server.images.fetchImages(animal.images);
-      const images = animal?.images.map((img: any) => {
-        return {
-          name: img.Key,
-          image: `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`,
-        };
-      });
+      const images = await actions.server.images.fetchImages(animal?.images);
       animals.push({ ...animal, images });
     }
 
@@ -98,7 +92,6 @@ async function list(val: any, key: string) {
         (images = await actions.server.images.fetchImages(target.images)),
       ]);
       animal = { ...target, images };
-      animal.user.profileImage = profileImage;
       Promise.all([
         (profileImage = await actions.server.images.fetchImages(
           animal.user.profileImage
@@ -109,6 +102,7 @@ async function list(val: any, key: string) {
       ]);
     }
 
+    animal.user.profileImage = profileImage;
     animal.user.coverImage = coverImage;
 
     response.status = 200;

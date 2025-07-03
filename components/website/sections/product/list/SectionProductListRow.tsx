@@ -17,7 +17,6 @@ const SectionProductListRow = (props: Props) => {
 
     const sellerCargo = props.animal?.deliveryOptions.includes("SELLER_DELIVERY")
     const selfPickup = props.animal?.deliveryOptions.includes("SELF_PICKUP")
-
     return (
         <Link href={`/entity/${props.animal?.id}`} className='w-full p-2 bg-white hover:outline-2 hover:outline-zinc-300 group rounded-md drop-shadow-lg h-full flex flex-col justify-between'>
             <div className="flex flex-col items-center gap-0">

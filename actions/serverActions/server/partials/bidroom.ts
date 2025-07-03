@@ -480,7 +480,7 @@ async function listByUser(
       return new Response(JSON.stringify(response));
     }
 
-    const otherRooms = await prisma.bidRoom.findMany({
+    let otherRooms: any = await prisma.bidRoom.findMany({
       where: whereClause,
       include: {
         animal: true,
@@ -527,7 +527,7 @@ async function listByUser(
       whereClause = { ...whereClause, animalId: animalId };
     }
 
-    const myRooms = await prisma.bidRoom.findMany({
+    let myRooms: any = await prisma.bidRoom.findMany({
       where: whereClause,
       include: {
         animal: true,
@@ -566,6 +566,40 @@ async function listByUser(
       },
     });
 
+    const [resolvedMyRooms, resolvedOtherRooms] = await Promise.all([
+      Promise.all(
+        myRooms.map(async (room: any) => {
+          const images = await actions.server.images.fetchImages(
+            room.animal.images
+          );
+          return {
+            ...room,
+            animal: {
+              ...room.animal,
+              images,
+            },
+          };
+        })
+      ),
+      Promise.all(
+        otherRooms.map(async (room: any) => {
+          const images = await actions.server.images.fetchImages(
+            room.animal.images
+          );
+          return {
+            ...room,
+            animal: {
+              ...room.animal,
+              images,
+            },
+          };
+        })
+      ),
+    ]);
+
+    myRooms = resolvedMyRooms;
+    otherRooms = resolvedOtherRooms;
+
     const rooms = {
       myRooms: myRooms,
       otherRooms: otherRooms,
@@ -578,7 +612,7 @@ async function listByUser(
     response.data = rooms;
     return response;
   } catch (error: any) {
-    console.log("[SERVER ERROR]: " + error.message);
+    console.log("[SERVER ERROR]:" + error.message);
     response.status = 500;
     response.message = error.message;
     return response;
