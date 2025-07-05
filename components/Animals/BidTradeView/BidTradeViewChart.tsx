@@ -17,7 +17,6 @@ interface BiddingChartProps {
 }
 
 export default function BidTradeViewChart({ initialAmount, bids, byUser }: BiddingChartProps) {
-    const [isMounted, setIsMounted] = useState(false)
     const [series, setSeries] = useState<{ name?: string; data: [number, number][] }[]>([]);
 
     // Prepare grouped or single-series data
@@ -97,19 +96,8 @@ export default function BidTradeViewChart({ initialAmount, bids, byUser }: Biddi
     };
 
     useEffect(() => {
-        if (isMounted) {
-            setSeries(bidSeries);
-        }
+        setSeries(bidSeries);
     }, [bids, byUser]);
 
-    useEffect(() => {
-        setIsMounted(true)
-    }, [])
-
-    if (!isMounted) {
-        // You can return a loader or nothing
-        return null;
-    }
-
-    return isMounted && <Chart options={options} series={series} type="line" height={350} />;
+    return <Chart options={options} series={series} type="line" height={350} />;
 }
