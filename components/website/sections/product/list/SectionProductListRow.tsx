@@ -54,7 +54,7 @@ const SectionProductListRow = (props: Props) => {
             <div className='text-2xl sm:text-xl md:text-lg text-nowrap text-left text-emerald-600 tracking-wide font-bold'>
                 {formatCurrency(calculatePricing(props.animal).price)}
             </div>
-            {props.animal?.bids.length - 1 > 0 && <div className='-mt-1 text-xs text-zinc-700 tracking-wide'>{props.animal?.bids.length - 1} {props.animal?.bids.length - 1 > 1 ? "bids" : "bid"}</div>}
+            {props.animal?.bids?.length - 1 > 0 && <div className='-mt-1 text-xs text-zinc-700 tracking-wide'>{props.animal?.bids?.length - 1} {props.animal?.bids?.length - 1 > 1 ? "bids" : "bid"}</div>}
         </Link >
     )
 }
