@@ -15,6 +15,7 @@ import RatingBar from '@/components/website/ratings/RatingBar'
 import { images } from '@/consts/images'
 import PhoneFooter from '@/components/website/footer/Phone'
 import BidProtection from './_components/BidProtection'
+import BidTradeView from '@/components/Animals/BidTradeView'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -75,6 +76,7 @@ const page = async (props: Props) => {
                 <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
                 <p className='text-lg text-gray-600'>{animal.description}</p>
                 <CalculatedDescription animal={animal} />
+                <BidTradeView animalId={animal.id} />
             </div>
             <div className='px-4 flex flex-col gap-4'>
                 <div className='flex flex-wrap justify-start items-start gap-2'>

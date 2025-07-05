@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^6.6.0",
     "@types/mapbox-gl": "^3.4.1",
+    "apexcharts": "^4.7.0",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.8.4",
     "bson": "^6.10.4",
@@ -22,6 +23,7 @@
     "mapbox-gl": "^3.11.1",
     "next": "15.3.1",
     "react": "^19.0.0",
+    "react-apexcharts": "^1.7.0",
     "react-dom": "^19.0.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",

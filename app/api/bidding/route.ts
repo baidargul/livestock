@@ -8,16 +8,16 @@ export async function GET(req: NextRequest) {
     data: null as any,
   };
   try {
-    const id = new URL(req.url).searchParams.get("id");
+    const animalId = new URL(req.url).searchParams.get("animalId");
 
-    if (!id) {
+    if (!animalId) {
       response.status = 400;
       response.message = "Missing required field: id";
       response.data = null;
       return new Response(JSON.stringify(response));
     }
 
-    response = await actions.server.bidRoom.bidding.inRoom(id ?? "");
+    response = await actions.server.bidRoom.bidding.onAnimal(animalId ?? "");
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

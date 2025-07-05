@@ -56,7 +56,7 @@ const BidRow = (props: Props) => {
     };
 
     return (
-        isMounted && props.user && <div
+        isMounted && props.user && props.activeBidRoom && <div
             ref={bidRef}
             onClick={() => {
                 !props.isLocked && props.setOfferValue(props.bid.price);

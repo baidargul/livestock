@@ -134,6 +134,7 @@ async function createBidRoom(
           price: calculatePricing(animal).price,
           bidRoomId: newRoom.id,
           userId: animal.userId,
+          intial: true,
         },
       });
     }
