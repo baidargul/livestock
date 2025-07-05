@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
@@ -16,6 +17,7 @@ interface BiddingChartProps {
 }
 
 export default function BidTradeViewChart({ initialAmount, bids, byUser }: BiddingChartProps) {
+    const [isMounted, setIsMounted] = useState(false)
     const [series, setSeries] = useState<{ name?: string; data: [number, number][] }[]>([]);
 
     // Prepare grouped or single-series data
@@ -95,8 +97,19 @@ export default function BidTradeViewChart({ initialAmount, bids, byUser }: Biddi
     };
 
     useEffect(() => {
-        setSeries(bidSeries);
+        if (isMounted) {
+            setSeries(bidSeries);
+        }
     }, [bids, byUser]);
 
-    return <Chart options={options} series={series} type="line" height={350} />;
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
+    if (!isMounted) {
+        // You can return a loader or nothing
+        return null;
+    }
+
+    return isMounted && <Chart options={options} series={series} type="line" height={350} />;
 }

@@ -27,7 +27,6 @@ export async function generateStaticParams() {
 }
 
 const page = async (props: Props) => {
-    const BiddingWrapper = dynamic(() => import('@/components/controls/Bidding/BiddingWrapper'))
     const { params } = props
     const { id } = await params
     const response = await actions.server.post.list(id, 'id');

@@ -1,11 +1,9 @@
 'use client'
-import { useRooms } from '@/hooks/useRooms'
 import React, { useEffect, useState } from 'react'
-import ApexCharts from 'apexcharts'
-import BidTradeViewChart from './BidTradeView/Chart'
 import { actions } from '@/actions/serverActions/actions'
 import { calculatePricing } from '@/lib/utils'
 import { useSession } from '@/hooks/useSession'
+import dynamic from 'next/dynamic'
 type Props = {
     animalId: string,
 }
@@ -16,6 +14,8 @@ const BidTradeView = (props: Props) => {
     const [initialAmount, setInitialAmount] = useState(0)
     const [bids, setBids] = useState<any>([])
     const getUser = useSession((state: any) => state.getUser)
+
+    const BidTradeViewChart = dynamic(() => import('@/components/Animals/BidTradeView/BidTradeViewChart'), { ssr: false })
 
     useEffect(() => {
         setIsMounted(true)
@@ -31,14 +31,14 @@ const BidTradeView = (props: Props) => {
     useEffect(() => {
         if (userId) {
             const fetchBids = async () => {
-                if (userId) {
+                if (userId && isMounted) {
                     const response = await actions.client.bidRoom.bidding.onAnimal(props.animalId ?? "")
                     if (response.status === 200) {
                         setInitialAmount(calculatePricing(response.data).price)
                         let animal = { ...response.data, price: initialAmount }
                         let newBids = []
                         let seenInitial = false;
-                        const initialBidId = animal.bids[animal.bids.length - 1].id
+                        const initialBidId = animal.bids[animal.bids.length - 1]?.id
                         newBids = animal.bids.filter((bid: any, index: number) => {
                             // 1) rename your own bids
                             if (bid.userId === userId) {
@@ -74,7 +74,7 @@ const BidTradeView = (props: Props) => {
     if (bids.length === 0) return null
 
     return (
-        <BidTradeViewChart initialAmount={initialAmount} bids={bids} byUser />
+        isMounted && <BidTradeViewChart initialAmount={initialAmount} bids={bids} byUser />
     )
 }
 
