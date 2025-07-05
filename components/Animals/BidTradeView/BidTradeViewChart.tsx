@@ -74,7 +74,7 @@ export default function BidTradeViewChart({ initialAmount, bids, byUser }: Biddi
         },
         stroke: { curve: 'smooth', width: 2 },
         markers: { size: 6 },
-        title: { text: `Last Bid: ${formatCurrency(bids[0]?.price)}`, align: 'left' },
+        title: { text: `Last Bid: ${formatCurrency(bids[0]?.price ?? 0)}`, align: 'left' },
         xaxis: {
             type: 'datetime',
             min: xMin,
