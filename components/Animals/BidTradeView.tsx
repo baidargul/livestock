@@ -1,81 +1,67 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import { actions } from '@/actions/serverActions/actions'
-import { calculatePricing } from '@/lib/utils'
-import { useSession } from '@/hooks/useSession'
-import dynamic from 'next/dynamic'
-type Props = {
-    animalId: string,
-}
+'use client';
+import React, { useEffect, useState } from 'react';
+import { actions } from '@/actions/serverActions/actions';
+import { calculatePricing } from '@/lib/utils';
+import { useSession } from '@/hooks/useSession';
+import dynamic from 'next/dynamic';
+type Props = { animalId: string };
 
-const BidTradeView = (props: Props) => {
-    const [isMounted, setIsMounted] = useState(false)
-    const [userId, setUserId] = useState(null)
-    const [initialAmount, setInitialAmount] = useState(0)
-    const [bids, setBids] = useState<any>([])
-    const getUser = useSession((state: any) => state.getUser)
+const BidTradeViewChart = dynamic(
+    () => import('@/components/Animals/BidTradeView/BidTradeViewChart'),
+    { ssr: false }
+);
 
-    const BidTradeViewChart = dynamic(() => import('@/components/Animals/BidTradeView/BidTradeViewChart'), { ssr: false })
+export default function BidTradeView({ animalId }: Props) {
+    const getUser = useSession((s: any) => s.getUser);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [initialAmount, setInitialAmount] = useState<number>(0);
+    const [bids, setBids] = useState<any[]>([]);
 
+    // load userId once on mount
     useEffect(() => {
-        setIsMounted(true)
-    }, [])
+        const raw = getUser();
+        if (raw?.id) setUserId(raw.id);
+    }, [getUser]);
 
+    // poll bids every 5s
     useEffect(() => {
-        if (isMounted) {
-            const rawUser = getUser()
-            setUserId(rawUser?.id)
-        }
-    }, [isMounted])
+        if (!userId) return;
 
-    useEffect(() => {
-        if (userId) {
-            const fetchBids = async () => {
-                if (userId && isMounted) {
-                    const response = await actions.client.bidRoom.bidding.onAnimal(props.animalId ?? "")
-                    if (response.status === 200) {
-                        setInitialAmount(calculatePricing(response.data).price)
-                        let animal = { ...response.data, price: initialAmount }
-                        let newBids = []
-                        let seenInitial = false;
-                        const initialBidId = animal.bids[animal.bids.length - 1]?.id
-                        newBids = animal.bids.filter((bid: any, index: number) => {
-                            // 1) rename your own bids
-                            if (bid.userId === userId) {
-                                bid.user.name = "You";
-                            }
+        const fetchBids = async () => {
+            const res = await actions.client.bidRoom.bidding.onAnimal(animalId);
+            if (res.status === 200) {
+                const price = calculatePricing(res.data).price;
+                setInitialAmount(price);
 
-                            // 2) include the very first initial bid, then skip any further ones
-                            if (bid.intial /* or `bid.initial` if spelled correctly */) {
-                                if (!seenInitial && bid.id === initialBidId) {
-                                    seenInitial = true;
-                                    return true;          // keep this one
-                                }
-                                return false;           // drop any other initial bids
-                            }
-
-                            // 3) for all non‑initial bids, always keep
+                // keep only first `initial` and all others
+                let seenInitial = false;
+                const initialBidId = res.data.bids[res.data.bids.length - 1]?.id;
+                const filtered = res.data.bids.filter((b: any) => {
+                    if (b.userId === userId) b.user.name = 'You';
+                    if (b.intial) {
+                        if (!seenInitial && b.id === initialBidId) {
+                            seenInitial = true;
                             return true;
-                        });
-                        animal = null
-                        setBids(newBids)
+                        }
+                        return false;
                     }
-                }
+                    return true;
+                });
+                setBids(filtered);
             }
+        };
 
-            const interval = setInterval(fetchBids, 5000)
-            return () => {
-                setIsMounted(false)
-                clearInterval(interval)
-            }
-        }
-    }, [userId])
+        fetchBids();                   // initial fetch
+        const iv = setInterval(fetchBids, 5000);
+        return () => clearInterval(iv);
+    }, [userId, animalId]);
 
-    if (bids.length === 0) return null
-
+    // Always render the chart; let it handle empty data
     return (
-        <BidTradeViewChart initialAmount={initialAmount} bids={bids} byUser />
-    )
+        <BidTradeViewChart
+            initialAmount={initialAmount}
+            bids={bids}
+            byUser
+        />
+    );
 }
-
-export default BidTradeView
