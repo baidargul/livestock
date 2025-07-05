@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
 import { user } from "./user";
 import { calculatePricing } from "@/lib/utils";
+import { bidding } from "./bidding";
 
 export type RoomType = {
   key: string;
@@ -303,7 +304,6 @@ async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
     return response;
   }
 }
-
 async function closeDeal(room: any, userId: string, bid: any) {
   const response = {
     status: 500,
@@ -854,7 +854,6 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
     return response;
   }
 }
-
 async function bidSeen(bidId: string) {
   const response = {
     status: 500,
@@ -900,4 +899,5 @@ export const bidRoom = {
   leaveAllBidRooms,
   lockBidAsFinalOffer,
   bidSeen,
+  bidding,
 };

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { RoomType } from "../../server/partials/bidroom";
+import { bidding } from "./bidding";
 
 async function list(value: string, key: "id" | "key") {
   const response = await axios.get(`/api/rooms?${key}=${value}&key=${key}`);
@@ -35,4 +36,5 @@ export const bidRoom = {
   createBidRoom,
   closeBidRoom,
   lockBidAsFinalOffer,
+  bidding,
 };
