@@ -14,6 +14,7 @@ const BidTradeViewChart = dynamic(
 export default function BidTradeView({ animalId }: Props) {
     const getUser = useSession((s: any) => s.getUser);
     const [userId, setUserId] = useState<string | null>(null);
+    const [isAuthor, setIsAuthor] = useState<boolean>(false);
     const [initialAmount, setInitialAmount] = useState<number>(0);
     const [bids, setBids] = useState<any[]>([]);
 
@@ -31,6 +32,7 @@ export default function BidTradeView({ animalId }: Props) {
             const res = await actions.client.bidRoom.bidding.onAnimal(animalId);
             if (res.status === 200) {
                 const price = calculatePricing(res.data).price;
+                if (res.data.userId === userId) setIsAuthor(true);
                 setInitialAmount(price);
 
                 // keep only first `initial` and all others
@@ -61,7 +63,7 @@ export default function BidTradeView({ animalId }: Props) {
         <BidTradeViewChart
             initialAmount={initialAmount}
             bids={bids}
-            byUser
+            byUser={isAuthor}
         />
     );
 }
