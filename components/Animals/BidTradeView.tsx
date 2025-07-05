@@ -74,7 +74,7 @@ const BidTradeView = (props: Props) => {
     if (bids.length === 0) return null
 
     return (
-        isMounted && <BidTradeViewChart initialAmount={initialAmount} bids={bids} byUser />
+        <BidTradeViewChart initialAmount={initialAmount} bids={bids} byUser />
     )
 }
 
