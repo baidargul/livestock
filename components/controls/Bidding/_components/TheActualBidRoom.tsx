@@ -30,7 +30,7 @@ const TheActualBidRoom = (props: Props) => {
                 </div>
             </div>
             <div className="text-xs tracking-wide -mt-3 px-6">
-                {props.activeBidRoom.maleQuantityAvailable && props.activeBidRoom.maleQuantityAvailable > 0 && `${props.activeBidRoom.maleQuantityAvailable} Male,`} {props.activeBidRoom.femaleQuantityAvailable && props.activeBidRoom.femaleQuantityAvailable > 0 && `${props.activeBidRoom.femaleQuantityAvailable} Female`} - {props.activeBidRoom.deliveryOptions.map((option: any) => option).join(", ")}
+                {[...new Set(props.activeBidRoom.deliveryOptions)].join(", ")} - {Object.entries({ male: props.activeBidRoom.maleQuantityAvailable, female: props.activeBidRoom.femaleQuantityAvailable }).filter(([_, value]) => value > 0).map(([key, value]) => `${value} ${key.charAt(0).toUpperCase()}${key.slice(1)}`).join(", ")}
             </div>
         </div>
     )

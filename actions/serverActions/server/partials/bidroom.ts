@@ -81,7 +81,11 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       // AUTHOR OFFER
       await prisma.bids.create({
         data: {
-          price: calculatePricing(animal).price,
+          price: calculatePricing({
+            ...animal,
+            maleQuantityAvailable: room.maleQuantityAvailable,
+            femaleQuantityAvailable: room.femaleQuantityAvailable,
+          }).price,
           bidRoomId: newRoom.id,
           userId: animal.userId,
           intial: true,

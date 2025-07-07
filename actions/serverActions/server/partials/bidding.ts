@@ -22,6 +22,14 @@ async function onAnimal(id: string) {
           include: {
             bids: {
               include: {
+                BidRoom: {
+                  select: {
+                    id: true,
+                    offer: true,
+                    maleQuantityAvailable: true,
+                    femaleQuantityAvailable: true,
+                  },
+                },
                 user: {
                   select: {
                     name: true,

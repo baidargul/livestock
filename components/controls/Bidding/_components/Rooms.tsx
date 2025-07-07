@@ -71,7 +71,9 @@ const Rooms = (props: Props) => {
                 {bid.user.name}
               </div>
               <div className="text-xs tracking-wide -mt-1">
-                {bid.maleQuantityAvailable && bid.maleQuantityAvailable > 0 && `${bid.maleQuantityAvailable} male,`} {bid.femaleQuantityAvailable && bid.femaleQuantityAvailable > 0 && `${bid.femaleQuantityAvailable} female`} - {bid.deliveryOptions.map((option: any) => option).join(", ")}
+                {[...new Set(bid.deliveryOptions)].join(", ")}
+                {bid.maleQuantityAvailable > 0 && ` ${bid.maleQuantityAvailable} male`}
+                {bid.femaleQuantityAvailable > 0 && ` ${bid.femaleQuantityAvailable} female`}
               </div>
             </div>
           </div>
