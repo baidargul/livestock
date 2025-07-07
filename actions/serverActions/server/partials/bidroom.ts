@@ -19,49 +19,36 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
   } as any;
 
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: room.userId,
-      },
-    });
+    let [user, postUser, animal, demand, isExists] = await Promise.all([
+      prisma.user.findUnique({ where: { id: room.userId } }),
+      prisma.user.findUnique({ where: { id: room.authorId } }),
+      prisma.animal.findUnique({ where: { id: room.animalId } }),
+      demandId
+        ? prisma.demands.findUnique({ where: { id: demandId } })
+        : Promise.resolve(null),
+      prisma.bidRoom.findUnique({
+        where: {
+          key: room.key,
+        },
+      }),
+    ]);
 
     if (!user) {
       response.status = 404;
       response.message = `User that requested the bid room does not exist.`;
       return response;
     }
-
-    const postUser = await prisma.user.findUnique({
-      where: {
-        id: room.authorId,
-      },
-    });
-
     if (!postUser) {
       response.status = 404;
       response.message = `Post author does not exist.`;
       return response;
     }
-
-    const animal = await prisma.animal.findUnique({
-      where: {
-        id: room.animalId,
-      },
-    });
-
     if (!animal) {
       response.status = 404;
       response.message = `Animal does not exist.`;
       return response;
     }
-
     if (demandId) {
-      const demand = await prisma.demands.findUnique({
-        where: {
-          id: demandId,
-        },
-      });
-
       if (!demand) {
         response.status = 404;
         response.message = `Demand does not exist.`;
@@ -69,46 +56,8 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       }
     }
 
-    const isExists = await prisma.bidRoom.findUnique({
-      where: {
-        key: room.key,
-      },
-      include: {
-        animal: true,
-        bids: {
-          take: 5,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                connectionIds: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-      },
-    });
-
     if (!isExists) {
-      const newRoom = await prisma.bidRoom.create({
+      let newRoom: any = await prisma.bidRoom.create({
         data: {
           key: room.key,
           authorId: room.authorId,
@@ -150,59 +99,62 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           isSeen: false,
         },
       });
+
+      isExists = newRoom;
+      newRoom = null;
     }
 
-    const existingRoom = await prisma.bidRoom.findUnique({
-      where: {
-        key: room.key,
-      },
-      include: {
-        animal: true,
-        bids: {
-          take: 5,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                connectionIds: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-      },
-    });
+    // const existingRoom = await prisma.bidRoom.findUnique({
+    //   where: {
+    //     key: room.key,
+    //   },
+    //   include: {
+    //     animal: true,
+    //     bids: {
+    //       take: 5,
+    //       include: {
+    //         user: {
+    //           select: {
+    //             id: true,
+    //             name: true,
+    //             connectionIds: true,
+    //           },
+    //         },
+    //       },
+    //       orderBy: {
+    //         createdAt: "desc",
+    //       },
+    //     },
+    //     user: {
+    //       select: {
+    //         id: true,
+    //         name: true,
+    //         connectionIds: true,
+    //       },
+    //     },
+    //     author: {
+    //       select: {
+    //         id: true,
+    //         name: true,
+    //         connectionIds: true,
+    //       },
+    //     },
+    //   },
+    // });
 
-    if (!existingRoom) {
-      response.status = 404;
-      response.message = `Bid room does not exist.`;
-      return response;
-    }
+    // if (!existingRoom) {
+    //   response.status = 404;
+    //   response.message = `Bid room does not exist.`;
+    //   return response;
+    // }
 
-    const allExceptThis = existingRoom.activeUsers.filter(
+    const allExceptThis: any = isExists?.activeUsers.filter(
       (user) => user !== userId
     );
     const newUsers = [...allExceptThis, userId];
     let updated: any = await prisma.bidRoom.update({
       where: {
-        id: existingRoom.id,
+        id: isExists?.id,
       },
       data: {
         activeUsers: newUsers,
