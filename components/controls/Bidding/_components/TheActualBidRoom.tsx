@@ -29,6 +29,9 @@ const TheActualBidRoom = (props: Props) => {
                     </div>}
                 </div>
             </div>
+            <div className="text-xs tracking-wide -mt-3 px-6">
+                {props.activeBidRoom.maleQuantityAvailable && props.activeBidRoom.maleQuantityAvailable > 0 && `${props.activeBidRoom.maleQuantityAvailable} Male,`} {props.activeBidRoom.femaleQuantityAvailable && props.activeBidRoom.femaleQuantityAvailable > 0 && `${props.activeBidRoom.femaleQuantityAvailable} Female`} - {props.activeBidRoom.deliveryOptions.map((option: any) => option).join(", ")}
+            </div>
         </div>
     )
 }

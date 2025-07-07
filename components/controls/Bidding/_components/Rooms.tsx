@@ -64,7 +64,20 @@ const Rooms = (props: Props) => {
           onClick={() => handleJoinRoom(bid)}
           className={`p-2 ${props.expectedKey === bid.key ? "scale-75 pointer-events-none opacity-50" : ""} transition-all duration-100 ease-in-out flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}
         >
-          <div className="flex gap-1 items-center">{bid.userOfferAccepted ? <HandshakeIcon size={16} className="text-emerald-700" /> : <ChartCandlestickIcon className="text-amber-700" size={16} />}{bid.user.name}</div><div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : bid.bids[bid.bids.length - 1].price ?? 0}</div>
+          <div className="flex gap-4 items-center">
+            {bid.userOfferAccepted ? <HandshakeIcon size={16} className="text-emerald-700" /> : <ChartCandlestickIcon className="text-amber-700" size={16} />}
+            <div>
+              <div>
+                {bid.user.name}
+              </div>
+              <div className="text-xs tracking-wide -mt-1">
+                {bid.maleQuantityAvailable && bid.maleQuantityAvailable > 0 && `${bid.maleQuantityAvailable} male,`} {bid.femaleQuantityAvailable && bid.femaleQuantityAvailable > 0 && `${bid.femaleQuantityAvailable} female`} - {bid.deliveryOptions.map((option: any) => option).join(", ")}
+              </div>
+            </div>
+          </div>
+          <div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : formatCurrency(bid.bids[bid.bids.length - 1].price ?? 0)}
+
+          </div>
         </div>
       );
     })}
