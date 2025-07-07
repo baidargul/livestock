@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
-    const room: RoomType = data.room;
+    const room: any = data.room;
     const userId: string = data.userId;
     const demandId: string = data.demandId ?? null;
     response = await actions.server.bidRoom.createBidRoom(
@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
       userId,
       demandId
     );
+
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

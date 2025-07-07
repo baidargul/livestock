@@ -113,21 +113,25 @@ model Bids {
 }
 
 model BidRoom {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  key               String?   @unique
-  animalId          String?   @db.ObjectId
-  animal            Animal?   @relation(fields: [animalId], references: [id])
-  userId            String?   @db.ObjectId
-  user              User?     @relation(fields: [userId], references: [id])
-  authorId          String?   @db.ObjectId // ID of the user who created the room
-  author            User?     @relation("BidRoomAuthor", fields: [authorId], references: [id])
-  demandId          String?   @db.ObjectId
-  activeUsers       String[]
-  bids              Bids[]
-  createdAt         DateTime  @default(now())
-  closedAt          DateTime?
-  closedAmount      Float?
-  userOfferAccepted Boolean?  @default(false)
+  id                      String            @id @default(auto()) @map("_id") @db.ObjectId
+  key                     String?           @unique
+  animalId                String?           @db.ObjectId
+  animal                  Animal?           @relation(fields: [animalId], references: [id])
+  userId                  String?           @db.ObjectId
+  user                    User?             @relation(fields: [userId], references: [id])
+  authorId                String?           @db.ObjectId // ID of the user who created the room
+  author                  User?             @relation("BidRoomAuthor", fields: [authorId], references: [id])
+  demandId                String?           @db.ObjectId
+  activeUsers             String[]
+  bids                    Bids[]
+  createdAt               DateTime          @default(now())
+  offer                   Float
+  deliveryOptions         DeliveryOptions[]
+  maleQuantityAvailable   Int
+  femaleQuantityAvailable Int
+  closedAt                DateTime?
+  closedAmount            Float?
+  userOfferAccepted       Boolean?          @default(false)
 }
 
 model Following {

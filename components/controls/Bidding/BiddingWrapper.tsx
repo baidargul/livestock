@@ -207,6 +207,10 @@ const BiddingWrapper = (props: Props) => {
                         authorId: props.room.authorId,
                         userId: props.room.userId,
                         key: `${props.room.animalId}-${props.room.authorId}-${props.room.userId}`,
+                        offer: calculatePricing(props.animal.price).price,
+                        deliveryOptions: ["SELF_PICKUP"],
+                        maleQuantityAvailable: 1,
+                        femaleQuantityAvailable: 1
                     }
                     socket.emit("join-bidroom", serialize({ room, userId: user.id }));
                 }
@@ -218,6 +222,10 @@ const BiddingWrapper = (props: Props) => {
                     authorId: props.animal.userId,
                     userId: user.id,
                     key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
+                    offer: calculatePricing(props.animal.price).price,
+                    deliveryOptions: ["SELF_PICKUP"],
+                    maleQuantityAvailable: 1,
+                    femaleQuantityAvailable: 1
                 }
 
                 socket.emit("join-bidroom", serialize({ room, userId: user.id }));

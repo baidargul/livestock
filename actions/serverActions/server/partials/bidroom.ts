@@ -11,11 +11,7 @@ export type RoomType = {
   animalId: string;
 };
 
-async function createBidRoom(
-  room: RoomType,
-  userId: string,
-  demandId?: string
-) {
+async function createBidRoom(room: any, userId: string, demandId?: string) {
   const response = {
     status: 500,
     message: "Failed to create bid room",
@@ -118,6 +114,10 @@ async function createBidRoom(
           authorId: room.authorId,
           userId: room.userId,
           animalId: room.animalId,
+          femaleQuantityAvailable: room.femaleQuantityAvailable,
+          maleQuantityAvailable: room.maleQuantityAvailable,
+          offer: room.offer,
+          deliveryOptions: room.deliveryOptions,
           activeUsers: [userId],
           demandId: demandId ?? null,
         },
@@ -129,12 +129,25 @@ async function createBidRoom(
         return response;
       }
 
+      // AUTHOR OFFER
       await prisma.bids.create({
         data: {
           price: calculatePricing(animal).price,
           bidRoomId: newRoom.id,
           userId: animal.userId,
           intial: true,
+          isSeen: true,
+        },
+      });
+
+      // USER FIRST OFFER
+      await prisma.bids.create({
+        data: {
+          price: room.offer ?? calculatePricing(animal).price,
+          bidRoomId: newRoom.id,
+          userId: newRoom.userId,
+          intial: false,
+          isSeen: false,
         },
       });
     }

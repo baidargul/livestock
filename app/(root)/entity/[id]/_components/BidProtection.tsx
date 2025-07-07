@@ -8,6 +8,7 @@ import { useSocket } from '@/socket-client/SocketWrapper'
 import { serialize } from 'bson'
 import { ChartCandlestickIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import PostBiddingOptions from './PostBiddingOptions'
 
 type Props = {
     children: React.ReactNode
@@ -19,6 +20,19 @@ const BidProtection = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [bid, setBid] = useState<any>(null)
     const [room, setRoom] = useState<any>(null)
+    const [postBiddingOptions, setPostBiddingOptions] = useState<{
+        deliveryOptions: string[],
+        maleQuantityAvailable: number,
+        femaleQuantityAvailable: number,
+        amount: number,
+        posted: boolean
+    }>({
+        deliveryOptions: [],
+        maleQuantityAvailable: 0,
+        femaleQuantityAvailable: 0,
+        amount: 0,
+        posted: false
+    })
     const getUser = useSession((state: any) => state.getUser)
     const rooms = useRooms((state: any) => state.rooms)
     const find = useRooms((state: any) => state.find)
@@ -51,6 +65,15 @@ const BidProtection = (props: Props) => {
                 socket.emit("close-bidroom", serialize({ room, userId: user.id }));
             }
         }
+    }
+
+    // IF NOT AUTHOR AND HAS NOT STARTED BIDDING YET
+    if (!room && props.animal.userId !== user?.id) {
+        return (
+            <PostBiddingOptions postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
+                {props.children}
+            </PostBiddingOptions>
+        )
     }
 
     if (!user && !bid && !room) {
