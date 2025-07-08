@@ -33,7 +33,7 @@ const TheActualBidRoom = (props: Props) => {
             <div className="text-xs tracking-wide -mt-3 px-6 flex gap-1 items-center">
                 <div className='border-r-2 border-zinc-300 pr-4'>
                     {
-                        props.activeBidRoom.deliveryOptions.map((option: any) => <DeliveryIcon icon={option} />)
+                        props.activeBidRoom.deliveryOptions.map((option: any, index: number) => <DeliveryIcon icon={option} key={`${option}-${index}`} />)
                     }
                 </div>
                 {Object.entries({ male: props.activeBidRoom.maleQuantityAvailable, female: props.activeBidRoom.femaleQuantityAvailable }).filter(([_, value]) => value > 0).map(([key, value]) => `${value} ${key.charAt(0).toUpperCase()}${key.slice(1)}`).join(", ")}

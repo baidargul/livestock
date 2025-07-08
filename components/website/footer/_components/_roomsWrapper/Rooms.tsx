@@ -33,10 +33,14 @@ const Rooms = (props: Props) => {
     useEffect(() => {
         if (props.rooms) {
             if (props.rooms.myRooms.length > 0) {
-                setMyRooms(groupByAnimal(props.rooms.myRooms))
+                if (myRooms.length === 0) {
+                    setMyRooms(groupByAnimal(props.rooms.myRooms))
+                }
             }
             if (props.rooms.otherRooms.length > 0) {
-                setOtherRooms(groupByAnimal(props.rooms.otherRooms))
+                if (otherRooms.length === 0) {
+                    setOtherRooms(groupByAnimal(props.rooms.otherRooms))
+                }
             }
             setIsReady(true)
         }
@@ -58,12 +62,14 @@ const Rooms = (props: Props) => {
     }
 
     const groupByAnimal = (rooms: any) => {
-        const groupedRooms = rooms.reduce((acc: any, room: any) => {
+        let groupedRooms = rooms.reduce((acc: any, room: any) => {
             acc[room.animalId] = acc[room.animalId] || { rooms: [], animal: null };
             acc[room.animalId].animal = room.animal;
             acc[room.animalId].rooms.push(room);
             return acc;
         }, {});
+        // sort by room.createdAt desc
+        groupedRooms = Object.values(groupedRooms).sort((a: any, b: any) => b.rooms[0].createdAt - a.rooms[0].createdAt);
         return Object.values(groupedRooms) as any;
     }
 

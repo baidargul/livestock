@@ -27,6 +27,7 @@ type Props = {
     staticStyle?: boolean
     allowJoinRoomImmediately?: boolean
     room?: any
+    targetRoomKey?: { key: string, refill: () => void, clear: () => void }
 }
 
 const BiddingWrapper = (props: Props) => {
@@ -192,6 +193,11 @@ const BiddingWrapper = (props: Props) => {
     }
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
+        if (val === false) {
+            if (props.targetRoomKey) {
+                props.targetRoomKey.refill()
+            }
+        }
     }
     const handleOfferChange = (val: string | number) => {
         const offer = String(val).length > 0 ? Number(val) : val
@@ -253,6 +259,13 @@ const BiddingWrapper = (props: Props) => {
             handleOpen(false);
             setActiveBidRoom(null);
         }
+        if (props.targetRoomKey) {
+            if (props.targetRoomKey.key !== '') {
+                props.targetRoomKey.clear()
+            } else {
+                props.targetRoomKey.refill()
+            }
+        }
     }
     const handlePostOffer = async () => {
         if (!user) {
@@ -309,7 +322,7 @@ const BiddingWrapper = (props: Props) => {
                 <div className='flex flex-col gap-4'>
                     {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={props.animal} />}
                     <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={rooms} socket={socket} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
+                        {!activeBidRoom && <Rooms rooms={[...rooms?.myRooms, ...rooms?.otherRooms]} socket={socket} targetRoomKey={props.targetRoomKey} isOpen={isOpen} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (

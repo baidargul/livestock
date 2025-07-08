@@ -13,21 +13,22 @@ type Props = {
   animal: any
   isStaticStyle: boolean
   expectedKey: string
+  isOpen: boolean
+  targetRoomKey?: { key: string, refill: () => void, clear: () => void }
 };
 
 const Rooms = (props: Props) => {
-  const [rooms, setRooms] = useState<any>([])
+
   useEffect(() => {
-    if (props.rooms) {
-      setRooms([...props.rooms.myRooms, ...props.rooms.otherRooms].map((r: any) => {
-        if (props.animal.id === r.animalId) {
-          return r
-        } else {
-          return null
+    if (props.isOpen) {
+      if (props.targetRoomKey?.key && props.targetRoomKey?.key.length > 0) {
+        const room = props.rooms.find((r: any) => r.key === props.targetRoomKey?.key)
+        if (room) {
+          handleJoinRoom(room)
         }
-      }))
+      }
     }
-  }, [props.rooms])
+  }, [props.isOpen])
 
   const handleJoinRoom = (bidRoom: any) => {
     if (props.currentUser && props.socket) {
@@ -46,10 +47,12 @@ const Rooms = (props: Props) => {
 
   return props.animal && <div>
     <div className="mb-5">
-      {rooms && rooms?.length > 0 && <div className="tracking-tight text-xl">Please select a room for</div>}
+      {props.rooms && props.rooms?.length > 0 && <div className="tracking-tight text-xl">Please select a room for</div>}
       {props.animal && <Link href={`/entity/${props.animal.id}`} className="underline underline-offset-6 text-emerald-700">{totalQuantity} x {formalizeText(props.animal.breed)} {totalQuantity > 1 ? props.animal.type : props.animal.type.slice(0, props.animal.type.length - 1)} @ {formatCurrency(props.animal.price)} = {calculatePricing(props.animal).price}</Link>}
     </div>
-    {rooms && rooms.map((bid: any, index: number) => {
+    {props.rooms && props.rooms.map((bid: any, index: number) => {
+
+      if (bid.animalId == !props.animal.id) return null
 
       if (!bid) return
 
