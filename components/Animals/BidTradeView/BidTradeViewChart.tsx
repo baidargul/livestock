@@ -11,12 +11,11 @@ interface Bid {
     user: { id: string; name: string }; // assuming user info available
 }
 interface BiddingChartProps {
-    initialAmount: number;
     bids: Bid[];
     byUser?: boolean;
 }
 
-export default function BidTradeViewChart({ initialAmount, bids, byUser }: BiddingChartProps) {
+export default function BidTradeViewChart({ bids, byUser }: BiddingChartProps) {
     const [series, setSeries] = useState<{ name?: string; data: [number, number][] }[]>([]);
 
     // Prepare grouped or single-series data

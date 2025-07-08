@@ -15,7 +15,6 @@ export default function BidTradeView({ animalId }: Props) {
     const getUser = useSession((s: any) => s.getUser);
     const [userId, setUserId] = useState<string | null>(null);
     const [isAuthor, setIsAuthor] = useState<boolean>(false);
-    const [initialAmount, setInitialAmount] = useState<number>(0);
     const [bids, setBids] = useState<any[]>([]);
 
     // load userId once on mount
@@ -33,7 +32,6 @@ export default function BidTradeView({ animalId }: Props) {
             if (res.status === 200) {
                 const price = calculatePricing(res.data).price;
                 if (res.data.userId === userId) setIsAuthor(true);
-                setInitialAmount(price);
 
                 // keep only first `initial` and all others
                 let seenInitial = false;
@@ -61,7 +59,6 @@ export default function BidTradeView({ animalId }: Props) {
     // Always render the chart; let it handle empty data
     return (
         <BidTradeViewChart
-            initialAmount={initialAmount}
             bids={bids}
             byUser={isAuthor}
         />

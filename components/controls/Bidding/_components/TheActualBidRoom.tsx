@@ -1,3 +1,4 @@
+import DeliveryIcon from '@/components/Animals/DeliveryIcon'
 import { calculatePricing, formatCurrency } from '@/lib/utils'
 import { ChevronLeftIcon } from 'lucide-react'
 import React from 'react'
@@ -29,8 +30,13 @@ const TheActualBidRoom = (props: Props) => {
                     </div>}
                 </div>
             </div>
-            <div className="text-xs tracking-wide -mt-3 px-6">
-                {[...new Set(props.activeBidRoom.deliveryOptions)].join(", ")} - {Object.entries({ male: props.activeBidRoom.maleQuantityAvailable, female: props.activeBidRoom.femaleQuantityAvailable }).filter(([_, value]) => value > 0).map(([key, value]) => `${value} ${key.charAt(0).toUpperCase()}${key.slice(1)}`).join(", ")}
+            <div className="text-xs tracking-wide -mt-3 px-6 flex gap-1 items-center">
+                <div className='border-r-2 border-zinc-300 pr-4'>
+                    {
+                        props.activeBidRoom.deliveryOptions.map((option: any) => <DeliveryIcon icon={option} />)
+                    }
+                </div>
+                {Object.entries({ male: props.activeBidRoom.maleQuantityAvailable, female: props.activeBidRoom.femaleQuantityAvailable }).filter(([_, value]) => value > 0).map(([key, value]) => `${value} ${key.charAt(0).toUpperCase()}${key.slice(1)}`).join(", ")}
             </div>
         </div>
     )

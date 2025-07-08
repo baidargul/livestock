@@ -1,3 +1,4 @@
+import DeliveryIcon from "@/components/Animals/DeliveryIcon";
 import { calculatePricing, formalizeText, formatCurrency } from "@/lib/utils";
 import { serialize } from "bson";
 import { ChartCandlestick, ChartCandlestickIcon, HandshakeIcon } from "lucide-react";
@@ -70,8 +71,12 @@ const Rooms = (props: Props) => {
               <div>
                 {bid.user.name}
               </div>
-              <div className="text-xs tracking-wide -mt-1">
-                {[...new Set(bid.deliveryOptions)].join(", ")}
+              <div className="text-xs tracking-wide -mt-1 flex gap-1 items-center">
+                <div className='border-r-2 border-zinc-300 pr-4'>
+                  {
+                    bid.deliveryOptions.map((option: any) => <DeliveryIcon icon={option} />)
+                  }
+                </div>
                 {bid.maleQuantityAvailable > 0 && ` ${bid.maleQuantityAvailable} male`}
                 {bid.femaleQuantityAvailable > 0 && ` ${bid.femaleQuantityAvailable} female`}
               </div>
