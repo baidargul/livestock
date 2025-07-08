@@ -6,12 +6,12 @@ import { useSession } from '@/hooks/useSession';
 import dynamic from 'next/dynamic';
 type Props = { animalId: string };
 
-const BidTradeViewChart = dynamic(
-    () => import('@/components/Animals/BidTradeView/BidTradeViewChart'),
-    { ssr: false }
-);
 
 export default function BidTradeView({ animalId }: Props) {
+    const BidTradeViewChart = dynamic(
+        () => import('@/components/Animals/BidTradeView/BidTradeViewChart'),
+        { ssr: false }
+    );
     const getUser = useSession((s: any) => s.getUser);
     const [userId, setUserId] = useState<string | null>(null);
     const [isAuthor, setIsAuthor] = useState<boolean>(false);
