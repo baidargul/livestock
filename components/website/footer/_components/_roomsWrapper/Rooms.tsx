@@ -66,8 +66,8 @@ const Rooms = ({ rooms, user }: Props) => {
 
         return (
             <div key={`group-${animal.id}`} className="flex flex-col gap-2 bg-white p-2">
-                <div className="flex gap-2 items-start w-full">
-                    <div className="w-[40%] relative aspect-square">
+                <div className="flex gap-2 items-start w-full h-full">
+                    <div className="w-[40%] h-full relative aspect-square">
                         <Image
                             src={animal.images?.length ? animal.images[0].image : images.chickens.images[1]}
                             alt={animal.breed}
