@@ -85,7 +85,7 @@ const Rooms = (props: Props) => {
               </div>
             </div>
           </div>
-          <div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : formatCurrency(bid.bids[bid.bids.length - 1].price ?? 0)}
+          <div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : formatCurrency(bid.bids[bid.bids.length - 1]?.price ?? 0)}
 
           </div>
         </div>

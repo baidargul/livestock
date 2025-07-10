@@ -59,6 +59,14 @@ const BidProtection = (props: Props) => {
         }
     }, [rooms, user])
 
+    if (!bid) {
+        return (
+            <BiddingWrapper animal={props.animal} >
+                {props.children}
+            </BiddingWrapper>
+        )
+    }
+
     const handleCloseBidRoom = async () => {
         if (socket) {
             if (room && user) {

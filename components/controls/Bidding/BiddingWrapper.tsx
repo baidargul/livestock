@@ -144,9 +144,15 @@ const BiddingWrapper = (props: Props) => {
                 if (bid.userId === user.id) thisUserLastBidValue = bid.price
             }
             if (bids.length > 0) {
-                const authorIndex = bids.findIndex((bid: any) => bid.userId === props.animal.userId)
-                bids = [bids[authorIndex], ...bids.slice(0, authorIndex), ...bids.slice(authorIndex + 1)]
+                const authorIndex = bids.findIndex((bid: any) => bid.userId === props.animal.userId);
+                if (authorIndex !== -1) {
+                    const [authorBid] = bids.splice(authorIndex, 1);
+                    bids.unshift(authorBid);
+                }
             }
+
+            bids = bids.filter((theBid: any) => typeof theBid === 'object');
+
             setFinalBids(bids)
             setMyLastOffer(thisUserLastBidValue)
             if (activeBidRoom.closedAt) {
@@ -156,7 +162,6 @@ const BiddingWrapper = (props: Props) => {
         }
 
     }, [activeBidRoom])
-
 
     useEffect(() => {
         const rawUser = getUser();
@@ -348,6 +353,27 @@ const BiddingWrapper = (props: Props) => {
                             </div>
                         </div>}
                         <div ref={scrollHookRef}></div>
+                    </div>
+                    <div className='flex justify-evenly items-center gap-0'>
+                        {
+                            finalBids.map((theBid: any, index: number) => {
+                                return (
+                                    <div className='flex gap-1 items-center p-1' key={`${theBid?.id}-${index}`}>
+                                        <LockIcon size={15} className='animate-pulse text-amber-500' />
+                                        <div className='font-semibold'>
+                                            {
+                                                theBid.user.id === user?.id ? "You" : theBid.user.name
+                                            }
+                                        </div>
+                                        <div>
+                                            {
+                                                formatCurrency(theBid.price)
+                                            }
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
                 {/* ALLOW BIDDING */}
