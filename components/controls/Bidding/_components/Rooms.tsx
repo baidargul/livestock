@@ -75,7 +75,7 @@ const Rooms = (props: Props) => {
                 {bid.user.name}
               </div>
               <div className="text-xs tracking-wide -mt-1 flex gap-1 items-center">
-                <div className='border-r-2 border-zinc-300 pr-4'>
+                <div className='border-r-2 border-zinc-300 pr-4 flex items-center gap-1'>
                   {
                     bid.deliveryOptions.map((option: any, index: number) => <DeliveryIcon icon={option} key={`${option}-${index}`} />)
                   }
