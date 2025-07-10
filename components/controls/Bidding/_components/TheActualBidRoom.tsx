@@ -25,7 +25,7 @@ const TheActualBidRoom = (props: Props) => {
                             {formatCurrency(props.activeBidRoom.bids.length > 0 && props.activeBidRoom.bids[props.activeBidRoom.bids.length - 1]?.price)}
                         </div>
                         <div className='p-1 px-2 text-center border-t pt-1 border-zinc-300'>
-                            {formatCurrency(calculatePricing(props.animal).price)}
+                            {formatCurrency(calculatePricing({ ...props.animal, maleQuantityAvailable: props.activeBidRoom.maleQuantityAvailable, femaleQuantityAvailable: props.activeBidRoom.femaleQuantityAvailable }).price)}
                         </div>
                     </div>}
                 </div>
