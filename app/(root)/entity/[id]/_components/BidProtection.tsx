@@ -115,7 +115,7 @@ const BidProtection = (props: Props) => {
             <BiddingWrapper animal={props.animal}>
                 <div className='w-full'>
                     <Button variant='btn-primary' className='w-full flex gap-2 justify-center text-center items-center'>
-                        {!bid.isSeen && bid.user !== user.id && <div className='w-4 h-4 left-2 bg-amber-500 rounded-full'></div>} <ChartCandlestickIcon className='w-6 h-6' /><div>{bid.user.name}</div> <div>({formatCurrency(bid.price)})</div>
+                        {!bid.isSeen && bid.user !== user.id && <div className='w-4 h-4 left-2 bg-amber-500 rounded-full'></div>} <ChartCandlestickIcon className='w-6 h-6' /><div>{user?.id === bid.userId ? "You" : bid.user.name}</div> <div>({formatCurrency(bid.price)})</div>
                     </Button>
                 </div>
             </BiddingWrapper>
