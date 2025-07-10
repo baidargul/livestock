@@ -354,7 +354,7 @@ const BiddingWrapper = (props: Props) => {
                         </div>}
                         <div ref={scrollHookRef}></div>
                     </div>
-                    <div className='flex justify-evenly items-center gap-0'>
+                    {finalBids && finalBids.length > 0 && <div className='flex justify-evenly items-center gap-0'>
                         {
                             finalBids.map((theBid: any, index: number) => {
                                 return (
@@ -374,7 +374,7 @@ const BiddingWrapper = (props: Props) => {
                                 )
                             })
                         }
-                    </div>
+                    </div>}
                 </div>
                 {/* ALLOW BIDDING */}
                 {!isLocked && <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
