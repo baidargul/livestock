@@ -35,7 +35,7 @@ const Room = (props: Props) => {
                 const calculateUnreadBids = () => {
                     let count = 0
                     props.room.bids.forEach((bid: any) => {
-                        if (bid.isSeen === false && bid.userId !== props.user.id) {
+                        if (bid.isSeen === false && bid.userId !== props.user?.id) {
                             count = count + 1
                         }
                     })
@@ -51,21 +51,21 @@ const Room = (props: Props) => {
 
 
     const totalQuantity = Number(props.room.maleQuantityAvailable ?? 0) + Number(props.room.femaleQuantityAvailable ?? 0)
-    const isAuthor = props.room.user.id === props.user.id
+    const isAuthor = props.room.user.id === props.user?.id
     return (
         animal && props.user && <BiddingWrapper animal={animal} room={props.room} targetRoomKey={targetRoomKey} staticStyle>
             <div className='flex flex-col gap-1 relative'>
                 <div className={`text-xs p-1 px-2 max-w-[120px] truncate -pb-1 absolute left-0 -top-6 rounded-t-md border-t border-x ${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"}`}>{isAuthor ? props.room.author.name : props.room.user.name}</div>
                 <div className='text-black'>
                     {props.room.demandId && props.room.demandId.length > 0 && <div className='p-1 px-2 bg-zinc-300 rounded text-xs scale-90 origin-top-left'>demand</div>}
-                    <div className={`${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2 flex justify-between items-center`}>
+                    <div className={`${bid?.userId === props.user?.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2 flex justify-between items-center`}>
                         <div className='text-center flex flex-col justify-center items-center'>
                             <div>Quantity</div>
                             <div className='font-bold text-base'>{totalQuantity}</div>
                         </div>
                         {bid && <div className='text-center flex flex-col justify-center items-center'>
                             <div>Running Bid</div>
-                            <div className={`font-bold text-base  ${bid?.user?.id === props.user.id ? "text-zinc-700" : "text-amber-700"}`}>{formatCurrency(bid.price ?? 0)}</div>
+                            <div className={`font-bold text-base  ${bid?.user?.id === props.user?.id ? "text-zinc-700" : "text-amber-700"}`}>{formatCurrency(bid.price ?? 0)}</div>
                         </div>}
                     </div>
                 </div>
