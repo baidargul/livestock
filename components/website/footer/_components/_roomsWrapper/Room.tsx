@@ -1,6 +1,7 @@
 import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
 import { formatCurrency } from '@/lib/utils'
 import React, { useEffect, useState } from 'react'
+import RoomStatus from './RoomStatus'
 
 type Props = {
     room: any
@@ -54,8 +55,11 @@ const Room = (props: Props) => {
     const isAuthor = props.room.user.id === props.user?.id
     return (
         animal && props.user && <BiddingWrapper animal={animal} room={props.room} targetRoomKey={targetRoomKey} staticStyle>
-            <div className='flex flex-col gap-1 relative'>
-                <div className={`text-xs p-1 px-2 max-w-[120px] truncate -pb-1 absolute left-0 -top-6 rounded-t-md border-t border-x ${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"}`}>{isAuthor ? props.room.author.name : props.room.user.name}</div>
+            <div className='flex flex-col gap-1 relative cursor-pointer'>
+                <div className={`text-xs p-1 px-2 max-w-[120px] flex gap-1 items-center truncate -pb-1 absolute left-0 -top-6 rounded-t-md border-t border-x ${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"}`}>
+                    <RoomStatus room={props.room} />
+                    {isAuthor ? props.room.author.name : props.room.user.name}
+                </div>
                 <div className='text-black'>
                     {props.room.demandId && props.room.demandId.length > 0 && <div className='p-1 px-2 bg-zinc-300 rounded text-xs scale-90 origin-top-left'>demand</div>}
                     <div className={`${bid?.userId === props.user?.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2 flex justify-between items-center`}>
