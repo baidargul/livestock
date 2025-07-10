@@ -1,7 +1,7 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import Room from './Room'
-import { ChevronDown, ChevronLeftIcon } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { images } from '@/consts/images'
@@ -11,153 +11,158 @@ type Props = {
     user: any
 }
 
-const Rooms = (props: Props) => {
-    const [isMounted, setIsMounted] = useState(false)
-    const [isReady, setIsReady] = useState(false)
+const Rooms = ({ rooms, user }: Props) => {
     const [currentSection, setCurrentSection] = useState<"" | "myRooms" | "otherRooms">("")
-    const [myRooms, setMyRooms] = useState([])
-    const [otherRooms, setOtherRooms] = useState([])
+    const [isMounted, setIsMounted] = useState(false)
 
-    const autoSize = () => {
-        if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length > 0) {
+    // Memoize grouped rooms calculation
+    const { myRooms, otherRooms } = useMemo(() => {
+        const groupByAnimal = (rooms: any) => {
+            if (!rooms || !rooms.length) return []
+
+            const grouped = rooms.reduce((acc: any, room: any) => {
+                if (!acc[room.animalId]) {
+                    acc[room.animalId] = { rooms: [], animal: room.animal }
+                }
+                acc[room.animalId].rooms.push(room)
+                return acc
+            }, {})
+
+            return Object.values(grouped).sort((a: any, b: any) =>
+                b.rooms[0].createdAt - a.rooms[0].createdAt
+            )
+        }
+
+        return {
+            myRooms: rooms?.myRooms?.length ? groupByAnimal(rooms.myRooms) : [],
+            otherRooms: rooms?.otherRooms?.length ? groupByAnimal(rooms.otherRooms) : []
+        }
+    }, [rooms])
+
+    // Determine initial section state
+    useEffect(() => {
+        if (myRooms.length > 0 && otherRooms.length > 0) {
             setCurrentSection("")
-        } else if (props.rooms.myRooms.length > 0 && props.rooms.otherRooms.length === 0) {
+        } else if (myRooms.length > 0) {
             setCurrentSection("myRooms")
-        } else if (props.rooms.myRooms.length === 0 && props.rooms.otherRooms.length > 0) {
+        } else if (otherRooms.length > 0) {
             setCurrentSection("otherRooms")
-        } else {
-            setCurrentSection("")
         }
-    }
+        setIsMounted(true)
+    }, [myRooms, otherRooms])
 
-    useEffect(() => {
-        if (props.rooms) {
-            if (props.rooms.myRooms.length > 0) {
-                if (myRooms.length === 0) {
-                    setMyRooms(groupByAnimal(props.rooms.myRooms))
-                }
-            }
-            if (props.rooms.otherRooms.length > 0) {
-                if (otherRooms.length === 0) {
-                    setOtherRooms(groupByAnimal(props.rooms.otherRooms))
-                }
-            }
-            setIsReady(true)
-        }
-    }, [props.rooms])
+    const handleSelectSection = useCallback((e: React.MouseEvent, section: "" | "myRooms" | "otherRooms") => {
+        e.stopPropagation()
+        setCurrentSection(prev => prev === section ? "" : section)
+    }, [])
 
-    useEffect(() => {
-        if (isReady) {
-            autoSize()
-            setIsMounted(true)
-        }
-    }, [isReady])
+    const renderRoomGroup = useCallback((group: any, type: 'seller' | 'buyer') => {
+        const animal = group.animal
+        const totalQuantity = (animal?.maleQuantityAvailable || 0) + (animal?.femaleQuantityAvailable || 0)
+        const animalType = totalQuantity > 1 ? animal.type : animal.type.slice(0, -1)
+        const priceText = totalQuantity > 1 ?
+            `${formatCurrency(animal.price)} each.` :
+            `${formatCurrency(animal.price)}.`
 
-    const handleSelectSection = (section: "" | "myRooms" | "otherRooms") => {
-        if (currentSection === section) {
-            setCurrentSection("")
-        } else {
-            setCurrentSection(section)
-        }
-    }
+        return (
+            <div key={`group-${animal.id}`} className="flex flex-col gap-2 bg-white p-2">
+                <div className="flex gap-2 items-start w-full">
+                    <div className="w-[40%] relative aspect-square">
+                        <Image
+                            src={animal.images?.length ? animal.images[0].image : images.chickens.images[1]}
+                            alt={animal.breed}
+                            fill
+                            className="rounded-md h-full object-cover"
+                        />
+                    </div>
+                    <div className="w-full overflow-y-auto max-h-[200px]">
+                        <div className="sticky top-0 pb-2 bg-white z-[1]">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <div className="font-semibold tracking-wide">
+                                    {formalizeText(animal.breed)} {animalType}
+                                </div>
+                                <div className="text-sm text-zinc-500">
+                                    {formatCurrency(calculatePricing(animal).price)}
+                                </div>
+                            </div>
+                            <div className="text-xs">
+                                {totalQuantity} {animalType}, {priceText}
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-8 pt-8">
+                            {group.rooms.map((room: any) => (
+                                <Room
+                                    key={`room-${room.id}`}
+                                    room={room}
+                                    user={user}
+                                    type={type}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }, [user])
 
-    const groupByAnimal = (rooms: any) => {
-        let groupedRooms = rooms.reduce((acc: any, room: any) => {
-            acc[room.animalId] = acc[room.animalId] || { rooms: [], animal: null };
-            acc[room.animalId].animal = room.animal;
-            acc[room.animalId].rooms.push(room);
-            return acc;
-        }, {});
-        // sort by room.createdAt desc
-        groupedRooms = Object.values(groupedRooms).sort((a: any, b: any) => b.rooms[0].createdAt - a.rooms[0].createdAt);
-        return Object.values(groupedRooms) as any;
-    }
+    if (!isMounted) return null
 
     return (
-        isMounted && <div className='w-full h-full text-zinc-700'>
-            <div onClick={() => handleSelectSection("myRooms")} className='flex p-2 justify-between items-center bg-zinc-100'>
-                <div className='text-zinc-700 font-semibold text-lg tracking-tight'>Selling Rooms</div>
-                <ChevronLeftIcon size={20} className={`transition-all duration-300 ease-in-out ${currentSection === "myRooms" ? "-rotate-90" : ""}`} />
+        <div className="w-full h-full text-zinc-700">
+            {/* Selling Rooms Section */}
+            <div
+                onClick={(e) => handleSelectSection(e, "myRooms")}
+                className="flex p-2 justify-between items-center bg-zinc-100 cursor-pointer"
+            >
+                <div className="font-semibold text-lg tracking-tight">
+                    Selling Rooms
+                </div>
+                <ChevronLeftIcon
+                    size={20}
+                    className={`transition-transform duration-300 ${currentSection === "myRooms" ? "-rotate-90" : ""
+                        }`}
+                />
             </div>
-            <section style={{ height: currentSection === "myRooms" ? "90%" : currentSection === "otherRooms" ? "0px" : "50%" }} className='p-2 cursor-pointer border-b border-zinc-400 mb-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
-                {myRooms.length > 0 &&
-                    <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
-                        {
-                            myRooms.map((group: any, index: number) => {
-                                const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
-                                return (
-                                    <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
-                                        <div className='flex gap-2 items-start w-full'>
-                                            <Image src={group.animal.images.length > 0 ? group.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[40%] rounded-md h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
-                                            <div className='w-full overflow-y-auto h-[200px]'>
-                                                <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
-                                                    <div className='flex flex-col items-start lg:flex-row justify-between sm:items-center  w-full'>
-                                                        <div className=' text font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
-                                                        <div className='text-sm text-zinc-500 -mt-1'>{formatCurrency(calculatePricing(group.animal).price)}</div>
-                                                    </div>
-                                                    <div className='text-xs -mt-1'>
-                                                        <div>{totalQuantity} {totalQuantity > 1 ? group.animal.type : group.animal.type.slice(0, group.animal.type.length - 1)}, {totalQuantity > 1 ? `${formatCurrency(group.animal.price)} each.` : `${formatCurrency(group.animal.price)}.`}</div>
-                                                    </div>
-                                                </div>
-                                                <div className='flex flex-col gap-8 pt-6'>
-                                                    {
-                                                        group.rooms.map((room: any, index: number) => {
-                                                            return (
-                                                                <Room room={room} key={`${room.key}-${index}`} user={props.user} type='seller' />
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
+            <section
+                style={{
+                    height: currentSection === "myRooms" ? "90%" :
+                        currentSection === "otherRooms" ? "0" : "50%"
+                }}
+                className="p-2 border-b border-zinc-400 mb-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
+            >
+                {myRooms.length > 0 && (
+                    <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
+                        {myRooms.map((group: any) => renderRoomGroup(group, 'seller'))}
                     </div>
-                }
+                )}
             </section>
-            <div onClick={() => handleSelectSection("otherRooms")} className='flex p-2 justify-between items-center bg-zinc-100'>
-                <div className='text-zinc-700 font-semibold text-lg tracking-tight'>Buying Rooms</div>
-                <ChevronLeftIcon size={20} className={`transition-all duration-300 ease-in-out ${currentSection === "otherRooms" ? "-rotate-90" : ""}`} />
+
+            {/* Buying Rooms Section */}
+            <div
+                onClick={(e) => handleSelectSection(e, "otherRooms")}
+                className="flex p-2 justify-between items-center bg-zinc-100 cursor-pointer"
+            >
+                <div className="font-semibold text-lg tracking-tight">
+                    Buying Rooms
+                </div>
+                <ChevronLeftIcon
+                    size={20}
+                    className={`transition-transform duration-300 ${currentSection === "otherRooms" ? "-rotate-90" : ""
+                        }`}
+                />
             </div>
-            <section style={{ height: currentSection === "otherRooms" ? "85%" : currentSection === "myRooms" ? "0px" : "50%" }} className='p-2 border-b border-zinc-400 bg-gradient-to-b from-zinc-100 to-transparent cursor-pointer transition-all duration-300 ease-in-out flex flex-col gap-1 w-full'>
-                {otherRooms.length > 0 &&
-                    <div className='flex flex-col gap-4 h-full overflow-y-auto pr-2 relative'>
-                        {
-                            otherRooms.map((group: any, index: number) => {
-                                const totalQuantity = Number(group.animal?.maleQuantityAvailable ?? 0) + Number(group.animal?.femaleQuantityAvailable ?? 0)
-                                return (
-                                    <div key={`group-${index}`} className={`flex flex-col gap-2 bg-white p-2`}>
-                                        <div className='flex gap-2 items-start w-full'>
-                                            <Image src={group.animal.images.length > 0 ? group.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-[30%] h-full group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
-                                            <div className='w-full overflow-y-auto h-[200px]'>
-                                                <div className='w-full z-[1] sticky top-0 pb-2 bg-white'>
-                                                    <div className='flex flex-col items-start lg:flex-row justify-between sm:items-center  w-full'>
-                                                        <div className=' text-xl font-semibold tracking-wide'>{formalizeText(group.animal.breed)} {group.animal.type.slice(0, group.animal.type.length - 1)}</div>
-                                                        <div className=' text-xl'>{formatCurrency(calculatePricing(group.animal).price)}</div>
-                                                    </div>
-                                                    <div className='-mt-1 sm:-mt-1'>
-                                                        <div>{totalQuantity} {totalQuantity > 1 ? group.animal.type : group.animal.type.slice(0, group.animal.type.length - 1)}, {totalQuantity > 1 ? `${formatCurrency(group.animal.price)} each.` : `${formatCurrency(group.animal.price)}.`}</div>
-                                                    </div>
-                                                </div>
-                                                <div className='flex flex-col gap-8 pt-6'>
-                                                    {
-                                                        group.rooms.map((room: any, index: number) => {
-                                                            return (
-                                                                <Room room={room} key={`${room.key}-${index}`} user={props.user} type='buyer' />
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
+            <section
+                style={{
+                    height: currentSection === "otherRooms" ? "85%" :
+                        currentSection === "myRooms" ? "0" : "50%"
+                }}
+                className="p-2 border-b border-zinc-400 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
+            >
+                {otherRooms.length > 0 && (
+                    <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
+                        {otherRooms.map((group: any) => renderRoomGroup(group, 'buyer'))}
                     </div>
-                }
+                )}
             </section>
         </div>
     )
