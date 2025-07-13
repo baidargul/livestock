@@ -2,6 +2,8 @@ import React from 'react'
 import SiteLogo from '../../logo/SiteLogo'
 import Textbox from '@/components/ui/Textbox'
 import ProfileMenu from './_components/ProfileMenu'
+import { ChartAreaIcon, ChartBarIncreasing, ChartCandlestickIcon } from 'lucide-react'
+import RoomsWrapper from '../../footer/_components/RoomsWrapper'
 
 type Props = {}
 
@@ -24,6 +26,11 @@ const DesktopHeaderHome = (props: Props) => {
                 </div>
                 <div className='menu-item'>
                     Demands
+                </div>
+                <div className='menu-item'>
+                    <RoomsWrapper>
+                        <ChartCandlestickIcon />
+                    </RoomsWrapper>
                 </div>
                 <div className='menu-item'>
                     <ProfileMenu />
