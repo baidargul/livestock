@@ -4,12 +4,14 @@ import Textbox from '@/components/ui/Textbox'
 import ProfileMenu from './_components/ProfileMenu'
 import { ChartAreaIcon, ChartBarIncreasing, ChartCandlestickIcon } from 'lucide-react'
 import RoomsWrapper from '../../footer/_components/RoomsWrapper'
+import FetchLastestRooms from '@/components/Fetchers/FetchLastestRooms'
 
 type Props = {}
 
 const DesktopHeaderHome = (props: Props) => {
     return (
         <div className='w-full p-4 pr-6 bg-zinc-100 border-b border-zinc-200 flex justify-between gap-4 mb-10'>
+            <FetchLastestRooms />
             <div className='flex gap-1 items-center w-full'>
                 <SiteLogo size='lg' />
                 <div>
