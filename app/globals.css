@@ -27,6 +27,10 @@
   .text-primary {
     @apply text-emerald-600 select-none;
   }
+
+  .menu-item {
+    @apply p-1 px-2 hover:bg-white/40 hover:border-b hover:border-zinc-200 transition duration-300 cursor-pointer rounded;
+  }
 }
 
 @layer components {
