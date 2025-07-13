@@ -21,7 +21,7 @@ const ProductGallery = (props: Props) => {
                 </div>
                 <div className='flex flex-col gap-1 overflow-y-auto max-h-[400px]'>
                     {
-                        [...otherImages, ...otherImages].map((image: any, index: number) => {
+                        otherImages.map((image: any, index: number) => {
 
                             return (
                                 <MediaViewer key={`${image.id}-${index}`} image={image.image ?? images.chickens.images[1]}>
