@@ -24,7 +24,7 @@ const SiteLogo: React.FC<Props> = ({ size = 'md' }) => {
             loading="lazy"
             layout="fixed"
             quality={100}
-            className={`${cls} select-none`}
+            className={`${cls} select-none pointer-events-none`}
             draggable={false}
         />
     )
