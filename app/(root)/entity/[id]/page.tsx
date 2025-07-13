@@ -37,7 +37,15 @@ const page = async (props: Props) => {
         animal && <>
             <section className='relative w-full min-h-[100vh] hidden md:block'>
                 <div className='p-4 flex gap-2 items-start'>
-                    <ProductGallery images={animal.images} />
+                    <div>
+                        <ProductGallery images={animal.images} />
+                        <div className=''>
+                            <h1 className='text-lg text-start font-bold text-gray-800 mt-4'>{formalizeText(animal?.breed ?? "")} {formalizeText(animal?.type ?? "")}</h1>
+                            <div className='max-w-[620px]'>
+                                <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
+                            </div>
+                        </div>
+                    </div>
                     <section>
                         <div className='flex justify-between items-center'>
                             <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
