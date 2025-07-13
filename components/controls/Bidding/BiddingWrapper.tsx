@@ -62,6 +62,12 @@ const BiddingWrapper = (props: Props) => {
     }
 
     useEffect(() => {
+        setFinalBids([])
+        setTempMessageOnHold(null)
+        setThisRoomActiveBidders(0)
+    }, [activeBidRoom])
+
+    useEffect(() => {
         if (isMounted && user) {
             let room: any = null;
             let activeBidders = 0
@@ -354,7 +360,7 @@ const BiddingWrapper = (props: Props) => {
                         </div>}
                         <div ref={scrollHookRef}></div>
                     </div>
-                    {finalBids && finalBids.length > 0 && <div className='flex justify-evenly items-center gap-0'>
+                    {activeBidRoom && finalBids && finalBids.length > 0 && <div className='flex justify-evenly items-center gap-0'>
                         {
                             finalBids.map((theBid: any, index: number) => {
                                 return (
