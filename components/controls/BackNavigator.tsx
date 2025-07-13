@@ -13,7 +13,7 @@ const BackNavigator = (props: Props) => {
     }
 
     return (
-        <div className={`${props.className} cursor-pointer`} onClick={handleNavigateBack}>{props.children}</div>
+        <div className={`${props.className} cursor-pointer md:hidden`} onClick={handleNavigateBack}>{props.children}</div>
     )
 }
 

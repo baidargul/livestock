@@ -28,7 +28,7 @@ const MediaViewer = (props: Props) => {
                 </div>
             </div>
             <span
-                className=''
+                className='cursor-pointer'
                 onClick={handleOpen}
             >{props.children}</span>
         </>

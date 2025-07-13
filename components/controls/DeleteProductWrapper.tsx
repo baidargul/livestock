@@ -46,7 +46,7 @@ const DeleteProductWrapper = (props: Props) => {
     if (!isAuthor) return null
 
     return (
-        <div onClick={handleDelete} className='cursor-pointer select-none'>{props.children}</div>
+        <div onClick={handleDelete} className='cursor-pointer select-none md:hidden'>{props.children}</div>
     )
 }
 
