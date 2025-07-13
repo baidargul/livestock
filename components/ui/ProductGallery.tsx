@@ -21,10 +21,10 @@ const ProductGallery = (props: Props) => {
                 </div>
                 <div className='flex flex-col gap-1 overflow-y-auto max-h-[400px]'>
                     {
-                        [...otherImages, ...otherImages].map((image: any) => {
+                        [...otherImages, ...otherImages].map((image: any, index: number) => {
 
                             return (
-                                <MediaViewer key={image.id} image={image.image ?? images.chickens.images[1]}>
+                                <MediaViewer key={`${image.id}-${index}`} image={image.image ?? images.chickens.images[1]}>
                                     <Image src={image.image ?? images.chickens.images[1]} width={500} height={500} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[198px] h-[198px] object-cover' />
                                 </MediaViewer>
                             )
