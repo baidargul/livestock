@@ -11,6 +11,7 @@ import DeleteDemandWrapper from '@/components/controls/DeleteDemandWrapper'
 import Button from '@/components/ui/Button'
 import FullfilmentWrapper from '@/components/controls/Fullfilment/FullfilmentWrapper'
 import FulFilmentUserProtection from './_components/FulFilmentUserProtection'
+import GeneralFooter from '@/components/website/footer/GeneralFooter'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -87,7 +88,7 @@ const page = async (props: Props) => {
                     </FulFilmentUserProtection>
                 </div>
             </div>
-            <PhoneFooter />
+            <GeneralFooter />
         </div >
     )
 }

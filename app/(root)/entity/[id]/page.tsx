@@ -16,6 +16,7 @@ import { images } from '@/consts/images'
 import PhoneFooter from '@/components/website/footer/Phone'
 import BidProtection from './_components/BidProtection'
 import BidTradeView from '@/components/Animals/BidTradeView'
+import GeneralFooter from '@/components/website/footer/GeneralFooter'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -106,7 +107,7 @@ const page = async (props: Props) => {
                     <Button className='w-full'>Buy Now</Button>
                 </BidProtection>
             </div>
-            <PhoneFooter />
+            <GeneralFooter />
         </div >
     )
 }
