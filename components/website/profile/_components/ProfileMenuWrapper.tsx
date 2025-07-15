@@ -141,8 +141,21 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
                                         <TrendingUpIcon />
                                     </div>
                                     <div className=''>
-                                        <div className='font-semibold tracking-wide'>Demands</div>
-                                        <div className='text-xs tracking-wide italic text-black/60'>List of all your demands.</div>
+                                        <div className='font-semibold tracking-wide'>Post demand</div>
+                                        <div className='text-xs tracking-wide italic text-black/60'>Create a post for a new demand.</div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                        <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
+                            <Link href={'/animal/demand'}>
+                                <div className='flex flex-col gap-2 items-start'>
+                                    <div>
+                                        <List />
+                                    </div>
+                                    <div className=''>
+                                        <div className='font-semibold tracking-wide'>Demand center</div>
+                                        <div className='text-xs tracking-wide italic text-black/60'>All listed demands.</div>
                                     </div>
                                 </div>
                             </Link>
