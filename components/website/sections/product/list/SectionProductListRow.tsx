@@ -18,10 +18,10 @@ const SectionProductListRow = (props: Props) => {
     const sellerCargo = props.animal?.deliveryOptions.includes("SELLER_DELIVERY")
     const selfPickup = props.animal?.deliveryOptions.includes("SELF_PICKUP")
     return (
-        <Link href={`/entity/${props.animal?.id}`} className='w-full p-2 bg-white hover:outline-2 hover:outline-zinc-300 group rounded-md drop-shadow-lg h-full flex flex-col justify-between'>
+        <Link href={`/entity/${props.animal?.id}`} className='w-full p-2 z-0 bg-white hover:outline-2 hover:outline-zinc-300 group rounded-md drop-shadow-lg h-full flex flex-col justify-between'>
             <div className="flex flex-col items-center gap-0">
                 <div className='relative w-full bg-black border-l border-y border-zinc-200/40 rounded-md overflow-hidden'>
-                    {props.animal?.deliveryOptions.length > 0 && <div className='absolute bottom-2  z-10 right-2 bg-white rounded p-1 flex gap-1 items-center text-zinc-700 border border-zinc-500 drop-shadow-sm'>
+                    {props.animal?.deliveryOptions.length > 0 && <div className='absolute bottom-2  z-[1] right-2 bg-white rounded p-1 flex gap-1 items-center text-zinc-700 border border-zinc-500 drop-shadow-sm'>
                         {sellerCargo && <div title='SELLER CARGO'>
                             <TruckIcon size={20} />
                         </div>}
