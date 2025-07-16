@@ -9,6 +9,8 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import DemandCard from './_components/DemandCard'
 import { useSession } from '@/hooks/useSession'
+import { FilterIcon } from 'lucide-react'
+import FilterMenuWrapper from './_components/FilterMenuWrapper'
 
 type Props = {}
 
@@ -88,12 +90,26 @@ const page = (props: Props) => {
     }
 
     return (
-        <div className='flex flex-col justify-between'>
-            <GeneralHeader />
-            <section className='p-2'>
-                <h1 className='text-2xl font-semibold tracking-tight'>Demand Center</h1>
+        <div className='flex flex-col justify-between w-full min-h-[100dvh]'>
+            <div>
+                <GeneralHeader />
+                <div className='flex justify-between items-center px-4'>
+                    <h1 className='text-2xl font-semibold tracking-tight '>Demand Center</h1>
+                    <div className='flex items-center gap-2'>
+                        <span className='text-zinc-700'>
+                            {demands && demands.length > 0 && <p>{`(${demands.length}) -`}</p>}
+                        </span>
+                        <span>
+                            <FilterMenuWrapper where={where} setWhere={setWhere}>
+                                <FilterIcon />
+                            </FilterMenuWrapper>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <section className='p-2 h-auto px-4'>
                 {/* <DemandRowLite title='Latest demands' /> */}
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-col gap-4'>
                     {/* <div className='flex flex-wrap items-start justify-center gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
                         {
                             animals.map((animal: any) => {
@@ -134,7 +150,7 @@ const page = (props: Props) => {
 
                     </div> */}
 
-                    <div className='flex flex-wrap items-start justify-start gap-2 py-10'>
+                    <div className='flex flex-wrap items-start justify-start gap-1 py-10'>
                         {
                             demands.map((demand: Demands, index: number) => {
                                 return (
@@ -146,7 +162,7 @@ const page = (props: Props) => {
                     </div>
                 </div>
             </section >
-            {/* <GeneralFooter /> */}
+            <GeneralFooter />
         </div >
     )
 }
