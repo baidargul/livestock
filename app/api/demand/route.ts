@@ -30,11 +30,14 @@ export async function GET(req: NextRequest) {
 
   try {
     const id = new URL(req.url).searchParams.get("id");
+    const where = new URL(req.url).searchParams.get("where");
     if (id) {
       const response = await actions.server.demand.list(id, "id");
       return new Response(JSON.stringify(response));
     } else {
-      const response = await actions.server.demand.listAll();
+      const response = await actions.server.demand.listAll(
+        where ? where : null
+      );
       return new Response(JSON.stringify(response));
     }
   } catch (error: any) {
@@ -45,7 +48,6 @@ export async function GET(req: NextRequest) {
     return new Response(JSON.stringify(response));
   }
 }
-
 export async function DELETE(req: NextRequest) {
   const response = {
     status: 500,

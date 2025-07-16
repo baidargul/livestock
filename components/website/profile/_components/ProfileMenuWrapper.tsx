@@ -148,7 +148,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
                             </Link>
                         </div>
                         <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
-                            <Link href={'/animal/demand'}>
+                            <Link href={'/demands'}>
                                 <div className='flex flex-col gap-2 items-start'>
                                     <div>
                                         <List />

@@ -72,7 +72,7 @@ async function list(val: any, key: string) {
     return response;
   }
 }
-async function listAll() {
+async function listAll(where?: any) {
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -80,7 +80,16 @@ async function listAll() {
   };
 
   try {
-    const allDemands = await prisma.demands.findMany();
+    const allDemands = await prisma.demands.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
     response.status = 200;
     response.message = `${allDemands.length} Demands fetched successfully`;

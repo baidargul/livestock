@@ -6,7 +6,9 @@ import Reels from '@/components/animation-wrappers/Reels'
 import { TrendingUpIcon } from 'lucide-react'
 import { useSession } from '@/hooks/useSession'
 
-type Props = {}
+type Props = {
+    title?: string
+}
 
 const DemandRowLite = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
@@ -48,7 +50,7 @@ const DemandRowLite = (props: Props) => {
     return (
         isMounted && demands && demands.length > 0 &&
         <div className="w-full mb-2">
-            <div className='mb-2 font-semibold tracking-tight flex gap-1 items-center'>Demands <TrendingUpIcon size={16} className='mt-1' /></div>
+            <div className='mb-2 font-semibold tracking-tight flex gap-1 items-center'>{props.title && props.title.length > 0 ? props.title : "Demands"} <TrendingUpIcon size={16} className='mt-1' /></div>
             <div className='w-full relative pt-2'>
                 <div className='w-[20%] h-full absolute top-0 right-0 pointer-events-none bg-gradient-to-l z-10 from-white to-transparent'></div>
                 <div className='w-[20%] h-full absolute top-0 left-0 pointer-events-none bg-gradient-to-r z-10 from-white to-transparent'></div>

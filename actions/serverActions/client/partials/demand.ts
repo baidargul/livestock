@@ -20,8 +20,8 @@ async function list(id: string) {
   });
   return response.data;
 }
-async function listAll() {
-  const response = await axios.get(`/api/demand`);
+async function listAll(where?: any) {
+  const response = await axios.get(`/api/demand?where=${where}`);
   return response.data;
 }
 async function removeDemand(id: string) {

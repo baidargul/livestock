@@ -58,13 +58,20 @@ const Reels = ({
             reelRef.current.scrollTop += scrollAmount;
             if (reelRef.current.scrollTop <= 0 && invert) {
               reelRef.current.scrollTop = reelRef.current.scrollHeight / 2;
-              images.unshift(...addImages());
+              try {
+                images.unshift(...addImages());
+              } catch (error) {
+
+              }
             } else if (
               reelRef.current.scrollTop >= reelRef.current.scrollHeight / 2 &&
               !invert
             ) {
-              reelRef.current.scrollTop = 0; // Reset scroll
-              images.unshift(...addImages());
+              try {
+                reelRef.current.scrollTop = 0; // Reset scroll
+                images.unshift(...addImages());
+              } catch (error) {
+              }
             }
           } else {
             reelRef.current.scrollLeft += scrollAmount;
