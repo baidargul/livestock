@@ -121,48 +121,51 @@ const FullfilmentWrapper = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed bottom-14 h-[80%] select-none flex flex-col justify-between gap-2 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
-
-                <div className='flex flex-col gap-1'>
-                    <div className='font-semibold text-lg p-1 bg-emerald-50 text-emerald-700'>
-                        📌 Please choose the appropriate post to satisfy this demand.
-                    </div>
-                    <Textbox label='Search' value={searchCriteria} onChange={handleSearchCriteria} />
-                </div>
-                <div className=''>
-                    {
-                        filteredPosts.length > 0 ? (
-                            <div className='grid grid-cols-2 gap-2 w-full overflow-y-auto h-[60%] pb-10'>
+            <div className={`fixed bottom-14 h-[80%] select-none flex flex-col gap-2 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
+                <div className='flex flex-col justify-between w-full h-full'>
+                    <div className='flex flex-col gap-1 h-[80%]'>
+                        <div className='flex flex-col h-full'>
+                            <div className='font-semibold text-lg p-1 bg-emerald-50 text-emerald-700'>
+                                📌 Please choose the appropriate post to satisfy this demand.
+                            </div>
+                            <Textbox label='Search' value={searchCriteria} onChange={handleSearchCriteria} />
+                            <div className='h-full overflow-y-auto mt-2'>
                                 {
-                                    filteredPosts.map((animal: any, index: number) => {
+                                    filteredPosts.length > 0 ? (
+                                        <div className='grid grid-cols-2 gap-2 w-full overflow-y-auto pb-10'>
+                                            {
+                                                filteredPosts.map((animal: any, index: number) => {
 
-                                        if (searchCriteria.length > 0) {
-                                            const isExists =
-                                                animal.type.toLowerCase().includes(searchCriteria.toLowerCase()) ||
-                                                animal.breed.toLowerCase().includes(searchCriteria.toLowerCase()) ||
-                                                animal.title.toLowerCase().includes(searchCriteria.toLowerCase())
+                                                    if (searchCriteria.length > 0) {
+                                                        const isExists =
+                                                            animal.type.toLowerCase().includes(searchCriteria.toLowerCase()) ||
+                                                            animal.breed.toLowerCase().includes(searchCriteria.toLowerCase()) ||
+                                                            animal.title.toLowerCase().includes(searchCriteria.toLowerCase())
 
-                                            if (!isExists) {
-                                                return null;
+                                                        if (!isExists) {
+                                                            return null;
+                                                        }
+
+                                                    }
+
+                                                    return (
+                                                        <div onClick={() => handleSelect(index)} key={`${animal.id}-${index}`} className={`drop-shadow-sm ${index === currentSelection ? "bg-emerald-50" : "bg-white"}  rounded-md p-2 cursor-pointer`}>
+                                                            <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={200} alt={animal.title} layout='fixed' quality={70} className='w-full h-[100px] object-cover rounded-lg' />
+                                                            <div className='text-lg font-semibold'>{animal.title}</div>
+                                                            <div className='text -mt-1 tracking-tight'>{animal.description}</div>
+                                                            <div className='text-2xl font-semibold tracking-widest -mt-1 text-right text-emerald-600'>{formatCurrency(animal.price)}</div>
+                                                        </div>
+                                                    )
+                                                })
                                             }
-
-                                        }
-
-                                        return (
-                                            <div onClick={() => handleSelect(index)} key={`${animal.id}-${index}`} className={`drop-shadow-sm ${index === currentSelection ? "bg-emerald-50" : "bg-white"}  rounded-md p-2 cursor-pointer`}>
-                                                <Image src={animal.images[0]?.image || images.chickens.covers[0]} width={300} height={200} alt={animal.title} layout='fixed' quality={70} className='w-full h-[100px] object-cover rounded-lg' />
-                                                <div className='text-lg font-semibold'>{animal.title}</div>
-                                                <div className='text -mt-1 tracking-tight'>{animal.description}</div>
-                                                <div className='text-2xl font-semibold tracking-widest -mt-1 text-right text-emerald-600'>{formatCurrency(animal.price)}</div>
-                                            </div>
-                                        )
-                                    })
+                                        </div>
+                                    ) : (
+                                        <div className='text-sm text-zinc-600'>No listings found</div>
+                                    )
                                 }
                             </div>
-                        ) : (
-                            <div className='text-sm text-zinc-600'>No listings found</div>
-                        )
-                    }
+                        </div>
+                    </div>
                     <div className='grid grid-cols-2 w-full gap-2 mt-3'>
                         <Button onClick={() => handleLeaveRoom(true)} variant='btn-secondary' className='w-full'>Cancel</Button>
                         <Button onClick={handleFulFilRequest} className='w-full' disabled={currentSelection === -1} >Select</Button>
