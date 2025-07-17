@@ -150,7 +150,7 @@ const page = (props: Props) => {
 
                     </div> */}
 
-                    <div className='flex flex-wrap items-start justify-start gap-1 py-10'>
+                    <div className='flex flex-wrap items-start justify-start gap-4 py-10'>
                         {
                             demands.map((demand: Demands, index: number) => {
                                 return (
@@ -158,7 +158,6 @@ const page = (props: Props) => {
                                 )
                             })
                         }
-
                     </div>
                 </div>
             </section >

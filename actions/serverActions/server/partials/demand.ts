@@ -80,7 +80,7 @@ async function listAll(where?: any) {
   };
 
   try {
-    const allDemands = await prisma.demands.findMany({
+    let allDemands: any = await prisma.demands.findMany({
       include: {
         user: {
           select: {
@@ -91,9 +91,22 @@ async function listAll(where?: any) {
       },
     });
 
+    let theDemands = allDemands.map(async (demand: any) => {
+      const activeRooms = await prisma.bidRoom.findMany({
+        where: {
+          demandId: demand.id,
+        },
+      });
+
+      return {
+        ...demand,
+        activeRooms: activeRooms.length,
+      };
+    });
+
+    response.data = await Promise.all(theDemands);
     response.status = 200;
-    response.message = `${allDemands.length} Demands fetched successfully`;
-    response.data = allDemands;
+    response.message = `${response.data.length} Demands fetched successfully`;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
