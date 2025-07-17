@@ -55,7 +55,7 @@ const DemandRowLite = (props: Props) => {
             <div className='w-full relative pt-2'>
                 <div className='w-[20%] h-full absolute top-0 right-0 pointer-events-none bg-gradient-to-l z-10 from-white to-transparent'></div>
                 <div className='w-[20%] h-full absolute top-0 left-0 pointer-events-none bg-gradient-to-r z-10 from-white to-transparent'></div>
-                <Marquee speed={100}>
+                <Marquee speed={100} pauseOnHover>
                     {
                         demands.map((image: any, index: number) => {
                             return (
