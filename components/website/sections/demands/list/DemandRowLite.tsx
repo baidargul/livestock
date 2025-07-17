@@ -5,6 +5,7 @@ import DemandLite from './DemandLite'
 import Reels from '@/components/animation-wrappers/Reels'
 import { TrendingUpIcon } from 'lucide-react'
 import { useSession } from '@/hooks/useSession'
+import Marquee from 'react-fast-marquee'
 
 type Props = {
     title?: string
@@ -54,7 +55,17 @@ const DemandRowLite = (props: Props) => {
             <div className='w-full relative pt-2'>
                 <div className='w-[20%] h-full absolute top-0 right-0 pointer-events-none bg-gradient-to-l z-10 from-white to-transparent'></div>
                 <div className='w-[20%] h-full absolute top-0 left-0 pointer-events-none bg-gradient-to-r z-10 from-white to-transparent'></div>
-                <Reels direction='horizontal' fps={60} gap={0} images={demands} directObject />
+                <Marquee speed={100}>
+                    {
+                        demands.map((image: any, index: number) => {
+                            return (
+                                <div key={index}>
+                                    {image}
+                                </div>
+                            )
+                        })
+                    }
+                </Marquee>
             </div>
         </div>
     )
