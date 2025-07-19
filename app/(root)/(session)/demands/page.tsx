@@ -100,7 +100,7 @@ const page = (props: Props) => {
                             {demands && demands.length > 0 && <p>{`(${demands.length}) -`}</p>}
                         </span>
                         <span>
-                            <FilterMenuWrapper where={where} setWhere={setWhere}>
+                            <FilterMenuWrapper where={where} setWhere={setWhere} handleSelectAnimal={handleSelectAnimal} animals={animals}>
                                 <FilterIcon />
                             </FilterMenuWrapper>
                         </span>
@@ -110,45 +110,7 @@ const page = (props: Props) => {
             <section className='p-2 h-auto px-4'>
                 {/* <DemandRowLite title='Latest demands' /> */}
                 <div className='flex flex-col gap-4'>
-                    {/* <div className='flex flex-wrap items-start justify-center gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
-                        {
-                            animals.map((animal: any) => {
-                                return (
-                                    <div
-                                        key={animal.id}
-                                        className={`relative w-20 sm:w-[400px] h-20 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer ${where?.type && where?.type === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"
-                                            }`}
-                                        onClick={() => handleSelectAnimal(animal)}
-                                    >
-                                        <Image
-                                            src={animal.image}
-                                            alt={animal.name}
-                                            priority
-                                            layout="fixed"
-                                            width={100}
-                                            height={100}
-                                            className={`w-full h-full absolute inset-0 z-0 object-cover mb-2 rounded-lg ${where?.type && where?.type === animal.name.toLocaleLowerCase() ? "" : ""
-                                                } ${where?.type && where?.type !== animal.name.toLocaleLowerCase() ? "grayscale blur-[1px] opacity-70" : ""
-                                                }`}
-                                        />
-                                        <div
-                                            className={`text-lg absolute z-10 bottom-0 left-1/2 -translate-x-1/2 font-semibold transition-all duration-200 ease-in-out ${where?.type && where?.type === animal.name.toLocaleLowerCase()
-                                                ? "bg-gradient-to-t from-emerald-700/40 to-transparent h-10"
-                                                : "bg-gradient-to-t from-black/50 to-transparent h-14"
-                                                } w-full text-white text-center`}
-                                        ></div>
-                                        <h1
-                                            className={`text-lg absolute z-10 bottom-2 left-2 font-semibold transition-all duration-200 ease-in-out w-full text-white`}
-                                            style={{ textShadow: "1px 1px 2px black" }}
-                                        >
-                                            {animal.name}
-                                        </h1>
-                                    </div>
-                                );
-                            })
-                        }
 
-                    </div> */}
 
                     <div className='flex flex-wrap items-start justify-start gap-4 py-10'>
                         {
