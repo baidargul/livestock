@@ -30,7 +30,13 @@ export async function GET(req: NextRequest) {
 
   try {
     const id = new URL(req.url).searchParams.get("id");
-    const where = new URL(req.url).searchParams.get("where");
+    let where: any = new URL(req.url).searchParams.get("where");
+
+    if (where) {
+      where = JSON.parse(where);
+      where = { where: { ...where } };
+    }
+
     if (id) {
       const response = await actions.server.demand.list(id, "id");
       return new Response(JSON.stringify(response));

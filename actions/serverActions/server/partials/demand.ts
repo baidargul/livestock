@@ -80,17 +80,31 @@ async function listAll(where?: any) {
   };
 
   try {
-    let allDemands: any = await prisma.demands.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
+    let allDemands: any;
+    if (where) {
+      allDemands = await prisma.demands.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
-
+        ...where,
+      });
+    } else {
+      allDemands = await prisma.demands.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+    }
     let theDemands = allDemands.map(async (demand: any) => {
       const activeRooms = await prisma.bidRoom.findMany({
         where: {

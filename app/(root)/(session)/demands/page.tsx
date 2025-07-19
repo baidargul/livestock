@@ -9,8 +9,9 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import DemandCard from './_components/DemandCard'
 import { useSession } from '@/hooks/useSession'
-import { FilterIcon } from 'lucide-react'
+import { FilterIcon, XIcon } from 'lucide-react'
 import FilterMenuWrapper from './_components/FilterMenuWrapper'
+import { formalizeText } from '@/lib/utils'
 
 type Props = {}
 
@@ -22,8 +23,8 @@ const page = (props: Props) => {
 
     })
 
-    const fetchDemands = async () => {
-        const res = await actions.client.demand.listAll(where)
+    const fetchDemands = async (forcedWhere?: any) => {
+        const res = await actions.client.demand.listAll(forcedWhere ? forcedWhere : where)
         setDemands(res.data)
     }
 
@@ -100,7 +101,7 @@ const page = (props: Props) => {
     }
 
     return (
-        <div className='flex flex-col justify-between w-full min-h-[100dvh]'>
+        <div className='flex flex-col justify-between w-full min-h-[100dvh] select-none'>
             <div>
                 <GeneralHeader />
                 <div className='flex justify-between items-center px-4'>
@@ -110,12 +111,18 @@ const page = (props: Props) => {
                             {demands && demands.length > 0 && <p>{`(${demands.length}) -`}</p>}
                         </span>
                         <span>
-                            <FilterMenuWrapper where={where} setWhere={setWhere} handleSelectAnimal={handleSelectAnimal} animals={animals} handleSelectBreed={handleSelectBreed}>
-                                <FilterIcon />
+                            <FilterMenuWrapper where={where} setWhere={setWhere} handleSelectAnimal={handleSelectAnimal} animals={animals} handleSelectBreed={handleSelectBreed} fetchDemands={fetchDemands}>
+                                <FilterIcon className={`${where?.type || where?.breed ? "fill-emerald-100" : "text-zinc-700"}`} />
                             </FilterMenuWrapper>
                         </span>
                     </div>
                 </div>
+                {(where?.type || where?.breed) && <div className='px-4'>
+                    <div className='scale-75 origin-top-left w-fit flex items-center gap-1 p-1 text-emerald-700 rounded bg-emerald-50 border border-emerald-100'>
+                        {where?.breed && <div onClick={() => { const raw = { ...where }; delete raw.breed; setWhere(() => raw); fetchDemands(raw) }} className='flex items-center gap-1 cursor-pointer'>{formalizeText(where?.breed ?? "")} <XIcon className='text-xs' /></div>}
+                        {where?.type && <div onClick={() => { const raw = { ...where }; delete raw.type; setWhere(() => raw); fetchDemands(raw) }} className='flex items-center gap-1 cursor-pointer'>{`${formalizeText(where?.type ?? "")}`} <XIcon className='text-xs' /></div>}
+                    </div>
+                </div>}
             </div>
             <section className='p-2 h-auto px-4'>
                 {/* <DemandRowLite title='Latest demands' /> */}

@@ -1,4 +1,5 @@
 'use client'
+import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
 import { XIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -11,6 +12,7 @@ type Props = {
     handleSelectAnimal: any
     animals: any
     handleSelectBreed: any
+    fetchDemands: () => void
 }
 
 const FilterMenuWrapper = (props: Props) => {
@@ -22,15 +24,15 @@ const FilterMenuWrapper = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed top-0 right-0 bg-white w-[90%] h-full z-[52] ${!open && "translate-x-full"} transition-all duration-200 ease-in-out p-4`}>
-                <div className='flex gap-1 justify-between items-center'>
+            <div className={`fixed top-0 right-0 bg-white flex flex-col justify-between  w-[90%] h-full z-[52] ${!open && "translate-x-full"} transition-all duration-200 ease-in-out p-4`}>
+                <div className='flex gap-1 justify-between items-center mb-2'>
                     <div className='text-xl font-semibold'>Filters</div>
                     <div onClick={() => handleOpen(false)} className='cursor-pointer'>
                         <XIcon className='text-base text-zinc-700' />
                     </div>
                 </div>
                 <section className='w-full flex flex-col gap-1 h-[90dvh] overflow-y-auto'>
-                    <div className='flex flex-wrap items-start justify-start gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
+                    <div className='flex flex-wrap items-start justify-start gap-4 w-full h-[50%] max-h-[60vh] overflow-y-auto'>
                         {
                             props.animals.map((animal: any) => {
                                 return (
@@ -71,7 +73,7 @@ const FilterMenuWrapper = (props: Props) => {
                     </div>
                     <div>
                         <div className='font-semibold text-xl my-2'>Breed:</div>
-                        <div className='flex flex-wrap items-start justify-start gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
+                        <div className='flex flex-wrap items-start justify-start gap-4 w-full h-[60%] max-h-[60vh] overflow-y-auto'>
                             {
                                 props.where?.type && images[props.where?.type]?.breeds.map((animal: any, index: number) => {
                                     return (
@@ -86,6 +88,10 @@ const FilterMenuWrapper = (props: Props) => {
                         </div>
                     </div>
                 </section>
+                <div className='flex justify-between items-center gap-2 w-full'>
+                    <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
+                    <Button onClick={() => { props.fetchDemands(); handleOpen(false) }} className='w-full' variant='btn-primary'>Filter</Button>
+                </div>
             </div>
             <div onClick={() => handleOpen(!open)} className={`cursor-pointer text-zinc-700`}>{props.children}</div>
             <div onClick={() => handleOpen(false)} className={`inset-0 fixed top-0 left-0 z-50 bg-black/50 backdrop-blur-[1px] transition duration-200 ${open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}></div>

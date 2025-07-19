@@ -21,7 +21,9 @@ async function list(id: string) {
   return response.data;
 }
 async function listAll(where?: any) {
-  const response = await axios.get(`/api/demand?where=${where}`);
+  const response = await axios.get(
+    `/api/demand?where=${JSON.stringify(where)}`
+  );
   return response.data;
 }
 async function removeDemand(id: string) {
