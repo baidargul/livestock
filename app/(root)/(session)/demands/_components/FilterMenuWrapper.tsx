@@ -101,14 +101,12 @@ const FilterMenuWrapper = (props: Props) => {
                     </div>
                     <div className='h-[25%]'>
                         <div className='font-semibold text-xl my-2'>Breed:</div>
-                        <div className='flex flex-wrap items-start justify-start gap-4 w-full h-[60%] max-h-[60vh] overflow-y-auto'>
+                        <div className='columns-3 sm:columns-5 w-full h-[60%] max-h-[60vh] overflow-y-auto'>
                             {
                                 props.where?.type && images[props.where?.type]?.breeds.map((animal: any, index: number) => {
                                     return (
-                                        <div key={`${animal.id}-${index}`} className={`relative w-26 sm:w-[400px] h-24 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer  ${props.where?.breed && props.where?.breed === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"}`} onClick={() => props.handleSelectBreed(animal)}>
-                                            <Image src={animal.images[0]} alt={animal.name} priority layout='fixed' width={100} height={100} className={`w-full h-full absolute inset-0 z-0 object-cover mb-2 rounded-lg ${props.where?.breed && props.where?.breed === animal.name.toLocaleLowerCase() ? "" : ``} ${props.where?.breed && props.where?.breed !== animal.name.toLocaleLowerCase() ? "grayscale blur-[1px] opacity-70 brightness-50" : ``}`} />
-                                            <div className={`text-lg absolute z-10 bottom-0 left-1/2 -translate-x-1/2 font-semibold transition-all duration-200 ease-in-out ${props.where?.breed && props.where?.breed === animal.name.toLocaleLowerCase() ? "bg-gradient-to-t from-emerald-700/40 to-transparent h-10" : "bg-gradient-to-t from-black/50 to-transparent h-14"}  w-full text-white text-center`}></div>
-                                            <h1 className={`text-lg absolute z-10 bottom-2 left-2 font-semibold transition-all duration-200 ease-in-out  w-full text-white`} style={{ textShadow: "1px 1px 2px black" }}>{animal.name}</h1>
+                                        <div key={`${animal.id}-${index}`} className={`w-fit cursor-pointer p-1 rounded transition-all duration-200 ease-in-out  ${props.where?.breed && props.where?.breed === animal.name.toLocaleLowerCase() ? "text-emerald-700 bg-emerald-50" : "hover:bg-gray-100 text-zinc-700"}`} onClick={() => props.handleSelectBreed(animal)}>
+                                            <h1 className={`text-sm font-semibold transition-all duration-200 ease-in-out w-full`}>{animal.name}</h1>
                                         </div>
                                     )
                                 })
