@@ -91,7 +91,9 @@ const page = (props: Props) => {
 
     const handleSelectBreed = (breed: any) => {
         if (breed.name.toLocaleLowerCase() === where?.breed) {
-            setWhere({})
+            const raw = { ...where }
+            delete raw.breed
+            setWhere(raw)
         } else {
             setWhere({ ...where, breed: breed.name.toLocaleLowerCase() })
         }
