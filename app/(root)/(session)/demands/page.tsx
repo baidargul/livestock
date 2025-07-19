@@ -89,6 +89,14 @@ const page = (props: Props) => {
         }
     }
 
+    const handleSelectBreed = (breed: any) => {
+        if (breed.name.toLocaleLowerCase() === where?.breed) {
+            setWhere({})
+        } else {
+            setWhere({ ...where, breed: breed.name.toLocaleLowerCase() })
+        }
+    }
+
     return (
         <div className='flex flex-col justify-between w-full min-h-[100dvh]'>
             <div>
@@ -100,7 +108,7 @@ const page = (props: Props) => {
                             {demands && demands.length > 0 && <p>{`(${demands.length}) -`}</p>}
                         </span>
                         <span>
-                            <FilterMenuWrapper where={where} setWhere={setWhere} handleSelectAnimal={handleSelectAnimal} animals={animals}>
+                            <FilterMenuWrapper where={where} setWhere={setWhere} handleSelectAnimal={handleSelectAnimal} animals={animals} handleSelectBreed={handleSelectBreed}>
                                 <FilterIcon />
                             </FilterMenuWrapper>
                         </span>
