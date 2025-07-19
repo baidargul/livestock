@@ -16,7 +16,7 @@ const DemandCard = (props: Props) => {
     const totalQuantity = Number(demand.maleQuantityAvailable || 0) + Number(demand.femaleQuantityAvailable || 0)
     return (
         <Link href={`/demands/${demand.id}`} className=''>
-            <div className={`w-[300px] cursor-pointer select-none p-2 bg-white rounded shadow-sm ${demand.user.id === props.user?.id ? "bg-gradient-to-t from-emerald-50 to-transparent" : ""}`}>
+            <div className={`w-full mb-4 break-inside-avoid cursor-pointer select-none p-2 bg-white rounded shadow-sm ${demand.user.id === props.user?.id ? "bg-gradient-to-t from-emerald-50 to-transparent" : ""}`}>
                 <Image src={image} alt={`${demand.type} - ${demand.breed}`} width={50} height={50} className={`object-cover w-full h-24`} />
                 <div className='p-1'>
                     <div className='flex gap-1 items-center'>

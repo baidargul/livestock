@@ -133,7 +133,7 @@ const page = (props: Props) => {
                 <div className='flex flex-col gap-4'>
 
 
-                    <div className='flex flex-wrap items-start justify-start gap-4 py-10'>
+                    <div className='columns-2 sm:columns-5 py-10'>
                         {
                             demands.map((demand: Demands, index: number) => {
                                 return (
