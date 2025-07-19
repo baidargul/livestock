@@ -60,13 +60,13 @@ const FilterMenuWrapper = (props: Props) => {
                     </div>
                 </div>
                 <section className='w-full flex flex-col gap-1 h-[90dvh] overflow-y-auto'>
-                    <div className='flex flex-wrap items-start justify-start gap-4 w-full h-[60%] max-h-[60vh] overflow-y-auto'>
+                    <div className='flex flex-wrap w-full h-[60%] max-h-[60vh] overflow-y-auto'>
                         {
                             props.animals.map((animal: any) => {
                                 return (
                                     <div
                                         key={animal.id}
-                                        className={`relative w-28 sm:w-[400px] h-20 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer ${props.where?.type && props.where?.type === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"
+                                        className={`relative w-1/3 sm:w-1/5 h-20 sm:h-28 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer ${props.where?.type && props.where?.type === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"
                                             }`}
                                         onClick={() => props.handleSelectAnimal(animal)}
                                     >
