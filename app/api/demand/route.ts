@@ -34,6 +34,19 @@ export async function GET(req: NextRequest) {
 
     if (where) {
       where = JSON.parse(where);
+      if (where.city) {
+        where = {
+          ...where,
+          city: { mode: "insensitive", contains: where.city },
+        };
+      }
+
+      if (where.province) {
+        where = {
+          ...where,
+          province: { mode: "insensitive", contains: where.province },
+        };
+      }
       where = { where: { ...where } };
     }
 

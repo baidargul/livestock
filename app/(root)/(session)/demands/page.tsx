@@ -114,15 +114,17 @@ const page = (props: Props) => {
                         </span>
                         <span>
                             <FilterMenuWrapper where={where} setWhere={setWhere} handleSelectAnimal={handleSelectAnimal} animals={animals} handleSelectBreed={handleSelectBreed} fetchDemands={fetchDemands}>
-                                <FilterIcon className={`${where?.type || where?.breed ? "fill-emerald-100" : "text-zinc-700"}`} />
+                                <FilterIcon className={`${where?.type || where?.breed || where?.city || where?.province ? "fill-emerald-100" : "text-zinc-700"}`} />
                             </FilterMenuWrapper>
                         </span>
                     </div>
                 </div>
-                {(where?.type || where?.breed) && <div className='px-4'>
+                {(where?.type || where?.breed || where?.city || where?.province) && <div className='px-4'>
                     <div className='scale-75 origin-top-left w-fit flex items-center gap-1 p-1 text-emerald-700 rounded bg-emerald-50 border border-emerald-100'>
                         {where?.breed && <div onClick={() => { const raw = { ...where }; delete raw.breed; setWhere(() => raw); fetchDemands(raw) }} className='flex items-center gap-1 cursor-pointer'>{formalizeText(where?.breed ?? "")} <XIcon className='text-xs' /></div>}
                         {where?.type && <div onClick={() => { const raw = { ...where }; delete raw.type; setWhere(() => raw); fetchDemands(raw) }} className='flex items-center gap-1 cursor-pointer'>{`${formalizeText(where?.type ?? "")}`} <XIcon className='text-xs' /></div>}
+                        {where?.city && <div onClick={() => { const raw = { ...where }; delete raw.city; setWhere(() => raw); fetchDemands(raw) }} className='flex items-center gap-1 cursor-pointer'>{`${formalizeText(where?.city ?? "")}`} <XIcon className='text-xs' /></div>}
+                        {where?.province && <div onClick={() => { const raw = { ...where }; delete raw.province; setWhere(() => raw); fetchDemands(raw) }} className='flex items-center gap-1 cursor-pointer'>{`${formalizeText(where?.province ?? "")}`} <XIcon className='text-xs' /></div>}
                     </div>
                 </div>}
             </div>
