@@ -12,6 +12,7 @@ import { useSession } from '@/hooks/useSession'
 import { FilterIcon, XIcon } from 'lucide-react'
 import FilterMenuWrapper from './_components/FilterMenuWrapper'
 import { formalizeText } from '@/lib/utils'
+import { useLoader } from '@/hooks/useLoader'
 
 type Props = {}
 
@@ -19,13 +20,14 @@ const page = (props: Props) => {
     const [demands, setDemands] = useState([])
     const [user, setUser] = useState(null)
     const getUser = useSession((state: any) => state.getUser)
-    const [where, setWhere] = useState<any>({
-
-    })
+    const [where, setWhere] = useState<any>({})
+    const setLoading = useLoader((state: any) => state.setLoading)
 
     const fetchDemands = async (forcedWhere?: any) => {
+        setLoading(true)
         const res = await actions.client.demand.listAll(forcedWhere ? forcedWhere : where)
         setDemands(res.data)
+        setLoading(false)
     }
 
     useEffect(() => {
