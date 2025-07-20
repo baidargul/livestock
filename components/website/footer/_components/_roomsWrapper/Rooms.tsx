@@ -156,7 +156,7 @@ const Rooms = ({ rooms, user }: Props) => {
                     height: currentSection === "otherRooms" ? "85%" :
                         currentSection === "myRooms" ? "0" : "50%"
                 }}
-                className="p-2 border-b border-zinc-400 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
+                className="p-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
             >
                 {otherRooms.length > 0 && (
                     <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
