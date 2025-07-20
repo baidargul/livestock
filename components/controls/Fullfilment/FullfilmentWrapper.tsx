@@ -5,7 +5,7 @@ import Textbox from '@/components/ui/Textbox';
 import { images } from '@/consts/images';
 import { useLoader } from '@/hooks/useLoader';
 import { useSession } from '@/hooks/useSession';
-import { formatCurrency } from '@/lib/utils';
+import { calculatePricing, formatCurrency } from '@/lib/utils';
 import { useSocket } from '@/socket-client/SocketWrapper';
 import { serialize } from 'bson';
 import Image from 'next/image';
@@ -108,9 +108,13 @@ const FullfilmentWrapper = (props: Props) => {
         if (socket && user) {
             const room = {
                 animalId: animal.id,
-                authorId: animal.userId,
+                authorId: user.id,
                 userId: props.demand.userId,
                 key: `${animal.id}-${animal.userId}-${props.demand.userId}`,
+                offer: calculatePricing(animal).price,
+                deliveryOptions: animal.deliveryOptions,
+                maleQuantityAvailable: animal.maleQuantityAvailable ?? 0,
+                femaleQuantityAvailable: animal.femaleQuantityAvailable ?? 0
             }
             socket.emit("join-bidroom", serialize({ room, userId: user.id, demandId: props.demand.id }));
             setIsOpen(false);

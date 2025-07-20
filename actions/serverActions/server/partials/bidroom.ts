@@ -93,64 +93,22 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
         },
       });
 
-      // USER FIRST OFFER
-      await prisma.bids.create({
-        data: {
-          price: room.offer ?? calculatePricing(animal).price,
-          bidRoomId: newRoom.id,
-          userId: newRoom.userId,
-          intial: false,
-          isSeen: false,
-        },
-      });
+      if (!demandId) {
+        // USER FIRST OFFER
+        await prisma.bids.create({
+          data: {
+            price: room.offer ?? calculatePricing(animal).price,
+            bidRoomId: newRoom.id,
+            userId: newRoom.userId,
+            intial: false,
+            isSeen: false,
+          },
+        });
+      }
 
       isExists = newRoom;
       newRoom = null;
     }
-
-    // const existingRoom = await prisma.bidRoom.findUnique({
-    //   where: {
-    //     key: room.key,
-    //   },
-    //   include: {
-    //     animal: true,
-    //     bids: {
-    //       take: 5,
-    //       include: {
-    //         user: {
-    //           select: {
-    //             id: true,
-    //             name: true,
-    //             connectionIds: true,
-    //           },
-    //         },
-    //       },
-    //       orderBy: {
-    //         createdAt: "desc",
-    //       },
-    //     },
-    //     user: {
-    //       select: {
-    //         id: true,
-    //         name: true,
-    //         connectionIds: true,
-    //       },
-    //     },
-    //     author: {
-    //       select: {
-    //         id: true,
-    //         name: true,
-    //         connectionIds: true,
-    //       },
-    //     },
-    //   },
-    // });
-
-    // if (!existingRoom) {
-    //   response.status = 404;
-    //   response.message = `Bid room does not exist.`;
-    //   return response;
-    // }
 
     const allExceptThis: any = isExists?.activeUsers.filter(
       (user) => user !== userId
