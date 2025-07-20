@@ -29,10 +29,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const rooms = useRooms();
 
     useEffect(() => {
-        const rawUser = getUser();
-        setUser(rawUser);
+        if (!user) {
+            const rawUser = getUser();
+            setUser(rawUser);
+        }
         setIsMounted(true);
-    }, []);
+    },);
 
     useEffect(() => {
         if (isMounted) {
