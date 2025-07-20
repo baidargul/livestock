@@ -1,4 +1,5 @@
 import { actions } from "@/actions/serverActions/actions";
+import { bidsReverse } from "@/components/controls/Bidding/BiddingWrapper";
 import axios from "axios";
 import { create } from "zustand";
 
@@ -95,10 +96,17 @@ export const useRooms: any = create<RoomsState>()((set) => ({
       };
     });
   },
+
   getLatestRooms: async (userId: string) => {
     const response = await actions.client.bidRoom.listByUser(userId, null, 5);
     if (response.status === 200) {
       const { myRooms, otherRooms } = response.data;
+      for (const i in myRooms) {
+        myRooms[i].bids = bidsReverse(myRooms[i].bids);
+      }
+      for (const i in otherRooms) {
+        otherRooms[i].bids = bidsReverse(otherRooms[i].bids);
+      }
       set({
         rooms: {
           myRooms: myRooms || [],
