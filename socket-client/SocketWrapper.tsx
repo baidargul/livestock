@@ -11,6 +11,9 @@ import { io, Socket } from "socket.io-client";
 // Create a context for the socket instance
 const SocketContext = createContext<Socket | null>(null);
 
+// Create a context for the user data
+const UserContext = createContext<any>(null);
+
 // SocketProvider Props
 interface SocketProviderProps {
     children: ReactNode;
@@ -22,18 +25,18 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [user, setUser] = useState<any>(null);
     const getUser = useSession((state: any) => state.getUser);
     const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
-    const setLoading = useLoader((state: any) => state.setLoading)
-    const rooms = useRooms()
+    const setLoading = useLoader((state: any) => state.setLoading);
+    const rooms = useRooms();
 
     useEffect(() => {
         const rawUser = getUser();
         setUser(rawUser);
         setIsMounted(true);
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (isMounted) {
-            let socket: any = null
+            let socket: any = null;
             if (user) {
                 let socket = io({
                     // let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com', {
@@ -42,54 +45,54 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     },
                 });
                 socket.on("user-joined-bidroom", (binaryData) => {
-                    const { room, userId }: any = deserialize(binaryData)
-                    let newBids = bidsReverse(room.bids)
-                    room.bids = newBids
-                    rooms.addRoom(room, user)
+                    const { room, userId }: any = deserialize(binaryData);
+                    let newBids = bidsReverse(room.bids);
+                    room.bids = newBids;
+                    rooms.addRoom(room, user);
                 });
                 socket.on("user-left-bidroom", (binaryData) => {
                     const { room, userId } = deserialize(binaryData);
                     if (room) {
-                        let newBids = bidsReverse(room.bids)
-                        room.bids = newBids
-                        rooms.addRoom(room, user)
+                        let newBids = bidsReverse(room.bids);
+                        room.bids = newBids;
+                        rooms.addRoom(room, user);
                         // rooms.removeRoom(room.key, user)
                     }
-                })
+                });
                 socket.on("bid-placed", (binaryData) => {
                     const { room, userId } = deserialize(binaryData);
                     if (room) {
-                        let newBids = bidsReverse(room.bids)
-                        room.bids = newBids
-                        rooms.addRoom(room, user)
+                        let newBids = bidsReverse(room.bids);
+                        room.bids = newBids;
+                        rooms.addRoom(room, user);
                     }
-                })
+                });
                 socket.on("bid-locked-as-final-offer", (binaryData) => {
                     const { room, userId } = deserialize(binaryData);
-                    let newBids = bidsReverse(room.bids)
-                    room.bids = newBids
-                    rooms.addRoom(room, user)
-                    setLoading(false)
-                })
+                    let newBids = bidsReverse(room.bids);
+                    room.bids = newBids;
+                    rooms.addRoom(room, user);
+                    setLoading(false);
+                });
                 socket.on("deal-closed", (binaryData) => {
                     const { room, bid } = deserialize(binaryData);
-                    const rawRoom = { ...room.room }
-                    let newBids = bidsReverse(rawRoom.bids)
-                    rawRoom.bids = newBids
-                    rooms.addRoom(rawRoom, user)
-                })
+                    const rawRoom = { ...room.room };
+                    let newBids = bidsReverse(rawRoom.bids);
+                    rawRoom.bids = newBids;
+                    rooms.addRoom(rawRoom, user);
+                });
                 socket.on("message-is-seen", (binaryData) => {
                     const { room, bidId } = deserialize(binaryData);
-                    const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid)
-                    room.bids = newBids
-                    rooms.addRoom(room, user)
-                })
+                    const newBids = room.bids.map((bid: any) => bid.id === bidId ? { ...bid, isSeen: true } : bid);
+                    room.bids = newBids;
+                    rooms.addRoom(room, user);
+                });
                 socket.on("room-closed", (binaryData) => {
                     const { room, userId } = deserialize(binaryData);
                     if (room) {
-                        rooms.removeRoom(room.key)
+                        rooms.removeRoom(room.key);
                     }
-                })
+                });
                 setSocketInstance(socket);
             } else {
                 setSocketInstance(null);
@@ -98,29 +101,34 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             return () => {
                 if (socket) {
                     socket.disconnect();
-                    console.info("Socket connection closed.");
                     socket?.off("user-joined-bidroom");
-                    socket?.off("user-left-bidroom")
-                    socket?.off("bid-placed")
-                    socket?.off("bid-locked-as-final-offer")
-                    socket?.off("deal-closed")
-                    socket?.off("room-closed")
-                    socket?.off("message-is-seen")
+                    socket?.off("user-left-bidroom");
+                    socket?.off("bid-placed");
+                    socket?.off("bid-locked-as-final-offer");
+                    socket?.off("deal-closed");
+                    socket?.off("room-closed");
+                    socket?.off("message-is-seen");
                     setSocketInstance(null);
                 }
             };
         }
-    }, [user, isMounted]);
+    }, [user]);
 
     return (
         <SocketContext.Provider value={socketInstance}>
-            {children}
+            <UserContext.Provider value={user}>
+                {children}
+            </UserContext.Provider>
         </SocketContext.Provider>
     );
 };
 
-// Custom hook to access the socket instance
 export const useSocket = () => {
     const context = useContext(SocketContext);
-    return context ?? null; // Return null if context is not available
+    return context ?? null; // Return null
+};
+
+export const useUser = () => {
+    const context = useContext(UserContext);
+    return context ?? null; // Return null
 };
