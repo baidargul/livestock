@@ -30,7 +30,7 @@ const Room = (props: Props) => {
     useEffect(() => {
         let intervalId: number
         if (props.user && props.room) {
-            intervalId = window.setInterval(() => setToggleName((prev) => !prev), 3000)
+            intervalId = window.setInterval(() => setToggleName((prev) => !prev), 5000)
         }
         return () => clearInterval(intervalId)
     }, [props.user, props.room])
