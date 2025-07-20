@@ -12,6 +12,7 @@ type Props = {
 const Room = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [unreadBids, setUnreadBids] = useState(0)
+    const [toggleName, setToggleName] = useState(false)
     const [targetRoomKey, setTargetRoomKey] = useState({
         key: '',
         refill: () => {
@@ -27,8 +28,14 @@ const Room = (props: Props) => {
     const animal = props.room.animal
 
     useEffect(() => {
-        setIsMounted(true)
-    }, [])
+        let intervalId: number
+        if (props.user && props.room) {
+            intervalId = window.setInterval(() => setToggleName((prev) => !prev), 3000)
+        }
+        return () => clearInterval(intervalId)
+    }, [props.user, props.room])
+
+
 
     useEffect(() => {
         if (isMounted) {
@@ -71,7 +78,7 @@ const Room = (props: Props) => {
                                 <div className='font-bold text-base'>{totalQuantity}</div>
                             </div>
                             {bid && <div className='text-center flex flex-col justify-center items-center'>
-                                <div>Running Bid</div>
+                                <div>{toggleName ? bid?.userId === props.user?.id ? 'You' : bid?.user?.name : 'Running Bid'}</div>
                                 <div className={`font-bold text-base  ${bid?.user?.id === props.user?.id ? "text-zinc-700" : "text-amber-700"}`}>{formatCurrency(bid.price ?? 0)}</div>
                             </div>}
                         </div>
