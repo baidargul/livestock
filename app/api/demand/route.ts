@@ -31,9 +31,10 @@ export async function GET(req: NextRequest) {
   try {
     const id = new URL(req.url).searchParams.get("id");
     let where: any = new URL(req.url).searchParams.get("where");
+    where =
+      where.length > 0 && where !== "undefined" ? JSON.parse(where) : undefined;
 
     if (where) {
-      where = JSON.parse(where);
       if (where.city) {
         where = {
           ...where,
@@ -49,13 +50,12 @@ export async function GET(req: NextRequest) {
       }
       where = { where: { ...where } };
     }
-
     if (id) {
       const response = await actions.server.demand.list(id, "id");
       return new Response(JSON.stringify(response));
     } else {
       const response = await actions.server.demand.listAll(
-        where ? where : null
+        where ? where : undefined
       );
       return new Response(JSON.stringify(response));
     }

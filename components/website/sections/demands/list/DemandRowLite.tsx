@@ -37,6 +37,7 @@ const DemandRowLite = (props: Props) => {
 
     const fetchDemands = async (user: any) => {
         const response = await actions.client.demand.listAll()
+        console.log(response)
         if (response.status === 200) {
             const raw = []
             for (const demand of response.data) {

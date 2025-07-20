@@ -29,7 +29,6 @@ const page = async (props: Props) => {
 
     const animals = data.data
 
-
     return (
         <div className='px-4 flex flex-col gap-2 items-start w-full'>
             <SectionLandingPageImage />

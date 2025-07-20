@@ -22,7 +22,7 @@ async function list(id: string) {
 }
 async function listAll(where?: any) {
   const response = await axios.get(
-    `/api/demand?where=${JSON.stringify(where)}`
+    `/api/demand?where=${where ? JSON.stringify(where) : undefined}`
   );
   return response.data;
 }
