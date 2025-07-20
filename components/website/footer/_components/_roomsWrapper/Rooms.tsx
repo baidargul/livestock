@@ -112,7 +112,7 @@ const Rooms = ({ rooms, user }: Props) => {
             {/* Selling Rooms Section */}
             <div
                 onClick={(e) => handleSelectSection(e, "myRooms")}
-                className="flex p-2 justify-between items-center bg-zinc-100 cursor-pointer"
+                className={`flex p-2 justify-between items-center ${currentSection === "myRooms" ? "bg-emerald-200" : "bg-zinc-100"}  cursor-pointer`}
             >
                 <div className="font-semibold text-lg tracking-tight">
                     Selling Rooms
@@ -125,10 +125,10 @@ const Rooms = ({ rooms, user }: Props) => {
             </div>
             <section
                 style={{
-                    height: currentSection === "myRooms" ? "90%" :
+                    height: currentSection === "myRooms" ? "85%" :
                         currentSection === "otherRooms" ? "0" : "50%"
                 }}
-                className="p-2 border-b border-zinc-400 mb-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
+                className="p-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
             >
                 {myRooms.length > 0 && (
                     <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
@@ -140,7 +140,7 @@ const Rooms = ({ rooms, user }: Props) => {
             {/* Buying Rooms Section */}
             <div
                 onClick={(e) => handleSelectSection(e, "otherRooms")}
-                className="flex p-2 justify-between items-center bg-zinc-100 cursor-pointer"
+                className={`flex p-2 justify-between items-center ${currentSection === "otherRooms" ? "bg-emerald-200" : "bg-zinc-100"} cursor-pointer`}
             >
                 <div className="font-semibold text-lg tracking-tight">
                     Buying Rooms
