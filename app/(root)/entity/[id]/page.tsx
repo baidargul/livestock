@@ -33,6 +33,8 @@ const page = async (props: Props) => {
     const { id } = await params
     const response = await actions.server.post.list(id, 'id');
     const animal = response.data as any
+    const breedObj = images[animal.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
+    const info = breedObj?.info;
     return (
         animal && <>
             <section className='relative w-full min-h-[100vh] hidden md:block'>
@@ -42,7 +44,7 @@ const page = async (props: Props) => {
                         <div className=''>
                             <h1 className='text-lg text-start font-bold text-gray-800 mt-4'>{formalizeText(animal?.breed ?? "")} {formalizeText(animal?.type ?? "")}</h1>
                             <div className='max-w-[620px]'>
-                                <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
+                                <p className='text-sm text-gray-600'>{info ?? ''}</p>
                             </div>
                         </div>
                     </div>
@@ -97,7 +99,7 @@ const page = async (props: Props) => {
                     <div className='bg-emerald-50 p-4 rounded-lg mx-4 absolute -mt-20 z-10' style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
                         <h1 className='text-3xl text-center font-bold text-gray-800 mt-4'>{formalizeText(animal?.breed ?? "")} {formalizeText(animal?.type ?? "")}</h1>
                         <div className='px-4 py-2'>
-                            <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
+                            <p className='text-sm text-gray-600'>{info ?? ''}</p>
                         </div>
                     </div>
                 </div>

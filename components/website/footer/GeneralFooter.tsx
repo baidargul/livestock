@@ -15,7 +15,7 @@ const GeneralFooter = (props: Props) => {
     }, [])
 
     const device = useDevice()
-    return route.length > 0 && device.isPhone ? route.includes("home") === true ? <PhoneFooter /> : <PhoneFooter /> : device.isDesktop ? route.includes("home") === true ? <DesktopFooter /> : <DesktopFooter /> : null
+    return route.length > 0 && device.isPhone ? route.includes("home") === true ? <PhoneFooter /> : <PhoneFooter /> : device.isDesktop || device.isLaptop || device.isTablet ? route.includes("home") === true ? <DesktopFooter /> : <DesktopFooter /> : null
 }
 
 export default GeneralFooter

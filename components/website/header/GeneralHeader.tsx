@@ -17,7 +17,7 @@ const GeneralHeader = (props: Props) => {
     }, [])
 
     const device = useDevice()
-    return route.length > 0 && device.isPhone ? route.includes("home") === true ? <PhoneHeaderHome /> : <PhoneHeader /> : device.isDesktop ? route.includes("home") === true ? <DesktopHeaderHome /> : <DesktopHeader /> : null
+    return route.length > 0 && device.isPhone ? route.includes("home") === true ? <PhoneHeaderHome /> : <PhoneHeader /> : device.isDesktop || device.isLaptop || device.isTablet ? route.includes("home") === true ? <DesktopHeaderHome /> : <DesktopHeader /> : null
 }
 
 export default GeneralHeader
