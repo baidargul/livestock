@@ -28,7 +28,8 @@ const page = async (props: Props) => {
     const response = await actions.server.demand.list(id, 'id');
     const demand = response.data as any
     const totalQuantity = Number(demand.maleQuantityAvailable ?? 0) + Number(demand.femaleQuantityAvailable ?? 0)
-
+    const breedObj = images[demand.type].breeds.find((b: any) => b.name.toLowerCase() === demand.breed);
+    const info = breedObj?.info;
     return (
         demand && <div className='relative w-full min-h-[100vh] flex flex-col justify-between'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
@@ -53,7 +54,7 @@ const page = async (props: Props) => {
                 <div className='bg-emerald-50 p-4 rounded-lg mx-4 absolute -mt-20 z-10' style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
                     <h1 className='text-3xl text-center font-bold text-gray-800 mt-4'>{formalizeText(demand?.breed ?? "")} {formalizeText(demand?.type ?? "")}</h1>
                     <div className='px-4 py-2'>
-                        <p className='text-sm text-gray-600'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.</p>
+                        <p className='text-sm text-gray-600'>{info ?? ""}</p>
                     </div>
                 </div>
             </div>
