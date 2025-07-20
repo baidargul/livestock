@@ -58,19 +58,23 @@ const Room = (props: Props) => {
             <div className='flex flex-col gap-1 relative cursor-pointer'>
                 <div className={`text-xs p-1 px-2 max-w-[120px] flex gap-1 items-center truncate -pb-1 absolute left-0 -top-6 rounded-t-md border-t border-x ${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"}`}>
                     <RoomStatus room={props.room} />
-                    {isAuthor ? props.room.author.name : props.room.user.name}
+                    <div>
+                        {isAuthor ? props.room.author.name : props.room.user.name}
+                    </div>
                 </div>
                 <div className='text-black'>
-                    {props.room.demandId && props.room.demandId.length > 0 && <div className='p-1 px-2 bg-zinc-300 rounded text-xs scale-90 origin-top-left'>demand</div>}
-                    <div className={`${bid?.userId === props.user?.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2 flex justify-between items-center`}>
-                        <div className='text-center flex flex-col justify-center items-center'>
-                            <div>Quantity</div>
-                            <div className='font-bold text-base'>{totalQuantity}</div>
+                    <div className={`${bid?.userId === props.user?.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2`}>
+                        {props.room.demandId && props.room.demandId.length > 0 && <div className='p-1 px-2 text-xs scale-90 origin-top-left w-fit text-zinc-700 flex gap-1 items-center'> <div className='w-1 h-1 animate-pulse rounded-full bg-amber-500'></div> Demand</div>}
+                        <div className='flex justify-between items-center'>
+                            <div className='text-center flex flex-col justify-center items-center'>
+                                <div>Quantity</div>
+                                <div className='font-bold text-base'>{totalQuantity}</div>
+                            </div>
+                            {bid && <div className='text-center flex flex-col justify-center items-center'>
+                                <div>Running Bid</div>
+                                <div className={`font-bold text-base  ${bid?.user?.id === props.user?.id ? "text-zinc-700" : "text-amber-700"}`}>{formatCurrency(bid.price ?? 0)}</div>
+                            </div>}
                         </div>
-                        {bid && <div className='text-center flex flex-col justify-center items-center'>
-                            <div>Running Bid</div>
-                            <div className={`font-bold text-base  ${bid?.user?.id === props.user?.id ? "text-zinc-700" : "text-amber-700"}`}>{formatCurrency(bid.price ?? 0)}</div>
-                        </div>}
                     </div>
                 </div>
             </div>
