@@ -63,7 +63,7 @@ const Room = (props: Props) => {
                     </div>
                 </div>
                 <div className='text-black'>
-                    <div className={`${bid?.userId === props.user?.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2`}>
+                    <div className={`${bid?.userId === props.user?.id ? "bg-zinc-100 border-transparent" : bid?.isSeen === true ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"} border  text-xs rounded-md rounded-tl-none w-full p-2`}>
                         {props.room.demandId && props.room.demandId.length > 0 && <div className='p-1 px-2 text-xs scale-90 origin-top-left w-fit text-zinc-700 flex gap-1 items-center'> <div className='w-1 h-1 animate-pulse rounded-full bg-amber-500'></div> Demand</div>}
                         <div className='flex justify-between items-center'>
                             <div className='text-center flex flex-col justify-center items-center'>
