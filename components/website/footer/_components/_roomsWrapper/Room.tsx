@@ -56,7 +56,7 @@ const Room = (props: Props) => {
     return (
         animal && props.user && <BiddingWrapper animal={animal} room={props.room} targetRoomKey={targetRoomKey} staticStyle>
             <div className='flex flex-col gap-1 relative cursor-pointer'>
-                <div className={`text-xs p-1 px-2 max-w-[120px] flex gap-1 items-center truncate -pb-1 absolute left-0 -top-6 rounded-t-md border-t border-x ${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"}`}>
+                <div className={`text-xs p-1 px-2 max-w-[120px] flex gap-1 items-center truncate -pb-1 absolute left-0 -top-6 rounded-t-md border-t border-x ${bid?.userId === props.user.id ? "bg-zinc-100 border-transparent" : bid?.isSeen === true ? "bg-zinc-100 border-transparent" : "bg-amber-50 border-amber-200"}`}>
                     <RoomStatus room={props.room} />
                     <div>
                         {isAuthor ? props.room.author.name : props.room.user.name}
