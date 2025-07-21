@@ -261,10 +261,46 @@ async function listBids(roomId: string) {
   }
 }
 
+async function changeBiddingStatus(postId: string, allowBidding: boolean) {
+  let response: any = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    let isExists = await prisma.animal.findFirst({
+      where: { id: postId },
+    });
+
+    if (!isExists) {
+      response.status = 400;
+      response.message = "Post not found";
+      response.data = null;
+      return response;
+    }
+
+    let updatedPost: any = await prisma.animal.update({
+      where: { id: postId },
+      data: { allowBidding },
+    });
+
+    updatedPost = await actions.server.post.list(updatedPost.id, "id");
+    response = updatedPost;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @CHANGE BIDDING STATUS: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const post = {
   list,
   listAll,
   removePost,
   placeBid,
   listBids,
+  changeBiddingStatus,
 };

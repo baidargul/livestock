@@ -64,10 +64,26 @@ async function listBids(postId: string) {
   return response.data;
 }
 
+async function changeBiddingStatus(postId: string, allowBidding: boolean) {
+  const response = await axios.put(
+    `/api/post/bidding-status?postId=${postId}&allowBidding=${allowBidding}`,
+    {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    }
+  );
+  return response.data;
+}
+
 export const posts = {
   createPost,
   removePost,
   placeBid,
   listBids,
   listByUser,
+  changeBiddingStatus,
 };

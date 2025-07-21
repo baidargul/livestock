@@ -4,7 +4,7 @@ import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Button from '@/components/ui/Button'
 import { formalizeText, } from '@/lib/utils'
-import { ArrowLeftCircleIcon, CandlestickChartIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, CandlestickChartIcon, MenuIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
@@ -18,6 +18,7 @@ import BidProtection from './_components/BidProtection'
 import BidTradeView from '@/components/Animals/BidTradeView'
 import GeneralFooter from '@/components/website/footer/GeneralFooter'
 import ProductGallery from '@/components/ui/ProductGallery'
+import ProductMenu from './_components/ProductMenu'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -79,9 +80,14 @@ const page = async (props: Props) => {
                 <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                     <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
                 </BackNavigator>
-                <DeleteProductWrapper id={animal.id} animal={animal}>
+                <div className='absolute top-3 right-3 z-10'>
+                    <ProductMenu animal={animal} >
+                        <MenuIcon size={32} className='text-black p-1 rounded bg-white' />
+                    </ProductMenu>
+                </div>
+                {/* <DeleteProductWrapper id={animal.id} animal={animal}>
                     <Trash2Icon size={32} className='absolute top-3 right-0 z-10 text-red-500 rounded-l-full w-14 bg-white p-1' />
-                </DeleteProductWrapper>
+                </DeleteProductWrapper> */}
                 <div className='relative'>
                     <Image
                         src={animal.images.length > 0 ? animal.images[0].image ? animal.images[0].image : images.chickens.images[1] : images.chickens.images[1]}
@@ -96,7 +102,7 @@ const page = async (props: Props) => {
                         className="w-full h-[250px] z-0 select-none origin-top-left object-left-top object-cover"
                     />
 
-                    <div className='bg-emerald-50 p-4 rounded-lg mx-4 absolute -mt-20 z-10' style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
+                    <div className='bg-emerald-50 p-4 rounded-lg mx-4 absolute -mt-20 z-[1]' style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
                         <h1 className='text-3xl text-center font-bold text-gray-800 mt-4'>{formalizeText(animal?.breed ?? "")} {formalizeText(animal?.type ?? "")}</h1>
                         <div className='px-4 py-2'>
                             <p className='text-sm text-gray-600'>{info ?? ''}</p>
