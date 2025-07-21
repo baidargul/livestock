@@ -28,7 +28,9 @@ const ProductMenu = (props: Props) => {
         setLoading(true)
         const response: any = await actions.client.posts.changeBiddingStatus(props.animal.id, val)
         if (response.status === 200) {
-            window.location.reload()
+            //do hard reload to update don't cache
+            window.location.replace(`/entity/${props.animal.id}`)
+
         }
     }
 
