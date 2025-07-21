@@ -19,6 +19,7 @@ import BidTradeView from '@/components/Animals/BidTradeView'
 import GeneralFooter from '@/components/website/footer/GeneralFooter'
 import ProductGallery from '@/components/ui/ProductGallery'
 import ProductMenu from './_components/ProductMenu'
+import Marquee from 'react-fast-marquee'
 
 type Props = {
     params: Promise<{ id: string }>
@@ -110,6 +111,9 @@ const page = async (props: Props) => {
                     </div>
                 </div>
                 <div className='mt-40 p-4'>
+                    {animal.allowBidding && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
+                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding Active</div>
+                    </Marquee>}
                     {animal?.user.name && <div className='w-full mb-2 flex justify-end items-center'>
                         <Link href={`/user/profile/${animal?.user.id}`} className='flex items-center gap-2'>
                             <Image src={animal?.user.profileImage && animal?.user.profileImage.length > 0 ? animal?.user.profileImage[0].image : images.site.placeholders.userProfile} alt={`${animal?.user.name} profile image`} width={32} height={32} className='w-8 h-8 object-cover rounded-full' />
