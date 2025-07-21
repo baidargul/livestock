@@ -83,10 +83,10 @@ model Animal {
   deliveryOptions         DeliveryOptions[]
   title                   String?
   description             String?
-
+  allowBidding            Boolean?          @default(false)
   // Media
-  images  Json // JSON field to store an array of objects
-  BidRoom BidRoom[]
+  images                  Json // JSON field to store an array of objects
+  BidRoom                 BidRoom[]
 
   @@index([type, breed, price]) // Index for efficient queries
 }

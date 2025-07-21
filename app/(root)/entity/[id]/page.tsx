@@ -4,7 +4,7 @@ import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Button from '@/components/ui/Button'
 import { formalizeText, } from '@/lib/utils'
-import { ArrowLeftCircleIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, CandlestickChartIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
@@ -145,9 +145,17 @@ const page = async (props: Props) => {
                 </div> */}
                 </div>
                 <div className='mb-2 px-4 flex justify-center items-center w-full'>
-                    <BidProtection animal={animal}>
-                        <Button className='w-full'>Buy Now</Button>
-                    </BidProtection>
+                    {animal.allowBidding &&
+                        <BidProtection animal={animal}>
+                            <Button className='w-full flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Buy Now</Button>
+                        </BidProtection>
+                    }
+                    {
+                        !animal.allowBidding &&
+                        <Button className='w-full'>
+                            Buy Now
+                        </Button>
+                    }
                 </div>
                 <GeneralFooter />
             </section >
