@@ -3,5 +3,12 @@ import { create } from "zustand";
 
 export const useLoader = create<LoaderState>()((set) => ({
   loading: false,
-  setLoading: (loading) => set({ loading }),
+  text: "",
+  setLoading: (loading, text?: string) =>
+    set(() => {
+      if (loading === false) {
+        return { loading: loading, text: "" };
+      }
+      return { loading: loading, text: loading === true ? text ?? "" : "" };
+    }),
 }));

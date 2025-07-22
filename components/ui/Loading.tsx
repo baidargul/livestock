@@ -13,6 +13,7 @@ const Loading = (props: Props) => {
     const [translate, setTranslate] = useState("-translate-x-2")
     const [rotate, setRotate] = useState("-rotate-2")
     const loading = useLoader((state: LoaderState) => state.loading)
+    const text = useLoader((state: LoaderState) => state.text)
 
     useEffect(() => {
         if (loading) {
@@ -31,7 +32,7 @@ const Loading = (props: Props) => {
                 <div className='text-red-600 font-bold tracking-wide bg-gradient-to-b from-red-100 via-white to-red-100 p-10 px-14 rounded-xl' style={{ boxShadow: "0px 3px 4px 0px #71141987" }}>
                     <Image src={images.site.logo.desktopIcon} width={100} height={100} quality={10} alt='logo' className={`w-32 h-32 mx-auto transition-all duration-200 ease-in-out ${rotate}`} />
                     <div className={`${translate} ${rotate} duration-300 text-center ease-in-out transition-all`}>
-                        Please wait
+                        {loading && text && text.length > 0 ? text : "Please wait"}
                     </div>
                 </div>
             </div>}

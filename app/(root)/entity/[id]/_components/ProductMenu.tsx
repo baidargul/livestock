@@ -26,13 +26,17 @@ const ProductMenu = (props: Props) => {
         setIsOpen(val)
     }
 
+    const stopLoading = () => {
+        setLoading(false)
+    }
+
     const changeBiddingStatus = async (val: boolean) => {
-        setLoading(true)
+        setLoading(true, val === true ? 'Enabling bidding' : 'Disabling bidding')
         setIsOpen(false)
         const response: any = await actions.client.posts.changeBiddingStatus(props.animal.id, val)
         if (response.status === 200) {
             router.refresh()
-            setLoading(false)
+            stopLoading()
         }
     }
 

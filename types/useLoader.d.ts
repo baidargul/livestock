@@ -1,4 +1,5 @@
 export interface LoaderState {
   loading: boolean;
-  setLoading: (loading: boolean) => void;
+  text: string;
+  setLoading: (loading: boolean, text?: string) => void;
 }
