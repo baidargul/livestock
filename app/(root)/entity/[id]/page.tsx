@@ -32,6 +32,7 @@ export async function generateStaticParams() {
 }
 
 const page = async (props: Props) => {
+    const timestamp = Date.now(); // Unique key
     const { params } = props
     const { id } = await params
     const response = await actions.server.post.list(id, 'id');
@@ -39,7 +40,7 @@ const page = async (props: Props) => {
     const breedObj = images[animal.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
     const info = breedObj?.info;
     return (
-        animal && <>
+        animal && <div className='w-full h-full' key={timestamp}>
             <section className='relative w-full min-h-[100vh] hidden md:block'>
                 <div className='p-4 flex gap-2 items-start'>
                     <div>
@@ -170,7 +171,7 @@ const page = async (props: Props) => {
                 </div>
                 <GeneralFooter />
             </section >
-        </>
+        </div>
     )
 }
 
