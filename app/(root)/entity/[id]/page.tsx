@@ -8,7 +8,6 @@ import { ArrowLeftCircleIcon, CandlestickChartIcon, MenuIcon, SquareUserIcon, Tr
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
-import dynamic from 'next/dynamic'
 import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 import Link from 'next/link'
 import RatingBar from '@/components/website/ratings/RatingBar'
@@ -20,6 +19,8 @@ import GeneralFooter from '@/components/website/footer/GeneralFooter'
 import ProductGallery from '@/components/ui/ProductGallery'
 import ProductMenu from './_components/ProductMenu'
 import Marquee from 'react-fast-marquee'
+
+export const dynamic = 'force-dynamic';
 
 type Props = {
     params: Promise<{ id: string }>
