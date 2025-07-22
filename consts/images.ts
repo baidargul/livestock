@@ -39,6 +39,8 @@ import rabbit3 from "@/public/media/rabbit3.png";
 import favIcon from "@/public/logos/header.png";
 import desktopIcon from "@/public/logos/logo.png";
 import mobileIcon from "@/public/logos/fullHd.png";
+import goldCoin from "@/public/system/coin/basic.png";
+import goldCoinShine from "@/public/system/coin/shine.png";
 
 export const images = {
   site: {
@@ -52,6 +54,12 @@ export const images = {
       userCover: "/placeholders/cover.png",
       animal: "/placeholders/animalprofile.gif",
       animalCover: "/placeholders/cover.png",
+    },
+    coins: {
+      gold: {
+        basic: goldCoin,
+        shine: goldCoinShine,
+      },
     },
   },
   chickens: {

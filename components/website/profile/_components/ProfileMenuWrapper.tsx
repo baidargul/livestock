@@ -103,6 +103,10 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
                                 </div>
                             </div>
                         </Link>
+                        <div className='flex flex-col items-center justify-center text-center gap-1'>
+                            <Image src={images.site.coins.gold.shine} alt='coin-logo' width={100} height={100} className='w-8 h-8 object-contain pointer-events-none select-none' />
+                            <div className='text-xs text-nowrap '>580 coins</div>
+                        </div>
                     </div>
                     <div className='w-full -mb-4'>
                         <DemandRowLite />
