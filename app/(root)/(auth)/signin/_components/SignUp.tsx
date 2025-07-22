@@ -1,11 +1,12 @@
 import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
+import { useDialog } from '@/hooks/useDialog'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
 import { LoaderState } from '@/types/useLoader'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 
 type Props = {
     setStage: (val: signInStages) => void
@@ -16,6 +17,8 @@ const SignUp = (props: Props) => {
     const setUser = useSession((state: any) => state.setUser)
     const getUser = useSession((state: any) => state.getUser)
     const router = useRouter();
+    const dialog = useDialog((state) => state)
+    const [isWorking, setIsWorking] = useState(false)
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -34,8 +37,12 @@ const SignUp = (props: Props) => {
     }, [])
 
     const handleSignUp = async () => {
-        if (!form.name || !form.email || !form.password) return
+        if (!form.name || !form.email || !form.password) {
+            dialog.showDialog("Error", null, "Name, Email and Password are required fields.")
+            return
+        }
         setLoading(true)
+        setIsWorking(true)
         const response = await actions.client.user.signup(form.name, form.email, form.password, form.province, form.city, form.phone)
         if (response?.status === 200) {
             setUser(response.data)
@@ -43,8 +50,12 @@ const SignUp = (props: Props) => {
             router.push("/home")
 
         } else if (response?.status === 402) {
-            alert("User with this email already exists")
+            dialog.showDialog("Error", null, "User with this email already exists.")
+            setIsWorking(false)
             props.setStage("signin")
+        } else {
+            dialog.showDialog("Error", null, response?.message || "An error occurred while signing up.")
+            setIsWorking(false)
         }
         setLoading(false)
     }
@@ -88,7 +99,7 @@ const SignUp = (props: Props) => {
             </div>
             <div className='flex justify-between items-center'>
                 <label onClick={() => props.setStage("signin")} className='text-primary text-sm border-b border-red-600 cursor-pointer'>Sign In</label>
-                <Button onClick={handleSignUp}>Create</Button>
+                <Button disabled={isWorking} onClick={handleSignUp}>Create</Button>
             </div>
         </div>
     )
