@@ -23,7 +23,7 @@ const Dialog = (props: Props) => {
                     </div>
                 </div>
             }
-            <div className={`${dialog.isVisible ? "pointer-events-none" : ""} transition-all duration-200 ease-in-out`}>
+            <div className={`${dialog.isVisible ? "pointer-events-none" : "pointer-events-auto"} transition-all duration-200 ease-in-out`}>
                 {props.children}
             </div>
         </>
