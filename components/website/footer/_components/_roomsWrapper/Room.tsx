@@ -77,8 +77,8 @@ const Room = (props: Props) => {
                                 <div>Quantity</div>
                                 <div className='font-bold text-base'>{totalQuantity}</div>
                             </div>
-                            {bid && <div className='text-center flex flex-col justify-center items-center'>
-                                <div>{toggleName ? bid?.userId === props.user?.id ? 'You' : bid?.user?.name : 'Running Bid'}</div>
+                            {bid && <div className='text-center flex flex-col justify-center items-center '>
+                                <div className='line-clamp-1 text-wrap'>{toggleName ? bid?.userId === props.user?.id ? 'You' : bid?.user?.name : 'Running Bid'}</div>
                                 <div className={`font-bold text-base  ${bid?.user?.id === props.user?.id ? "text-zinc-700" : "text-amber-700"}`}>{formatCurrency(bid.price ?? 0)}</div>
                             </div>}
                         </div>
