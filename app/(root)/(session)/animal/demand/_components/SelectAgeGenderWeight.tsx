@@ -67,14 +67,14 @@ const SelectAgeGenderWeight = (props: Props) => {
     }
 
     const handleWeightChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, averageWeight: Number(val) }))
+        props.setAnimal((prev: any) => ({ ...prev, averageWeight: Number(val) < 0 ? 0 : Number(val) }))
     }
     const handleAgeChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, averageAge: Number(val) }))
+        props.setAnimal((prev: any) => ({ ...prev, averageAge: Number(val) < 0 ? 0 : Number(val) }))
     }
 
     const handleQuantityChange = (val: string | number, key: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, [key]: Number(val) }))
+        props.setAnimal((prev: any) => ({ ...prev, [key]: Number(val) < 0 ? 0 : Number(val) }))
     }
 
     const handleAgeUnitChange = (val: string) => {
