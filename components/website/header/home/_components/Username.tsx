@@ -14,7 +14,7 @@ const Username = (props: Props) => {
     }, []);
 
     return (
-        <span className='tracking-wide text-wrap'>{user?.name ?? ""}</span>
+        <span className='tracking-wide text-wrap max-w-44 sm:max-w-full line-clamp-1'>{user?.name ?? ""}</span>
     )
 }
 
