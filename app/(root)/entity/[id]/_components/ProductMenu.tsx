@@ -2,6 +2,7 @@
 import { actions } from '@/actions/serverActions/actions'
 import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import { useLoader } from '@/hooks/useLoader'
+import { useUser } from '@/socket-client/SocketWrapper'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 type Props = {
@@ -13,8 +14,12 @@ type Props = {
 const ProductMenu = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const setLoading = useLoader((state: any) => state.setLoading)
+    const user = useUser()
     const router = useRouter()
 
+    if (user?.id !== props.animal.userId) {
+        return null
+    }
 
     useEffect(() => {
         setLoading(false)
