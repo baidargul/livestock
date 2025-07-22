@@ -50,7 +50,7 @@ const ProductMenu = (props: Props) => {
                 isOpen && (
                     <div className='absolute top-9 right-0 z-10'>
                         <ul className='p-2 w-full min-w-[200px] rounded bg-white shadow-lg'>
-                            <li className='p-2 hover:bg-gray-100 cursor-pointer'>
+                            <li onClick={() => setIsOpen(false)} className='p-2 hover:bg-gray-100 cursor-pointer'>
                                 <DeleteProductWrapper id={props.animal.id} animal={props.animal}>
                                     Remove
                                 </DeleteProductWrapper>

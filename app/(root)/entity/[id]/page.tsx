@@ -88,9 +88,6 @@ const page = async (props: Props) => {
                         <MenuIcon size={32} className='text-black p-1 rounded bg-white' />
                     </ProductMenu>
                 </div>
-                {/* <DeleteProductWrapper id={animal.id} animal={animal}>
-                    <Trash2Icon size={32} className='absolute top-3 right-0 z-10 text-red-500 rounded-l-full w-14 bg-white p-1' />
-                </DeleteProductWrapper> */}
                 <div className='relative'>
                     <Image
                         src={animal.images.length > 0 ? animal.images[0].image ? animal.images[0].image : images.chickens.images[1] : images.chickens.images[1]}

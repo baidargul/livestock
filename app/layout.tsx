@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Loading from "@/components/ui/Loading";
 import { SocketProvider } from "@/socket-client/SocketWrapper";
+import Dialog from "@/components/ui/Dialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <SocketProvider>
           <Loading>
-            {children}
+            <Dialog>
+              {children}
+            </Dialog>
           </Loading>
         </SocketProvider>
       </body>
