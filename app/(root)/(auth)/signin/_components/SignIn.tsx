@@ -66,9 +66,9 @@ const SignIn = (props: Props) => {
                 <Textbox label='Email:' placeholder='musmanjamil@gmail.com' onChange={handleEmailChange} value={form.email} />
                 <Textbox label='Password:' placeholder='1234' type='password' onChange={handlePasswordChange} value={form.password} />
             </div>
-            <div className='flex justify-between items-center'>
-                <label onClick={() => props.setStage("signup")} className='text-primary text-sm border-b border-red-600 cursor-pointer'>Create account</label>
-                <Button disabled={isWorking} onClick={handleSubmit}>Sign in</Button>
+            <div className='flex justify-between gap-2 items-center'>
+                <Button onClick={() => props.setStage("signup")} variant='btn-secondary' className='w-full text-nowrap'>Create account</Button>
+                <Button disabled={isWorking} onClick={handleSubmit} className='w-full'>Sign in</Button>
             </div>
         </div>
     )

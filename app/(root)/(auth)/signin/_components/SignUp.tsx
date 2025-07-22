@@ -89,17 +89,17 @@ const SignUp = (props: Props) => {
             <div>
                 <h1 className='heading1 text-primary font-bold'>Create a new account</h1>
             </div>
-            <div className='flex flex-col gap-1'>
-                <Textbox label='Name:' value={form.name} onChange={handleNameChange} placeholder='Muhammad Usman' />
-                <Textbox label='Email:' value={form.email} onChange={handleEmailChange} placeholder='musmanjamil@gmail.com' />
+            <div className='grid grid-cols-2 w-full gap-2'>
+                <Textbox label='Name:' value={form.name} onChange={handleNameChange} placeholder='Your name' />
                 <Textbox label='Phone:' value={form.phone} onChange={handlePhoneChange} placeholder='03' type='text' />
-                <Textbox label='Province:' value={form.province} onChange={handleProvinceChange} placeholder='Punjab' type='text' />
-                <Textbox label='City:' value={form.city} onChange={handleCityChange} placeholder='Multan' type='text' />
+                <Textbox label='Email:' value={form.email} onChange={handleEmailChange} placeholder='youremail@domain.com' />
                 <Textbox label='Password:' value={form.password} onChange={handlePasswordChange} placeholder='1234' type='password' />
+                <Textbox label='Province:' value={form.province} onChange={handleProvinceChange} placeholder='Your Province' type='text' />
+                <Textbox label='City:' value={form.city} onChange={handleCityChange} placeholder='Your City' type='text' />
             </div>
-            <div className='flex justify-between items-center'>
-                <label onClick={() => props.setStage("signin")} className='text-primary text-sm border-b border-red-600 cursor-pointer'>Sign In</label>
-                <Button disabled={isWorking} onClick={handleSignUp}>Create</Button>
+            <div className='flex justify-between gap-2 items-center'>
+                <Button onClick={() => props.setStage("signin")} variant='btn-secondary' className='w-full'>Sign In</Button>
+                <Button disabled={isWorking} onClick={handleSignUp} className='w-full'>Create</Button>
             </div>
         </div>
     )
