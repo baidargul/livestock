@@ -2,10 +2,9 @@
 import { actions } from '@/actions/serverActions/actions'
 import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import { useLoader } from '@/hooks/useLoader'
-import { CandlestickChartIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-
+import { revalidatePath } from 'next/cache';
 type Props = {
     children: React.ReactNode
     className?: string
@@ -35,6 +34,7 @@ const ProductMenu = (props: Props) => {
         setIsOpen(false)
         const response: any = await actions.client.posts.changeBiddingStatus(props.animal.id, val)
         if (response.status === 200) {
+            revalidatePath(`/entity/${props.animal.id}`);
             router.refresh()
             stopLoading()
         }
