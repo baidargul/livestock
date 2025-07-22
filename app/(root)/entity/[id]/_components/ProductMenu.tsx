@@ -17,13 +17,13 @@ const ProductMenu = (props: Props) => {
     const user = useUser()
     const router = useRouter()
 
-    if (user?.id !== props.animal.userId) {
-        return null
-    }
-
     useEffect(() => {
         setLoading(false)
     }, [])
+
+    if (user?.id !== props.animal.userId) {
+        return null
+    }
 
     const handleToggle = (val: boolean) => {
         setIsOpen(val)
