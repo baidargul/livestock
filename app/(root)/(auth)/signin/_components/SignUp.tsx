@@ -90,9 +90,9 @@ const SignUp = (props: Props) => {
                 <h1 className='heading1 text-primary font-bold'>Create a new account</h1>
             </div>
             <div className='grid grid-cols-2 w-full gap-2'>
-                <Textbox label='Name:' value={form.name} onChange={handleNameChange} placeholder='Your name' />
+                <Textbox label='Name:' value={form.name} onChange={handleNameChange} placeholder='Your name' type='text' />
                 <Textbox label='Phone:' value={form.phone} onChange={handlePhoneChange} placeholder='03' type='text' />
-                <Textbox label='Email:' value={form.email} onChange={handleEmailChange} placeholder='youremail@domain.com' />
+                <Textbox label='Email:' value={form.email} onChange={handleEmailChange} placeholder='youremail@domain.com' type='email' />
                 <Textbox label='Password:' value={form.password} onChange={handlePasswordChange} placeholder='1234' type='password' />
                 <Textbox label='Province:' value={form.province} onChange={handleProvinceChange} placeholder='Your Province' type='text' />
                 <Textbox label='City:' value={form.city} onChange={handleCityChange} placeholder='Your City' type='text' />
