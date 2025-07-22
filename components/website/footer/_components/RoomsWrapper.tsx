@@ -6,6 +6,7 @@ import RoomListContainer from './_roomsWrapper/RoomListContainer'
 
 type Props = {
     children: React.ReactNode
+    forPhone?: boolean
 }
 
 const RoomsWrapper = (props: Props) => {
@@ -69,8 +70,8 @@ const RoomsWrapper = (props: Props) => {
         isMounted && <>
             <RoomListContainer isToggled={isToggled} handleToggleMenu={handleToggle} rooms={rooms} user={user} />
             <div className='relative flex items-center'>
-                {myUnreadBids > 0 && <div className='absolute pointer-events-none bg-emerald-500 drop-shadow-sm border-2 border-white text-white  font-semibold -top-2 -right-2 text-xs w-5 h-5 text-center flex items-center justify-center rounded-full '>{myUnreadBids}</div>}
-                {otherUnreadBids > 0 && <div className='absolute pointer-events-none bg-amber-500 drop-shadow-sm border-2 border-white text-white  font-semibold -top-2 -left-2 text-xs w-5 h-5 text-center flex items-center justify-center rounded-full '>{otherUnreadBids}</div>}
+                {myUnreadBids > 0 && <div className={`absolute pointer-events-none bg-emerald-500 drop-shadow-sm border-2 border-white text-white  font-semibold ${props.forPhone ? "top-1 right-1" : "-top-2 -right-2"}  text-xs w-5 h-5 text-center flex items-center justify-center rounded-full`}>{myUnreadBids}</div>}
+                {otherUnreadBids > 0 && <div className={`absolute pointer-events-none bg-amber-500 drop-shadow-sm border-2 border-white text-white  font-semibold ${props.forPhone ? "top-1 left-1" : "-top-2 -left-2"}  text-xs w-5 h-5 text-center flex items-center justify-center rounded-full`}>{otherUnreadBids}</div>}
                 <div onClick={() => handleToggle(!isToggled)} className='cursor-pointer' >
                     {props.children}
                 </div>
