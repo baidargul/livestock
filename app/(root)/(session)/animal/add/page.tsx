@@ -65,6 +65,15 @@ const page = (props: Props) => {
         }
     }, [currentScreen, animal])
 
+    const deletePost = () => {
+        setLoading(true)
+        localStorage.removeItem('post')
+        setAnimal(null)
+        setCurrentScreen(1)
+        router.push('/home')
+        setLoading(false)
+    }
+
     const autoFill = () => {
         if (user) {
             let autoDetails = { province: user?.province, city: user?.city, }
@@ -87,12 +96,12 @@ const page = (props: Props) => {
     }
 
     const screens: any = {
-        1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
-        2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
-        3: <TitleAndDescription moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        4: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        5: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        6: <PriceAndDelivery moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        1: <SelectAnimal deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
+        2: <SelectBreed deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
+        3: <TitleAndDescription deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        4: <SelectAgeGenderWeight deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        5: <AddMedia deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        6: <PriceAndDelivery deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
         7: <PostPreview moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} user={user} />,
     }
 

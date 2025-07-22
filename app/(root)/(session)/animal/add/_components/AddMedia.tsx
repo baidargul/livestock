@@ -4,13 +4,14 @@ import ImageUploadWrapper from '@/components/wrappers/ImageUploadWrapper'
 import { useLoader } from '@/hooks/useLoader'
 import { constructBase64Image, fileToPayload, ImagePayload } from '@/lib/image'
 import { formalizeText } from '@/lib/utils'
-import { FileImageIcon, Trash } from 'lucide-react'
+import { FileImageIcon, Trash, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
     moveNext: () => void
     moveBack: () => void
+    deletePost: () => void
     setAnimal: (animal: any) => void
     animal: any
 }
@@ -126,10 +127,12 @@ const AddMedia = (props: Props) => {
                     </div>
                 </div>
             )}
-
-            <div className='flex items-center justify-between gap-4 w-full p-4'>
-                <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={props.moveNext} className='w-full' disabled={images && images.length === 3 ? false : true}>Next</Button>
+            <div className='w-full p-4'>
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                <div className='flex items-center justify-between gap-4 w-full'>
+                    <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
+                    <Button onClick={props.moveNext} className='w-full' disabled={images && images.length === 3 ? false : true}>Next</Button>
+                </div>
             </div>
         </div >
     )

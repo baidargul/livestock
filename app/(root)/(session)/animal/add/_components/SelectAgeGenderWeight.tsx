@@ -6,12 +6,14 @@ import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
 import { formalizeText } from '@/lib/utils'
 import { Animal } from '@prisma/client'
+import { Trash2Icon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
     moveNext: () => void
     moveBack: () => void
     setAnimal: (animal: any) => void
+    deletePost: () => void
     animal: Animal
 }
 
@@ -119,14 +121,14 @@ const SelectAgeGenderWeight = (props: Props) => {
                     <Textbox label={`Average weight`} type='number' value={Number(props.animal.averageWeight)} onChange={handleWeightChange} />
                     <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit ?? ""} onChange={handleWeightUnitChange} />
                 </div>
-                {/* <div className='flex items-center gap-5'>
-                    <Checkbox onChange={(val: boolean) => handleChecks(val, "vaccinationStatus")} value={props.animal.vaccinationStatus ?? false} label='Vaccined' />
-                    <Checkbox onChange={(val: boolean) => handleChecks(val, "pregnancyStatus")} value={props.animal.pregnancyStatus ?? false} label='Can get pregnant' />
-                </div> */}
             </div>
-            <div className='flex items-center justify-between gap-4 w-full p-4'>
-                <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={handleMoveNext} disabled={isDisabledForward} className='w-full'>Next</Button>
+
+            <div className='w-full p-4'>
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                <div className='flex items-center justify-between gap-4 w-full'>
+                    <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
+                    <Button onClick={handleMoveNext} disabled={isDisabledForward} className='w-full'>Next</Button>
+                </div>
             </div>
         </div>
     )

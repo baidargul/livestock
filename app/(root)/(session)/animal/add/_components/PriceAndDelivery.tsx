@@ -5,11 +5,13 @@ import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
+import { Trash2Icon } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 
 type Props = {
     moveNext: () => void
     moveBack: () => void
+    deletePost: () => void
     setAnimal: (animal: any) => void
     animal: any
 }
@@ -111,10 +113,13 @@ const PriceAndDelivery = (props: Props) => {
                     <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
                 </div>
             </div>
-            <div className='flex items-center justify-between gap-4 w-full p-4'>
-                <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                <Button onClick={props.moveNext} className='w-full' disabled={!props.animal.price || Number(props.animal.price) < 0 || props.animal.deliveryOptions && props.animal.deliveryOptions.length === 0}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
-            </div >
+            <div className='w-full p-4'>
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                <div className='flex items-center justify-between gap-4 w-full'>
+                    <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
+                    <Button onClick={props.moveNext} className='w-full' disabled={!props.animal.price || Number(props.animal.price) < 0 || props.animal.deliveryOptions && props.animal.deliveryOptions.length === 0}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
+                </div>
+            </div>
         </div >
     )
 }
