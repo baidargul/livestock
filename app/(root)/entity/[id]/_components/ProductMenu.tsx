@@ -3,6 +3,7 @@ import { actions } from '@/actions/serverActions/actions'
 import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import { useLoader } from '@/hooks/useLoader'
 import { CandlestickChartIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 const ProductMenu = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const setLoading = useLoader((state: any) => state.setLoading)
+    const router = useRouter()
 
 
     useEffect(() => {
@@ -26,10 +28,11 @@ const ProductMenu = (props: Props) => {
 
     const changeBiddingStatus = async (val: boolean) => {
         setLoading(true)
+        setIsOpen(false)
         const response: any = await actions.client.posts.changeBiddingStatus(props.animal.id, val)
         if (response.status === 200) {
-            window.location.replace(`/entity/${props.animal.id}?refresh=true`)
-
+            router.refresh()
+            setLoading(false)
         }
     }
 
