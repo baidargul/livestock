@@ -1,4 +1,5 @@
 import axios from "axios";
+import { account } from "./account";
 const apiPath = "/api/user";
 
 async function signup(
@@ -82,4 +83,5 @@ export const user = {
   followUser,
   setProfileImage,
   setCoverImage,
+  account,
 };
