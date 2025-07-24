@@ -142,8 +142,14 @@ model Following {
   followingId String?  @db.ObjectId // ID of the user being followed
   following   User?    @relation("UserFollowers", fields: [followingId], references: [id])
   createdAt   DateTime @default(now())
+}
 
-  @@map("following") // Map to a different collection name if needed
+model BusinessProtocol {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String // The business protocol in JSON format
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum DeliveryOptions {

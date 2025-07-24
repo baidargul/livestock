@@ -14,11 +14,6 @@ app.prepare().then(() => {
   const httpServer = createServer(handle);
   const io = new Server(httpServer);
 
-  fetch(`${route}/api/rooms/connections/`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-  });
-
   setInterval(() => {
     const used = process.memoryUsage();
     console.log(`SOCKET MEMORY: ${Math.round(used.rss / 1024 / 1024)}MB`);
@@ -365,7 +360,17 @@ app.prepare().then(() => {
     // Add more event listeners as needed
   });
 
-  httpServer.listen(port, () => {
+  httpServer.listen(port, async () => {
     console.log(`>✅ Socket Server Ready on http://${hostname}:${port}`);
+    // RESETTING CONNECTIONS FOR EACH USER
+    console.log(`RESETTING CONNECTIONS FOR EACH USER`);
+    fetch(`${route}/api/rooms/connections/`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // INITIALIZING PROTOCOLS
+    console.log(`INITIALIZING PROTOCOLS`);
+    fetch(`${route}/api/server/initialize/`);
   });
 });

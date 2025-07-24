@@ -3,6 +3,7 @@ import { demand } from "./partials/demand";
 import { images } from "./partials/images";
 import { post } from "./partials/posts";
 import { user } from "./partials/user";
+import { protocols } from "./protocols/protocols";
 
 export const server = {
   user,
@@ -10,4 +11,5 @@ export const server = {
   post,
   demand,
   bidRoom,
+  protocols,
 };
