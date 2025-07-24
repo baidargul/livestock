@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   };
 
   try {
-    response = await actions.protocols.defaults.initializeDefaults();
+    response = await actions.server.protocols.defaults.initializeDefaults();
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

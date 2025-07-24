@@ -1,5 +1,4 @@
 import { client } from "./client/client";
-import { protocols } from "./server/protocols/protocols";
 import { server } from "./server/server";
 
 export interface ProtocolType {
@@ -11,5 +10,4 @@ export interface ProtocolType {
 export const actions = {
   client,
   server,
-  protocols,
 };
