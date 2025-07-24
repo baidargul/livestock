@@ -56,6 +56,8 @@ const Rooms = (props: Props) => {
 
       if (!bid) return
 
+      if (bid.userId === props.currentUser?.id) return null
+
       if (props.isStaticStyle) {
         if (bid.animalId !== props.animal.id) {
           return null
