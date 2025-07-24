@@ -1,7 +1,5 @@
 import { BusinessProtocols } from "./BusinessProtocols";
-import { defaults } from "./defaults";
 
-export const protocols = {
+export const defaults = {
   BusinessProtocols,
-  defaults,
 };
