@@ -26,6 +26,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const getUser = useSession((state: any) => state.getUser);
     const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
     const setLoading = useLoader((state: any) => state.setLoading);
+    const fetchBalance = useSession((state: any) => state.fetchBalance);
     const rooms = useRooms();
 
     useEffect(() => {
@@ -67,6 +68,9 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                         let newBids = bidsReverse(room.bids);
                         room.bids = newBids;
                         rooms.addRoom(room, user);
+                    }
+                    if (userId !== user.id) {
+                        fetchBalance()
                     }
                 });
                 socket.on("bid-locked-as-final-offer", (binaryData) => {
