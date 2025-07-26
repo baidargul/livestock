@@ -191,6 +191,23 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
       return response;
     }
 
+    const isAuthor = room.authorId === userId;
+    let BusinessProtocol =
+      await actions.server.protocols.BusinessProtocols.list(
+        isAuthor ? "SellerBiddingCost" : "BuyerBiddingCost"
+      );
+
+    if (BusinessProtocol && BusinessProtocol?.status === 200) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          balance: {
+            decrement: Number(BusinessProtocol.data.value ?? 0),
+          },
+        },
+      });
+    }
+
     const bid = await prisma.bids.create({
       data: {
         userId,

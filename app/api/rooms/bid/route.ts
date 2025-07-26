@@ -10,7 +10,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    console.log(data);
     const { roomKey, userId, amount } = data;
 
     if (!roomKey || !userId || !amount) {
