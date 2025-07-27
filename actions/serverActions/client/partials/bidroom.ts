@@ -29,7 +29,6 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
   const response = await axios.post(`/api/rooms/bid/lock`, data);
   return response.data;
 }
-
 async function GetCustomerContact(activeBidRoomId: string, userId: string) {
   const response = await axios.get(
     `/api/rooms/cto?activeBidRoomId=${activeBidRoomId}&userId=${userId}`
