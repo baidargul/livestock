@@ -41,6 +41,7 @@ import desktopIcon from "@/public/logos/logo.png";
 import mobileIcon from "@/public/logos/fullHd.png";
 import goldCoin from "@/public/system/coin/basic.png";
 import goldCoinShine from "@/public/system/coin/shine.png";
+import handshake from "@/public/system/ui/handshake.png";
 
 export const images = {
   site: {
@@ -54,6 +55,9 @@ export const images = {
       userCover: "/placeholders/cover.png",
       animal: "/placeholders/animalprofile.gif",
       animalCover: "/placeholders/cover.png",
+    },
+    ui: {
+      handshake: handshake,
     },
     coins: {
       gold: {

@@ -186,6 +186,8 @@ const BiddingWrapper = (props: Props) => {
             }
         }
 
+        console.log(activeBidRoom)
+
     }, [activeBidRoom])
 
     useEffect(() => {
@@ -351,7 +353,7 @@ const BiddingWrapper = (props: Props) => {
                 {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <GeneralBasicInformation animal={props.animal} />}
                 <div className='flex flex-col gap-4'>
                     {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={props.animal} />}
-                    <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
+                    {!activeBidRoom?.userOfferAccepted && <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
                         {!activeBidRoom && <Rooms rooms={[...rooms?.myRooms, ...rooms?.otherRooms]} socket={socket} targetRoomKey={props.targetRoomKey} isOpen={isOpen} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
@@ -378,8 +380,8 @@ const BiddingWrapper = (props: Props) => {
                             </div>
                         </div>}
                         <div ref={scrollHookRef}></div>
-                    </div>
-                    {activeBidRoom && finalBids && finalBids.length > 0 && <div className='flex justify-evenly items-center gap-0'>
+                    </div>}
+                    {activeBidRoom && !activeBidRoom?.userOfferAccepted && finalBids && finalBids.length > 0 && <div className='flex justify-evenly items-center gap-0'>
                         {
                             finalBids.map((theBid: any, index: number) => {
                                 return (
@@ -455,13 +457,14 @@ const BiddingWrapper = (props: Props) => {
                     {/* AUTHOR HAS DECIDED */}
                     {
                         isLocked && selectedBid && activeBidRoom && activeBidRoom.closedAt && <div className='my-2 flex flex-col gap-2 items-center'>
-                            <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
+                            <Image src={images.site.ui.handshake} alt='Bid Closed' width={100} height={100} layout='responsive' className='w-full h-auto' />
+                            <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>Deal closed at <br/>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
                             {/* <div className='text-center tracking-wide'>
                             {selectedBid.user.id === user.id ? "You" : selectedBid.user.name} has won the bid for <span className='font-semibold'>{props.animal.name}</span> with a final offer of <span className='font-semibold'>{formatCurrency(selectedBid.price)}</span>.
                         </div> */}
                             {
                                 activeBidRoom.userOfferAccepted &&
-                                <CTOButton activeBidRoomId={activeBidRoom.id} user={user} />
+                                <CTOButton activeBidRoomId={activeBidRoom.id} user={user} room={activeBidRoom} />
                             }
                         </div>
                     }
