@@ -7,6 +7,14 @@ async function getBalance(userId: string) {
   return response.data;
 }
 
+async function recharge(userId: string, amount: number) {
+  const response = await axios.get(
+    `${apiPath}/recharge?userId=${userId}&amount=${amount}`
+  );
+  return response.data;
+}
+
 export const account = {
+  recharge,
   getBalance,
 };
