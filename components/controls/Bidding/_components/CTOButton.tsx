@@ -24,7 +24,10 @@ const CTOButton = (props: Props) => {
             if (response.status === 200) {
                 setUser(response.data)
                 fetchBalance()
-            } else {
+            } else if (response.status === 302) {
+                dialog.showDialog(`Insufficient balance`, null, `Error: ${response.message}`)
+            }
+            else {
                 dialog.showDialog(`Unable to get user information`, null, `Error: ${response.message}`)
             }
             setIsFetching(false)

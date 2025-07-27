@@ -834,6 +834,7 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
             id: true,
             name: true,
             phone: true,
+            balance: true,
           },
         },
       },
@@ -858,6 +859,19 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
     );
     if (protocol && protocol.status === 200) {
       const cost = Number(protocol.data?.value ?? 0);
+      const thisUserBalance = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          balance: true,
+        },
+      });
+      if (Number(Number(thisUserBalance?.balance ?? 0) - cost) < 0) {
+        response.status = 302;
+        response.message = `Insufficient balance`;
+        return response;
+      }
       if (cost > 0) {
         await prisma.user.update({
           where: {
