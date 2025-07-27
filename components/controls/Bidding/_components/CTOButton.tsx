@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
 import { useSession } from '@/hooks/useSession'
@@ -58,6 +59,10 @@ const LowBalanceDialog = (props: { dialog: any }) => {
         props.dialog.closeDialog()
     }
 
+    const handleRecharge = () => {
+        props.dialog.showDialog('Quick Recharge', <RechargeDialog />)
+    }
+
     return (
         <div className='p-2 px-6 flex flex-col items-center gap-2'>
             <div>
@@ -65,7 +70,7 @@ const LowBalanceDialog = (props: { dialog: any }) => {
                 <div className='flex font-normal gap-1 items-center -mt-1'>  Please recharge your account.</div>
             </div>
             <div className='flex gap-2 items-center'>
-                <Button onClick={handleClose} className='w-full flex gap-2 items-center'><BanknoteArrowDownIcon /> Recharge</Button>
+                <Button onClick={handleRecharge} className='w-full flex gap-2 items-center'><BanknoteArrowDownIcon /> Recharge</Button>
                 <Button onClick={handleClose} className='w-full' variant='btn-secondary'>Close</Button>
             </div>
         </div>
