@@ -1,6 +1,7 @@
 "use client";
 
 import { bidsReverse } from "@/components/controls/Bidding/BiddingWrapper";
+import { useDialog } from "@/hooks/useDialog";
 import { useLoader } from "@/hooks/useLoader";
 import { useRooms } from "@/hooks/useRooms";
 import { useSession } from "@/hooks/useSession";
@@ -27,6 +28,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
     const setLoading = useLoader((state: any) => state.setLoading);
     const fetchBalance = useSession((state: any) => state.fetchBalance);
+    const dialog = useDialog()
     const rooms = useRooms();
 
     useEffect(() => {
@@ -69,7 +71,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                         room.bids = newBids;
                         rooms.addRoom(room, user);
                     }
-                    if (userId !== user.id) {
+                    if (userId === user.id) {
                         fetchBalance()
                     }
                 });

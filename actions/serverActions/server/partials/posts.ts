@@ -198,14 +198,32 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
       );
 
     if (BusinessProtocol && BusinessProtocol?.status === 200) {
-      await prisma.user.update({
+      const user = await prisma.user.findUnique({
         where: { id: userId },
-        data: {
-          balance: {
-            decrement: Number(BusinessProtocol.data.value ?? 0),
-          },
+        select: {
+          balance: true,
         },
       });
+      if (
+        !(
+          Number(Number(user?.balance) - Number(BusinessProtocol.data.value)) <
+          0
+        )
+      ) {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            balance: {
+              decrement: Number(BusinessProtocol.data.value ?? 0),
+            },
+          },
+        });
+      } else {
+        response.status = 302;
+        response.message = `You don't have enough balance to place this bid.`;
+        response.data = null;
+        return response;
+      }
     }
 
     const bid = await prisma.bids.create({

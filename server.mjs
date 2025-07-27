@@ -83,6 +83,8 @@ app.prepare().then(() => {
               })
             );
           }
+        } else if (data.status === 302) {
+          socket.emit("low-balance");
         } else {
           console.error(data.message);
         }

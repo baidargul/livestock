@@ -20,6 +20,8 @@ import { serialize } from 'bson'
 import { useLoader } from '@/hooks/useLoader'
 import GeneralBasicInformation from './_components/GeneralBasicInformation'
 import TheActualBidRoom from './_components/TheActualBidRoom'
+import { useDialog } from '@/hooks/useDialog'
+import CTOButton from './_components/CTOButton'
 
 type Props = {
     children: React.ReactNode
@@ -56,6 +58,7 @@ const BiddingWrapper = (props: Props) => {
     const rooms = useRooms((state: any) => state.rooms)
     const addRoom = useRooms((state: any) => state.addRoom)
     const setLoading = useLoader((state: any) => state.setLoading)
+    const dialog = useDialog()
 
     if (rawSocket && !socket) {
         setSocket(rawSocket)
@@ -66,6 +69,22 @@ const BiddingWrapper = (props: Props) => {
         setTempMessageOnHold(null)
         setThisRoomActiveBidders(0)
     }, [activeBidRoom])
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("low-balance", () => {
+                setTempMessageOnHold(null)
+                setMyLastOffer(0)
+                dialog.showDialog("Low Balance", null, `You don't have enough balance to place this bid.`);
+            })
+            return () => {
+                if (socket) {
+                    socket?.off("low-balance");
+                }
+            };
+        }
+
+    }, [])
 
     useEffect(() => {
         if (isMounted && user) {
@@ -382,72 +401,71 @@ const BiddingWrapper = (props: Props) => {
                         }
                     </div>}
                 </div>
-                {/* ALLOW BIDDING */}
-                {!isLocked && <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
-                    {isAuthor && activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length > 0 && <div className='my-4'>
-                        <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
-                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(Number(offerValue)))}</div>
+                <div className='w-full overflow-y-auto'>
+                    {/* ALLOW BIDDING */}
+                    {!isLocked && <div className='w-full fixed bottom-2 left-0 bg-white p-1 px-4 gap-2'>
+                        {isAuthor && activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length > 0 && <div className='my-4'>
+                            <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
+                            <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(Number(offerValue)))}</div>
+                        </div>}
+                        {!isAuthor && activeBidRoom && <div className='my-4'>
+                            <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
+                            <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(Number(offerValue)))}</div>
+                        </div>}
+                        <div className=' flex items-center gap-2'>
+                            <Button onClick={() => handleLeaveRoom(!isAuthor)} className='w-full' variant='btn-secondary'>{!activeBidRoom ? "Close" : "Cancel"}</Button>
+                            {activeBidRoom && <Button onClick={handlePostOffer} disabled={offerValue === 0} className='w-full'>Place Offer</Button>}
+                        </div>
                     </div>}
-                    {!isAuthor && activeBidRoom && <div className='my-4'>
-                        <Textbox disabled={isLocked} onKeyDown={handlePlaceOfferKeyDown} label='Give Your Price' type='number' onChange={handleOfferChange} value={offerValue} className='text-center tracking-widest' />
-                        <div className='italic text-sm tracking-wide mt-2 text-black/50'>{formalizeText(convertCurrencyToWords(Number(offerValue)))}</div>
-                    </div>}
-                    <div className=' flex items-center gap-2'>
-                        <Button onClick={() => handleLeaveRoom(!isAuthor)} className='w-full' variant='btn-secondary'>{!activeBidRoom ? "Close" : "Cancel"}</Button>
-                        {activeBidRoom && <Button onClick={handlePostOffer} disabled={offerValue === 0} className='w-full'>Place Offer</Button>}
-                    </div>
-                </div>}
-                {/* AUTHOR WILL NOW TAKE FINAL DECISION */}
-                {
-                    isLocked && isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div className='grid grid-cols-2 place-items-center gap-2'>
-                        {
-                            finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
-                                if (!bid) return
-                                return (
-                                    <div onClick={() => handleCloseDeal(bid)} key={`${bid.id}-${index}`} className='p-4 bg-white cursor-pointer hover:bg-emerald-50 rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
-                                        <div>{bid.user.id === user.id ? "You" : bid.user.name}</div>
-                                        <div className='text-2xl tracking-wide'>{formatCurrency(bid.price)}</div>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                }
-                {/* USER WILL WAIT FOR AUTHOR SELECTION */}
-                {
-                    isLocked && !isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div>
-                        <div className='my-4 text-center'>⚠️ Your final offer has been placed, Please wait for the author to make the final decision.</div>
-                        <div className='grid grid-cols-2 place-items-center gap-2 pointer-events-none'>
+                    {/* AUTHOR WILL NOW TAKE FINAL DECISION */}
+                    {
+                        isLocked && isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div className='grid grid-cols-2 place-items-center gap-2'>
                             {
                                 finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
                                     if (!bid) return
                                     return (
-                                        <div key={`${bid.id}-${index}`} className='p-2 bg-white rounded py-2 w-full flex flex-col justify-center items-center'>
-                                            <div className='text-sm'>{bid.user.id === user.id ? "You" : bid.user.name}</div>
-                                            <div className='tracking-wide'>{formatCurrency(bid.price)}</div>
+                                        <div onClick={() => handleCloseDeal(bid)} key={`${bid.id}-${index}`} className='p-4 bg-white cursor-pointer hover:bg-emerald-50 rounded drop-shadow-sm py-2 w-full flex flex-col justify-center items-center'>
+                                            <div>{bid.user.id === user.id ? "You" : bid.user.name}</div>
+                                            <div className='text-2xl tracking-wide'>{formatCurrency(bid.price)}</div>
                                         </div>
                                     )
                                 })
                             }
                         </div>
-                    </div>
-                }
-                {/* AUTHOR HAS DECIDED */}
-                {
-                    isLocked && selectedBid && activeBidRoom && activeBidRoom.closedAt && <div className='my-2'>
-                        <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
-                        <div className='text-center tracking-wide'>
-                            {isAuthor
-                                ? (selectedBid.userId === user.id
-                                    ? 'You have rejected the offer.'
-                                    : 'You have accepted the offer.')
-                                : (selectedBid.userId === user.id
-                                    ? 'Your offer has been accepted.'
-                                    : 'Your offer has been rejected.')}
+                    }
+                    {/* USER WILL WAIT FOR AUTHOR SELECTION */}
+                    {
+                        isLocked && !isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div>
+                            <div className='my-4 text-center'>⚠️ Your final offer has been placed, Please wait for the author to make the final decision.</div>
+                            <div className='grid grid-cols-2 place-items-center gap-2 pointer-events-none'>
+                                {
+                                    finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
+                                        if (!bid) return
+                                        return (
+                                            <div key={`${bid.id}-${index}`} className='p-2 bg-white roundedpy-2 w-full flex flex-col justify-center items-center'>
+                                                <div className='text-sm'>{bid.user.id === user.id ? "You" : bid.user.name}</div>
+                                                <div className='tracking-wide'>{formatCurrency(bid.price)}</div>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
-
-                    </div>
-                }
+                    }
+                    {/* AUTHOR HAS DECIDED */}
+                    {
+                        isLocked && selectedBid && activeBidRoom && activeBidRoom.closedAt && <div className='my-2 flex flex-col gap-2 items-center'>
+                            <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
+                            {/* <div className='text-center tracking-wide'>
+                            {selectedBid.user.id === user.id ? "You" : selectedBid.user.name} has won the bid for <span className='font-semibold'>{props.animal.name}</span> with a final offer of <span className='font-semibold'>{formatCurrency(selectedBid.price)}</span>.
+                        </div> */}
+                            {
+                                activeBidRoom.userOfferAccepted &&
+                                <CTOButton activeBidRoomId={activeBidRoom.id} user={user} />
+                            }
+                        </div>
+                    }
+                </div>
             </div >
             <div onClick={handleCreateBidRoom} className={`w-full ${isOpen && "pointer-events-none opacity-50 scale-75"} w-full transition-all duration-100 ease-in-out`}>
                 {props.staticStyle && props.children}

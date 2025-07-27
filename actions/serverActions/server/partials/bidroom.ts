@@ -816,6 +816,73 @@ async function bidSeen(bidId: string) {
     return response;
   }
 }
+async function GetCustomerContact(activeBidRoomId: string, userId: string) {
+  const response = {
+    status: 500,
+    message: "Failed to get customer contact",
+    data: null,
+  } as any;
+
+  try {
+    const activeBidRoom = await prisma.bidRoom.findUnique({
+      where: {
+        id: activeBidRoomId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    if (!activeBidRoom) {
+      response.status = 404;
+      response.message = `Room does not exist.`;
+      return response;
+    }
+
+    if (!activeBidRoom?.user && !activeBidRoom?.user?.id) {
+      response.status = 404;
+      response.message = `User does not exist.`;
+      return response;
+    }
+
+    const isAuthor = activeBidRoom.authorId === userId;
+
+    const protocol = await actions.server.protocols.BusinessProtocols.list(
+      isAuthor ? "SellerHandShakeCost" : "BuyerHandShakeCost"
+    );
+    if (protocol && protocol.status === 200) {
+      const cost = Number(protocol.data?.value ?? 0);
+      if (cost > 0) {
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            balance: {
+              decrement: cost,
+            },
+          },
+        });
+      }
+    }
+
+    response.status = 200;
+    response.message = "Customer contact fetched successfully.";
+    response.data = activeBidRoom.user;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    return response;
+  }
+}
 
 export const bidRoom = {
   list,
@@ -826,6 +893,7 @@ export const bidRoom = {
   leaveBidRoom,
   leaveAllBidRooms,
   lockBidAsFinalOffer,
+  GetCustomerContact,
   bidSeen,
   bidding,
 };
