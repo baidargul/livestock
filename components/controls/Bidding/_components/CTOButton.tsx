@@ -33,6 +33,7 @@ const CTOButton = (props: Props) => {
                 dialog.showDialog(`Insufficient balance`, <LowBalanceDialog dialog={dialog} />)
             }
             else {
+
                 dialog.showDialog(`Unable to get user information`, null, `Error: ${response.message}`)
             }
             setIsFetching(false)

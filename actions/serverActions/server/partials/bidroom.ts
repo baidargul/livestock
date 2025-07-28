@@ -873,16 +873,23 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
         return response;
       }
       if (cost > 0) {
-        await prisma.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            balance: {
-              decrement: cost,
+        Promise.all([
+          await prisma.user.update({
+            where: {
+              id: userId,
             },
-          },
-        });
+            data: {
+              balance: {
+                decrement: cost,
+              },
+            },
+          }),
+          await actions.server.user.contacts.createContact(
+            userId,
+            isAuthor ? activeBidRoom.authorId : userId,
+            `Handshake cost: ${cost}`
+          ),
+        ]);
       }
     }
 
