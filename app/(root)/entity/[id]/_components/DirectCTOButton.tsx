@@ -7,7 +7,7 @@ import { useSession } from '@/hooks/useSession'
 import { useUser } from '@/socket-client/SocketWrapper'
 import { BanknoteArrowDownIcon, PhoneIcon } from 'lucide-react'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
@@ -15,11 +15,16 @@ type Props = {
 }
 
 const DirectCTOButton = (props: Props) => {
+    const [preCheck, setPreCheck] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
     const [user, setUser] = useState<any>(null)
     const currentUser = useUser()
     const fetchBalance = useSession((state: any) => state.fetchBalance)
     const dialog = useDialog()
+
+    useEffect(() => {
+
+    }, [])
 
 
     const handleClick = async () => {
@@ -43,9 +48,7 @@ const DirectCTOButton = (props: Props) => {
     return (
         <>
             {!user && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
-                <div onClick={handleClick} className='w-full'>
-                    <div className='w-full'>{props.children}</div>
-                </div>
+                <div onClick={handleClick} className='w-full'>{props.children}</div>
             </div>}
             {user && <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
                 <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}

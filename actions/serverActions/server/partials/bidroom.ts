@@ -909,7 +909,7 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
           await actions.server.user.contacts.createContact(
             activeBidRoom.authorId,
             activeBidRoom.userId,
-            `Handshake cost: ${cost}`
+            `Buyer`
           ),
         ]);
       }

@@ -337,6 +337,21 @@ async function GetCustomerContact(postId: string, userId: string) {
     data: null as any,
   };
   try {
+    let isExists = await prisma.animal.findFirst({
+      where: { id: postId },
+      select: {
+        id: true,
+        userId: true,
+      },
+    });
+
+    if (!isExists) {
+      response.status = 400;
+      response.message = "Post not found";
+      response.data = null;
+      return response;
+    }
+
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -367,14 +382,22 @@ async function GetCustomerContact(postId: string, userId: string) {
         response.data = null;
         return response;
       } else {
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            balance: {
-              decrement: cost,
+        Promise.all([
+          await prisma.user.update({
+            where: { id: userId },
+            data: {
+              balance: {
+                decrement: Number(protocol.data.value ?? 0),
+              },
             },
-          },
-        });
+          }),
+
+          await actions.server.user.contacts.createContact(
+            userId,
+            isExists.id,
+            `Seller`
+          ),
+        ]);
       }
     }
 
