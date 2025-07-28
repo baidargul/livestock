@@ -186,8 +186,6 @@ const BiddingWrapper = (props: Props) => {
             }
         }
 
-        console.log(activeBidRoom)
-
     }, [activeBidRoom])
 
     useEffect(() => {
