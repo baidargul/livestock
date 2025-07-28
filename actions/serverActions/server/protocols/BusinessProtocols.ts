@@ -17,6 +17,10 @@ const businessProtocols: ProtocolType[] = [
     name: "BuyerHandShakeCost",
     value: "0",
   },
+  {
+    name: "BuyerDirectHandShakeCost",
+    value: "300",
+  },
 ];
 
 const initializeDefaults = async () => {
@@ -33,6 +37,7 @@ const initializeDefaults = async () => {
             value: protocol.value,
           },
         });
+        console.log(`created protocol: ${protocol.name}`);
       }
     }
   } catch (error: any) {

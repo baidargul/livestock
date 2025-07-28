@@ -295,7 +295,6 @@ async function listBids(roomId: string) {
     return response;
   }
 }
-
 async function changeBiddingStatus(postId: string, allowBidding: boolean) {
   let response: any = {
     status: 500,
@@ -331,6 +330,89 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
   }
 }
 
+async function GetCustomerContact(postId: string, userId: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        balance: true,
+      },
+    });
+
+    if (!user) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    const protocol = await actions.server.protocols.BusinessProtocols.list(
+      "BuyerDirectHandShakeCost"
+    );
+    if (protocol && protocol.status === 200) {
+      const cost = Number(
+        Number(user.balance ?? 0) - Number(protocol.data.value ?? 0)
+      );
+      if (cost < 0) {
+        response.status = 302;
+        response.message = `You don't have enough balance to place this bid.`;
+        response.data = null;
+        return response;
+      } else {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            balance: {
+              decrement: cost,
+            },
+          },
+        });
+      }
+    }
+
+    const post = await prisma.animal.findUnique({
+      where: {
+        id: postId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    if (!post) {
+      response.status = 400;
+      response.message = "Post not found";
+      response.data = null;
+      return response;
+    }
+
+    response.status = 200;
+    response.message = "Customer contact fetched successfully";
+    response.data = post.user;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @GET CUSTOMER CONTACT: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const post = {
   list,
   listAll,
@@ -338,4 +420,5 @@ export const post = {
   placeBid,
   listBids,
   changeBiddingStatus,
+  GetCustomerContact,
 };

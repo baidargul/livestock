@@ -79,6 +79,13 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
   return response.data;
 }
 
+async function GetCustomerContact(postId: string, userId: string) {
+  const response = await axios.get(
+    `/api/post/cto?postId=${postId}&userId=${userId}`
+  );
+  return response.data;
+}
+
 export const posts = {
   createPost,
   removePost,
@@ -86,4 +93,5 @@ export const posts = {
   listBids,
   listByUser,
   changeBiddingStatus,
+  GetCustomerContact,
 };

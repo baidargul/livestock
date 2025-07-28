@@ -1,0 +1,81 @@
+'use client'
+import { actions } from '@/actions/serverActions/actions'
+import RechargeDialog from '@/components/Recharge/RechargeDialog'
+import Button from '@/components/ui/Button'
+import { useDialog } from '@/hooks/useDialog'
+import { useSession } from '@/hooks/useSession'
+import { useUser } from '@/socket-client/SocketWrapper'
+import { BanknoteArrowDownIcon, PhoneIcon } from 'lucide-react'
+import Link from 'next/link'
+import React, { useState } from 'react'
+
+type Props = {
+    children: React.ReactNode
+    animal: any
+}
+
+const DirectCTOButton = (props: Props) => {
+    const [isFetching, setIsFetching] = useState(false)
+    const [user, setUser] = useState<any>(null)
+    const currentUser = useUser()
+    const fetchBalance = useSession((state: any) => state.fetchBalance)
+    const dialog = useDialog()
+
+
+    const handleClick = async () => {
+        if (!isFetching && currentUser) {
+            setIsFetching(true)
+            const response = await actions.client.posts.GetCustomerContact(props.animal.id, currentUser.id)
+            if (response.status === 200) {
+                setUser(response.data)
+                fetchBalance()
+            } else if (response.status === 302) {
+                dialog.showDialog(`Insufficient balance`, <LowBalanceDialog dialog={dialog} />)
+            }
+            else {
+
+                dialog.showDialog(`Unable to get user information`, null, `Error: ${response.message}`)
+            }
+            setIsFetching(false)
+        }
+    }
+
+    return (
+        <>
+            {!user && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
+                <div onClick={handleClick} className='w-full'>
+                    <div className='w-full'>{props.children}</div>
+                </div>
+            </div>}
+            {user && <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
+                <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
+            </Link>}
+        </>
+    )
+}
+
+export default DirectCTOButton
+
+const LowBalanceDialog = (props: { dialog: any }) => {
+
+    const handleClose = () => {
+        props.dialog.closeDialog()
+    }
+
+    const handleRecharge = () => {
+        props.dialog.showDialog('Quick Recharge', <RechargeDialog />)
+    }
+
+    return (
+        <div className='p-2 px-6 flex flex-col items-center gap-2'>
+            <div>
+                <div className='text-lg font-semibold'>You're low on balance</div>
+                <div className='flex font-normal gap-1 items-center -mt-1'>  Please recharge your account.</div>
+            </div>
+            <div className='flex gap-2 items-center'>
+                <Button onClick={handleRecharge} className='w-full flex gap-2 items-center'><BanknoteArrowDownIcon /> Recharge</Button>
+                <Button onClick={handleClose} className='w-full' variant='btn-secondary'>Close</Button>
+            </div>
+        </div>
+    )
+}

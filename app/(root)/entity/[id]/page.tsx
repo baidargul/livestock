@@ -19,6 +19,8 @@ import GeneralFooter from '@/components/website/footer/GeneralFooter'
 import ProductGallery from '@/components/ui/ProductGallery'
 import ProductMenu from './_components/ProductMenu'
 import Marquee from 'react-fast-marquee'
+import CTOButton from '@/components/controls/Bidding/_components/CTOButton'
+import DirectCTOButton from './_components/DirectCTOButton'
 
 export const dynamic = 'force-dynamic';
 
@@ -161,9 +163,11 @@ const page = async (props: Props) => {
                     }
                     {
                         !animal.allowBidding &&
-                        <Button className='w-full'>
-                            Buy Now
-                        </Button>
+                        <DirectCTOButton animal={animal}>
+                            <Button className='w-full'>
+                                Buy Now
+                            </Button>
+                        </DirectCTOButton>
                     }
                 </div>
                 <GeneralFooter />
