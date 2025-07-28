@@ -394,7 +394,7 @@ async function GetCustomerContact(postId: string, userId: string) {
 
           await actions.server.user.contacts.createContact(
             userId,
-            isExists.id,
+            isExists.userId,
             `Seller`
           ),
         ]);

@@ -23,12 +23,23 @@ const DirectCTOButton = (props: Props) => {
     const dialog = useDialog()
 
     useEffect(() => {
+        const fetchContact = async () => {
+            if (currentUser) {
+                setPreCheck(true)
+                const response = await actions.client.user.contacts.list(currentUser.id, props.animal.userId)
+                if (response.status === 200) {
+                    setUser(response.data.user)
+                }
+                setPreCheck(false)
+            }
+        }
 
-    }, [])
+        fetchContact()
+    }, [currentUser])
 
 
     const handleClick = async () => {
-        if (!isFetching && currentUser) {
+        if (!isFetching && !preCheck && currentUser) {
             setIsFetching(true)
             const response = await actions.client.posts.GetCustomerContact(props.animal.id, currentUser.id)
             if (response.status === 200) {

@@ -26,7 +26,15 @@ async function toggleFavorite(contactId: string) {
   return response.data;
 }
 
+async function list(userId: string, targetUserId: string) {
+  const response = await axios.get(
+    `${apiPath}?userId=${userId}&targetUserId=${targetUserId}`
+  );
+  return response.data;
+}
+
 export const contacts = {
+  list,
   listAll,
   toggleFavorite,
   deleteContact,
