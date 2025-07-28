@@ -1,5 +1,6 @@
 import axios from "axios";
 import { account } from "./account";
+import { contacts } from "./contacts";
 const apiPath = "/api/user";
 
 async function signup(
@@ -84,4 +85,5 @@ export const user = {
   setProfileImage,
   setCoverImage,
   account,
+  contacts,
 };

@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
 import { account } from "./account";
+import { contacts } from "./contacts";
 async function signup(
   name: string,
   email: string,
@@ -364,4 +365,5 @@ export const user = {
   isFollowing,
   list,
   account,
+  contacts,
 };

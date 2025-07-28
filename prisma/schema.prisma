@@ -31,31 +31,43 @@ model Demands {
 }
 
 model User {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?     @unique
+  email         String?       @unique
   password      String?
   province      String?
   city          String?
   phone         String?
   profileImage  Json?
   coverImage    Json?
-  balance       Float?      @default(0)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  connectionIds String[]    @default([])
+  balance       Float?        @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  connectionIds String[]      @default([])
   animals       Animal[] // Relation to Animal
   sessions      Sessions[] // Relation to Sessions
   bids          Bids[] // Relation to Bids
-  followers     Following[] @relation("UserFollowers") // Users that follow this user
-  following     Following[] @relation("UserFollowing") // Users this user follows
+  followers     Following[]   @relation("UserFollowers") // Users that follow this user
+  following     Following[]   @relation("UserFollowing") // Users this user follows
   bidRooms      BidRoom[] // Relation to BidRoom
-  bidRoomAuthor BidRoom[]   @relation("BidRoomAuthor") // Rooms created by this user
+  bidRoomAuthor BidRoom[]     @relation("BidRoomAuthor") // Rooms created by this user
   demands       Demands[]
+  contactBooks  ContactBook[] @relation("UserContactBook") // Contact books related to this user
 
   @@index([name]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email
   @@map("users") // Map to a different collection name if needed
+}
+
+model ContactBook {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId  String   @db.ObjectId // ID of the user who created the contact
+  author    User?    @relation("UserContactBook", fields: [authorId], references: [id])
+  userId    String   @db.ObjectId // ID of the user this contact belongs to
+  remarks   String? // Optional remarks for the contact
+  favourite Boolean  @default(false) // Whether this contact is a favorite
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Animal {
