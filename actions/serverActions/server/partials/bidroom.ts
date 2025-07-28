@@ -94,7 +94,7 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       });
 
       if (!demandId) {
-        // USER FIRST OFFER
+        // FOR DEMANDS USER FIRST OFFER
         await prisma.bids.create({
           data: {
             price: room.offer ?? calculatePricing(animal).price,

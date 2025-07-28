@@ -59,13 +59,7 @@ const BidProtection = (props: Props) => {
         }
     }, [rooms, user])
 
-    if (!bid) {
-        return (
-            <BiddingWrapper animal={props.animal} >
-                {props.children}
-            </BiddingWrapper>
-        )
-    }
+
 
     const handleCloseBidRoom = async () => {
         if (socket) {
@@ -81,6 +75,14 @@ const BidProtection = (props: Props) => {
             <PostBiddingOptions postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
                 {props.children}
             </PostBiddingOptions>
+        )
+    }
+
+    if (!bid) {
+        return (
+            <BiddingWrapper animal={props.animal} >
+                {props.children}
+            </BiddingWrapper>
         )
     }
 
