@@ -458,13 +458,17 @@ const BiddingWrapper = (props: Props) => {
                     {
                         isLocked && selectedBid && activeBidRoom && activeBidRoom.closedAt && <div className='my-2 flex flex-col gap-2 items-center'>
                             <Image src={images.site.ui.handshake} alt='Bid Closed' width={100} height={100} layout='responsive' className='w-full h-auto' />
-                            <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>Deal closed at <br/>{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
+                            <div className='text-2xl text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>Deal closed at <br />{formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
                             {/* <div className='text-center tracking-wide'>
                             {selectedBid.user.id === user.id ? "You" : selectedBid.user.name} has won the bid for <span className='font-semibold'>{props.animal.name}</span> with a final offer of <span className='font-semibold'>{formatCurrency(selectedBid.price)}</span>.
                         </div> */}
                             {
-                                activeBidRoom.userOfferAccepted &&
+                                activeBidRoom.userOfferAccepted && isAuthor &&
                                 <CTOButton activeBidRoomId={activeBidRoom.id} user={user} room={activeBidRoom} />
+                            }
+                            {
+                                activeBidRoom.userOfferAccepted && !isAuthor &&
+                                <div>Please wait for the author to call you.</div>
                             }
                         </div>
                     }
