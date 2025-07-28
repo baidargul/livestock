@@ -48,11 +48,9 @@ const Rooms = (props: Props) => {
   return props.animal && <div>
     <div className="mb-5">
       {props.rooms && props.rooms?.length > 0 && <div className="tracking-tight text-xl">Please select a room for</div>}
-      {props.animal && <Link href={`/entity/${props.animal.id}`} className="underline underline-offset-6 text-emerald-700">{totalQuantity} x {formalizeText(props.animal.breed)} {totalQuantity > 1 ? props.animal.type : props.animal.type.slice(0, props.animal.type.length - 1)} @ {formatCurrency(props.animal.price)} = {calculatePricing(props.animal).price}</Link>}
+      {/* {props.animal && <Link href={`/entity/${props.animal.id}`} className="underline underline-offset-6 text-emerald-700">{totalQuantity} x {formalizeText(props.animal.breed)} {totalQuantity > 1 ? props.animal.type : props.animal.type.slice(0, props.animal.type.length - 1)} @ {formatCurrency(props.animal.price)} = {calculatePricing(props.animal).price}</Link>} */}
     </div>
     {props.rooms && props.rooms.map((bid: any, index: number) => {
-      console.log(bid)
-
       if (bid.animalId == !props.animal.id) return null
 
       if (!bid) return
