@@ -157,7 +157,7 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
 
     let contact: any = await actions.server.user.contacts.list(
       updated.authorId,
-      userId
+      updated.userId
     );
     if (contact.status === 200) {
       contact = contact.data;
@@ -907,8 +907,8 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
             },
           }),
           await actions.server.user.contacts.createContact(
-            userId,
-            isAuthor ? activeBidRoom.authorId : userId,
+            activeBidRoom.authorId,
+            activeBidRoom.userId,
             `Handshake cost: ${cost}`
           ),
         ]);

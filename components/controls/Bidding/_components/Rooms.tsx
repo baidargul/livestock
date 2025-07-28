@@ -1,7 +1,7 @@
 import DeliveryIcon from "@/components/Animals/DeliveryIcon";
 import { calculatePricing, formalizeText, formatCurrency } from "@/lib/utils";
 import { serialize } from "bson";
-import { ChartCandlestick, ChartCandlestickIcon, HandshakeIcon } from "lucide-react";
+import { ChartCandlestick, ChartCandlestickIcon, HandshakeIcon, PhoneIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -51,6 +51,7 @@ const Rooms = (props: Props) => {
       {props.animal && <Link href={`/entity/${props.animal.id}`} className="underline underline-offset-6 text-emerald-700">{totalQuantity} x {formalizeText(props.animal.breed)} {totalQuantity > 1 ? props.animal.type : props.animal.type.slice(0, props.animal.type.length - 1)} @ {formatCurrency(props.animal.price)} = {calculatePricing(props.animal).price}</Link>}
     </div>
     {props.rooms && props.rooms.map((bid: any, index: number) => {
+      console.log(bid)
 
       if (bid.animalId == !props.animal.id) return null
 
@@ -65,30 +66,34 @@ const Rooms = (props: Props) => {
       }
 
       return (
-        <div
-          key={`${bid.id}-${index}`}
-          onClick={() => handleJoinRoom(bid)}
-          className={`p-2 ${props.expectedKey === bid.key ? "scale-75 pointer-events-none opacity-50" : ""} transition-all duration-100 ease-in-out flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}
-        >
-          <div className="flex gap-4 items-center">
-            {bid.userOfferAccepted ? <HandshakeIcon size={16} className="text-emerald-700" /> : <ChartCandlestickIcon className="text-amber-700" size={16} />}
-            <div>
+        <div key={`${bid.id}-${index}`} className="flex gap-1 items-center w-full">
+          {bid.contact && <Link href={`tel:${bid.contact.user.phone}`} className="">
+            <PhoneIcon className="text-emerald-700 animate-pulse duration-300" />
+          </Link>}
+          <div
+            onClick={() => handleJoinRoom(bid)}
+            className={`p-2 ${props.expectedKey === bid.key ? "scale-75 pointer-events-none opacity-50" : ""} transition-all duration-100 ease-in-out w-full flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}
+          >
+            <div className="flex gap-4 items-center">
+              {bid.userOfferAccepted ? <HandshakeIcon size={16} className="text-emerald-700" /> : <ChartCandlestickIcon className="text-amber-700" size={16} />}
               <div>
-                {bid.user.name}
-              </div>
-              <div className="text-xs tracking-wide -mt-1 flex gap-1 items-center">
-                <div className='border-r-2 border-zinc-300 pr-4 flex items-center gap-1'>
-                  {
-                    bid.deliveryOptions.map((option: any, index: number) => <DeliveryIcon icon={option} key={`${option}-${index}`} />)
-                  }
+                <div>
+                  {bid.user.name}
                 </div>
-                {bid.maleQuantityAvailable > 0 && ` ${bid.maleQuantityAvailable} male`}
-                {bid.femaleQuantityAvailable > 0 && ` ${bid.femaleQuantityAvailable} female`}
+                <div className="text-xs tracking-wide -mt-1 flex gap-1 items-center">
+                  <div className='border-r-2 border-zinc-300 pr-4 flex items-center gap-1'>
+                    {
+                      bid.deliveryOptions.map((option: any, index: number) => <DeliveryIcon icon={option} key={`${option}-${index}`} />)
+                    }
+                  </div>
+                  {bid.maleQuantityAvailable > 0 && ` ${bid.maleQuantityAvailable} male`}
+                  {bid.femaleQuantityAvailable > 0 && ` ${bid.femaleQuantityAvailable} female`}
+                </div>
               </div>
             </div>
-          </div>
-          <div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : formatCurrency(bid.bids[bid.bids.length - 1]?.price ?? 0)}
+            <div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : formatCurrency(bid.bids[bid.bids.length - 1]?.price ?? 0)}
 
+            </div>
           </div>
         </div>
       );
