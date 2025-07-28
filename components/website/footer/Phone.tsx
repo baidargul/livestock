@@ -6,6 +6,9 @@ import ProfileMenuWrapper from '../profile/_components/ProfileMenuWrapper'
 import RoomsWrapper from './_components/RoomsWrapper'
 import FetchLastestRooms from '@/components/Fetchers/FetchLastestRooms'
 import { useUser } from '@/socket-client/SocketWrapper'
+import ContactsWrapper from './_components/ContactsWrapper'
+import Image from 'next/image'
+import { images } from '@/consts/images'
 
 type Props = {}
 
@@ -46,6 +49,14 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </RoomsWrapper>}
+            {user && <ContactsWrapper>
+                <div className={`${route.includes("contacts") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                    <Image src={images.site.ui.contactlisthover} alt='contacts' width={24} height={24} layout='fixed' className='' />
+                    <div>
+                        Contacts
+                    </div>
+                </div>
+            </ContactsWrapper>}
             <ProfileMenuWrapper>
                 <div className={`${route.includes("profile") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <UserIcon />

@@ -60,7 +60,7 @@ async function listAll(userId: string) {
   try {
     const contacts = await prisma.contactBook.findMany({
       where: {
-        userId: userId,
+        authorId: userId,
       },
       include: {
         author: {
