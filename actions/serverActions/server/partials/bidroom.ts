@@ -155,12 +155,23 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       },
     });
 
+    let contact: any = await actions.server.user.contacts.list(
+      updated.authorId,
+      userId
+    );
+    if (contact.status === 200) {
+      contact = contact.data;
+    } else {
+      contact = null;
+    }
+
     const images = await actions.server.images.fetchImages(
       updated.animal.images
     );
 
     updated = {
       ...updated,
+      contact: contact,
       animal: {
         ...updated.animal,
         images: images,
@@ -368,12 +379,23 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
       },
     });
 
+    let contact: any = await actions.server.user.contacts.list(
+      rooms.authorId,
+      rooms.userId
+    );
+    if (contact.status === 200) {
+      contact = contact.data;
+    } else {
+      contact = null;
+    }
+
     const images = await actions.server.images.fetchImages(
       rooms?.animal?.images
     );
 
     rooms = {
       ...rooms,
+      contact: contact,
       animal: {
         ...rooms.animal,
         images,

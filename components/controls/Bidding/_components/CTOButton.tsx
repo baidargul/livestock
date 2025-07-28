@@ -2,13 +2,14 @@
 import { actions } from '@/actions/serverActions/actions'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
+import Room from '@/components/website/footer/_components/_roomsWrapper/Room'
 import { images } from '@/consts/images'
 import { useDialog } from '@/hooks/useDialog'
 import { useSession } from '@/hooks/useSession'
 import { BanknoteArrowDownIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     activeBidRoomId: string
@@ -21,6 +22,12 @@ const CTOButton = (props: Props) => {
     const dialog = useDialog()
     const [user, setUser] = useState<any>(null)
     const fetchBalance = useSession((state: any) => state.fetchBalance)
+
+    useEffect(() => {
+        if (props.room.contact) {
+            setUser(props.room.contact.user)
+        }
+    }, [props.room])
 
     const handleClick = async () => {
         if (!isFetching) {

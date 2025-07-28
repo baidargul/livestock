@@ -104,7 +104,59 @@ async function listAll(userId: string) {
 
   return response;
 }
+async function list(userId: string, targetUserId: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
 
+  try {
+    let contact: any = await prisma.contactBook.findFirst({
+      where: {
+        authorId: userId,
+        userId: targetUserId,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (contact) {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: contact.userId,
+        },
+        select: {
+          name: true,
+          phone: true,
+          city: true,
+          province: true,
+        },
+      });
+
+      contact = {
+        ...contact,
+        user: user ? { ...user, id: contact.userId } : null,
+      };
+    }
+    response.status = 200;
+    response.message = `Contact retrieved successfully`;
+    response.data = contact;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+  }
+
+  return response;
+}
 async function deleteContact(contactId: string) {
   const response = {
     status: 500,
@@ -131,7 +183,6 @@ async function deleteContact(contactId: string) {
 
   return response;
 }
-
 async function toggleFavorite(contactId: string) {
   const response = {
     status: 500,
@@ -185,5 +236,6 @@ export const contacts = {
   createContact,
   toggleFavorite,
   deleteContact,
+  list,
   listAll,
 };

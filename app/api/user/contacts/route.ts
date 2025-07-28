@@ -9,14 +9,18 @@ export async function GET(req: NextRequest) {
   };
 
   try {
-    const userId = req.nextUrl.searchParams.get("userId");
+    const userId = new URL(req.url).searchParams.get("userId");
+    const targetUserId = new URL(req.url).searchParams.get("targetUserId");
     if (!userId) {
       response.status = 400;
       response.message = "Missing userId parameter";
       return new Response(JSON.stringify(response));
     }
-
-    response = await actions.server.user.contacts.listAll(userId);
+    if (targetUserId) {
+      response = await actions.server.user.contacts.list(userId, targetUserId);
+    } else {
+      response = await actions.server.user.contacts.listAll(userId);
+    }
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
@@ -83,7 +87,6 @@ export async function DELETE(req: NextRequest) {
     return new Response(JSON.stringify(response));
   }
 }
-
 export async function PATCH(req: NextRequest) {
   let response = {
     status: 500,
