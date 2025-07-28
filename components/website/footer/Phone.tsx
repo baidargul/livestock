@@ -38,14 +38,14 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </Link>
-            <RoomsWrapper forPhone>
+            {user && <RoomsWrapper forPhone>
                 <div className={`${route.includes("cart") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShoppingBagIcon />
                     <div>
                         BidRooms
                     </div>
                 </div>
-            </RoomsWrapper>
+            </RoomsWrapper>}
             <ProfileMenuWrapper>
                 <div className={`${route.includes("profile") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <UserIcon />
