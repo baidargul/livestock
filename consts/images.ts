@@ -42,6 +42,7 @@ import mobileIcon from "@/public/logos/fullHd.png";
 import goldCoin from "@/public/system/coin/basic.png";
 import goldCoinShine from "@/public/system/coin/shine.png";
 import handshake from "@/public/system/ui/handshake.png";
+import contactlist from "@/public/system/ui/contactlist.png";
 
 export const images = {
   site: {
@@ -58,6 +59,7 @@ export const images = {
     },
     ui: {
       handshake: handshake,
+      contactlist: contactlist,
     },
     coins: {
       gold: {

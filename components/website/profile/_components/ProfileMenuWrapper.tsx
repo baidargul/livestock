@@ -162,6 +162,19 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
                                 </div>
                             </Link>
                         </div>
+                        <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
+                            <Link href={'#'}>
+                                <div className='flex flex-col gap-2 items-start'>
+                                    <div>
+                                        <Image src={images.site.ui.contactlist} alt='contacts' width={24} height={24} layout='fixed' className='' />
+                                    </div>
+                                    <div className=''>
+                                        <div className='font-semibold tracking-wide'>Contacts</div>
+                                        <div className='text-xs tracking-wide italic text-black/60'>All your saved connections.</div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
                     </div>
                     <div onClick={handleLoggout} className='bg-zinc-100 border border-zinc-200/40 cursor-pointer p-4 rounded-xl mt-5 text-center font-semibold tracking-widest'>
                         Logout
