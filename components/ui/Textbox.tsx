@@ -32,6 +32,10 @@ const Textbox = (props: Props) => {
             if (txtRef.current) {
                 txtRef.current.select()
             }
+        } else if (e.key === "Escape") {
+            if (txtRef.current) {
+                handleChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
+            }
         }
     }
 
