@@ -21,6 +21,10 @@ const TheContact = (props: Props) => {
         dialog.showDialog('Delete Contact', <DeleteConfirmationBox closeDialog={() => dialog.closeDialog()} contact={props.contact} goBack={props.goBack} fetchContacts={props.fetchContacts} />)
     }
 
+    const handleCopyPhone = () => {
+        navigator.clipboard.writeText(contact?.user?.phone)
+    }
+
     return (
         <div className='w-full h-full flex flex-col gap-2'>
             <div className='flex gap-1 items-center font-semibold text-lg'> <ChevronLeftIcon onClick={props.goBack} size={24} className='w-8 h-8 cursor-pointer' /> {contact?.user?.name}</div>
