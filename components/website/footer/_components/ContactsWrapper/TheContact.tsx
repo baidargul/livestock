@@ -23,7 +23,7 @@ const TheContact = (props: Props) => {
 
     return (
         <div className='w-full h-full flex flex-col gap-2'>
-            <div className='flex gap-1 items-center font-semibold text-lg'> <ChevronLeftIcon size={24} className='w-8 h-8' /> {contact?.user?.name}</div>
+            <div className='flex gap-1 items-center font-semibold text-lg'> <ChevronLeftIcon onClick={props.goBack} size={24} className='w-8 h-8 cursor-pointer' /> {contact?.user?.name}</div>
             <div className='px-4'>
                 <div className='text-xs -mt-2 flex justify-end items-center'>
                     <div>{formalizeText(contact?.user?.city)}, {formalizeText(contact?.user?.province)}</div>
