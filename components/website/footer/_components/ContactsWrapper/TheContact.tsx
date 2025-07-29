@@ -62,15 +62,15 @@ const DeleteConfirmationBox = (props: { closeDialog: () => void, contact: any, g
         setIsWorking(true)
         const response = await actions.client.user.contacts.deleteContact(props.contact.id)
         if (response.status === 200) {
-            props.fetchContacts()
             props.closeDialog()
             props.goBack()
+            props.fetchContacts()
         }
         setIsWorking(false)
     }
 
     return (
-        <div className='flex flex-col gap-2 px-2'>
+        <div className='flex flex-col gap-2 px-2 pb-1'>
             <div className='text-lg'>Are you sure to delete this contact?</div>
             <div className='flex justify-evenly gap-2 items-center w-full'>
                 <Button disabled={isWorking} onClick={handleDeleteContact} className='w-full' variant='btn-secondary'>Yes</Button>
