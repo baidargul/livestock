@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import CoinTransactionAnimationWrapper from '@/components/animation-wrappers/CoinTransactionAnimationWrapper'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
@@ -18,6 +19,7 @@ const DirectCTOButton = (props: Props) => {
     const [preCheck, setPreCheck] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
     const [user, setUser] = useState<any>(null)
+    const [costString, setCostString] = useState('')
     const currentUser = useUser()
     const fetchBalance = useSession((state: any) => state.fetchBalance)
     const dialog = useDialog()
@@ -44,12 +46,12 @@ const DirectCTOButton = (props: Props) => {
             const response = await actions.client.posts.GetCustomerContact(props.animal.id, currentUser.id)
             if (response.status === 200) {
                 setUser(response.data)
+                setCostString(`-${response.data.cost} coins`)
                 fetchBalance()
             } else if (response.status === 302) {
                 dialog.showDialog(`Insufficient balance`, <LowBalanceDialog dialog={dialog} />)
             }
             else {
-
                 dialog.showDialog(`Unable to get user information`, null, `Error: ${response.message}`)
             }
             setIsFetching(false)
@@ -61,9 +63,13 @@ const DirectCTOButton = (props: Props) => {
             {!user && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
                 <div onClick={handleClick} className='w-full'>{props.children}</div>
             </div>}
-            {user && <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
-                <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
-            </Link>}
+            {user &&
+                <CoinTransactionAnimationWrapper text={costString} type='warning' className='w-full'>
+                    <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
+                        <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
+                    </Link>
+                </CoinTransactionAnimationWrapper>
+            }
         </>
     )
 }

@@ -425,7 +425,10 @@ async function GetCustomerContact(postId: string, userId: string) {
 
     response.status = 200;
     response.message = "Customer contact fetched successfully";
-    response.data = post.user;
+    response.data = {
+      ...post.user,
+      cost: Number(protocol ? protocol.data.value : 0),
+    };
     return response;
   } catch (error: any) {
     console.log(`[SERVER ERROR] @GET CUSTOMER CONTACT: ${error.message}`);
