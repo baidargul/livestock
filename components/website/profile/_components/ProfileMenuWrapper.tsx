@@ -3,7 +3,7 @@ import { actions } from '@/actions/serverActions/actions'
 import { images } from '@/consts/images'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
-import { List, PlusCircleIcon, TrendingUpIcon, X } from 'lucide-react'
+import { List, PlusCircleIcon, SquareUserIcon, TrendingUpIcon, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -166,7 +166,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
                             <Link href={'#'}>
                                 <div className='flex flex-col gap-2 items-start'>
                                     <div>
-                                        <Image src={images.site.ui.contactlist} alt='contacts' width={24} height={24} layout='fixed' className='' />
+                                        <SquareUserIcon />
                                     </div>
                                     <div className=''>
                                         <div className='font-semibold tracking-wide'>Contacts</div>

@@ -1,5 +1,5 @@
 'use client'
-import { CompassIcon, HouseIcon, ShoppingBagIcon, UserIcon } from 'lucide-react'
+import { CompassIcon, HouseIcon, ShoppingBagIcon, SquareUserIcon, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import ProfileMenuWrapper from '../profile/_components/ProfileMenuWrapper'
@@ -51,7 +51,7 @@ const PhoneFooter = (props: Props) => {
             </RoomsWrapper>}
             {user && <ContactsWrapper>
                 <div className={`${route.includes("contacts") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
-                    <Image src={images.site.ui.contactlisthover} alt='contacts' width={24} height={24} layout='fixed' className='' />
+                    <SquareUserIcon />
                     <div>
                         Contacts
                     </div>
