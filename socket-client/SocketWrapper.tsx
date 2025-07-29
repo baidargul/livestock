@@ -32,11 +32,23 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const rooms = useRooms();
 
     useEffect(() => {
-        if (!user) {
+        const interval = setInterval(() => {
             const rawUser = getUser();
-            setUser(rawUser);
-        }
+            if (!user && rawUser) {
+                setUser(rawUser);
+            } else if (user && !rawUser) {
+                setUser(null);
+            } else if (user && rawUser && user.id !== rawUser.id) {
+                setUser(rawUser);
+            } else if (!user && !rawUser) {
+                setUser(null);
+            }
+        }, 500)
         setIsMounted(true);
+
+        return () => {
+            clearInterval(interval);
+        }
     },);
 
     useEffect(() => {

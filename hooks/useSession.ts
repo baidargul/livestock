@@ -18,8 +18,8 @@ export const useSession = create((set) => ({
     }
   },
   logoutUser: () => {
-    set({ user: null });
     localStorage.removeItem("session");
+    set({ user: null });
   },
   setUser: (user: any) => {
     localStorage.setItem("session", JSON.stringify(user));

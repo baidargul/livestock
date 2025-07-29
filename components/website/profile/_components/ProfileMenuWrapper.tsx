@@ -11,6 +11,8 @@ import SiteLogo from '../../logo/SiteLogo'
 import DemandRowLite from '../../sections/demands/list/DemandRowLite'
 import { useRouter } from 'next/navigation'
 import CoinsAvailable from './CoinsAvailable'
+import SignInSignOutWrapper from '@/components/wrappers/SignInSignOutWrapper'
+import { useUser } from '@/socket-client/SocketWrapper'
 
 type Props = {
     children: React.ReactNode
@@ -18,50 +20,41 @@ type Props = {
 
 const ProfileMenuWrapper = (props: Props) => {
     const [isToggled, setIsToggled] = useState(false)
-    const [user, setUser] = useState<any>(null);
     const [isMounted, setIsMounted] = useState(false)
-    const getUser = useSession((state: any) => state.getUser);
-    const router = useRouter();
+    const user = useUser()
 
     useEffect(() => {
         setIsMounted(true)
     }, [])
 
-    useEffect(() => {
-        if (isMounted) {
-            const rawUser = getUser();
-            setUser(rawUser);
-        }
-    }, [isMounted])
-
     const handleToggleMenu = (val: boolean) => {
         if (isMounted) {
             if (user) {
                 setIsToggled(val)
-            } else {
-                setIsToggled(false)
-                router.push("/signin")
             }
         }
     }
 
     return (
         <div className='select-none'>
-            <div onClick={() => handleToggleMenu(true)} className='cursor-pointer'>
-                {props.children}
-            </div>
-            <MenuWrapper handleToggleMenu={handleToggleMenu} isToggled={isToggled} user={user} />
+            <SignInSignOutWrapper>
+                <div onClick={() => handleToggleMenu(true)} className='cursor-pointer'>
+                    {props.children}
+                </div>
+            </SignInSignOutWrapper>
+            <MenuWrapper handleToggleMenu={handleToggleMenu} isToggled={isToggled} />
         </div>
     )
 }
 
 export default ProfileMenuWrapper
 
-const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
+const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
     const logoutUser = useSession((state: any) => state.logoutUser);
     const setLoading = useLoader((state: any) => state.setLoading)
     const loading = useLoader((state: any) => state.loading)
     const router = useRouter();
+    const user = useUser()
 
     const handleLoggout = async () => {
         setLoading(true)
@@ -69,7 +62,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled, user }: any) => {
         const response = await actions.client.user.signout({ token: user?.token });
         if (response.status === 200) {
             logoutUser();
-            router.push("/");
+            // router.push("/");
         } else {
         }
         setLoading(false)
