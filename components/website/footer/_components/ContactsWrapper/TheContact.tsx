@@ -1,14 +1,26 @@
+'use client'
+import { actions } from '@/actions/serverActions/actions'
+import Button from '@/components/ui/Button'
+import { useDialog } from '@/hooks/useDialog'
 import { formalizeText } from '@/lib/utils'
 import { ChevronLeftIcon, Clipboard, CopyIcon, PhoneIcon } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 
 type Props = {
     contact: any
+    goBack: () => void
+    fetchContacts: () => void
 }
 
 const TheContact = (props: Props) => {
     const contact = props.contact
+    const dialog = useDialog()
+
+    const handleDeleteButton = () => {
+        dialog.showDialog('Delete Contact', <DeleteConfirmationBox closeDialog={() => dialog.closeDialog()} contact={props.contact} goBack={props.goBack} fetchContacts={props.fetchContacts} />)
+    }
+
     return (
         <div className='w-full h-full flex flex-col gap-2'>
             <div className='flex gap-1 items-center font-semibold text-lg'> <ChevronLeftIcon size={24} className='w-8 h-8' /> {contact?.user?.name}</div>
@@ -32,8 +44,34 @@ const TheContact = (props: Props) => {
                     </div>
                 </div>
             </div>
+            <Button onClick={handleDeleteButton} className='w-full' variant='btn-secondary'>Delete Contact</Button>
         </div>
     )
 }
 
 export default TheContact
+
+const DeleteConfirmationBox = (props: { closeDialog: () => void, contact: any, goBack: () => void, fetchContacts: () => void }) => {
+    const [isWorking, setIsWorking] = useState(false)
+
+    const handleDeleteContact = async () => {
+        setIsWorking(true)
+        const response = await actions.client.user.contacts.deleteContact(props.contact.id)
+        if (response.status === 200) {
+            props.fetchContacts()
+            props.closeDialog()
+            props.goBack()
+        }
+        setIsWorking(false)
+    }
+
+    return (
+        <div className='flex flex-col gap-2 px-2'>
+            <div className='text-lg'>Are you sure to delete this contact?</div>
+            <div className='flex justify-evenly gap-2 items-center w-full'>
+                <Button disabled={isWorking} onClick={handleDeleteContact} className='w-full' variant='btn-secondary'>Yes</Button>
+                <Button disabled={isWorking} className='w-full' onClick={props.closeDialog}>No</Button>
+            </div>
+        </div>
+    )
+}

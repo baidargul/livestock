@@ -28,7 +28,7 @@ const DirectCTOButton = (props: Props) => {
                 setPreCheck(true)
                 const response = await actions.client.user.contacts.list(currentUser.id, props.animal.userId)
                 if (response.status === 200) {
-                    setUser(response.data.user)
+                    setUser(response.data?.user)
                 }
                 setPreCheck(false)
             }

@@ -50,6 +50,13 @@ const ContactsWrapper = (props: Props) => {
                 <Textbox className='pl-10' placeholder='Search contacts' value={searchText} onChange={(val: string) => setSearchText(val)} />
                 <div className={`w-full h-full max-h-[70%] transition duration-300 p-1 bg-gradient-to-b from-zinc-100 to-transparent mt-2 overflow-y-auto ${isWorking && "grayscale-100 animate-pulse"}`}>
                     {
+                        !selectedContact && contacts.length === 0 && (
+                            <div>
+                                <div className='mt-5 text-center text-zinc-500 italic'>No contacts found</div>
+                            </div>
+                        )
+                    }
+                    {
                         !selectedContact && contacts.map((contact: any, index: number) => {
 
                             if (searchText && searchText.length > 0) {
@@ -66,7 +73,7 @@ const ContactsWrapper = (props: Props) => {
                     }
                     {
                         selectedContact && (
-                            <TheContact contact={selectedContact} />
+                            <TheContact contact={selectedContact} goBack={() => setSelectedContact(null)} fetchContacts={fetchContacts} />
                         )
                     }
                 </div>
