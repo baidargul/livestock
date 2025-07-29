@@ -2,7 +2,6 @@
 import { actions } from '@/actions/serverActions/actions'
 import React, { useEffect, useState } from 'react'
 import DemandLite from './DemandLite'
-import Reels from '@/components/animation-wrappers/Reels'
 import { TrendingUpIcon } from 'lucide-react'
 import { useSession } from '@/hooks/useSession'
 import Marquee from 'react-fast-marquee'
