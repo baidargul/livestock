@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import CoinTransactionAnimationWrapper from '@/components/animation-wrappers/CoinTransactionAnimationWrapper'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
 import Room from '@/components/website/footer/_components/_roomsWrapper/Room'
@@ -19,6 +20,7 @@ type Props = {
 
 const CTOButton = (props: Props) => {
     const [isFetching, setIsFetching] = useState(false)
+    const [coinString, setCoinString] = useState('')
     const dialog = useDialog()
     const [user, setUser] = useState<any>(null)
     const fetchBalance = useSession((state: any) => state.fetchBalance)
@@ -35,6 +37,7 @@ const CTOButton = (props: Props) => {
             const response = await actions.client.bidRoom.GetCustomerContact(props.activeBidRoomId, props.user.id)
             if (response.status === 200) {
                 setUser(response.data)
+                setCoinString(`-${response.data.cost} coins`)
                 fetchBalance()
             } else if (response.status === 302) {
                 dialog.showDialog(`Insufficient balance`, <LowBalanceDialog dialog={dialog} />)
@@ -53,9 +56,13 @@ const CTOButton = (props: Props) => {
             {!user && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
                 <Button onClick={handleClick} className='w-full flex gap-1 justify-evenly line-clamp-1 items-center' variant='btn-secondary' ><div className=''><Image src={images.site.coins.gold.basic} width={20} height={20} layout='fixed' className='w-6 h-6' alt='coin' /> <div className='font-semibold tracking-wide'>300</div></div> <div className='font-semibold tracking-wide line-clamp-1'>{`Call ${props.room?.user?.name}`}</div> </Button>
             </div>}
-            {user && <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
-                <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
-            </Link>}
+            {user &&
+                <CoinTransactionAnimationWrapper text={coinString} type='warning'>
+                    <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
+                        <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
+                    </Link>
+                </CoinTransactionAnimationWrapper>
+            }
         </>
     )
 
