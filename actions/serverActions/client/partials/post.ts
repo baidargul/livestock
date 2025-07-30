@@ -86,9 +86,16 @@ async function GetCustomerContact(postId: string, userId: string) {
   return response.data;
 }
 
+async function Query(val: string) {
+  let response: any = await axios.get(`/api/post/query?searchText=${val}`);
+  response = response;
+  return response.data;
+}
+
 export const posts = {
   createPost,
   removePost,
+  Query,
   placeBid,
   listBids,
   listByUser,

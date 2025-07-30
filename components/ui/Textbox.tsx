@@ -15,6 +15,8 @@ type Props = {
     icon?: React.ReactNode
     iconClassName?: string
     iconHideOnFocus?: boolean
+    onFocus?: (val: boolean) => void
+    onBlur?: (val: boolean) => void
 }
 
 const Textbox = (props: Props) => {
@@ -44,8 +46,20 @@ const Textbox = (props: Props) => {
     }
 
     const handleOnFocus = () => {
+        setIsInFocus(true)
         if (txtRef.current) {
             txtRef.current.select()
+        }
+
+        if (props.onFocus) {
+            props.onFocus(true)
+        }
+    }
+
+    const handleOnBlur = () => {
+        setIsInFocus(false)
+        if (props.onBlur) {
+            props.onBlur(false)
         }
     }
 
@@ -54,7 +68,7 @@ const Textbox = (props: Props) => {
             {props.label && props.label.length > 0 && <label className={`label ${props.labelClassName}`}>{props.label}</label>}
             <div className='flex gap-1 items-center relative'>
                 {props.icon && <div className={`absolute transition duration-300 left-2 ${isInFocus ? "opacity-0" : "opacity-100"}`}>{props.icon}</div>}
-                <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} onFocusCapture={() => setIsInFocus(true)} onBlurCapture={() => setIsInFocus(false)} className={`textbox w-full focus-within:tracking-wide ${props.className} ${props.icon ? `${isInFocus ? "pl-2" : props.iconClassName}` : null}`} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={handleOnFocus} value={props.value ?? ""} />
+                <input id={props.id} ref={txtRef} disabled={props.disabled ?? false} type={props.type ?? "text"} placeholder={props.placeholder} className={`textbox w-full focus-within:tracking-wide ${props.className} ${props.icon ? `${isInFocus ? "pl-2" : props.iconClassName}` : null}`} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={handleOnFocus} onBlur={handleOnBlur} value={props.value ?? ""} />
             </div>
         </div>
     )

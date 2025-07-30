@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
+import { doQuery } from "./Query/Query";
 async function listAll(value?: string, key?: string) {
   const response = {
     status: 500,
@@ -329,7 +330,6 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
     return response;
   }
 }
-
 async function GetCustomerContact(postId: string, userId: string) {
   const response = {
     status: 500,
@@ -438,11 +438,32 @@ async function GetCustomerContact(postId: string, userId: string) {
     return response;
   }
 }
+async function Query(val: string) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const result = await doQuery(val);
+    response.status = 200;
+    response.message = "Posts fetched successfully";
+    response.data = result;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @QUERY: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
 
 export const post = {
   list,
   listAll,
   removePost,
+  Query,
   placeBid,
   listBids,
   changeBiddingStatus,
