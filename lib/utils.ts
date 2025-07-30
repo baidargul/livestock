@@ -283,3 +283,27 @@ export function TrimString(str: string, maxLength: number) {
   }
   return str;
 }
+
+export function elapsedTime(dateTimeString: string) {
+  const now = Date.now();
+  const then = new Date(dateTimeString).getTime();
+  const elapsed = now - then;
+
+  const intervals = [
+    { unit: "year", factor: 31536000000 }, // 60 * 60 * 24 * 365
+    { unit: "month", factor: 2628000000 }, // 60 * 60 * 24 * 30
+    { unit: "day", factor: 86400000 }, // 60 * 60 * 24
+    { unit: "hour", factor: 3600000 }, // 60 * 60 * 1000
+    { unit: "minute", factor: 60000 }, // 60 * 1000
+    { unit: "second", factor: 1000 },
+  ];
+
+  for (const { unit, factor } of intervals) {
+    const value = Math.floor(elapsed / factor);
+    if (value > 0) {
+      return `${value} ${unit}${value > 1 ? "s" : ""} ago`;
+    }
+  }
+
+  return "Just now";
+}

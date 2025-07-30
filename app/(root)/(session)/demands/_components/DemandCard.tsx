@@ -1,6 +1,7 @@
 import { images } from '@/consts/images'
-import { formalizeText } from '@/lib/utils'
+import { elapsedTime, formalizeText } from '@/lib/utils'
 import { Demands } from '@prisma/client'
+import { MapPinIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -33,19 +34,19 @@ const DemandCard = (props: Props) => {
                     </div>
                     <div className='text-xs text-zinc-600 flex justify-between items-start'>
                         <div>
-                            {new Date(demand.createdAt).toLocaleDateString()}
-                        </div>
-                        <div>
-                            <div>
-                                {demand.city}, {demand.province}
+                            <div className='flex gap-1 items-center'>
+                                <MapPinIcon size={14} /> {demand.city}, {demand.province}
                             </div>
                             {demand.activeRooms > 0 && <div>
                                 {demand.activeRooms} bidders
                             </div>}
                         </div>
                     </div>
-                    <div className={`${demand.user.id === props.user?.id ? "text-emerald-700 line-clamp-1 font-semibold" : ""}`}>
+                    <div className={` text-lg ${demand.user.id === props.user?.id ? "text-emerald-700 line-clamp-1 font-semibold" : ""}`}>
                         {demand.user.name}
+                    </div>
+                    <div className='text-xs -mt-1 text-zinc-600 italic'>
+                        {elapsedTime(demand.createdAt)}
                     </div>
                 </div>
             </div>

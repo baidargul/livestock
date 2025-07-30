@@ -4,7 +4,7 @@ import Textbox from '@/components/ui/Textbox'
 import { images } from '@/consts/images'
 import { XIcon } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
@@ -17,11 +17,18 @@ type Props = {
 }
 
 const FilterMenuWrapper = (props: Props) => {
+    const [prev, setPrev] = useState({})
     const [open, setOpen] = useState(false)
 
     const handleOpen = (val: boolean) => {
         setOpen(val)
     }
+
+    useEffect(() => {
+        if (open) {
+            setPrev(props.where)
+        }
+    }, [open])
 
     const handleChangeProvince = (val: string) => {
         if (!val || val.length === 0) {
@@ -119,12 +126,12 @@ const FilterMenuWrapper = (props: Props) => {
                     </div>
                 </section>
                 <div className='flex justify-between items-center gap-2 w-full'>
-                    <Button onClick={() => handleOpen(false)} className='w-full' variant='btn-secondary'>Cancel</Button>
+                    <Button onClick={() => { props.setWhere(prev); handleOpen(false) }} className='w-full' variant='btn-secondary'>Cancel</Button>
                     <Button onClick={() => { props.fetchDemands(); handleOpen(false) }} className='w-full' variant='btn-primary'>Filter</Button>
                 </div>
             </div>
             <div onClick={() => handleOpen(!open)} className={`cursor-pointer text-zinc-700`}>{props.children}</div>
-            <div onClick={() => handleOpen(false)} className={`inset-0 fixed top-0 left-0 z-50 bg-black/50 backdrop-blur-[1px] transition duration-200 ${open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}></div>
+            <div onClick={() => { props.setWhere(prev); handleOpen(false) }} className={`inset-0 fixed top-0 left-0 z-50 bg-black/50 backdrop-blur-[1px] transition duration-200 ${open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}></div>
         </>
     )
 }
