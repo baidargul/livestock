@@ -33,7 +33,7 @@ const CoinTransactionAnimationWrapper = (props: Props) => {
         <div className={props.className}>
             <div className='relative w-full flex justify-center items-center text-center'>
                 <div className='coin absolute top-0 opacity-0 pointer-events-none w-full flex flex-col text-center items-center gap-0'>
-                    <Image src={images.site.coins.gold.shine} alt='coin' width={50} height={50} layout='fixed' quality={100} />
+                    <Image src={images.site.coins.gold.shine} priority={true} alt='coin' width={50} height={50} layout='fixed' quality={100} />
                 </div>
                 <div className={`coin-text ${props.type === "warning" ? "text-amber-700" : props.text === "error" ? "text-red-500" : "text-green-500"} w-full absolute -top-4 opacity-0 pointer-events-none`}>{props.text ? props.text : "Transaction complete"}</div>
                 <div className='w-full'>{props.children}</div>
