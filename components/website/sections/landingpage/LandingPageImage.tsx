@@ -14,8 +14,8 @@ const SectionLandingPageImage = (props: Props) => {
                 <h1 className='text-4xl font-semibold' style={{ textShadow: "1px 1px 3px black" }}>{props.heading ?? "Adorable pets"}</h1>
                 <h2 className='tracking-tight font-medium' style={{ textShadow: "1px 1px 3px black" }}>{props.subheading ?? "get your adorable pets home today!"}</h2>
             </div>
-            <div className='absolute z-[1] top-0 left-0 w-full h-[150%] rounded-t-xl bg-gradient-to-t from-transparent to-emerald-600/50'></div>
-            <Image src={images.chickens.covers[1]} priority layout='fixed' alt='janwarmarkaz' draggable={false} width={406} height={195} quality={70} className='w-full max-h-[230px] h-full rounded-xl object-cover' />
+            <div className='absolute z-[1] top-0 left-0 w-full h-[150%] bg-gradient-to-t from-transparent to-emerald-600/50'></div>
+            <Image src={images.chickens.covers[1]} priority layout='fixed' alt='janwarmarkaz' draggable={false} width={406} height={195} quality={70} className='w-full max-h-[230px] h-full object-cover' />
         </div>
     )
 }
