@@ -37,7 +37,7 @@ const SectionProductListRow = (props: Props) => {
                             }
                         </div>}
                     <div className='bg-gradient-to-t from-black/50 to-transparent w-full h-[40%] absolute bottom-0 left-0'></div>
-                    <Image src={props.animal.images.length > 0 ? props.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[200px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-cover' />
+                    <Image src={props.animal.images.length > 0 ? props.animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[150px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-contain' />
                 </div>
                 <div className='w-full pt-4'>
                     <div className='transition-all duration-200 ease-in-out w-[90%] sm:w-auto text-xl font-semibold line-clamp-1 text-balance'>{formalizeText(props.animal?.title)}</div>
