@@ -4,6 +4,7 @@ import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 import ContactRow from './ContactsWrapper/ContactRow'
 import TheContact from './ContactsWrapper/TheContact'
+import { SearchIcon } from 'lucide-react'
 
 type Props = {
     children: React.ReactNode
@@ -47,7 +48,7 @@ const ContactsWrapper = (props: Props) => {
         <>
             <section className={`w-[95%] h-[90%] ${toggled ? "translate-y-0 pointer-events-auto z-10 opacity-100" : "translate-y-full pointer-events-none opacity-0 z-0"} transition duration-300 ease-in-out bg-white fixed bottom-0 rounded-t-md text-zinc-700 border border-zinc-300 p-2`}>
                 <div className='text-center p-2 text-lg font-bold text-gray-800'>Contacts</div>
-                <Textbox className='pl-10' placeholder='Search contacts' value={searchText} onChange={(val: string) => setSearchText(val)} />
+                <Textbox icon={<SearchIcon size={20} className='text-zinc-400' />} iconClassName='pl-10' placeholder='Search contacts' value={searchText} onChange={(val: string) => setSearchText(val)} />
                 <div className={`w-full h-full max-h-[70%] transition duration-300 p-1 bg-gradient-to-b from-zinc-100 to-transparent mt-2 overflow-y-auto ${isWorking && "grayscale-100 animate-pulse"}`}>
                     {
                         !selectedContact && contacts.length === 0 && (
