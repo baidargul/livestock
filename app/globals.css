@@ -48,6 +48,6 @@
 
 @layer components {
   .textbox {
-    @apply w-full h-10 px-2 appearance-none transition-all duration-200 ease-in-out border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-700 selection:bg-emerald-100 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-black;
+    @apply w-full h-10 px-2 appearance-none transition-all duration-200 ease-in-out border border-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-700 selection:bg-emerald-100 disabled:cursor-not-allowed disabled:bg-zinc-100 disabled:text-black;
   }
 }

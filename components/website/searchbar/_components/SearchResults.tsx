@@ -46,7 +46,7 @@ const SearchResults = (props: Props) => {
     }, [fetchCriteria])
 
     return (
-        <div className='z-10 w-full h-auto max-h-[400px] flex flex-col gap-2 absolute top-12 left-0 p-2 bg-white border border-zinc-300 rounded shadow-2xl'>
+        <div className='z-10 w-full h-auto max-h-[400px] flex flex-col gap-2 absolute top-11 left-0 p-2 bg-white border border-zinc-300 shadow-2xl'>
             <div className=''>
                 <span className='font-semibold'>Search</span> <span>'{props.criteria}'</span>
             </div>
