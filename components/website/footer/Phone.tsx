@@ -23,26 +23,26 @@ const PhoneFooter = (props: Props) => {
 
 
     return (
-        <div className='bg-emerald-100 text-emerald-600 select-none z-50 sticky bottom-0 left-0 w-full h-14 flex justify-evenly items-center'>
+        <div className='bg-zinc-100 border-t border-zinc-200 text-zinc-600 select-none z-50 sticky bottom-0 left-0 w-full h-14 flex justify-evenly items-center'>
             <FetchLastestRooms />
             <Link href={'/home'}>
-                <div className={`${route.includes("home") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
+                <div className={`${route.includes("home") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
                     <HouseIcon />
                     <div>
                         Home
                     </div>
                 </div>
             </Link>
-            <Link href={'/nearby'}>
-                <div className={`${route.includes("nearby") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
+            {/* <Link href={'/nearby'}>
+                <div className={`${route.includes("nearby") ? "bg-white border-b-2 border-zinc-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
                     <CompassIcon />
                     <div>
                         Temp
                     </div>
                 </div>
-            </Link>
+            </Link> */}
             {user && <RoomsWrapper forPhone>
-                <div className={`${route.includes("cart") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                <div className={`${route.includes("cart") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShoppingBagIcon />
                     <div>
                         BidRooms
@@ -50,7 +50,7 @@ const PhoneFooter = (props: Props) => {
                 </div>
             </RoomsWrapper>}
             {user && <ContactsWrapper>
-                <div className={`${route.includes("contacts") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <SquareUserIcon />
                     <div>
                         Contacts
@@ -58,7 +58,7 @@ const PhoneFooter = (props: Props) => {
                 </div>
             </ContactsWrapper>}
             <ProfileMenuWrapper>
-                <div className={`${route.includes("profile") ? "bg-emerald-50 border-b-2 border-emerald-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                <div className={`${route.includes("profile") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <UserIcon />
                     <div className='line-clamp-1 max-w-20'>
                         {user ? user?.name : "Login"}
