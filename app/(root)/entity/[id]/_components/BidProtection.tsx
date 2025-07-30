@@ -4,7 +4,7 @@ import Button from '@/components/ui/Button'
 import { useRooms } from '@/hooks/useRooms'
 import { useSession } from '@/hooks/useSession'
 import { formatCurrency } from '@/lib/utils'
-import { useSocket } from '@/socket-client/SocketWrapper'
+import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import { serialize } from 'bson'
 import { ChartCandlestickIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const BidProtection = (props: Props) => {
-    const [user, setUser] = useState<any>(null)
+    const user = useUser()
     const [isMounted, setIsMounted] = useState(false)
     const [bid, setBid] = useState<any>(null)
     const [room, setRoom] = useState<any>(null)
@@ -33,7 +33,6 @@ const BidProtection = (props: Props) => {
         amount: 0,
         posted: false
     })
-    const getUser = useSession((state: any) => state.getUser)
     const rooms = useRooms((state: any) => state.rooms)
     const find = useRooms((state: any) => state.find)
     const socket = useSocket()
@@ -41,15 +40,6 @@ const BidProtection = (props: Props) => {
     useEffect(() => {
         setIsMounted(true)
     }, [])
-
-    useEffect(() => {
-        if (isMounted) {
-            const rawUser = getUser()
-            if (rawUser) {
-                setUser(rawUser)
-            }
-        }
-    }, [isMounted])
 
     useEffect(() => {
         if (rooms && user) {
@@ -67,6 +57,14 @@ const BidProtection = (props: Props) => {
                 socket.emit("close-bidroom", serialize({ room, userId: user.id }));
             }
         }
+    }
+
+    if (!user) {
+        return (
+            <div className='w-full bg-zinc-100 p-2 border-b-2 border-zinc-200 flex justify-center items-center text-center'>
+                <div className='text-sm'>⚠️ Please login to bid</div>
+            </div>
+        )
     }
 
     // IF NOT AUTHOR AND HAS NOT STARTED BIDDING YET
