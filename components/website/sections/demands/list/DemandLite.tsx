@@ -15,7 +15,7 @@ const DemandLite = (props: Props) => {
 
     return (
         <Link href={`/demands/${demand.id}`}>
-            <div className={`p-1 h-fit scale-75 origin-top-left select-none cursor-pointer px-2 ${props.user?.id === demand.userId ? "bg-emerald-50" : "bg-white"} rounded drop-shadow-sm`}>
+            <div className={`p-1 h-fit scale-75 origin-top-left select-none cursor-pointer px-2 ${props.user?.id === demand.userId ? "bg-zinc-50" : "bg-white"} rounded drop-shadow-sm`}>
                 <div className='font-semibold'>{totalQuantity} {formalizeText(demand.breed)} {demand.type}.</div>
                 <div className='text-zinc-400 text-xs'>{demand.city}, {demand.province}</div>
             </div>
