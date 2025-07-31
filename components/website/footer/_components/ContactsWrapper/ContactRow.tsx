@@ -22,7 +22,7 @@ const ContactRow = (props: Props) => {
                 <div onClick={props.onClick} className='cursor-pointer italic text-sm'>{props.contact.remarks}</div>
             </div>
             <div onClick={props.onClick} className='cursor-pointer flex gap-1 items-center'>
-                {time.includes('minute') && <div>
+                {time.includes('minute') || time.includes('second') && <div>
                     <Image src={images.site.ui.plusIcon} alt='plus' className='animate-bounce' width={15} height={15} layout='fixed' quality={100} />
                 </div>}
                 <ElapsedTimeControl date={props.contact.createdAt} />
