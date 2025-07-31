@@ -21,6 +21,7 @@ import ProductMenu from './_components/ProductMenu'
 import Marquee from 'react-fast-marquee'
 import CTOButton from '@/components/controls/Bidding/_components/CTOButton'
 import DirectCTOButton from './_components/DirectCTOButton'
+import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,7 @@ const page = async (props: Props) => {
                             </Link>
                         </div>
                         <p className='text-lg text-gray-600'>{animal.description}</p>
+                        <ElapsedTimeControl date={animal.createdAt} />
                         <CalculatedDescription animal={animal} />
                         <div className='flex justify-start items-start gap-4 my-4 w-full'>{
                             animal.deliveryOptions.map((option: any, index: number) => {
@@ -109,6 +111,7 @@ const page = async (props: Props) => {
                         <div className='px-4 py-2'>
                             <p className='text-sm text-gray-600'>{info ?? ''}</p>
                         </div>
+                        <ElapsedTimeControl date={animal.createdAt} />
                     </div>
                 </div>
                 <div className='mt-40 p-4'>
