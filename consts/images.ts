@@ -44,6 +44,7 @@ import goldCoinShine from "@/public/system/coin/shine.png";
 import handshake from "@/public/system/ui/handshake.png";
 import contactlist from "@/public/system/ui/contactlist.png";
 import contactlisthover from "@/public/system/ui/contactlisthover.png";
+import plusIcon from "@/public/system/ui/plusIcon.png";
 
 export const images = {
   site: {
@@ -62,6 +63,7 @@ export const images = {
       handshake: handshake,
       contactlist: contactlist,
       contactlisthover: contactlisthover,
+      plusIcon: plusIcon,
     },
     coins: {
       gold: {

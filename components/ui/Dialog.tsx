@@ -13,7 +13,7 @@ const Dialog = (props: Props) => {
     return (
         <>
             {
-                dialog.isVisible && <div className='fixed flex inset-0 w-full h-full bg-red-200/80 pointer-events-none justify-center items-center cursor-not-allowed' style={{ zIndex: 999 }} >
+                dialog.isVisible && <div className='fixed select-none flex inset-0 w-full h-full bg-red-200/80 pointer-events-none justify-center items-center cursor-not-allowed' style={{ zIndex: 999 }} >
                     <div className='mx-4 font-bold tracking-wide bg-white' style={{ boxShadow: "0px 3px 4px 0px #71141987" }}>
                         <div className='bg-zinc-700 p-2 px-4 text-white w-full'>
                             {dialog.title}
@@ -30,7 +30,7 @@ const Dialog = (props: Props) => {
                     </div>
                 </div>
             }
-            <div className={`${dialog.isVisible ? "pointer-events-none" : "pointer-events-auto"} transition-all duration-200 ease-in-out`}>
+            <div className={`${dialog.isVisible ? "pointer-events-none" : "pointer-events-auto"} select-none transition-all duration-200 ease-in-out`}>
                 {props.children}
             </div>
         </>

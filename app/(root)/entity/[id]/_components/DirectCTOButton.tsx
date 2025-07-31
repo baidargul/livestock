@@ -17,15 +17,13 @@ type Props = {
 }
 
 const DirectCTOButton = (props: Props) => {
-    const [preCheck, setPreCheck] = useState(false)
+    const dialog = useDialog()
+    const currentUser = useUser()
+    const Contact = useContacts()
     const [isFetching, setIsFetching] = useState(false)
     const [user, setUser] = useState<any>(null)
     const [costString, setCostString] = useState('')
-    const currentUser = useUser()
-    const contacts = useContacts((state: any) => state.contacts)
-    const Contact = useContacts()
     const fetchBalance = useSession((state: any) => state.fetchBalance)
-    const dialog = useDialog()
 
     useEffect(() => {
         const contact = Contact.find(props.animal.userId)
@@ -34,15 +32,14 @@ const DirectCTOButton = (props: Props) => {
         } else {
             setUser(null)
         }
-    }, [contacts])
+    }, [Contact.contacts])
 
 
     const handleClick = async () => {
-        if (!isFetching && !preCheck && currentUser) {
+        if (!isFetching && currentUser) {
             setIsFetching(true)
             const response = await actions.client.posts.GetCustomerContact(props.animal.id, currentUser.id)
             if (response.status === 200) {
-                setUser(response.data.user)
                 Contact.addToContact(response.data)
                 setCostString(`-${response.data.cost} coins`)
                 fetchBalance()

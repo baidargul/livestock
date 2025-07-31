@@ -9,6 +9,7 @@ import { useUser } from '@/socket-client/SocketWrapper'
 import ContactsWrapper from './_components/ContactsWrapper'
 import Image from 'next/image'
 import { images } from '@/consts/images'
+import NewContactAnimationWrapper from '@/components/animation-wrappers/NewContactAnimationWrapper'
 
 type Props = {}
 

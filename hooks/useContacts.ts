@@ -3,12 +3,14 @@ import { create } from "zustand";
 
 export const useContacts = create<any>()((set) => ({
   contacts: [],
-  isFetching: false,
+  isAdding: false,
   addToContact: (contact: any) => {
-    set({ isFetching: true });
-    const prev = useContacts.getState();
-    prev.contacts.push(contact);
-    set({ isFetching: false, contacts: prev.contacts });
+    set({ isAdding: true }); //
+
+    set((state: any) => ({
+      contacts: [...state.contacts, contact],
+      // isAdding: false,
+    }));
   },
   removeContact: (userId: string) => {
     const prev = useContacts.getState();
@@ -29,4 +31,6 @@ export const useContacts = create<any>()((set) => ({
       set({ contacts: [] });
     }
   },
+  toggleIsAdding: (val: boolean) =>
+    set((state: any) => ({ ...state, isAdding: val })),
 }));
