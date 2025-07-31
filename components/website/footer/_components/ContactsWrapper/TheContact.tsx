@@ -70,7 +70,7 @@ const DeleteConfirmationBox = (props: { closeDialog: () => void, contact: any, g
     }
 
     return (
-        <div className='flex flex-col gap-2 px-2 pb-1'>
+        <div className='flex flex-col gap-2 px-2 -mb-2'>
             <div className='text-lg'>Are you sure to delete this contact?</div>
             <div className='flex justify-evenly gap-2 items-center w-full'>
                 <Button disabled={isWorking} onClick={handleDeleteContact} className='w-full'>Yes</Button>

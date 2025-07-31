@@ -14,8 +14,8 @@ const Dialog = (props: Props) => {
         <>
             {
                 dialog.isVisible && <div className='fixed flex inset-0 w-full h-full bg-red-200/80 pointer-events-none justify-center items-center cursor-not-allowed' style={{ zIndex: 999 }} >
-                    <div className='mx-4 font-bold tracking-wide bg-white rounded-xl' style={{ boxShadow: "0px 3px 4px 0px #71141987" }}>
-                        <div className='bg-emerald-500 p-2 px-4 text-white w-full rounded-t-xl' style={{ textShadow: '1px 1px #007850' }}>
+                    <div className='mx-4 font-bold tracking-wide bg-white' style={{ boxShadow: "0px 3px 4px 0px #71141987" }}>
+                        <div className='bg-zinc-700 p-2 px-4 text-white w-full'>
                             {dialog.title}
                         </div>
                         {dialog.content && <div className='py-4 pointer-events-auto'>
