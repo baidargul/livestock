@@ -23,7 +23,7 @@ const ContactsWrapper = (props: Props) => {
         if (user) {
             Contact.fetchContacts(user.id)
         }
-    }, [])
+    }, [user])
 
     const handleToggleMenu = (val: boolean) => {
         setToggled(val)

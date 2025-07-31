@@ -1,5 +1,3 @@
-import LiveLocation from '@/app/(root)/(session)/nearby/page'
-import RatingBar from '@/components/website/ratings/RatingBar'
 import { images } from '@/consts/images'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
@@ -7,9 +5,10 @@ import { CandlestickChartIcon, LocateIcon, LocationEditIcon, MapPinIcon, SquareU
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import CTOButton from './_components/CTOButton'
 
 type Props = {
-    animal?: Animal | any
+    animal: Animal | any
 }
 
 const SectionProductListRow = (props: Props) => {
@@ -54,13 +53,14 @@ const SectionProductListRow = (props: Props) => {
                         {/* <div className='font-medium text-zinc-800 tracking-tight text-base text-balance leading-4 -mb-1'>
                             {props.animal?.user?.name}
                         </div> */}
-                        {props.animal?.city && props.animal?.province && props.animal?.city.length > 0 && props.animal?.province.length > 0 && <div className='text-xs text-zinc-700 tracking-tight flex gap-1 items-center'> <MapPinIcon size={14} /> {formalizeText(props.animal?.city)}, {formalizeText(props.animal?.province)}</div>}
+                        {props.animal?.city && props.animal?.province && props.animal?.city.length > 0 && props.animal?.province.length > 0 && <div className='text-xs text-zinc-700 tracking-tight mb-2 flex gap-1 items-center'> <MapPinIcon size={14} /> {formalizeText(props.animal?.city)}, {formalizeText(props.animal?.province)}</div>}
                     </div>}
                 </div>
             </div>
-            <div className='text-2xl sm:text-xl md:text-lg text-nowrap text-left text-emerald-600 tracking-wide font-bold'>
+            <CTOButton animal={props.animal} />
+            {/* <div className='text-2xl sm:text-xl md:text-lg text-nowrap text-left text-emerald-600 tracking-wide font-bold'>
                 {formatCurrency(calculatePricing(props.animal).price)}
-            </div>
+            </div> */}
         </Link >
     )
 }
