@@ -66,7 +66,7 @@ const DirectCTOButton = (props: Props) => {
             </div>}
             {user && currentUser &&
                 <CoinTransactionAnimationWrapper text={costString} type='warning' className='w-full'>
-                    <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-4 text-emerald-700 bg-emerald-50 rounded-lg'>
+                    <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-emerald-600 p-2 text-emerald-700 bg-emerald-50 rounded-lg'>
                         <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
                     </Link>
                 </CoinTransactionAnimationWrapper>
