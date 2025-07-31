@@ -36,8 +36,6 @@ const ContactsWrapper = (props: Props) => {
         setSelectedContact(contact)
     }
 
-    console.log(Contact.isAdding)
-
     return (
         <>
             <section className={`w-[95%] h-[90%] ${toggled ? "translate-y-0 pointer-events-auto z-10 opacity-100" : "translate-y-full pointer-events-none opacity-0 z-0"} transition duration-300 ease-in-out bg-white fixed bottom-0 rounded-t-md text-zinc-700 border border-zinc-300 p-2`}>
