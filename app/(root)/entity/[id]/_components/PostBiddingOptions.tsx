@@ -102,7 +102,7 @@ const PostBiddingOptions = (props: Props) => {
                         </div>
                         <div className='mt-10 grid grid-cols-2 gap-2 w-full'>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
-                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0} onClick={handlePostOffer} className='w-full'>Post Offer</Button>
+                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0} onClick={handlePostOffer} className='w-full'>Post Offer</Button>
                         </div>
                     </div>
                 </div>
