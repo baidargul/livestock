@@ -58,15 +58,21 @@ const DirectCTOButton = (props: Props) => {
             {!currentUser && <div title='Please login to continue' className={`w-full cursor-not-allowed ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
                 <div className='w-full'>{props.children}</div>
             </div>}
-            {currentUser && !user && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
+            {currentUser && !user && currentUser.id !== props.animal.userId && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
                 <div onClick={handleClick} className='w-full'>{props.children}</div>
             </div>}
-            {user && currentUser &&
+            {user && currentUser && currentUser.id !== props.animal.userId &&
                 <CoinTransactionAnimationWrapper text={costString} type='warning' className='w-full'>
                     <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-zinc-600 p-2 text-emerald-700 bg-zinc-50'>
                         <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
                     </Link>
                 </CoinTransactionAnimationWrapper>
+            }
+            {
+                currentUser && currentUser.id === props.animal.userId &&
+                <div className='w-full text-center text-zinc-700'>
+                    Please wait for buyers to contact you
+                </div>
             }
         </>
     )
