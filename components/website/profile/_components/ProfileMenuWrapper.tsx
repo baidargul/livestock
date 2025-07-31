@@ -169,7 +169,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                             </Link>
                         </div>
                     </div>
-                    <div onClick={handleLoggout} className='bg-zinc-100 border border-zinc-200/40 cursor-pointer p-4 rounded-xl mt-5 text-center font-semibold tracking-widest'>
+                    <div onClick={handleLoggout} className='bg-zinc-100 border border-zinc-200/40 cursor-pointer p-4 rounded-xl mt-5 mx-5 text-center font-semibold tracking-widest'>
                         Logout
                     </div>
                 </div>}
