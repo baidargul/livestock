@@ -19,7 +19,7 @@ const SectionProductListRow = (props: Props) => {
     const sellerCargo = props.animal?.deliveryOptions.includes("SELLER_DELIVERY")
     const selfPickup = props.animal?.deliveryOptions.includes("SELF_PICKUP")
     return (
-        <Link href={`/entity/${props.animal?.id}`} prefetch={true} className='break-inside-avoid-column w-full border border-zinc-400 p-2 z-0 bg-white hover:outline-2 hover:outline-zinc-300 group h-full flex flex-col justify-between'>
+        <Link href={`/entity/${props.animal?.id}`} prefetch={true} className='break-inside-avoid-column w-full shadow-sm p-2 z-0 bg-white hover:outline-2 hover:outline-zinc-300 group h-full flex flex-col justify-between'>
             <div className="flex flex-col items-center gap-0">
                 <div className='relative w-full bg-black border-l border-y border-zinc-200/40 overflow-hidden'>
                     {(props.animal?.deliveryOptions.length > 0 || props.animal?.allowBidding) &&
