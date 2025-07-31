@@ -32,7 +32,7 @@ const SectionProductListRow = (props: Props) => {
                             </div>}
                             {
                                 props.animal.allowBidding && <div title='ALLOW BIDDING'>
-                                    <CandlestickChartIcon size={20} className='text-amber-500 animate-pulse' />
+                                    <CandlestickChartIcon size={20} className='text-emerald-700 animate-pulse' />
                                 </div>
                             }
                         </div>}
