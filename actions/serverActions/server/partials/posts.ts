@@ -382,8 +382,8 @@ async function GetCustomerContact(postId: string, userId: string) {
         response.data = null;
         return response;
       } else {
-        Promise.all([
-          await prisma.user.update({
+        await Promise.all([
+          prisma.user.update({
             where: { id: userId },
             data: {
               balance: {
@@ -392,7 +392,7 @@ async function GetCustomerContact(postId: string, userId: string) {
             },
           }),
 
-          await actions.server.user.contacts.createContact(
+          actions.server.user.contacts.createContact(
             userId,
             isExists.userId,
             `Seller`
@@ -401,32 +401,40 @@ async function GetCustomerContact(postId: string, userId: string) {
       }
     }
 
-    const post = await prisma.animal.findUnique({
+    let contact: any = await prisma.contactBook.findFirst({
       where: {
-        id: postId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
-          },
-        },
+        authorId: userId,
+        userId: isExists.userId,
       },
     });
 
-    if (!post) {
+    if (!contact) {
       response.status = 400;
-      response.message = "Post not found";
+      response.message = "Contact not found";
       response.data = null;
       return response;
     }
 
+    const postAuthor = await prisma.user.findUnique({
+      where: {
+        id: contact.userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+      },
+    });
+
+    contact = {
+      ...contact,
+      user: postAuthor,
+    };
+
     response.status = 200;
     response.message = "Customer contact fetched successfully";
     response.data = {
-      ...post.user,
+      ...contact,
       cost: Number(protocol ? protocol.data.value : 0),
     };
     return response;

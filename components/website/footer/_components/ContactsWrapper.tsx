@@ -5,27 +5,24 @@ import React, { useEffect, useState } from 'react'
 import ContactRow from './ContactsWrapper/ContactRow'
 import TheContact from './ContactsWrapper/TheContact'
 import { SearchIcon } from 'lucide-react'
+import { useContacts } from '@/hooks/useContacts'
 
 type Props = {
     children: React.ReactNode
 }
 
 const ContactsWrapper = (props: Props) => {
+    const Contact = useContacts()
     const [toggled, setToggled] = useState(false)
     const [isWorking, setIsWorking] = useState(false)
-    const [contacts, setContacts] = useState([])
+    const contacts = Contact.contacts
     const [searchText, setSearchText] = useState("")
     const [selectedContact, setSelectedContact] = useState<any>(null)
     const user = useUser()
 
     const fetchContacts = async () => {
         if (user) {
-            setIsWorking(true)
-            const response = await actions.client.user.contacts.listAll(user.id)
-            if (response.status === 200) {
-                setContacts(response.data)
-            }
-            setIsWorking(false)
+            Contact.fetchContacts(user.id)
         }
     }
 

@@ -3,6 +3,7 @@ import { actions } from '@/actions/serverActions/actions'
 import CoinTransactionAnimationWrapper from '@/components/animation-wrappers/CoinTransactionAnimationWrapper'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
+import { useContacts } from '@/hooks/useContacts'
 import { useDialog } from '@/hooks/useDialog'
 import { useSession } from '@/hooks/useSession'
 import { useUser } from '@/socket-client/SocketWrapper'
@@ -21,23 +22,19 @@ const DirectCTOButton = (props: Props) => {
     const [user, setUser] = useState<any>(null)
     const [costString, setCostString] = useState('')
     const currentUser = useUser()
+    const contacts = useContacts((state: any) => state.contacts)
+    const Contact = useContacts()
     const fetchBalance = useSession((state: any) => state.fetchBalance)
     const dialog = useDialog()
 
     useEffect(() => {
-        const fetchContact = async () => {
-            if (currentUser) {
-                setPreCheck(true)
-                const response = await actions.client.user.contacts.list(currentUser.id, props.animal.userId)
-                if (response.status === 200) {
-                    setUser(response.data?.user)
-                }
-                setPreCheck(false)
-            }
+        const contact = Contact.find(props.animal.userId)
+        if (contact) {
+            setUser(contact.user)
+        } else {
+            setUser(null)
         }
-
-        fetchContact()
-    }, [currentUser])
+    }, [contacts])
 
 
     const handleClick = async () => {
@@ -45,7 +42,8 @@ const DirectCTOButton = (props: Props) => {
             setIsFetching(true)
             const response = await actions.client.posts.GetCustomerContact(props.animal.id, currentUser.id)
             if (response.status === 200) {
-                setUser(response.data)
+                setUser(response.data.user)
+                Contact.addToContact(response.data)
                 setCostString(`-${response.data.cost} coins`)
                 fetchBalance()
             } else if (response.status === 302) {
@@ -57,8 +55,6 @@ const DirectCTOButton = (props: Props) => {
             setIsFetching(false)
         }
     }
-
-    console.log(currentUser)
 
     return (
         <>
