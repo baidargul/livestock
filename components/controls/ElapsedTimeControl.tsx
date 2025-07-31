@@ -1,3 +1,4 @@
+'use client'
 import { elapsedTime } from '@/lib/utils'
 import React, { useEffect, useState } from 'react'
 
