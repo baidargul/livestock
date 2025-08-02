@@ -90,30 +90,32 @@ const PriceAndDelivery = (props: Props) => {
     const seller = isExists('SELLER_DELIVERY')
 
     return (
-        <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
-            <div className='text-xl font-semibold tracking-tight text-center'>{`Commericial Information`}</div>
-            <div className='w-full flex flex-col items-start p-4 gap-4'>
-                <div className='flex flex-col gap-2'>
-                    <div className='relative flex items-center'>
-                        <label className='absolute left-0 text-2xl'>Rs </label>
-                        <input ref={txtRef} onFocus={handleOnFocus} onChange={(e: any) => handlePriceChange(Number(e.target.value))} value={props.animal.price} placeholder='0/-' type='number' className='text-2xl border-b border-black selection:bg-emerald-100 text-left pl-8 p-2 outline-0 text-emerald-600' />
+        <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
+            <div className='flex flex-col gap-4'>
+                <div className='text-xl font-semibold tracking-tight text-center'>{`Commericial Information`}</div>
+                <div className='w-full flex flex-col items-start p-4 gap-4'>
+                    <div className='flex flex-col gap-2'>
+                        <div className='relative flex items-center'>
+                            <label className='absolute left-0 text-2xl'>Rs </label>
+                            <input ref={txtRef} onFocus={handleOnFocus} onChange={(e: any) => handlePriceChange(Number(e.target.value))} value={props.animal.price} placeholder='0/-' type='number' className='text-2xl border-b border-black selection:bg-emerald-100 text-left pl-8 p-2 outline-0 text-emerald-600' />
+                        </div>
+                        <Selectbox options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
                     </div>
-                    <Selectbox options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
-                </div>
-                {selectedUnit !== "per Set" && selectedUnit !== "per Kg" && <div>
-                    <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                </div>}
-                {selectedUnit === "per Kg" && <div className='flex flex-col gap-1'>
-                    <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
-                    <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
-                    <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                </div>}
-                <div className='flex flex-col justify-between gap-4 w-full'>
-                    <Checkbox label='SELF PICKUP AVAILABLE' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
-                    <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
+                    {selectedUnit !== "per Set" && selectedUnit !== "per Kg" && <div>
+                        <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
+                    </div>}
+                    {selectedUnit === "per Kg" && <div className='flex flex-col gap-1'>
+                        <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
+                        <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
+                        <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
+                    </div>}
+                    <div className='flex flex-col justify-between gap-4 w-full'>
+                        <Checkbox label='SELF PICKUP AVAILABLE' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
+                        <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
+                    </div>
                 </div>
             </div>
-            <div className='w-full p-4'>
+            <div className='w-full p-4 mt-auto'>
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>

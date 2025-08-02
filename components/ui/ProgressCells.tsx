@@ -3,11 +3,12 @@ import React from 'react'
 type Props = {
     value: number
     max: number
+    className?: string
 }
 
 const ProgressCells = (props: Props) => {
     return (
-        <div className='flex gap-0 w-full'>
+        <div className={`flex gap-0 w-full ${props.className}`}>
             {
                 Array.from({ length: props.max }).map((_, index) => {
                     return (

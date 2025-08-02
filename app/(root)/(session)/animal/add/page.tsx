@@ -109,7 +109,7 @@ const page = (props: Props) => {
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center justify-center'>
-            <ProgressCells value={currentScreen} max={7} />
+            <ProgressCells value={currentScreen} max={7} className='px-4 pt-4' />
             {screens[currentScreen]}
         </div>
     )

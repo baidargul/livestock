@@ -64,11 +64,11 @@ const PostPreview = (props: Props) => {
 
     const totalQuantity = checkQuantity()
     return (
-        <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
+        <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
             <div className='w-full'>
                 <h1 className='text-2xl font-bold mb-10'>Post Preview</h1>
                 <div className='flex flex-col gap-4 leading-tight tracking-tight text-start'>
-                    <div className='grid grid-cols-2 gap-2'>
+                    <div className='columns-3'>
                         {
                             props.animal?.images && props.animal?.images.length > 0 && props.animal.images.map((image: ImagePayload, index: number) => {
 
@@ -110,7 +110,7 @@ const PostPreview = (props: Props) => {
                 </div>
 
             </div>
-            <div className='flex items-center justify-between gap-4 w-full p-4'>
+            <div className='flex items-center justify-between gap-4 w-full p-4 mt-auto'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting || !props.user.id}>Go Back</Button>
                 <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Yes Create Post</Button>
             </div>
