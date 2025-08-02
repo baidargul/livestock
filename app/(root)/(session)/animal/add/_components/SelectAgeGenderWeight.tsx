@@ -86,23 +86,30 @@ const SelectAgeGenderWeight = (props: Props) => {
     }
 
     const handleMoveNext = () => {
+        let isValid = true
         const totalAvailable = Number(props.animal.maleQuantityAvailable ?? 0) + Number(props.animal.femaleQuantityAvailable ?? 0)
         if (Number(totalAvailable) > 0) {
-            props.moveNext()
         } else {
-            dialog.showDialog('Please add at least one animal', null, 'Error')
+            isValid = false
+            dialog.showDialog('Please add at least one animal', null, 'Animal')
         }
 
         if (Number(props.animal.averageAge ?? 0) > 0) {
             if (String(props.animal.ageUnit ?? '').length === 0) {
-                dialog.showDialog('Please select age unit', null, 'Error')
+                isValid = false
+                dialog.showDialog('Age', null, 'Please select age unit')
             }
         }
 
         if (Number(props.animal.averageWeight ?? 0) > 0) {
             if (String(props.animal.weightUnit ?? '').length === 0) {
-                dialog.showDialog('Please select weight unit', null, 'Error')
+                isValid = false
+                dialog.showDialog('Weight', null, 'Please select weight unit')
             }
+        }
+
+        if (isValid) {
+            props.moveNext()
         }
     }
 
