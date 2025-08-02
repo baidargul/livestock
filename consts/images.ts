@@ -45,6 +45,8 @@ import handshake from "@/public/system/ui/handshake.png";
 import contactlist from "@/public/system/ui/contactlist.png";
 import contactlisthover from "@/public/system/ui/contactlisthover.png";
 import plusIcon from "@/public/system/ui/plusIcon.png";
+import skulls from "@/public/system/media/skulls.png";
+import cash from "@/public/system/media/cash.png";
 
 export const images = {
   site: {
@@ -58,6 +60,10 @@ export const images = {
       userCover: "/placeholders/cover.png",
       animal: "/placeholders/animalprofile.gif",
       animalCover: "/placeholders/cover.png",
+    },
+    media: {
+      skulls: skulls,
+      cash: cash,
     },
     ui: {
       handshake: handshake,

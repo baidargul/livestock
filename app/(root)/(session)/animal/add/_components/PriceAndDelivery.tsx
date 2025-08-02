@@ -3,9 +3,11 @@ import Checkbox from '@/components/ui/Checkbox'
 import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
+import { images } from '@/consts/images'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
 import { Trash2Icon } from 'lucide-react'
+import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 
 type Props = {
@@ -113,6 +115,9 @@ const PriceAndDelivery = (props: Props) => {
                         <Checkbox label='SELF PICKUP AVAILABLE' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
                         <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
                     </div>
+                </div>
+                <div className='w-full'>
+                    <Image src={images.site.media.cash} alt='skulls' layout='fixed' width={100} height={100} className='w-full object-contain' />
                 </div>
             </div>
             <div className='w-full p-4 mt-auto'>

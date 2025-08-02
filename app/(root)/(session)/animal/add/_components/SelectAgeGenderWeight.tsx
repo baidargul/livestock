@@ -4,10 +4,12 @@ import Groupbox from '@/components/ui/Groupbox'
 import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
+import { images } from '@/consts/images'
 import { useDialog } from '@/hooks/useDialog'
 import { formalizeText } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import { Trash2Icon } from 'lucide-react'
+import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
@@ -140,6 +142,9 @@ const SelectAgeGenderWeight = (props: Props) => {
                         <Textbox label={`Average weight`} type='number' value={Number(props.animal.averageWeight ?? 0)} onChange={handleWeightChange} />
                         <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit ?? ""} className={Number(props.animal.averageWeight ?? 0) > 0 ? '' : 'opacity-50 grayscale-100'} onChange={handleWeightUnitChange} />
                     </div>
+                </div>
+                <div className='w-full'>
+                    <Image src={images.site.media.skulls} alt='skulls' layout='fixed' width={100} height={100} className='w-full h-auto' />
                 </div>
             </div>
             <div className='w-full p-4 mt-auto'>
