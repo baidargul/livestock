@@ -87,6 +87,7 @@ const Rooms = (props: Props) => {
                   {bid.maleQuantityAvailable > 0 && ` ${bid.maleQuantityAvailable} male`}
                   {bid.femaleQuantityAvailable > 0 && ` ${bid.femaleQuantityAvailable} female`}
                 </div>
+                <div className="text-xs text-zinc-700">{formalizeText(bid.user.city ?? "")}, {bid.user.province}</div>
               </div>
             </div>
             <div className={`${bid.closedAt && "font-semibold tracking-wider text-emerald-700"}`}>{bid.userOfferAccepted ? formatCurrency(bid.closedAmount) : formatCurrency(bid.bids[bid.bids.length - 1]?.price ?? 0)}

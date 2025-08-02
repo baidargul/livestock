@@ -130,6 +130,8 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
               select: {
                 id: true,
                 name: true,
+                city: true,
+                province: true,
                 connectionIds: true,
               },
             },
@@ -142,6 +144,8 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           select: {
             id: true,
             name: true,
+            city: true,
+            province: true,
             connectionIds: true,
           },
         },
@@ -350,6 +354,8 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
           select: {
             id: true,
             name: true,
+            city: true,
+            province: true,
             connectionIds: true,
           },
         },
@@ -368,6 +374,8 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
                 id: true,
                 name: true,
                 connectionIds: true,
+                city: true,
+                province: true,
               },
             },
             BidRoom: true,
@@ -465,6 +473,8 @@ async function listByUser(
               select: {
                 id: true,
                 name: true,
+                city: true,
+                province: true,
                 connectionIds: true,
               },
             },
@@ -477,6 +487,8 @@ async function listByUser(
           select: {
             id: true,
             name: true,
+            city: true,
+            province: true,
             connectionIds: true,
           },
         },
@@ -512,6 +524,8 @@ async function listByUser(
               select: {
                 id: true,
                 name: true,
+                city: true,
+                province: true,
                 connectionIds: true,
               },
             },
@@ -524,6 +538,8 @@ async function listByUser(
           select: {
             id: true,
             name: true,
+            city: true,
+            province: true,
             connectionIds: true,
           },
         },
@@ -675,6 +691,8 @@ async function leaveAllBidRooms(userId: string) {
                 select: {
                   id: true,
                   name: true,
+                  city: true,
+                  province: true,
                   connectionIds: true,
                 },
               },
@@ -687,6 +705,8 @@ async function leaveAllBidRooms(userId: string) {
             select: {
               id: true,
               name: true,
+              city: true,
+              province: true,
               connectionIds: true,
             },
           },
@@ -735,6 +755,8 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
               select: {
                 id: true,
                 name: true,
+                city: true,
+                province: true,
                 connectionIds: true,
               },
             },
@@ -857,6 +879,8 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
             name: true,
             phone: true,
             balance: true,
+            city: true,
+            province: true,
           },
         },
       },

@@ -34,6 +34,8 @@ async function onAnimal(id: string) {
                   select: {
                     name: true,
                     id: true,
+                    city: true,
+                    province: true,
                   },
                 },
               },
