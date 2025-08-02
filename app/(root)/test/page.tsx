@@ -4,6 +4,7 @@ import React from 'react'
 import { gsap } from "gsap";
 import Image from 'next/image';
 import { images } from '@/consts/images';
+import ProgressCells from '@/components/ui/ProgressCells';
 type Props = {}
 
 const page = (props: Props) => {
@@ -17,7 +18,10 @@ const page = (props: Props) => {
 
     return (
         <>
-            <div className='w-full min-h-[100dvh] flex justify-center items-center'>
+            <div className='w-full min-h-[100dvh] flex flex-col gap-4 p-2 justify-center items-center'>
+                <div className='w-full'>
+                    <ProgressCells value={3} max={10} />
+                </div>
                 <div className='relative flex justify-center items-center'>
                     <div className='plus absolute top-0 opacity-0 pointer-events-none flex flex-col items-center gap-0'>
                         <Image src={images.site.ui.plusIcon} alt='plus' width={30} height={30} layout='fixed' quality={100} />

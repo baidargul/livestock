@@ -11,6 +11,7 @@ import PostPreview from './_components/PostPreview'
 import { useSession } from '@/hooks/useSession'
 import { useRouter } from 'next/navigation'
 import { useLoader } from '@/hooks/useLoader'
+import ProgressCells from '@/components/ui/ProgressCells'
 
 type Props = {}
 
@@ -108,6 +109,7 @@ const page = (props: Props) => {
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center justify-center'>
+            <ProgressCells value={currentScreen} max={7} />
             {screens[currentScreen]}
         </div>
     )
