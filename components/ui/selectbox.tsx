@@ -5,6 +5,7 @@ type Props = {
     value: string
     onChange: (val: string) => void
     label?: string
+    className?: string
 }
 
 const Selectbox = (props: Props) => {
@@ -14,7 +15,7 @@ const Selectbox = (props: Props) => {
     }
 
     return (
-        <div className='flex flex-col gap-0 w-full'>
+        <div className={`flex flex-col gap-0 w-full transition duration-300 ease-in-out ${props.className}`}>
             {props.label && props.label.length > 0 && <label className='label'>{props.label}</label>}
             <div className='flex items-center gap-2 w-full'>
                 {

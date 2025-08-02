@@ -4,6 +4,7 @@ import Groupbox from '@/components/ui/Groupbox'
 import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
+import { useDialog } from '@/hooks/useDialog'
 import { formalizeText } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import { Trash2Icon } from 'lucide-react'
@@ -20,6 +21,7 @@ type Props = {
 const SelectAgeGenderWeight = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [isDisabledForward, setIsDisabledForward] = useState(true)
+    const dialog = useDialog()
 
     useEffect(() => {
         if (!props.animal.averageWeight) {
@@ -43,7 +45,7 @@ const SelectAgeGenderWeight = (props: Props) => {
 
     const validate = () => {
         let disableForward = true
-        if (Number(Number(props.animal.maleQuantityAvailable) + Number(props.animal.femaleQuantityAvailable)) > 0) {
+        if (Number(Number(props.animal.maleQuantityAvailable ?? 0) + Number(props.animal.femaleQuantityAvailable ?? 0)) > 0) {
             disableForward = false
         }
         if (props.animal.averageAge && Number(props.animal.averageAge) > 0) {
@@ -84,9 +86,11 @@ const SelectAgeGenderWeight = (props: Props) => {
     }
 
     const handleMoveNext = () => {
-        const totalAvailable = Number(props.animal.maleQuantityAvailable) + Number(props.animal.femaleQuantityAvailable)
+        const totalAvailable = Number(props.animal.maleQuantityAvailable ?? 0) + Number(props.animal.femaleQuantityAvailable ?? 0)
         if (Number(totalAvailable) > 0) {
             props.moveNext()
+        } else {
+            dialog.showDialog('Please add at least one animal', null, 'Error')
         }
     }
 
@@ -109,12 +113,12 @@ const SelectAgeGenderWeight = (props: Props) => {
                         </div> */}
                 </div>
                 <div className='flex items-center justify-between gap-2'>
-                    <Textbox label='Average age' type='number' value={Number(props.animal.averageAge)} onChange={handleAgeChange} />
-                    <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit ?? ""} onChange={handleAgeUnitChange} />
+                    <Textbox label='Average age' type='number' value={Number(props.animal.averageAge ?? 0)} onChange={handleAgeChange} />
+                    <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit ?? ""} className={Number(props.animal.averageAge ?? 0) > 0 ? '' : 'opacity-50 grayscale-100'} onChange={handleAgeUnitChange} />
                 </div>
                 <div className='flex items-center justify-between gap-2'>
-                    <Textbox label={`Average weight`} type='number' value={Number(props.animal.averageWeight)} onChange={handleWeightChange} />
-                    <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit ?? ""} onChange={handleWeightUnitChange} />
+                    <Textbox label={`Average weight`} type='number' value={Number(props.animal.averageWeight ?? 0)} onChange={handleWeightChange} />
+                    <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit ?? ""} className={Number(props.animal.averageWeight ?? 0) > 0 ? '' : 'opacity-50 grayscale-100'} onChange={handleWeightUnitChange} />
                 </div>
             </div>
 
