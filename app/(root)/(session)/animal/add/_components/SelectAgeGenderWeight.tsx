@@ -92,6 +92,18 @@ const SelectAgeGenderWeight = (props: Props) => {
         } else {
             dialog.showDialog('Please add at least one animal', null, 'Error')
         }
+
+        if (Number(props.animal.averageAge ?? 0) > 0) {
+            if (String(props.animal.ageUnit ?? '').length === 0) {
+                dialog.showDialog('Please select age unit', null, 'Error')
+            }
+        }
+
+        if (Number(props.animal.averageWeight ?? 0) > 0) {
+            if (String(props.animal.weightUnit ?? '').length === 0) {
+                dialog.showDialog('Please select weight unit', null, 'Error')
+            }
+        }
     }
 
 
