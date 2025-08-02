@@ -84,11 +84,9 @@ const SelectAgeGenderWeight = (props: Props) => {
     }
 
     const handleMoveNext = () => {
-        if (props.animal.maleQuantityAvailable || props.animal.femaleQuantityAvailable) {
-            const totalAvailable = Number(props.animal.maleQuantityAvailable) + Number(props.animal.femaleQuantityAvailable)
-            if (Number(totalAvailable) > 0) {
-                props.moveNext()
-            }
+        const totalAvailable = Number(props.animal.maleQuantityAvailable) + Number(props.animal.femaleQuantityAvailable)
+        if (Number(totalAvailable) > 0) {
+            props.moveNext()
         }
     }
 
