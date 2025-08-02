@@ -43,22 +43,18 @@ const SelectAgeGenderWeight = (props: Props) => {
 
     const validate = () => {
         let disableForward = true
-        if (props.animal.maleQuantityAvailable || props.animal.femaleQuantityAvailable) {
-            if (Number(props.animal.maleQuantityAvailable) > 0 || Number(props.animal.femaleQuantityAvailable) > 0) {
+        if (Number(Number(props.animal.maleQuantityAvailable) + Number(props.animal.femaleQuantityAvailable)) > 0) {
+            disableForward = false
+        }
+        if (props.animal.averageAge && Number(props.animal.averageAge) > 0) {
+            if (props.animal.ageUnit && String(props.animal.ageUnit).length > 0) {
                 disableForward = false
             } else {
                 disableForward = true
             }
         }
-        if (props.animal.averageAge && props.animal.averageAge > 0) {
-            if (props.animal.ageUnit) {
-                disableForward = false
-            } else {
-                disableForward = true
-            }
-        }
-        if (props.animal.averageWeight && props.animal.averageWeight > 0) {
-            if (props.animal.weightUnit) {
+        if (props.animal.averageWeight && Number(props.animal.averageWeight) > 0) {
+            if (String(props.animal.weightUnit).length > 0) {
                 disableForward = false
             } else {
                 disableForward = true
