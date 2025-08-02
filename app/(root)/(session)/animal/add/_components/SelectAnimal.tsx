@@ -1,6 +1,6 @@
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
-import { Trash2Icon } from 'lucide-react'
+import { HomeIcon, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -130,7 +130,7 @@ const SelectAnimal = (props: Props) => {
             <div className='w-full p-4 mt-auto'>
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
-                    <Button onClick={() => { window.history.back() }} className='w-full' variant='btn-secondary'>Back</Button>
+                    <Button onClick={() => { window.history.back() }} className='w-full flex gap-1 items-center justify-center' variant='btn-secondary'><HomeIcon size={20} className='text-emerald-700' /> Back</Button>
                     <Button onClick={props.moveNext} className='w-full' disabled={props.animal?.type && props.animal?.type !== "" ? false : true}>{props.animal?.type && props.animal?.type !== "" ? `Next` : "Select"}</Button>
                 </div>
             </div>
