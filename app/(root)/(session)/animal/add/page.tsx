@@ -71,7 +71,6 @@ const page = (props: Props) => {
         localStorage.removeItem('post')
         setAnimal(null)
         setCurrentScreen(1)
-        router.push('/home')
         setLoading(false)
     }
 
