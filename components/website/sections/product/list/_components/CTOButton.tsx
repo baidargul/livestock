@@ -1,6 +1,7 @@
 'use client'
 import { useContacts } from '@/hooks/useContacts'
 import { calculatePricing, formatCurrency } from '@/lib/utils'
+import { useUser } from '@/socket-client/SocketWrapper'
 import { Animal } from '@prisma/client'
 import { PhoneIcon } from 'lucide-react'
 import Link from 'next/link'
@@ -11,6 +12,7 @@ type Props = {
 }
 
 const CTOButton = (props: Props) => {
+    const user = useUser()
     const [contact, setContact] = useState<any>(null)
     const contacts = useContacts((state: any) => state.contacts)
     const find = useContacts((state: any) => state.find)
@@ -19,7 +21,7 @@ const CTOButton = (props: Props) => {
         setContact(find(props.animal?.userId))
     }, [contacts])
 
-    if (contact) {
+    if (contact && user) {
         return (
             <Link href={`tel:${contact.phone}`} className='flex gap-1 justify-center items-center p-1 w-full bg-emerald-700 rounded scale-90 origin-center text-white'>
                 <PhoneIcon size={20} />
