@@ -5,6 +5,7 @@ import { ChevronLeftIcon } from 'lucide-react'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { images } from '@/consts/images'
+import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
 
 type Props = {
     rooms: any
@@ -61,19 +62,21 @@ const Rooms = ({ rooms, user }: Props) => {
         const totalQuantity = (animal?.maleQuantityAvailable || 0) + (animal?.femaleQuantityAvailable || 0)
         const animalType = totalQuantity > 1 ? animal.type : animal.type.slice(0, -1)
         const priceText = totalQuantity > 1 ?
-            `${formatCurrency(animal.price)} each.` :
+            `${formatCurrency(animal.price)} each ${animal.priceUnit}.` :
             `${formatCurrency(animal.price)}.`
 
         return (
             <div key={`group-${animal.id}`} className="flex flex-col gap-2 bg-white p-2">
                 <div className="flex gap-2 items-start w-full h-full">
                     <div className="w-[40%] h-full relative aspect-square">
-                        <Image
-                            src={animal.images?.length ? animal.images[0].image : images.chickens.images[1]}
-                            alt={animal.breed}
-                            fill
-                            className="rounded-md h-full object-cover"
-                        />
+                        <BiddingWrapper animal={animal} staticStyle>
+                            <Image
+                                src={animal.images?.length ? animal.images[0].image : images.chickens.images[1]}
+                                alt={animal.breed}
+                                fill
+                                className="rounded-md h-full object-cover"
+                            />
+                        </BiddingWrapper>
                     </div>
                     <div className="w-full overflow-y-auto max-h-[200px]">
                         <div className="sticky top-0 pb-2 bg-white z-[1]">
