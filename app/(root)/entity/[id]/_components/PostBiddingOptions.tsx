@@ -2,6 +2,7 @@
 import CalculatedDescription from '@/components/Animals/CalculatedDescription'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
+import { useDialog } from '@/hooks/useDialog'
 import { useSession } from '@/hooks/useSession'
 import { calculatePricing, formatCurrency } from '@/lib/utils'
 import { useSocket } from '@/socket-client/SocketWrapper'
@@ -25,9 +26,8 @@ type Props = {
 
 const PostBiddingOptions = (props: Props) => {
     const [isOpen, setisOpen] = useState(false)
-    const [isMounted, setIsMounted] = useState(false)
-    const getUser = useSession((state: any) => state.getUser)
     const socket = useSocket()
+    const dialog = useDialog()
 
     const handleOpen = () => {
         setisOpen(!isOpen)
@@ -69,7 +69,15 @@ const PostBiddingOptions = (props: Props) => {
                 maleQuantityAvailable: Number(props.postBiddingOptions.maleQuantityAvailable) ?? 0,
                 femaleQuantityAvailable: Number(props.postBiddingOptions.femaleQuantityAvailable) ?? 0
             }
-            socket.emit("join-bidroom", serialize({ room, userId: props.user.id }));
+
+            const againstValue = Number(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price)
+            if (Number(props.postBiddingOptions.amount) === againstValue) {
+                dialog.showDialog('Equal trade', <MakeSureBox message='Are you sure you want to post an amount equal to the animal’s cost?' onYes={() => { socket.emit("join-bidroom", serialize({ room, userId: props.user.id })); dialog.closeDialog(); handleClose(true) }} onNo={() => { dialog.closeDialog(); }} />)
+            } else if (Number(props.postBiddingOptions.amount) > againstValue) {
+                dialog.showDialog('Equal trade', <MakeSureBox message='Are you sure you want to post an amount greater then animal’s cost?' onYes={() => { socket.emit("join-bidroom", serialize({ room, userId: props.user.id })); dialog.closeDialog(); handleClose(true) }} onNo={() => { dialog.closeDialog() }} />)
+            } else {
+                socket.emit("join-bidroom", serialize({ room, userId: props.user.id }))
+            }
         }
     }
 
@@ -114,3 +122,17 @@ const PostBiddingOptions = (props: Props) => {
 }
 
 export default PostBiddingOptions
+
+
+const MakeSureBox = (props: { message: string, onYes: () => void, onNo: () => void }) => {
+
+    return (
+        <div className='p-2 pb-0 -mb-2 w-full flex flex-col gap-6'>
+            <div>{props.message}</div>
+            <div className='grid grid-cols-2 gap-2 w-full'>
+                <Button onClick={props.onYes}>Yes</Button>
+                <Button onClick={props.onNo}>No</Button>
+            </div>
+        </div>
+    )
+}
