@@ -79,19 +79,21 @@ const Rooms = ({ rooms, user }: Props) => {
                         </BiddingWrapper>
                     </div>
                     <div className="w-full overflow-y-auto max-h-[200px]">
-                        <div className="sticky top-0 pb-2 bg-white z-[1]">
-                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                                <div className="font-semibold tracking-wide">
-                                    {formalizeText(animal.breed)} {animalType}
+                        <BiddingWrapper animal={animal} staticStyle>
+                            <div className="sticky top-0 pb-2 bg-white z-[1]">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                    <div className="font-semibold tracking-wide">
+                                        {formalizeText(animal.breed)} {animalType}
+                                    </div>
+                                    <div className="text-sm text-zinc-500">
+                                        {formatCurrency(calculatePricing(animal).price)}
+                                    </div>
                                 </div>
-                                <div className="text-sm text-zinc-500">
-                                    {formatCurrency(calculatePricing(animal).price)}
+                                <div className="text-xs">
+                                    {totalQuantity} {animalType}, {priceText}
                                 </div>
                             </div>
-                            <div className="text-xs">
-                                {totalQuantity} {animalType}, {priceText}
-                            </div>
-                        </div>
+                        </BiddingWrapper>
                         <div className="flex flex-col gap-8 pt-8">
                             {group.rooms.map((room: any) => (
                                 <Room
