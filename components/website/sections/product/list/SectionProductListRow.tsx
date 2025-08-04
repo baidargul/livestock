@@ -22,7 +22,6 @@ const SectionProductListRow = (props: Props) => {
 
     useEffect(() => {
         if (socket) {
-
             socket.on("sold", (binaryData) => {
                 const { animalId } = deserialize(binaryData);
                 if (animalId === animal.id) {
@@ -34,7 +33,7 @@ const SectionProductListRow = (props: Props) => {
                 socket.off("sold")
             }
         }
-    }, [socket])
+    }, [socket, user])
 
     useEffect(() => {
         setAnimal(props.animal)
