@@ -44,6 +44,15 @@ async function recharge(userId: string, amount: number) {
       };
     }
 
+    if (!isExists.balance) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          balance: 0,
+        },
+      });
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
