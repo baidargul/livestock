@@ -116,7 +116,7 @@ const PostBiddingOptions = (props: Props) => {
                             </div>
                         </div>
                         <div>
-                            <Textbox label='Your offer' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
+                            <Textbox label='Your offer' type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                         </div>
                         <div className='mt-10 grid grid-cols-2 gap-2 w-full'>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
