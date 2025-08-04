@@ -4,26 +4,27 @@ import React from 'react'
 
 type Props = {
     animal: Animal
+    inRow?: boolean
 }
 
 const CalculatedDescription = (props: Props) => {
     switch (props.animal.priceUnit) {
         case `per ${props.animal.weightUnit}`:
-            return PerWeight(props.animal)
+            return PerWeight(props.animal, props.inRow)
         case "per Set":
-            return PerSet(props.animal)
+            return PerSet(props.animal, props.inRow)
         case "per Piece":
-            return PerPC(props.animal)
+            return PerPC(props.animal, props.inRow)
         default:
-            return PerPC(props.animal)
+            return PerPC(props.animal, props.inRow)
     }
 }
 
 export default CalculatedDescription
-const PerWeight = (animal: Animal) => {
+const PerWeight = (animal: Animal, inRow?: boolean) => {
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
     return (
-        <div>
+        <div className={`${inRow && "flex justify-between items-center w-full"}`}>
             <div className='leading-5' >
                 <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> by {animal.priceUnit?.toLocaleLowerCase()}.</span>
                 <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} with an average weight of {animal.averageWeight} {animal.weightUnit?.toLocaleLowerCase()} each.</span>
@@ -82,11 +83,11 @@ const PerWeight = (animal: Animal) => {
     )
 }
 
-const PerSet = (animal: Animal) => {
+const PerSet = (animal: Animal, inRow?: boolean) => {
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
 
     return (
-        <div>
+        <div className={`${inRow && "flex justify-between items-center w-full"}`}>
             <div className='leading-5'>
                 <span>I want to sell <span className='font-semibold'> {quantity} {formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> as a complete set.</span>
                 {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
@@ -143,11 +144,11 @@ const PerSet = (animal: Animal) => {
     )
 }
 
-const PerPC = (animal: Animal) => {
+const PerPC = (animal: Animal, inRow?: boolean) => {
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
 
     return (
-        <div>
+        <div className={`${inRow && "flex justify-between items-center w-full"}`}>
             <div className='leading-5'>
                 <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> individually.</span>
                 {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (

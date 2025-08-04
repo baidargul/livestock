@@ -59,18 +59,6 @@ const page = async (props: Props) => {
                         </div>
                     </div>
                     <section>
-                        <div className='flex justify-between items-center'>
-                            <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
-                            <Link href={`/user/profile/${animal?.user.id}`} className='flex items-center gap-2'>
-                                <Image src={animal?.user.profileImage && animal?.user.profileImage.length > 0 ? animal?.user.profileImage[0].image : images.site.placeholders.userProfile} alt={`${animal?.user.name} profile image`} width={32} height={32} className='w-8 h-8 object-cover rounded-full' />
-                                <div>
-                                    <label className='cursor-pointer select-none text-right tracking-widest w-fit'>{formalizeText(animal?.user.name)}</label>
-                                    <div className='scale-75 origin-top-left'>
-                                        <RatingBar defaultRating={4.5} readonly />
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
                         <p className='text-lg text-gray-600'>{animal.description}</p>
                         <ElapsedTimeControl date={animal.createdAt} />
                         <SoldOverlay animal={animal}>
@@ -123,17 +111,6 @@ const page = async (props: Props) => {
                     {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
                         <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding Active</div>
                     </Marquee>}
-                    {animal?.user.name && <div className='w-full mb-2 flex justify-end items-center'>
-                        <Link href={`/user/profile/${animal?.user.id}`} className='flex items-center gap-2'>
-                            <Image src={animal?.user.profileImage && animal?.user.profileImage.length > 0 ? animal?.user.profileImage[0].image : images.site.placeholders.userProfile} alt={`${animal?.user.name} profile image`} width={32} height={32} className='w-8 h-8 object-cover rounded-full' />
-                            <div>
-                                <label className='cursor-pointer select-none text-right tracking-widest w-fit'>{formalizeText(animal?.user.name)}</label>
-                                <div className='scale-75 origin-top-left'>
-                                    <RatingBar defaultRating={4.5} readonly />
-                                </div>
-                            </div>
-                        </Link>
-                    </div>}
                     <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
                     <p className='text-lg text-gray-600'>{animal.description}</p>
                     <SoldOverlay animal={animal}>
