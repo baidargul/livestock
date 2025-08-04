@@ -22,6 +22,7 @@ import Marquee from 'react-fast-marquee'
 import CTOButton from '@/components/controls/Bidding/_components/CTOButton'
 import DirectCTOButton from './_components/DirectCTOButton'
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
+import SoldOverlay from '@/components/ui/SoldOverlay'
 
 export const dynamic = 'force-dynamic';
 
@@ -70,7 +71,9 @@ const page = async (props: Props) => {
                         </div>
                         <p className='text-lg text-gray-600'>{animal.description}</p>
                         <ElapsedTimeControl date={animal.createdAt} />
-                        <CalculatedDescription animal={animal} />
+                        <SoldOverlay animal={animal}>
+                            <CalculatedDescription animal={animal} />
+                        </SoldOverlay>
                         <div className='flex justify-start items-start gap-4 my-4 w-full'>{
                             animal.deliveryOptions.map((option: any, index: number) => {
                                 const Icon = String(option).toLocaleLowerCase() === "self_pickup" ? SquareUserIcon : TruckIcon
@@ -115,7 +118,7 @@ const page = async (props: Props) => {
                     </div>
                 </div>
                 <div className='mt-40 p-4'>
-                    {animal.allowBidding && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
+                    {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
                         <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding Active</div>
                     </Marquee>}
                     {animal?.user.name && <div className='w-full mb-2 flex justify-end items-center'>
@@ -131,7 +134,9 @@ const page = async (props: Props) => {
                     </div>}
                     <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
                     <p className='text-lg text-gray-600'>{animal.description}</p>
-                    <CalculatedDescription animal={animal} />
+                    <SoldOverlay animal={animal}>
+                        <CalculatedDescription animal={animal} />
+                    </SoldOverlay>
                     {/* <BidTradeView animalId={animal.id} /> */}
                 </div>
                 <div className='px-4 flex flex-col gap-4'>
@@ -158,7 +163,7 @@ const page = async (props: Props) => {
                     {animal.priceUnit && <span className='text-base uppercase '>{`${animal.priceUnit === "per Set" ? "Whole set" : animal.priceUnit}`}</span>}
                 </div> */}
                 </div>
-                <div className='mb-2 px-4 flex justify-center items-center w-full'>
+                {!animal?.sold && <div className='mb-2 px-4 flex justify-center items-center w-full'>
                     {animal.allowBidding &&
                         <BidProtection animal={animal}>
                             <Button className='w-full flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Buy Now</Button>
@@ -172,7 +177,7 @@ const page = async (props: Props) => {
                             </Button>
                         </DirectCTOButton>
                     }
-                </div>
+                </div>}
                 <GeneralFooter />
             </section >
         </div>
