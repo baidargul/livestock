@@ -22,6 +22,8 @@ type Props = {
     children: React.ReactNode
     staticStyle?: boolean
     user: any
+    directCTO?: boolean
+    directCTOAction?: () => void
 }
 
 const PostBiddingOptions = (props: Props) => {
@@ -58,25 +60,33 @@ const PostBiddingOptions = (props: Props) => {
     }, [props.postBiddingOptions.femaleQuantityAvailable, props.postBiddingOptions.maleQuantityAvailable])
 
     const handlePostOffer = () => {
-        if (socket && props.user) {
-            const room = {
-                animalId: props.animal.id,
-                authorId: props.animal.userId,
-                userId: props.user.id,
-                key: `${props.animal.id}-${props.animal.userId}-${props.user.id}`,
-                offer: Number(props.postBiddingOptions.amount),
-                deliveryOptions: props.postBiddingOptions.deliveryOptions,
-                maleQuantityAvailable: Number(props.postBiddingOptions.maleQuantityAvailable) ?? 0,
-                femaleQuantityAvailable: Number(props.postBiddingOptions.femaleQuantityAvailable) ?? 0
+        if (props.directCTO) {
+            if (props.directCTOAction) {
+                props.directCTOAction()
+                handleClose(true)
             }
+        } else {
+            if (socket && props.user) {
+                const room = {
+                    animalId: props.animal.id,
+                    authorId: props.animal.userId,
+                    userId: props.user.id,
+                    key: `${props.animal.id}-${props.animal.userId}-${props.user.id}`,
+                    offer: Number(props.postBiddingOptions.amount),
+                    deliveryOptions: props.postBiddingOptions.deliveryOptions,
+                    maleQuantityAvailable: Number(props.postBiddingOptions.maleQuantityAvailable) ?? 0,
+                    femaleQuantityAvailable: Number(props.postBiddingOptions.femaleQuantityAvailable) ?? 0
+                }
 
-            const againstValue = Number(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price)
-            if (Number(props.postBiddingOptions.amount) === againstValue) {
-                dialog.showDialog('Equal trade', <MakeSureBox message='Are you sure you want to post an amount equal to the animal’s cost?' onYes={() => { socket.emit("join-bidroom", serialize({ room, userId: props.user.id })); dialog.closeDialog(); handleClose(true) }} onNo={() => { dialog.closeDialog(); }} />)
-            } else if (Number(props.postBiddingOptions.amount) > againstValue) {
-                dialog.showDialog('Equal trade', <MakeSureBox message='Are you sure you want to post an amount greater then animal’s cost?' onYes={() => { socket.emit("join-bidroom", serialize({ room, userId: props.user.id })); dialog.closeDialog(); handleClose(true) }} onNo={() => { dialog.closeDialog() }} />)
-            } else {
-                socket.emit("join-bidroom", serialize({ room, userId: props.user.id }))
+
+                const againstValue = Number(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price)
+                if (Number(props.postBiddingOptions.amount) === againstValue) {
+                    dialog.showDialog('Equal trade', <MakeSureBox message='Are you sure you want to post an amount equal to the animal’s cost?' onYes={() => { socket.emit("join-bidroom", serialize({ room, userId: props.user.id })); dialog.closeDialog(); handleClose(true) }} onNo={() => { dialog.closeDialog(); }} />)
+                } else if (Number(props.postBiddingOptions.amount) > againstValue) {
+                    dialog.showDialog('Equal trade', <MakeSureBox message='Are you sure you want to post an amount greater then animal’s cost?' onYes={() => { socket.emit("join-bidroom", serialize({ room, userId: props.user.id })); dialog.closeDialog(); handleClose(true) }} onNo={() => { dialog.closeDialog() }} />)
+                } else {
+                    socket.emit("join-bidroom", serialize({ room, userId: props.user.id }))
+                }
             }
         }
     }

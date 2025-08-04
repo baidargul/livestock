@@ -10,6 +10,7 @@ import { useUser } from '@/socket-client/SocketWrapper'
 import { BanknoteArrowDownIcon, PhoneIcon } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import PostBiddingOptions from './PostBiddingOptions'
 
 type Props = {
     children: React.ReactNode
@@ -24,6 +25,20 @@ const DirectCTOButton = (props: Props) => {
     const [user, setUser] = useState<any>(null)
     const [costString, setCostString] = useState('')
     const fetchBalance = useSession((state: any) => state.fetchBalance)
+    const [postBiddingOptions, setPostBiddingOptions] = useState<{
+        deliveryOptions: string[],
+        maleQuantityAvailable: number,
+        femaleQuantityAvailable: number,
+        amount: number,
+        posted: boolean
+    }>({
+        deliveryOptions: [],
+        maleQuantityAvailable: 0,
+        femaleQuantityAvailable: 0,
+        amount: 0,
+        posted: false
+    })
+
 
     useEffect(() => {
         const contact = Contact.find(props.animal.userId)
@@ -54,27 +69,29 @@ const DirectCTOButton = (props: Props) => {
     }
 
     return (
-        <>
-            {!currentUser && <div title='Please login to continue' className={`w-full cursor-not-allowed ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
-                <div className='w-full'>{props.children}</div>
-            </div>}
-            {currentUser && !user && currentUser.id !== props.animal.userId && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
-                <div onClick={handleClick} className='w-full'>{props.children}</div>
-            </div>}
-            {user && currentUser && currentUser.id !== props.animal.userId &&
-                <CoinTransactionAnimationWrapper text={costString} type='warning' className='w-full'>
-                    <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-zinc-600 p-2 text-emerald-700 bg-zinc-50'>
-                        <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
-                    </Link>
-                </CoinTransactionAnimationWrapper>
-            }
-            {
-                currentUser && currentUser.id === props.animal.userId &&
-                <div className='w-full text-center text-zinc-700'>
-                    Please wait for buyers to contact you
-                </div>
-            }
-        </>
+        <PostBiddingOptions directCTO directCTOAction={handleClick} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
+            <>
+                {!currentUser && <div title='Please login to continue' className={`w-full cursor-not-allowed ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
+                    <div className='w-full'>{props.children}</div>
+                </div>}
+                {currentUser && !user && currentUser.id !== props.animal.userId && <div className={`w-full ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
+                    <div className='w-full'>{props.children}</div>
+                </div>}
+                {user && currentUser && currentUser.id !== props.animal.userId &&
+                    <CoinTransactionAnimationWrapper text={costString} type='warning' className='w-full'>
+                        <Link href={`tel: ${user.phone}`} className='w-full flex gap-1 justify-center items-center border-2 text-lg cursor-pointer text-center border-dashed border-zinc-600 p-2 text-emerald-700 bg-zinc-50'>
+                            <PhoneIcon className="text-emerald-700 animate-pulse duration-300" /> {user.phone}
+                        </Link>
+                    </CoinTransactionAnimationWrapper>
+                }
+                {
+                    currentUser && currentUser.id === props.animal.userId &&
+                    <div className='w-full text-center text-zinc-700'>
+                        Please wait for buyers to contact you
+                    </div>
+                }
+            </>
+        </PostBiddingOptions>
     )
 }
 
