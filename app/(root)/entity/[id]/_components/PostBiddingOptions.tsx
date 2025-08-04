@@ -28,6 +28,7 @@ type Props = {
 
 const PostBiddingOptions = (props: Props) => {
     const [isOpen, setisOpen] = useState(false)
+    const [isWorking, setIsWorking] = useState(false)
     const socket = useSocket()
     const dialog = useDialog()
 
@@ -60,6 +61,7 @@ const PostBiddingOptions = (props: Props) => {
     }, [props.postBiddingOptions.femaleQuantityAvailable, props.postBiddingOptions.maleQuantityAvailable])
 
     const handlePostOffer = () => {
+        setIsWorking(true)
         if (props.directCTO) {
             if (props.directCTOAction) {
                 props.directCTOAction()
@@ -89,6 +91,7 @@ const PostBiddingOptions = (props: Props) => {
                 }
             }
         }
+        setIsWorking(false)
     }
 
 
@@ -118,7 +121,7 @@ const PostBiddingOptions = (props: Props) => {
                         <div>
                             <Textbox label='Your offer' type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                         </div>
-                        <div className='mt-10 grid grid-cols-2 gap-2 w-full'>
+                        <div className={`mt-10 grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
                             <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0} onClick={handlePostOffer} className='w-full'>Post Offer</Button>
                         </div>
