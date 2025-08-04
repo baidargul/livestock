@@ -23,10 +23,10 @@ const CTOButton = (props: Props) => {
 
     if (contact && user) {
         return (
-            <Link href={`tel:${contact.phone}`} className='flex gap-1 justify-center items-center p-1 w-full bg-emerald-700 rounded scale-90 origin-center text-white'>
+            <div className='flex gap-1 justify-center items-center p-1 w-full bg-emerald-700 rounded scale-90 origin-center text-white'>
                 <PhoneIcon size={20} />
                 <div>{formatCurrency(calculatePricing(props.animal).price)}</div>
-            </Link>
+            </div>
         )
     } else {
         return (
