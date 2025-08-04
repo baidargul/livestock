@@ -45,6 +45,7 @@ import handshake from "@/public/system/ui/handshake.png";
 import contactlist from "@/public/system/ui/contactlist.png";
 import contactlisthover from "@/public/system/ui/contactlisthover.png";
 import plusIcon from "@/public/system/ui/plusIcon.png";
+import sold from "@/public/system/ui/sold.png";
 import skulls from "@/public/system/media/skulls.png";
 import cash from "@/public/system/media/cash.png";
 
@@ -70,6 +71,7 @@ export const images = {
       contactlist: contactlist,
       contactlisthover: contactlisthover,
       plusIcon: plusIcon,
+      sold: sold,
     },
     coins: {
       gold: {

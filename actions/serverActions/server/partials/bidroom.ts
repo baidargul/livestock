@@ -337,6 +337,37 @@ async function closeDeal(room: any, userId: string, bid: any) {
       },
     });
 
+    if (OfferAccepted) {
+      let updatedroom = await prisma.bidRoom.update({
+        where: {
+          id: room.id,
+        },
+        data: {
+          maleQuantityAvailable: {
+            decrement: room.maleQuantityAvailable ?? 0,
+          },
+          femaleQuantityAvailable: {
+            decrement: room.femaleQuantityAvailable ?? 0,
+          },
+        },
+      });
+
+      const remainingQuantity =
+        Number(updatedroom.maleQuantityAvailable ?? 0) +
+        Number(updatedroom.femaleQuantityAvailable ?? 0);
+
+      if (remainingQuantity <= 0) {
+        await prisma.animal.update({
+          where: {
+            id: room.animalId,
+          },
+          data: {
+            sold: true,
+          },
+        });
+      }
+    }
+
     let theRoom = await actions.server.bidRoom.list(room.id, "id");
     theRoom = theRoom.data;
 

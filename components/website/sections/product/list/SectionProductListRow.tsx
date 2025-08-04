@@ -21,7 +21,10 @@ const SectionProductListRow = (props: Props) => {
     const sellerCargo = props.animal?.deliveryOptions.includes("SELLER_DELIVERY")
     const selfPickup = props.animal?.deliveryOptions.includes("SELF_PICKUP")
     return (
-        <Link href={`/entity/${props.animal?.id}`} prefetch={true} className={`break-inside-avoid-column w-full shadow-sm p-2 z-0 ${user?.id === props.animal.userId ? "bg-white" : "bg-white"}  hover:outline-2 hover:outline-zinc-300 group h-full flex flex-col justify-between`}>
+        <Link href={`/entity/${props.animal?.id}`} prefetch={true} className={`relative break-inside-avoid-column w-full shadow-sm p-2 z-0 ${user?.id === props.animal.userId ? "bg-white" : "bg-white"}  hover:outline-2 hover:outline-zinc-300 group h-full flex flex-col justify-between`}>
+            {props.animal.sold && <div className='absolute bottom-0 left-0 z-50 pointer-events-none w-full h-full bg-gradient-to-t from-white to-transparent flex justify-center items-center'>
+                <Image src={images.site.ui.sold} alt='sold' width={100} height={100} layout='fixed' className='w-full mt-auto' />
+            </div>}
             <div className="flex flex-col items-center gap-0">
                 <div className='relative w-full bg-black border-l border-y border-zinc-200/40 overflow-hidden'>
                     {(props.animal?.deliveryOptions.length > 0 || props.animal?.allowBidding) &&
