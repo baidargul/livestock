@@ -338,9 +338,9 @@ async function closeDeal(room: any, userId: string, bid: any) {
     });
 
     if (OfferAccepted) {
-      let updatedroom = await prisma.bidRoom.update({
+      let updatedAnimal = await prisma.animal.update({
         where: {
-          id: room.id,
+          id: room.animalId,
         },
         data: {
           maleQuantityAvailable: {
@@ -353,9 +353,8 @@ async function closeDeal(room: any, userId: string, bid: any) {
       });
 
       const remainingQuantity =
-        Number(updatedroom.maleQuantityAvailable ?? 0) +
-        Number(updatedroom.femaleQuantityAvailable ?? 0);
-
+        Number(updatedAnimal.maleQuantityAvailable ?? 0) +
+        Number(updatedAnimal.femaleQuantityAvailable ?? 0);
       if (remainingQuantity <= 0) {
         await prisma.animal.update({
           where: {
@@ -373,7 +372,11 @@ async function closeDeal(room: any, userId: string, bid: any) {
 
     response.status = 200;
     response.message = "Deal closed successfully.";
-    response.data = { room: theRoom, bid: selectedBid };
+    response.data = {
+      room: theRoom,
+      bid: selectedBid,
+      sold: theRoom.animal.sold,
+    };
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

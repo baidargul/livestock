@@ -23,6 +23,7 @@ import CTOButton from '@/components/controls/Bidding/_components/CTOButton'
 import DirectCTOButton from './_components/DirectCTOButton'
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import SoldOverlay from '@/components/ui/SoldOverlay'
+import OnSoldProtection from './_components/OnSoldProtection'
 
 export const dynamic = 'force-dynamic';
 
@@ -45,6 +46,7 @@ const page = async (props: Props) => {
     const info = breedObj?.info;
     return (
         animal && <div className='w-full h-full' key={timestamp}>
+            <OnSoldProtection animal={animal} />
             <section className='relative w-full min-h-[100vh] hidden md:block'>
                 <div className='p-4 flex gap-2 items-start'>
                     <div>

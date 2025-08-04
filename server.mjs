@@ -103,6 +103,9 @@ app.prepare().then(() => {
         const data = await res.json();
         if (data.status === 200) {
           socket.join(room.key);
+          if (data.data.sold) {
+            io.emit("sold", serialize({ animalId: data.data.room.animalId }));
+          }
           socket.emit(
             "deal-closed",
             serialize({
