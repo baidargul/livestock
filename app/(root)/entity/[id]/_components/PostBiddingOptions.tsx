@@ -32,6 +32,8 @@ type Props = {
 const PostBiddingOptions = (props: Props) => {
     const [isOpen, setisOpen] = useState(false)
     const [isWorking, setIsWorking] = useState(false)
+    const [sellerOffer, setSellerOffer] = useState(0)
+    const [mode, setMode] = useState<"per unit" | "to total">('to total')
     const socket = useSocket()
     const dialog = useDialog()
 
@@ -60,7 +62,9 @@ const PostBiddingOptions = (props: Props) => {
     }
 
     useEffect(() => {
-        props.setPostBiddingOptions((prev) => ({ ...prev, amount: calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price }))
+        const amount = calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price
+        setSellerOffer(amount)
+        props.setPostBiddingOptions((prev) => ({ ...prev, amount: amount }))
     }, [props.postBiddingOptions.femaleQuantityAvailable, props.postBiddingOptions.maleQuantityAvailable])
 
     const handlePostOffer = () => {
@@ -97,6 +101,21 @@ const PostBiddingOptions = (props: Props) => {
         setIsWorking(false)
     }
 
+    const handleChangeUnit = () => {
+        const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
+        if (mode === "per unit") {
+            const seller = Number(Number(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price / totalQuantity).toFixed(0))
+            const user = Number(Number(props.postBiddingOptions.amount / totalQuantity).toFixed(0))
+            setSellerOffer(seller)
+            props.setPostBiddingOptions((prev) => ({ ...prev, amount: user }))
+            setMode("to total")
+        } else {
+            setSellerOffer(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price)
+            props.setPostBiddingOptions((prev) => ({ ...prev, amount: props.postBiddingOptions.amount * totalQuantity }))
+            setMode("per unit")
+        }
+    }
+
 
     return (
         <>
@@ -119,8 +138,12 @@ const PostBiddingOptions = (props: Props) => {
                                     <Textbox disabled={props.animal.femaleQuantityAvailable < 1} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
                                 </div>
                             </div>
-                            <div className={`${props.directCTO && "flex gaap-2 justify-between items-center"}`}>
+                            <div className='mt-2 w-full'>
+                                <div onClick={handleChangeUnit} className='w-full text-right underline underline-offset-2 text-emerald-700 cursor-pointer'>Switch {mode.toLocaleLowerCase()}.</div>
+                            </div>
+                            <div className={`${"flex gap-2 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
+                                {!props.directCTO && <Textbox disabled label={`Seller offer`} type='number' value={sellerOffer} />}
                                 <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                             </div>
                             {props.directCTO && <div className='text-sm p-2 text-amber-700 bg-yellow-50'>This is a flat rate offer, which means you are not allowed to negotiate with the buyer.</div>}
