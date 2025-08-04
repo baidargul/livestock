@@ -12,6 +12,7 @@ type Props = {
     index: number
     setOfferValue: (val: number) => void
     socket: any
+    isTempMessage?: boolean
 }
 
 const BidRow = (props: Props) => {
@@ -77,7 +78,7 @@ const BidRow = (props: Props) => {
                 {props.bid?.isFinalOffer && <LockIcon size={15} className="text-amber-700" />}
                 {formatCurrency(props.bid.price)}
             </div>
-            {props.user.id === props.bid.userId && (
+            {props.user.id === props.bid.userId && !props.isTempMessage && (
                 <div className="absolute bottom-0 right-2 flex justify-center items-center gap-1">
                     <CheckCheckIcon
                         size={14}

@@ -16,7 +16,7 @@ import { CheckCheckIcon, ChevronLeftIcon, LockIcon, LockOpenIcon } from 'lucide-
 import BidRow from './_components/BidRow'
 import { useRooms } from '@/hooks/useRooms'
 import { Bids } from '@prisma/client'
-import { serialize } from 'bson'
+import { deserialize, serialize } from 'bson'
 import { useLoader } from '@/hooks/useLoader'
 import GeneralBasicInformation from './_components/GeneralBasicInformation'
 import TheActualBidRoom from './_components/TheActualBidRoom'
@@ -57,8 +57,14 @@ const BiddingWrapper = (props: Props) => {
     const [expectedKey, setExpectedKey] = useState(``)
     const rooms = useRooms((state: any) => state.rooms)
     const addRoom = useRooms((state: any) => state.addRoom)
+    const removeRoom = useRooms((state: any) => state.removeRoom)
     const setLoading = useLoader((state: any) => state.setLoading)
+    const [animal, setAnimal] = useState<any>(null)
     const dialog = useDialog()
+
+    useEffect(() => {
+        setAnimal(props.animal)
+    }, [props.animal])
 
     if (rawSocket && !socket) {
         setSocket(rawSocket)
@@ -71,27 +77,36 @@ const BiddingWrapper = (props: Props) => {
     }, [activeBidRoom])
 
     useEffect(() => {
-        if (socket) {
+        if (socket && animal) {
             socket.on("low-balance", () => {
                 setTempMessageOnHold(null)
                 setMyLastOffer(0)
                 dialog.showDialog("Low Balance", null, `You don't have enough balance to place this bid.`);
             })
+            socket.on("sold", (binaryData: any) => {
+                const { animalId } = deserialize(binaryData);
+                if (animalId === animal.id) {
+                    setAnimal({ ...animal, sold: true })
+                    dialog.showDialog("Sold", null, `The animal has been sold.`);
+                    removeRoom(activeBidRoom.key)
+                }
+            })
+
             return () => {
                 if (socket) {
                     socket?.off("low-balance");
+                    socket?.off("sold")
                 }
             };
         }
-
-    }, [])
+    }, [animal, socket])
 
     useEffect(() => {
         if (isMounted && user) {
             let room: any = null;
             let activeBidders = 0
             rooms.myRooms.find((r: any) => {
-                if (r.animalId === props.animal.id) {
+                if (r.animalId === animal.id) {
                     activeBidders = activeBidders + 1
                 }
                 if (r.key === expectedKey) {
@@ -101,7 +116,7 @@ const BiddingWrapper = (props: Props) => {
 
             if (!room) {
                 rooms.otherRooms.find((r: any) => {
-                    if (r.animalId === props.animal.id) {
+                    if (r.animalId === animal.id) {
                         activeBidders = activeBidders + 1
                     }
                     if (r.key === expectedKey) {
@@ -117,7 +132,7 @@ const BiddingWrapper = (props: Props) => {
                 setExpectedKey(room.key)
             } else {
                 setActiveBidRoom(null)
-                setExpectedKey(`${props.animal.id}-${props.animal.userId}-${user.id}`)
+                setExpectedKey(`${animal.id}-${animal.userId}-${user.id}`)
             }
         }
         setTempMessageOnHold(null)
@@ -152,7 +167,7 @@ const BiddingWrapper = (props: Props) => {
                     setSocketState({ ...socketState, isOtherUserConnected: false });
                 }
             } else {
-                setSocketState({ ...socketState, isOtherUserConnected: activeBidRoom.activeUsers.includes(props.animal.userId) });
+                setSocketState({ ...socketState, isOtherUserConnected: activeBidRoom.activeUsers.includes(animal.userId) });
             }
 
 
@@ -169,7 +184,7 @@ const BiddingWrapper = (props: Props) => {
                 if (bid.userId === user.id) thisUserLastBidValue = bid.price
             }
             if (bids.length > 0) {
-                const authorIndex = bids.findIndex((bid: any) => bid.userId === props.animal.userId);
+                const authorIndex = bids.findIndex((bid: any) => bid.userId === animal.userId);
                 if (authorIndex !== -1) {
                     const [authorBid] = bids.splice(authorIndex, 1);
                     bids.unshift(authorBid);
@@ -194,7 +209,7 @@ const BiddingWrapper = (props: Props) => {
         setIsMounted(true);
         if (isMounted) {
             if (!activeBidRoom) {
-                setOfferValue(calculatePricing(props.animal).price)
+                setOfferValue(calculatePricing(animal).price)
             } else {
                 setOfferValue(activeBidRoom.bids[activeBidRoom.bids.length - 1].price)
             }
@@ -204,12 +219,12 @@ const BiddingWrapper = (props: Props) => {
 
 
     useEffect(() => {
-        setOfferValue(calculatePricing(props.animal).price)
-    }, [props.animal])
+        setOfferValue(calculatePricing(animal).price)
+    }, [animal])
 
 
     const fetchBidRoomsForThisAnimal = async () => {
-        const response = await actions.client.bidRoom.listByUser(user.id, props.animal.id)
+        const response = await actions.client.bidRoom.listByUser(user.id, animal.id)
         if (response.status === 200) {
             for (const theRoom of response.data.myRooms) {
                 theRoom.bids = bidsReverse(theRoom.bids)
@@ -243,7 +258,7 @@ const BiddingWrapper = (props: Props) => {
                         authorId: props.room.authorId,
                         userId: props.room.userId,
                         key: `${props.room.animalId}-${props.room.authorId}-${props.room.userId}`,
-                        offer: calculatePricing(props.animal.price).price,
+                        offer: calculatePricing(animal.price).price,
                         deliveryOptions: ["SELF_PICKUP"],
                         maleQuantityAvailable: 1,
                         femaleQuantityAvailable: 1
@@ -254,11 +269,11 @@ const BiddingWrapper = (props: Props) => {
         } else {
             if (socket && user) {
                 const room = {
-                    animalId: props.animal.id,
-                    authorId: props.animal.userId,
+                    animalId: animal.id,
+                    authorId: animal.userId,
                     userId: user.id,
-                    key: `${props.animal.id}-${props.animal.userId}-${user.id}`,
-                    offer: calculatePricing(props.animal.price).price,
+                    key: `${animal.id}-${animal.userId}-${user.id}`,
+                    offer: calculatePricing(animal.price).price,
                     deliveryOptions: ["SELF_PICKUP"],
                     maleQuantityAvailable: 1,
                     femaleQuantityAvailable: 1
@@ -346,13 +361,13 @@ const BiddingWrapper = (props: Props) => {
     }
 
     return (
-        <>
+        animal && <>
             <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
-                {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <GeneralBasicInformation animal={props.animal} />}
+                {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <GeneralBasicInformation animal={animal} />}
                 <div className='flex flex-col gap-4'>
-                    {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={props.animal} />}
+                    {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={animal} />}
                     {!activeBidRoom?.userOfferAccepted && <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={[...rooms?.myRooms, ...rooms?.otherRooms]} socket={socket} targetRoomKey={props.targetRoomKey} isOpen={isOpen} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={props.animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
+                        {!activeBidRoom && <Rooms rooms={[...rooms?.myRooms, ...rooms?.otherRooms]} socket={socket} targetRoomKey={props.targetRoomKey} isOpen={isOpen} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
                             activeBidRoom && activeBidRoom.bids && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
@@ -363,7 +378,7 @@ const BiddingWrapper = (props: Props) => {
                         {
                             tempMessageOnHold && (
                                 <div key={tempMessageOnHold.id} className='animate-pulse text-zinc-700 opacity-90'>
-                                    <BidRow index={-1} activeBidRoom={activeBidRoom} setOfferValue={setOfferValue} user={user} bid={tempMessageOnHold} key={`${tempMessageOnHold.id}`} isLocked={isLocked} socket={socket} />
+                                    <BidRow index={-1} isTempMessage activeBidRoom={activeBidRoom} setOfferValue={setOfferValue} user={user} bid={tempMessageOnHold} key={`${tempMessageOnHold.id}`} isLocked={isLocked} socket={socket} />
                                 </div>
                             )
                         }
@@ -458,7 +473,7 @@ const BiddingWrapper = (props: Props) => {
                             <Image src={images.site.ui.handshake} alt='Bid Closed' width={100} height={100} layout='responsive' className='w-full h-auto' />
                             <div className='text-lg text-center p-2 px-4 bg-emerald-50 border-emerald-200 border rounded font-semibold tracking-wider text-emerald-800'>Deal closed at {formatCurrency(activeBidRoom.closedAmount ?? 0)}</div>
                             {/* <div className='text-center tracking-wide'>
-                            {selectedBid.user.id === user.id ? "You" : selectedBid.user.name} has won the bid for <span className='font-semibold'>{props.animal.name}</span> with a final offer of <span className='font-semibold'>{formatCurrency(selectedBid.price)}</span>.
+                            {selectedBid.user.id === user.id ? "You" : selectedBid.user.name} has won the bid for <span className='font-semibold'>{animal.name}</span> with a final offer of <span className='font-semibold'>{formatCurrency(selectedBid.price)}</span>.
                         </div> */}
                             {
                                 activeBidRoom.userOfferAccepted && isAuthor &&
