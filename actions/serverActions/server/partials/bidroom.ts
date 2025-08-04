@@ -303,6 +303,25 @@ async function closeDeal(room: any, userId: string, bid: any) {
       return response;
     }
 
+    const authorLastBid = await prisma.bids.findFirst({
+      where: {
+        bidRoomId: activeRoom.id,
+        userId: activeRoom.authorId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (!authorLastBid) {
+      response.status = 404;
+      response.message = `Unable to fetch author bids`;
+      return response;
+    }
+
+    const bothHasSamePrice =
+      Number(authorLastBid.price) === Number(selectedBid.price);
+
     await prisma.bidRoom.update({
       where: {
         id: room.id,
@@ -310,7 +329,9 @@ async function closeDeal(room: any, userId: string, bid: any) {
       data: {
         closedAt: new Date(),
         closedAmount: selectedBid.price ?? 0,
-        userOfferAccepted: selectedBid.userId !== activeRoom.authorId,
+        userOfferAccepted: bothHasSamePrice
+          ? true
+          : selectedBid.userId !== activeRoom.authorId,
       },
     });
 
