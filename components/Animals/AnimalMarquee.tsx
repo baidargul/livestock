@@ -39,7 +39,7 @@ const AnimalMarquee = (props: Props) => {
         <div className='w-full my-2'>
             <div className={`mb-2 font-semibold tracking-tight flex ${props.reversedIcon && "flex-row-reverse"} gap-1 items-center`}>
                 {props.title && props.title.length > 0 ? props.title : "Animals"}
-                <CatIcon size={16} className='mt-1' />
+                <CatIcon size={16} className='mt-1 fill-amber-100' />
             </div>
             <Marquee pauseOnHover={true} className='py-1' >
                 {
