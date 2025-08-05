@@ -1,3 +1,4 @@
+import AnimalMarquee from '@/components/Animals/AnimalMarquee'
 import SectionCategoryBar from '@/components/website/sections/category/SectionCategoryBar'
 import DemandRowLite from '@/components/website/sections/demands/list/DemandRowLite'
 import SectionLandingPageImage from '@/components/website/sections/landingpage/LandingPageImage'
@@ -44,6 +45,7 @@ const page = async (props: Props) => {
                 }
             </div>
             <DemandRowLite />
+            <AnimalMarquee />
         </div>
     )
 }

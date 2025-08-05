@@ -1,3 +1,4 @@
+import { algorithms } from "./partials/algorithms";
 import { bidRoom } from "./partials/bidroom";
 import { demand } from "./partials/demand";
 import { images } from "./partials/images";
@@ -12,4 +13,5 @@ export const server = {
   demand,
   bidRoom,
   protocols,
+  algorithms,
 };

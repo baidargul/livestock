@@ -101,6 +101,9 @@ model Animal {
   images                  Json // JSON field to store an array of objects
   BidRoom                 BidRoom[]
   sold                    Boolean?          @default(false)
+  rank                    Int               @default(0)
+  views                   Int               @default(0)
+  likes                   Int               @default(0)
 
   @@index([type, breed, price]) // Index for efficient queries
 }
