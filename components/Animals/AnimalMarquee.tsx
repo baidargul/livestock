@@ -45,7 +45,7 @@ const AnimalMarquee = (props: Props) => {
                 {
                     posts.map((animal: any, index: number) => {
                         return (
-                            <Link href={`/entity/${animal.id}`} key={`${animal.id}-${index}`} className='grid grid-cols-[auto_1fr] place-items-center gap-2 w-full p-2 bg-white rounded shadow-sm'>
+                            <Link href={`/entity/${animal.id}`} key={`${animal.id}-${index}`} className='grid grid-cols-[auto_1fr] place-items-center gap-2 w-full p-1 bg-white rounded shadow-sm mx-1'>
                                 <Image src={animal.images.length > 0 ? animal.images[0].image ? animal.images[0].image : images.chickens.images[1] : images.chickens.images[1]} alt={`${animal.title}, ${animal.type} - ${animal.breed}`} width={100} height={100} layout='fixed' className='w-[100px] h-[100px] object-cover bg-black' />
                                 <div className='text-xs'>
                                     <div className='font-bold line-clamp-2'>{formalizeText(animal.title)}</div>
