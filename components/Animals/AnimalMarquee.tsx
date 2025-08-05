@@ -6,7 +6,7 @@ type Props = {}
 const AnimalMarquee = (props: Props) => {
     return (
         <div>
-            <Marquee autoFill={true} speed={20} pauseOnHover={true}>
+            <Marquee>
                 <div>Animals</div>
                 <div>Animals</div>
                 <div>Animals</div>
