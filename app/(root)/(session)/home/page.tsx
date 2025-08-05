@@ -33,6 +33,7 @@ const page = async (props: Props) => {
     return (
         <div className='px-4 flex flex-col gap-2 items-start w-full'>
             <SectionLandingPageImage />
+            <AnimalMarquee title='Trending' />
             <SectionCategoryBar value={selectedCategoryFilter as string} />
             <div className='py-4 pb-4 bg-zinc-100 p-2 space-y-4 columns-2 sm:columns-3 md:columns-4 lg:columns-5'>
                 {
@@ -45,7 +46,6 @@ const page = async (props: Props) => {
                 }
             </div>
             <DemandRowLite />
-            <AnimalMarquee />
         </div>
     )
 }

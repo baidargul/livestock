@@ -64,7 +64,7 @@ async function rankPost(post: any) {
 
   return score;
 }
-export async function rankPostsInBatch() {
+async function rankPostsInBatch() {
   console.log("Batch ranking started:", new Date().toISOString());
 
   // 1. Get all unsold posts

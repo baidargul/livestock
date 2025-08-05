@@ -54,7 +54,7 @@ async function listAll(value?: string, key?: string) {
     return response;
   }
 }
-async function list(val: any, key: string) {
+async function list(val: any, key: string, directReturn?: boolean) {
   const response = {
     status: 500,
     message: "Internal Server Error",
@@ -105,6 +105,10 @@ async function list(val: any, key: string) {
 
     animal.user.profileImage = profileImage;
     animal.user.coverImage = coverImage;
+
+    if (directReturn) {
+      return animal;
+    }
 
     response.status = 200;
     response.message = "Animal fetched successfully";
@@ -467,7 +471,42 @@ async function Query(val: string) {
   }
 }
 
+async function fetchPosts(take?: number) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const posts = await prisma.animal.findMany({
+      where: { sold: false },
+      select: {
+        id: true,
+      },
+      orderBy: { rank: "desc" },
+      take,
+    });
+
+    const rawPosts = posts.map((post) =>
+      actions.server.post.list(post.id, "id", true)
+    );
+    const thePosts = await Promise.all(rawPosts);
+
+    response.status = 200;
+    response.message = `${thePosts.length} posts fetched successfully`;
+    response.data = thePosts;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @FETCH POSTS: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const post = {
+  fetchPosts,
   list,
   listAll,
   removePost,

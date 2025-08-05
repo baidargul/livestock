@@ -92,7 +92,13 @@ async function Query(val: string) {
   return response.data;
 }
 
+async function fetchPosts(take?: number) {
+  const response = await axios.get(`/api/post/fetch?take=${take}`);
+  return response.data;
+}
+
 export const posts = {
+  fetchPosts,
   createPost,
   removePost,
   Query,
