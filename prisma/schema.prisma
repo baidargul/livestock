@@ -47,8 +47,6 @@ model User {
   animals       Animal[] // Relation to Animal
   sessions      Sessions[] // Relation to Sessions
   bids          Bids[] // Relation to Bids
-  followers     Following[]   @relation("UserFollowers") // Users that follow this user
-  following     Following[]   @relation("UserFollowing") // Users this user follows
   bidRooms      BidRoom[] // Relation to BidRoom
   bidRoomAuthor BidRoom[]     @relation("BidRoomAuthor") // Rooms created by this user
   demands       Demands[]
@@ -149,15 +147,6 @@ model BidRoom {
   closedAt                DateTime?
   closedAmount            Float?
   userOfferAccepted       Boolean?          @default(false)
-}
-
-model Following {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId // UUID ID
-  userId      String?  @db.ObjectId
-  user        User?    @relation("UserFollowing", fields: [userId], references: [id])
-  followingId String?  @db.ObjectId // ID of the user being followed
-  following   User?    @relation("UserFollowers", fields: [followingId], references: [id])
-  createdAt   DateTime @default(now())
 }
 
 model BusinessProtocol {
