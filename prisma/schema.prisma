@@ -51,6 +51,7 @@ model User {
   bidRoomAuthor BidRoom[]     @relation("BidRoomAuthor") // Rooms created by this user
   demands       Demands[]
   contactBooks  ContactBook[] @relation("UserContactBook") // Contact books related to this user
+  Interaction   Interaction[]
 
   @@index([name]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email
@@ -102,6 +103,7 @@ model Animal {
   rank                    Int               @default(0)
   views                   Int               @default(0)
   likes                   Int               @default(0)
+  Interactions            Interaction[]
 
   @@index([type, breed, price]) // Index for efficient queries
 }
@@ -160,4 +162,22 @@ model BusinessProtocol {
 enum DeliveryOptions {
   SELF_PICKUP
   SELLER_DELIVERY
+}
+
+model Interaction {
+  id        String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String          @db.ObjectId
+  animalId  String?         @db.ObjectId
+  user      User?           @relation(fields: [userId], references: [id])
+  animal    Animal?         @relation(fields: [animalId], references: [id])
+  type      InteractionType
+  weight    Int // e.g. view=1, like=5, bid=10
+  createdAt DateTime        @default(now())
+}
+
+enum InteractionType {
+  VIEW
+  LIKE
+  BID
+  SAVE
 }

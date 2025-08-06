@@ -4,7 +4,7 @@ import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Button from '@/components/ui/Button'
 import { formalizeText, } from '@/lib/utils'
-import { ArrowLeftCircleIcon, CandlestickChartIcon, MenuIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, CandlestickChartIcon, HeartIcon, MenuIcon, ShareIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
@@ -24,6 +24,7 @@ import DirectCTOButton from './_components/DirectCTOButton'
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import SoldOverlay from '@/components/ui/SoldOverlay'
 import OnSoldProtection from './_components/OnSoldProtection'
+import SidebarButtons from './_components/SidebarButtons'
 
 export const dynamic = 'force-dynamic';
 
@@ -45,7 +46,7 @@ const page = async (props: Props) => {
     const breedObj = images[animal.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
     const info = breedObj?.info;
     return (
-        animal && <div className='w-full h-full' key={timestamp}>
+        animal && <div className='w-full h-full relative' key={timestamp}>
             <OnSoldProtection animal={animal} />
             <section className='relative w-full min-h-[100vh] hidden md:block'>
                 <div className='p-4 flex gap-2 items-start'>
@@ -157,6 +158,7 @@ const page = async (props: Props) => {
                         </DirectCTOButton>
                     }
                 </div>}
+                <SidebarButtons />
                 <GeneralFooter />
             </section >
         </div>
