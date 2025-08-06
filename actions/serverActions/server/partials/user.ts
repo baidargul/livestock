@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
 import { account } from "./account";
 import { contacts } from "./contacts";
+import { interactions } from "./interactions";
 async function signup(
   name: string,
   email: string,
@@ -235,4 +236,5 @@ export const user = {
   list,
   account,
   contacts,
+  interactions,
 };

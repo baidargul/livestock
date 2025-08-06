@@ -470,7 +470,6 @@ async function Query(val: string) {
     return response;
   }
 }
-
 async function fetchPosts(take?: number) {
   const response = {
     status: 500,

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { account } from "./account";
 import { contacts } from "./contacts";
+import { interactions } from "../../server/partials/interactions";
 const apiPath = "/api/user";
 
 async function signup(
@@ -86,4 +87,5 @@ export const user = {
   setCoverImage,
   account,
   contacts,
+  interactions,
 };
