@@ -67,10 +67,11 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                         </tr>
 
                         <tr>
-                            <td className="py-2 pr-4 font-medium">Offer</td>
+                            <td className="py-2 pr-4 font-medium">Pricing</td>
                             <td className="py-2">
                                 <div className="flex flex-col">
                                     <span>{formatCurrency(animal.price ?? 0)}/{animal.priceUnit?.toLowerCase()}</span>
+                                    <span>{formatCurrency(Number(animal.price * Number(animal.averageWeight ?? 0)))}/per piece</span>
                                     <span className="font-semibold">
                                         {formatCurrency(animal.price * quantity * Number(animal.averageWeight ?? 0))}
                                     </span>
@@ -142,8 +143,9 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2 pr-4 font-medium">Pricing</td>
                             <td className="py-2">
                                 <div className="flex flex-col">
+                                    <span>{formatCurrency(animal.price ?? 0)} /piece</span>
                                     <span className="font-semibold">
-                                        {formatCurrency(animal.price)}
+                                        Total: {formatCurrency(animal.price * quantity)}
                                     </span>
                                 </div>
                             </td>
@@ -193,13 +195,13 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
-                                    {animal?.maleQuantityAvailable !== 0 && <div className='flex gap-1 items-center'>Male:
+                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
-                                    {animal?.femaleQuantityAvailable !== 0 && <div className='flex gap-1 items-center'>Female:
+                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Female:
                                         <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
                                     </div>}
-                                    {(animal?.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
                                             Age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
