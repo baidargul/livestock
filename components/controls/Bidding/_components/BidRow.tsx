@@ -1,8 +1,9 @@
 'use client'
 import { formatCurrency } from '@/lib/utils';
 import { serialize } from 'bson';
-import { CheckCheckIcon, LockIcon } from 'lucide-react';
+import { CheckCheckIcon, LockIcon, LockOpenIcon } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
+import ElapsedTimeControl from '../../ElapsedTimeControl';
 
 type Props = {
     bid: any
@@ -13,6 +14,8 @@ type Props = {
     setOfferValue: (val: number) => void
     socket: any
     isTempMessage?: boolean
+    handleLockThisAsMyFinalOffer: () => void
+    myLastOffer: string | number
 }
 
 const BidRow = (props: Props) => {
@@ -64,29 +67,32 @@ const BidRow = (props: Props) => {
             }}
             key={`${props.bid.id}-${props.index}`}
             className={`p-2 relative ${props.user.id === props.bid.userId
-                ? "bg-zinc-100"
-                : ""
-                } flex justify-between items-center border-b tracking-tight border-zinc-100 hover:bg-gradient-to-l hover:bg-zinc-100/70 to:bg-transparent cursor-pointer`}
+                ? "bg-emerald-100 pr-5 w-fit ml-auto"
+                : "bg-white border border-zinc-200 w-fit pl-5 mr-auto"
+                } rounded mx-1`}
         >
-            <div className="tracking-tight">
-                {props.user.id === props.bid.userId ? "You" : props.bid.user.name}
-            </div>
-            <div
-                className={`tracking-wide flex gap-1 items-center justify-center ${props.index === props.activeBidRoom.bids.length - 1 && "text-emerald-700 font-bold"
-                    }`}
-            >
-                {props.bid?.isFinalOffer && <LockIcon size={15} className="text-amber-700" />}
-                {formatCurrency(props.bid.price)}
-            </div>
-            {props.user.id === props.bid.userId && !props.isTempMessage && (
-                <div className="absolute bottom-0 right-2 flex justify-center items-center gap-1">
-                    <CheckCheckIcon
-                        size={14}
-                        className={`${props.bid.isSeen === true ? "text-emerald-500" : "text-zinc-500"
+            <div className='flex gap-4 items-center'>
+                <div>
+                    <div
+                        className={`tracking-wide flex gap-1 items-center justify-start ${props.user.id === props.bid.userId ? "" : ""} ${props.index === props.activeBidRoom.bids.length - 1 && "text-black font-bold"
                             }`}
-                    />
+                    >
+                        {props.bid?.isFinalOffer && <LockIcon size={15} className="text-amber-700" />}
+                        {formatCurrency(props.bid.price)}
+                    </div>
+                    <div className="flex justify-between items-center gap-1">
+                        <ElapsedTimeControl date={props.bid.createdAt} />
+                        {props.user.id === props.bid.userId && !props.isTempMessage && (
+                            <CheckCheckIcon
+                                size={14}
+                                className={`${props.bid.isSeen === true ? "text-emerald-700" : "text-zinc-600"
+                                    }`}
+                            />
+                        )}
+                    </div>
                 </div>
-            )}
+                {props.user.id === props.bid.userId && !props.isTempMessage && !props.isLocked && Number(props.myLastOffer) === Number(props.bid.price) && <LockOpenIcon onClick={props.handleLockThisAsMyFinalOffer} size={15} className={`${props.user.id === props.bid.userId ? "ml-auto cursor-pointer hover:fill-yellow-200" : ""}`} />}
+            </div>
         </div>
     )
 }

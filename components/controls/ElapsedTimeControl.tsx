@@ -25,7 +25,7 @@ const ElapsedTimeControl = (props: Props) => {
     }, [props.date])
 
     return (
-        <div className={`text-xs ${props.className}`}>{elapsedString}</div>
+        elapsedString.length > 0 && <div className={`text-xs ${props.className}`}>{elapsedString}</div>
     )
 }
 
