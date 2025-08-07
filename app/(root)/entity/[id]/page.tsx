@@ -25,6 +25,7 @@ import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import SoldOverlay from '@/components/ui/SoldOverlay'
 import OnSoldProtection from './_components/OnSoldProtection'
 import SidebarButtons from './_components/SidebarButtons'
+import DeliveryIcon from '@/components/Animals/DeliveryIcon'
 
 export const dynamic = 'force-dynamic';
 
@@ -129,14 +130,18 @@ const page = async (props: Props) => {
                             )
                         })}
                     </div>
-                    <div className='flex justify-evenly items-center my-4 w-full'>{
-                        animal.deliveryOptions.map((option: any, index: number) => {
-                            const Icon = String(option).toLocaleLowerCase() === "self_pickup" ? SquareUserIcon : TruckIcon
-                            return (
-                                <div key={`${option}-${index}`} className='flex gap-1 items-center'><Icon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Cargo delivery"}</div>
-                            )
-                        })
-                    }</div>
+                    <div className='my-4 border-l-4 pl-4 border-zinc-200'>
+                        <div className='font-bold mb-2 text-xl'>Mode of Delivery</div>
+                        <div className='flex flex-col justify-start gap-2 items-start w-full'>{
+                            animal.deliveryOptions.map((option: any, index: number) => {
+                                const Icon = String(option).toLocaleLowerCase() === "self_pickup" ? SquareUserIcon : TruckIcon
+                                return (
+                                    // <div key={`${option}-${index}`} className='flex gap-1 items-center'><Icon size={20} className='text-emerald-700' /> {String(option).toLocaleLowerCase() === "self_pickup" ? "Self Pickup" : "Cargo delivery"}</div>
+                                    <DeliveryIcon icon={option} key={`${option}-${index}`} size={25} animal={animal} description />
+                                )
+                            })
+                        }</div>
+                    </div>
                 </div>
                 <div className='px-4 my-2 flex flex-col gap-1 justify-end items-end'>
                     {/* <div className='select-none p-1 bg-green-100 rounded-md scale-75 origin-top-right border border-green-300 w-fit font-bold tracking-wider text-green-800'>
