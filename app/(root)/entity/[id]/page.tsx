@@ -158,7 +158,7 @@ const page = async (props: Props) => {
                         </DirectCTOButton>
                     }
                 </div>}
-                <SidebarButtons />
+                <SidebarButtons animal={animal} />
                 <GeneralFooter />
             </section >
         </div>

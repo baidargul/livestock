@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import { InteractionType } from "@prisma/client";
 
 const InteractionWeights = {
@@ -21,7 +22,51 @@ async function saveInteraction(
   try {
     const weight = InteractionWeights[type] || 0;
 
-    const interaction = await prisma?.interaction.create({
+    if (type === InteractionType.LIKE) {
+      const isAlreadyLiked = await prisma.interaction.findFirst({
+        where: {
+          userId,
+          animalId,
+          type: InteractionType.LIKE,
+        },
+      });
+
+      if (isAlreadyLiked) {
+        await prisma.interaction.delete({
+          where: {
+            id: isAlreadyLiked.id,
+          },
+        });
+      }
+
+      response.status = 200;
+      response.message = "Interaction saved successfully";
+      response.data = null;
+      return response;
+    } else if (type === InteractionType.SAVE) {
+      const isAlreadySaved = await prisma.interaction.findFirst({
+        where: {
+          userId,
+          animalId,
+          type: InteractionType.SAVE,
+        },
+      });
+
+      if (isAlreadySaved) {
+        await prisma.interaction.delete({
+          where: {
+            id: isAlreadySaved.id,
+          },
+        });
+      }
+
+      response.status = 200;
+      response.message = "Interaction saved successfully";
+      response.data = null;
+      return response;
+    }
+
+    await prisma.interaction.create({
       data: {
         userId,
         animalId,
@@ -32,7 +77,7 @@ async function saveInteraction(
 
     response.status = 200;
     response.message = "Interaction saved successfully";
-    response.data = interaction ?? null;
+    response.data = null;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

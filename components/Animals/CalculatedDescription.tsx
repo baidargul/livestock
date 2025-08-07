@@ -1,6 +1,8 @@
+'use client'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
-import React from 'react'
+import { InfoIcon } from 'lucide-react'
+import React, { useState } from 'react'
 
 type Props = {
     animal: Animal
@@ -22,17 +24,16 @@ const CalculatedDescription = (props: Props) => {
 
 export default CalculatedDescription
 const PerWeight = (animal: Animal, inRow?: boolean) => {
+    const [showInfo, setShowInfo] = useState(false)
+
+    const handleShowInfo = () => {
+        setShowInfo(!showInfo)
+    }
+
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
     return (
         <div className={`${inRow && "flex justify-between items-center w-full"}`}>
-            <div className='leading-5' >
-                <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> by {animal.priceUnit?.toLocaleLowerCase()}.</span>
-                <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} with an average weight of {animal.averageWeight} {animal.weightUnit?.toLocaleLowerCase()} each.</span>
-                {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
-                    <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
-                )}
-                <span> My {String(animal.priceUnit).toLocaleLowerCase()} offer is {formatCurrency(animal.price ?? 0)} which makes a total of <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price * quantity * Number(animal.averageWeight ?? 0))}</span></span>
-            </div >
+
             <div className="w-full my-4 bg-slate-50 px-2 border-b-4 border-slate-400/20 overflow-x-auto">
                 <table className="w-full border-collapse">
                     <tbody className="text-sm">
@@ -47,7 +48,7 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                         </tr>
 
                         <tr className="border-b border-gray-200">
-                            <td className="py-2 pr-4 font-medium">Details</td>
+                            <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
                                     <div>
@@ -79,22 +80,32 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                     </tbody>
                 </table>
             </div>
+            <div className='w-full'>
+                <div onClick={handleShowInfo} className='w-full cursor-pointer flex gap-2 justify-start -mt-2 mb-2 items-center text-sm'><InfoIcon size={20} className={`${showInfo && "fill-amber-200"}`} />More Info</div>
+                {showInfo && <div className='leading-5 bg-amber-50' >
+                    <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> by {animal.priceUnit?.toLocaleLowerCase()}.</span>
+                    <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} with an average weight of {animal.averageWeight} {animal.weightUnit?.toLocaleLowerCase()} each.</span>
+                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                        <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
+                    )}
+                    <span> My {String(animal.priceUnit).toLocaleLowerCase()} offer is {formatCurrency(animal.price ?? 0)} which makes a total of <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price * quantity * Number(animal.averageWeight ?? 0))}</span></span>
+                </div >}
+            </div>
         </div>
     )
 }
 
 const PerSet = (animal: Animal, inRow?: boolean) => {
+    const [showInfo, setShowInfo] = useState(false)
+
+    const handleShowInfo = () => {
+        setShowInfo(!showInfo)
+    }
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
 
     return (
         <div className={`${inRow && "flex justify-between items-center w-full"}`}>
-            <div className='leading-5'>
-                <span>I want to sell <span className='font-semibold'> {quantity} {formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> as a complete set.</span>
-                {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
-                    <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
-                )}
-                <span> My offer is <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price)}</span> as whole set.</span>
-            </div>
+
             <div className="w-full my-4 bg-slate-50 px-2 border-b-4 border-slate-400/20 overflow-x-auto">
                 <table className="w-full border-collapse">
                     <tbody className="text-sm">
@@ -109,14 +120,14 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                         </tr>
 
                         <tr className="border-b border-gray-200">
-                            <td className="py-2 pr-4 font-medium">Details</td>
+                            <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
-                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div>
-                                        <span className="font-semibold">{animal.maleQuantityAvailable}</span> Male
+                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
+                                        <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
-                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div>
-                                        <span className="font-semibold">{animal.femaleQuantityAvailable}</span> Female
+                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Female:
+                                        <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
                                     </div>}
                                     {animal.ageUnit && animal.ageUnit.length > 0 && (animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
@@ -140,23 +151,31 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                     </tbody>
                 </table>
             </div>
+            <div className='w-full'>
+                <div onClick={handleShowInfo} className='w-full cursor-pointer flex gap-2 justify-start -mt-2 mb-2 items-center text-sm'><InfoIcon size={20} className={`${showInfo && "fill-amber-200"}`} />More Info</div>
+                {showInfo && <div className='leading-5 bg-amber-50'>
+                    <span>I want to sell <span className='font-semibold'> {quantity} {formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> as a complete set.</span>
+                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                        <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
+                    )}
+                    <span> My offer is <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price)}</span> as whole set.</span>
+                </div>}
+            </div>
         </div>
     )
 }
 
 const PerPC = (animal: Animal, inRow?: boolean) => {
+    const [showInfo, setShowInfo] = useState(false)
+
+    const handleShowInfo = () => {
+        setShowInfo(!showInfo)
+    }
     const quantity = Number(animal.maleQuantityAvailable) + Number(animal.femaleQuantityAvailable);
 
     return (
         <div className={`${inRow && "flex justify-between items-center w-full"}`}>
-            <div className='leading-5'>
-                <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> individually.</span>
-                {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
-                    <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
-                )}
-                <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} available for sale.</span>
-                <span> My per piece price is {formatCurrency(animal.price ?? 0)} totaling <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price * quantity)}</span></span>
-            </div>
+
             <div className="w-full my-4 bg-slate-50 px-2 border-b-4 border-slate-400/20 overflow-x-auto">
                 <table className="w-full border-collapse">
                     <tbody className="text-sm">
@@ -171,14 +190,14 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                         </tr>
 
                         <tr className="border-b border-gray-200">
-                            <td className="py-2 pr-4 font-medium">Details</td>
+                            <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
                                 <div className="flex gap-4 flex-wrap">
-                                    {animal?.maleQuantityAvailable !== 0 && <div>
-                                        <span className="font-semibold">{animal.maleQuantityAvailable}</span> Male
+                                    {animal?.maleQuantityAvailable !== 0 && <div className='flex gap-1 items-center'>Male:
+                                        <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
-                                    {animal?.femaleQuantityAvailable !== 0 && <div>
-                                        <span className="font-semibold">{animal.femaleQuantityAvailable}</span> Female
+                                    {animal?.femaleQuantityAvailable !== 0 && <div className='flex gap-1 items-center'>Female:
+                                        <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
                                     </div>}
                                     {(animal?.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
                                         <div>
@@ -202,6 +221,17 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div className='w-full'>
+                <div onClick={handleShowInfo} className='w-full cursor-pointer flex gap-2 justify-start -mt-2 mb-2 items-center text-sm'><InfoIcon size={20} className={`${showInfo && "fill-amber-200"}`} />More Info</div>
+                {showInfo && <div className='leading-5 p-1 bg-amber-50'>
+                    <span>I want to sell <span className='font-semibold'>{formalizeText(animal.breed)} {animal.type}{quantity > 1 ? "" : ""}</span> individually.</span>
+                    {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
+                        <span> Average age: {animal.averageAge} {animal.ageUnit.toLowerCase()}.</span>
+                    )}
+                    <span> <span className='font-semibold text-lg'>{quantity}</span> {animal.type} available for sale.</span>
+                    <span> My per piece price is {formatCurrency(animal.price ?? 0)} totaling <span className='font-semibold tracking-tight text-green-800 text-lg border-b'>{formatCurrency(animal.price * quantity)}</span></span>
+                </div>}
             </div>
         </div>
     )
