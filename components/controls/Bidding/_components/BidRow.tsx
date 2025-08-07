@@ -69,7 +69,7 @@ const BidRow = (props: Props) => {
             className={`p-2 relative ${props.user.id === props.bid.userId
                 ? "bg-emerald-100 pr-5 w-fit ml-auto"
                 : "bg-white border border-zinc-200 w-fit pl-5 mr-auto"
-                } rounded mx-1`}
+                } rounded m-1`}
         >
             <div className='flex gap-4 items-center'>
                 <div>
