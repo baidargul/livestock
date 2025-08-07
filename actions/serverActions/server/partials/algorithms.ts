@@ -73,7 +73,6 @@ async function rankPostsInBatch() {
     include: {
       user: {
         select: {
-          followers: true,
           bids: true,
         },
       },
@@ -101,8 +100,8 @@ async function rankPostsInBatch() {
       (Date.now() - post.createdAt.getTime()) / (1000 * 60 * 60);
     const recencyScore = 1 / (hoursSincePost + 1);
 
-    const likeScore = post.likes / (post.views > 0 ? post.views : 1);
-    const viewWeight = Math.log(post.views + 1) / 10;
+    const likeScore = 0; //post.likes / (post.views > 0 ? post.views : 1);
+    const viewWeight = 0; //Math.log(post.views + 1) / 10;
     const engagementScore = likeScore * 0.7 + viewWeight * 0.3;
 
     const requiredFields = [
