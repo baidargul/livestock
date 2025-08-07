@@ -18,7 +18,7 @@ const CloseDealFinalConfirmation = (props: Props) => {
             <div>You have selected {isThisUserBid ? "Your own" : `${props.bid.user.name}'s`} bid for {formatCurrency(props.bid.price)}.</div>
             <div className='font-bold'>Are you sure you want to close this deal?</div>
             <div className='w-full flex gap-2 justify-evenly items-center'>
-                <Button onClick={async () => { await props.action(); dialog.closeDialog() }} variant={'btn-secondary'} className='w-full'>Yes</Button>
+                <Button onClick={() => { props.action(); dialog.closeDialog() }} variant={'btn-secondary'} className='w-full'>Yes</Button>
                 <Button onClick={() => dialog.closeDialog()} variant={'btn-secondary'} className='w-full'>No</Button>
             </div>
         </div>
