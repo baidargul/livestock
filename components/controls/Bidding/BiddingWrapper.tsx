@@ -90,6 +90,10 @@ const BiddingWrapper = (props: Props) => {
                     setAnimal({ ...animal, sold: true })
                     dialog.showDialog("Sold", null, `The animal has been sold.`);
                     removeRoom(room.key)
+                    const route = window.location.pathname
+                    if (route.includes(`entity/${animalId}`)) {
+                        router.refresh()
+                    }
                 }
             })
 
