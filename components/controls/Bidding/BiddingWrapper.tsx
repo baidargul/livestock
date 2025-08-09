@@ -85,11 +85,11 @@ const BiddingWrapper = (props: Props) => {
                 dialog.showDialog("Low Balance", null, `You don't have enough balance to place this bid.`);
             })
             socket.on("sold", (binaryData: any) => {
-                const { animalId } = deserialize(binaryData);
+                const { animalId, room } = deserialize(binaryData);
                 if (animalId === animal.id) {
                     setAnimal({ ...animal, sold: true })
                     dialog.showDialog("Sold", null, `The animal has been sold.`);
-                    removeRoom(activeBidRoom.key)
+                    removeRoom(room.key)
                 }
             })
 

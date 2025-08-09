@@ -104,7 +104,10 @@ app.prepare().then(() => {
         if (data.status === 200) {
           socket.join(room.key);
           if (data.data.sold) {
-            io.emit("sold", serialize({ animalId: data.data.room.animalId }));
+            io.emit(
+              "sold",
+              serialize({ animalId: data.data.room.animalId, room: room })
+            );
           }
           socket.emit(
             "deal-closed",
