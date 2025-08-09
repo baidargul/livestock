@@ -111,7 +111,7 @@ const page = async (props: Props) => {
                 </div>
                 <div className='mt-40 p-4'>
                     {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
-                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding Active</div>
+                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding is active for this animal.</div>
                     </Marquee>}
                     <h2 className='text-2xl font-bold text-gray-800'>{animal.title}</h2>
                     <p className='text-lg text-gray-600'>{animal.description}</p>
