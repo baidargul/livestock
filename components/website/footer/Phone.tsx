@@ -52,7 +52,7 @@ const PhoneFooter = (props: Props) => {
                 </div>
             </RoomsWrapper>}
             <Link href={'/animal/add'} className='mb-6 group bg-zinc-100 rounded-full border-t border-t-zinc-200'>
-                <div className={`${route.includes("home") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
+                <div className={`${route.includes("animal/add") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
                     <PlusCircleIcon size={50} className='group-hover:text-emerald-700 transition duration-300 ease-in-out' />
                     <div className=''>
                         Sell
