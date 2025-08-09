@@ -11,6 +11,7 @@ import PostPreview from './_components/PostPreview'
 import { useSession } from '@/hooks/useSession'
 import { useRouter } from 'next/navigation'
 import { useLoader } from '@/hooks/useLoader'
+import ProgressCells from '@/components/ui/ProgressCells'
 
 type Props = {}
 
@@ -73,19 +74,28 @@ const page = (props: Props) => {
         setCurrentScreen((prev) => prev - 1)
     }
 
+    const deletePost = () => {
+        setLoading(true)
+        localStorage.removeItem('demand')
+        setAnimal(null)
+        setCurrentScreen(1)
+        setLoading(false)
+    }
+
     const screens: any = {
-        1: <SelectAnimal moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
-        2: <SelectBreed moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
-        3: <TitleAndDescription moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        4: <SelectAgeGenderWeight moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        1: <SelectAnimal deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
+        2: <SelectBreed deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal} />,
+        3: <TitleAndDescription deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        4: <SelectAgeGenderWeight deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
         // 5: <AddMedia moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        // 5: <PriceAndDelivery moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
-        5: <PostPreview moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} user={user} />,
+        5: <PriceAndDelivery deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} />,
+        6: <PostPreview deletePost={deletePost} moveBack={handleMoveBack} moveNext={handleMoveNext} setAnimal={setAnimal} animal={animal as any} user={user} />,
     }
 
 
     return (
         <div className='w-full min-h-[100dvh] flex flex-col items-center justify-center'>
+            <ProgressCells value={currentScreen} max={6} className='px-4 pt-4' />
             {screens[currentScreen]}
         </div>
     )

@@ -5,7 +5,7 @@ import { useSession } from '@/hooks/useSession'
 import { constructBase64Image, ImagePayload } from '@/lib/image'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
-import { Calendar1Icon, CalendarIcon, ClipboardCheckIcon, WeightIcon } from 'lucide-react'
+import { Calendar1Icon, CalendarIcon, ClipboardCheckIcon, Trash2Icon, WeightIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -16,6 +16,7 @@ type Props = {
     setAnimal: (animal: any) => void
     animal: any
     user: any
+    deletePost: () => void
 }
 
 const PostPreview = (props: Props) => {
@@ -66,33 +67,38 @@ const PostPreview = (props: Props) => {
 
     const totalQuantity = checkQuantity()
     return (
-        <div className='w-full min-h-[100dvh] flex flex-col items-center gap-4 justify-between p-4'>
-            <h1 className='text-2xl font-bold mb-10'>Demand Preview</h1>
+        <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
             <div className='w-full'>
-                <div className='flex flex-col gap-4 leading-tight tracking-tight text-start'>
-                    <div className='p-4 rounded-lg bg-white drop-shadow-sm'>
-                        {
-                            Number(totalQuantity) < 1 && <div className=''>
+                <h1 className='text-2xl font-bold mb-10'>Demand Preview</h1>
+                <div className='w-full'>
+                    <div className='flex flex-col gap-4 leading-tight tracking-tight text-start'>
+                        <div className='p-4 rounded-lg bg-white drop-shadow-sm'>
+                            {
+                                Number(totalQuantity) < 1 && <div className=''>
+                                    {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
+                                    {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className=''>{props.animal.femaleQuantityAvailable} Female</label>}
+                                    <label> {props.animal.breed} {props.animal.type}.</label>
+                                </div>
+                            }
+                            {Number(totalQuantity) > 0 && <div className='text-lg'>
                                 {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
-                                {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className=''>{props.animal.femaleQuantityAvailable} Female</label>}
+                                {props.animal.maleQuantityAvailable && props.animal.femaleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && props.animal.femaleQuantityAvailable > 0 && <label> and </label>} {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className='text-black/80 text-base'>{props.animal.femaleQuantityAvailable} Female</label>}
                                 <label> {props.animal.breed} {props.animal.type}.</label>
-                            </div>
-                        }
-                        {Number(totalQuantity) > 0 && <div className='text-lg'>
-                            {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
-                            {props.animal.maleQuantityAvailable && props.animal.femaleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && props.animal.femaleQuantityAvailable > 0 && <label> and </label>} {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className='text-black/80 text-base'>{props.animal.femaleQuantityAvailable} Female</label>}
-                            <label> {props.animal.breed} {props.animal.type}.</label>
-                            {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}</label> in total.</div>}
-                            <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</label></div>
-                            <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>
-                        </div>}
+                                {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}</label> in total.</div>}
+                                <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</label></div>
+                                <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>
+                            </div>}
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-            <div className='flex items-center justify-between gap-4 w-full p-4'>
-                <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting || !props.user.id}>Go Back</Button>
-                <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Yes Create Demand</Button>
+            <div className='w-full mt-auto p-4'>
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                <div className='flex items-center justify-between gap-4 w-full'>
+                    <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting || !props.user.id}>Go Back</Button>
+                    <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Yes Create Demand</Button>
+                </div>
             </div>
         </div>
     )
