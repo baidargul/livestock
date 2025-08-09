@@ -37,13 +37,13 @@ const SelectBreed = (props: Props) => {
 
     return (
         <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4 w-full'>
                 <div className='text-xl font-semibold tracking-tight text-center'>{`Select ${props.animal.type} breed`}</div>
-                <div className='flex flex-wrap items-center justify-center gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
+                <div className='grid grid-cols-2 sm:grid-cols-3 md:gap-2 w-full h-full max-h-[60vh] overflow-y-auto'>
                     {
                         images[props.animal?.type].breeds.map((animal: any, index: number) => {
                             return (
-                                <div key={`${animal.id}-${index}`} className={`relative w-56 sm:w-[400px] h-32 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer  ${props.animal?.breed && props.animal?.breed === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"}`} onClick={() => handleSelectAnimal(animal)}>
+                                <div key={`${animal.id}-${index}`} className={`relative min-w-36 w-full h-32 break-inside-avoid-column transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer  ${props.animal?.breed && props.animal?.breed === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"}`} onClick={() => handleSelectAnimal(animal)}>
                                     <Image src={animal.images[0]} alt={animal.name} priority layout='fixed' width={100} height={100} className={`w-full h-full absolute inset-0 z-0 object-cover mb-2 rounded-lg ${props.animal?.breed && props.animal?.breed === animal.name.toLocaleLowerCase() ? "" : ``} ${props.animal?.breed && props.animal?.breed !== animal.name.toLocaleLowerCase() ? "grayscale blur-[1px] opacity-70" : ``}`} />
                                     <div className={`text-lg absolute z-10 bottom-0 left-1/2 -translate-x-1/2 font-semibold transition-all duration-200 ease-in-out ${props.animal?.breed && props.animal?.breed === animal.name.toLocaleLowerCase() ? "bg-gradient-to-t from-emerald-700/40 to-transparent h-10" : "bg-gradient-to-t from-black/50 to-transparent h-14"}  w-full text-white text-center`}></div>
                                     <h1 className={`text-lg absolute z-10 bottom-2 left-2 font-semibold transition-all duration-200 ease-in-out  w-full text-white`} style={{ textShadow: "1px 1px 2px black" }}>{animal.name}</h1>
