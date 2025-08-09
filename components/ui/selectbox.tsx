@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 type Props = {
     options: string[]
@@ -6,6 +6,7 @@ type Props = {
     onChange: (val: string) => void
     label?: string
     className?: string
+    autoSelectSingle?: boolean
 }
 
 const Selectbox = (props: Props) => {
@@ -13,6 +14,14 @@ const Selectbox = (props: Props) => {
     const handleChange = (val: string) => {
         props.onChange(val)
     }
+
+    useEffect(() => {
+        if (props.autoSelectSingle) {
+            if (props.options.length === 1) {
+                handleChange(props.options[0])
+            }
+        }
+    }, [])
 
     return (
         <div className={`flex flex-col gap-0 w-full transition duration-300 ease-in-out ${props.className}`}>

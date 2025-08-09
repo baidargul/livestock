@@ -1,6 +1,7 @@
 import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
+import { useDialog } from '@/hooks/useDialog'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
 import { constructBase64Image, ImagePayload } from '@/lib/image'
@@ -25,6 +26,7 @@ const PostPreview = (props: Props) => {
     const logoutUser = useSession((state: any) => state.logoutUser)
     const [isPosting, setIsPosting] = useState(false)
     const setLoading = useLoader((state: any) => state.setLoading)
+    const dialog = useDialog((state: any) => state)
 
     const handleHitApi = async () => {
         if (!props.user.id) {
@@ -47,15 +49,15 @@ const PostPreview = (props: Props) => {
             router.push(`/home`)
         } else if (response.status === 401) {
             await logoutUser()
-            alert("Invalid user, please login again")
+            dialog.showDialog(`Invalid user`, null, `Error: Please login again`)
             router.push('/home')
         } else if (response.status === 402) {
             await logoutUser()
-            alert("Session expired, please login again")
+            dialog.showDialog(`Session expired`, null, `Session expired, Please login again`)
             router.push('/home')
         }
         else {
-            alert(response.message)
+            dialog.showDialog(`Session expired`, null, `Error: ${response.message}`)
             setIsPosting(false)
         }
         setLoading(false)
@@ -91,7 +93,7 @@ const PostPreview = (props: Props) => {
                                 <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-base text-emerald-700'>{props.animal.averageAge < 1 ? `any` : props.animal.averageAge} {props.animal.ageUnit}</label></div>
                             </div>}
                             <div>
-                                <div className='font-bold text-lg'>
+                                <div className='font-bold text-base'>
                                     Between
                                 </div>
                                 <div className='flex gap-1 items-center'>

@@ -37,12 +37,6 @@ const PriceAndDelivery = (props: Props) => {
         }));
     };
 
-    const handleOnFocus = () => {
-        if (txtRef.current) {
-            txtRef.current.select()
-        }
-    }
-
     const isExists = (key: string) => {
         for (const i in props.animal?.deliveryOptions) {
             if (props.animal?.deliveryOptions[i] === key) {
@@ -111,7 +105,7 @@ const PriceAndDelivery = (props: Props) => {
                                 </div>
                             </div>
                         </div>
-                        <Selectbox options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
+                        <Selectbox autoSelectSingle options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
                     </div>
                     {selectedUnit !== "per Set" && selectedUnit !== "per Kg" && <div>
                         <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
