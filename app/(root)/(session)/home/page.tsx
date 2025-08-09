@@ -46,7 +46,7 @@ const page = async (props: Props) => {
                     })
                 }
             </div>}
-            {animals.length < 1 && <div className='py-4 pb-4 bg-zinc-100 p-2 flex justify-center items-center'>
+            {animals.length < 1 && <div className='py-4 pb-4 text-zinc-600 p-2 flex justify-center items-center w-full'>
                 <div>Please upload new animal</div>
             </div>}
         </div>
