@@ -86,6 +86,8 @@ const BiddingWrapper = (props: Props) => {
             })
             socket.on("sold", (binaryData: any) => {
                 const { animalId, room } = deserialize(binaryData);
+                console.log(`Sold `, animalId)
+                console.log(`${animalId === animal.id ? "This is the same animal" : "This is not the same animal"}`)
                 if (animalId === animal.id) {
                     setAnimal({ ...animal, sold: true })
                     dialog.showDialog("Sold", null, `The animal has been sold.`);

@@ -1,7 +1,6 @@
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
 import { formatCurrency } from '@/lib/utils'
-import { useSocket } from '@/socket-client/SocketWrapper'
 import { serialize } from 'bson'
 import React from 'react'
 
@@ -17,7 +16,9 @@ const CloseDealFinalConfirmation = (props: Props) => {
     const isThisUserBid = props.bid.userId === props.user?.id
 
     const handleYes = () => {
+        console.log(props.socket)
         if (props.socket) {
+            console.log(`Sending closing signal`)
             props.socket.emit("close-deal", serialize({ room: props.activeRoom, userId: props.user.id, bid: props.bid }))
             dialog.closeDialog()
         }
