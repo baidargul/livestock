@@ -1,8 +1,12 @@
+'use client'
 import Button from '@/components/ui/Button'
 import { images } from '@/consts/images'
+import { useDialog } from '@/hooks/useDialog'
 import { Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
+import AddCustomBreed from './AddCustomBreed'
+import { formalizeText } from '@/lib/utils'
 
 type Props = {
     moveNext: () => void
@@ -13,6 +17,8 @@ type Props = {
 }
 
 const SelectBreed = (props: Props) => {
+    const [isCustom, setIsCustom] = useState(false)
+    const dialog = useDialog()
 
     const handleSelectAnimal = (animal: any) => {
         animal = String(animal.name).toLocaleLowerCase()
@@ -34,6 +40,15 @@ const SelectBreed = (props: Props) => {
         }
     }
 
+    const handleAddCustomBreed = () => {
+        if (isCustom) {
+            props.setAnimal((prev: any) => ({ ...prev, breed: '' }))
+            setIsCustom(false)
+        } else {
+            dialog.showDialog(`Add custom breed`, <AddCustomBreed animal={props.animal} setAnimal={props.setAnimal} setIsCustom={setIsCustom} />)
+        }
+    }
+
 
     return (
         <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
@@ -41,7 +56,7 @@ const SelectBreed = (props: Props) => {
                 <div className='text-xl font-semibold tracking-tight text-center'>{`Select ${props.animal.type} breed`}</div>
                 <div className='grid grid-cols-2 sm:grid-cols-3 md:gap-2 w-full h-full max-h-[60vh] overflow-y-auto'>
                     {
-                        images[props.animal?.type].breeds.map((animal: any, index: number) => {
+                        !isCustom && images[props.animal?.type].breeds.map((animal: any, index: number) => {
                             return (
                                 <div key={`${animal.id}-${index}`} className={`relative min-w-36 w-full h-32 break-inside-avoid-column transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer  ${props.animal?.breed && props.animal?.breed === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"}`} onClick={() => handleSelectAnimal(animal)}>
                                     <Image src={animal.images[0]} alt={animal.name} priority layout='fixed' width={100} height={100} className={`w-full h-full absolute inset-0 z-0 object-cover mb-2 rounded-lg ${props.animal?.breed && props.animal?.breed === animal.name.toLocaleLowerCase() ? "" : ``} ${props.animal?.breed && props.animal?.breed !== animal.name.toLocaleLowerCase() ? "grayscale blur-[1px] opacity-70" : ``}`} />
@@ -52,6 +67,11 @@ const SelectBreed = (props: Props) => {
                         })
                     }
                 </div>
+                {isCustom && <div>
+                    <div className='text-xl font-bold tracking-tight text-center'>{`Custom breed`}</div>
+                    <div className='text-4xl font-semibold tracking-tight text-center text-emerald-700'>{`' ${formalizeText(props.animal.breed)} '`}</div>
+                </div>}
+                <div onClick={handleAddCustomBreed} className={`cursor-pointer text-emerald-700 ${isCustom && "text-center text-red-500"}`}>{isCustom ? `❌ Remove custom breed` : `Not in the list? Add custom breed!`}</div>
             </div>
             <div className='w-full p-4 mt-auto'>
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
