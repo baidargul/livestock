@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import CoinsAvailable from './CoinsAvailable'
 import SignInSignOutWrapper from '@/components/wrappers/SignInSignOutWrapper'
 import { useUser } from '@/socket-client/SocketWrapper'
+import { useRooms } from '@/hooks/useRooms'
 
 type Props = {
     children: React.ReactNode
@@ -54,6 +55,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
     const setLoading = useLoader((state: any) => state.setLoading)
     const loading = useLoader((state: any) => state.loading)
     const router = useRouter();
+    const clearRooms = useRooms((state: any) => state.clearRooms);
     const user = useUser()
 
     const handleLoggout = async () => {
@@ -61,6 +63,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
         handleToggleMenu(false)
         const response = await actions.client.user.signout({ token: user?.token });
         if (response.status === 200) {
+            clearRooms();
             logoutUser();
             // router.push("/");
         } else {

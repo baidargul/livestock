@@ -1,6 +1,5 @@
 import { actions } from "@/actions/serverActions/actions";
 import { bidsReverse } from "@/components/controls/Bidding/BiddingWrapper";
-import axios from "axios";
 import { create } from "zustand";
 
 interface Room {
@@ -122,4 +121,5 @@ export const useRooms: any = create<RoomsState>()((set) => ({
       (room) => room[key] === id && room.animalId === animalId
     );
   },
+  clearRooms: () => set({ rooms: { myRooms: [], otherRooms: [] } }),
 }));
