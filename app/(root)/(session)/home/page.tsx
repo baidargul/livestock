@@ -36,7 +36,7 @@ const page = async (props: Props) => {
             <AnimalMarquee title='Trending' />
             <DemandRowLite />
             {/* <SectionCategoryBar value={selectedCategoryFilter as string} /> */}
-            <div className='py-4 pb-4 bg-zinc-100 p-2 space-y-4 columns-2 sm:columns-3 md:columns-4 lg:columns-5'>
+            {animals.length > 0 && <div className='py-4 pb-4 bg-zinc-100 p-2 space-y-4 columns-2 sm:columns-3 md:columns-4 lg:columns-5'>
                 {
                     animals.map((animal: any) => {
                         if (selectedCategoryFilter && String(selectedCategoryFilter).length > 0) {
@@ -45,7 +45,10 @@ const page = async (props: Props) => {
                         return (<SectionProductListRow key={animal.id} animal={animal} />)
                     })
                 }
-            </div>
+            </div>}
+            {animals.length < 1 && <div className='py-4 pb-4 bg-zinc-100 p-2 flex justify-center items-center'>
+                <div>Please upload new animal</div>
+            </div>}
         </div>
     )
 }
