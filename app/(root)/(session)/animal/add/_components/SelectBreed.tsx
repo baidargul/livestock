@@ -71,7 +71,7 @@ const SelectBreed = (props: Props) => {
                     <div className='text-xl font-bold tracking-tight text-center'>{`Custom breed`}</div>
                     <div className='text-4xl font-semibold tracking-tight text-center text-emerald-700'>{`' ${formalizeText(props.animal.breed)} '`}</div>
                 </div>}
-                <div onClick={handleAddCustomBreed} className={`cursor-pointer text-emerald-700 ${isCustom && "text-center text-red-500"}`}>{isCustom ? `❌ Remove custom breed` : `Not in the list? Add custom breed!`}</div>
+                <div onClick={handleAddCustomBreed} className={`cursor-pointer text-emerald-700 ${isCustom ? "text-center text-red-500" : "underline underline-offset-2"}`}>{isCustom ? `❌ Remove custom breed` : `Not in the list? Add custom breed!`}</div>
             </div>
             <div className='w-full p-4 mt-auto'>
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
