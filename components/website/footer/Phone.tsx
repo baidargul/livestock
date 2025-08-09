@@ -1,5 +1,5 @@
 'use client'
-import { CompassIcon, HouseIcon, ShoppingBagIcon, SquareUserIcon, UserIcon } from 'lucide-react'
+import { CompassIcon, HouseIcon, PlusCircleIcon, ShoppingBagIcon, SquareUserIcon, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import ProfileMenuWrapper from '../profile/_components/ProfileMenuWrapper'
@@ -34,6 +34,7 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </Link>
+
             {/* <Link href={'/nearby'}>
                 <div className={`${route.includes("nearby") ? "bg-white border-b-2 border-zinc-200 rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
                     <CompassIcon />
@@ -50,6 +51,14 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </RoomsWrapper>}
+            <Link href={'/animal/add'} className='mb-6 group bg-zinc-100 rounded-full border-t border-t-zinc-200'>
+                <div className={`${route.includes("home") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>
+                    <PlusCircleIcon size={50} className='group-hover:text-emerald-700 transition duration-300 ease-in-out' />
+                    <div className=''>
+                        Sell
+                    </div>
+                </div>
+            </Link>
             {user && <ContactsWrapper>
                 <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <SquareUserIcon />
