@@ -52,10 +52,10 @@ const PriceAndDelivery = (props: Props) => {
         return false
     }
 
-    const handlePriceChange = (val: number) => {
+    const handlePriceChange = (val: number, key: "minPrice" | "maxPrice") => {
         props.setAnimal((prev: any) => ({
             ...prev,
-            price: Number(val),
+            [key]: Number(val),
         }));
     }
 
@@ -95,9 +95,21 @@ const PriceAndDelivery = (props: Props) => {
                 <div className='text-xl font-semibold tracking-tight text-center'>{`Your budget`}</div>
                 <div className='w-full flex flex-col items-start gap-4'>
                     <div className='flex flex-col gap-2'>
-                        <div className='relative flex items-center'>
-                            <label className='absolute left-0 text-2xl'>Rs </label>
-                            <input ref={txtRef} onFocus={handleOnFocus} onChange={(e: any) => handlePriceChange(Number(e.target.value))} value={props.animal.price} placeholder='0/-' type='number' className='text-2xl border-b border-black selection:bg-emerald-100 text-left pl-8 p-2 outline-0 text-emerald-600' />
+                        <div className='grid grid-cols-2 w-full'>
+                            <div>
+                                <div className='text-xs -mb-2'>- Minimum Budget</div>
+                                <div className='relative flex items-center'>
+                                    <label className='absolute left-0 text-lg'>Rs </label>
+                                    <input onChange={(e: any) => handlePriceChange(Number(e.target.value), "minPrice")} value={props.animal.minPrice ?? ""} placeholder='0/-' type='number' className='text-lg border-b border-black selection:bg-emerald-100 text-left pl-6 p-2 outline-0 text-emerald-600' />
+                                </div>
+                            </div>
+                            <div>
+                                <div className='text-xs -mb-2'>- Maximum Budget</div>
+                                <div className='relative flex items-center'>
+                                    <label className='absolute left-0 text-lg'>Rs </label>
+                                    <input onChange={(e: any) => handlePriceChange(Number(e.target.value), "maxPrice")} value={props.animal.maxPrice ?? ""} placeholder='0/-' type='number' className='text-lg border-b border-black selection:bg-emerald-100 text-left pl-6 p-2 outline-0 text-emerald-600' />
+                                </div>
+                            </div>
                         </div>
                         <Selectbox options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
                     </div>
@@ -110,8 +122,8 @@ const PriceAndDelivery = (props: Props) => {
                         <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
                     </div>}
                     <div className='flex flex-col justify-between gap-4 w-full'>
-                        <Checkbox label='SELF PICKUP AVAILABLE' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
-                        <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
+                        <Checkbox label={`I'll visit and self pick up.`} value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
+                        <Checkbox label={'You can cargo and deliver to me.'} value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
                     </div>
                 </div>
             </div>
@@ -119,7 +131,7 @@ const PriceAndDelivery = (props: Props) => {
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                    <Button onClick={props.moveNext} className='w-full' disabled={!props.animal.price || Number(props.animal.price) < 0 || props.animal.deliveryOptions && props.animal.deliveryOptions.length === 0}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
+                    <Button onClick={props.moveNext} className='w-full' disabled={!props.animal.minPrice || Number(props.animal.minPrice) < 0 || !props.animal.maxPrice || Number(props.animal.maxPrice) < 0 || props.animal.deliveryOptions && props.animal.deliveryOptions.length === 0}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>
                 </div >
             </div>
         </div >

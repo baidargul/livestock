@@ -1,11 +1,12 @@
 import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
+import { images } from '@/consts/images'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
 import { constructBase64Image, ImagePayload } from '@/lib/image'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
-import { Calendar1Icon, CalendarIcon, ClipboardCheckIcon, Trash2Icon, WeightIcon } from 'lucide-react'
+import { ActivityIcon, Calendar1Icon, CalendarIcon, ClipboardCheckIcon, Trash2Icon, WeightIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -71,8 +72,9 @@ const PostPreview = (props: Props) => {
             <div className='w-full'>
                 <h1 className='text-2xl font-bold mb-10'>Demand Preview</h1>
                 <div className='w-full'>
-                    <div className='flex flex-col gap-4 leading-tight tracking-tight text-start'>
-                        <div className='p-4 rounded-lg bg-white drop-shadow-sm'>
+                    <div className='grid grid-cols-[1fr_auto] gap-2 text-base w-full max-w-[400px] items-center leading-tight tracking-tight text-start p-4 rounded-lg bg-white drop-shadow-sm'>
+                        <Image src={images[props.animal.type].images[1]} alt={props.animal.type} width={100} height={100} className='w-full h-full object-cover' />
+                        <div className='text-base'>
                             {
                                 Number(totalQuantity) < 1 && <div className=''>
                                     {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
@@ -80,14 +82,24 @@ const PostPreview = (props: Props) => {
                                     <label> {props.animal.breed} {props.animal.type}.</label>
                                 </div>
                             }
-                            {Number(totalQuantity) > 0 && <div className='text-lg'>
+                            {Number(totalQuantity) > 0 && <div className='text-base'>
                                 {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
                                 {props.animal.maleQuantityAvailable && props.animal.femaleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && props.animal.femaleQuantityAvailable > 0 && <label> and </label>} {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className='text-black/80 text-base'>{props.animal.femaleQuantityAvailable} Female</label>}
                                 <label> {props.animal.breed} {props.animal.type}.</label>
                                 {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}</label> in total.</div>}
-                                <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</label></div>
-                                <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>
+                                <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-base text-emerald-700'>{props.animal.averageWeight < 1 ? `any` : props.animal.averageWeight} {props.animal.weightUnit}</label></div>
+                                <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-base text-emerald-700'>{props.animal.averageAge < 1 ? `any` : props.animal.averageAge} {props.animal.ageUnit}</label></div>
                             </div>}
+                            <div>
+                                <div className='font-bold text-lg'>
+                                    Between
+                                </div>
+                                <div className='flex gap-1 items-center'>
+                                    <div>{formatCurrency(props.animal.minPrice ?? 0)}</div>
+                                    <ActivityIcon size={20} />
+                                    <div>{formatCurrency(props.animal.maxPrice ?? 0)}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -97,7 +109,7 @@ const PostPreview = (props: Props) => {
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting || !props.user.id}>Go Back</Button>
-                    <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Yes Create Demand</Button>
+                    <Button onClick={handleHitApi} className='w-full text-nowrap' disabled={isPosting}>Create Demand</Button>
                 </div>
             </div>
         </div>
