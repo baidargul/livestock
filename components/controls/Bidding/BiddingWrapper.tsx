@@ -355,7 +355,7 @@ const BiddingWrapper = (props: Props) => {
             if (socket && user) {
                 //only author can close the deal
                 if (isAuthor) {
-                    dialog.showDialog("Close Deal", <CloseDealFinalConfirmation bid={bid} user={user} activeRoom={activeBidRoom} />)
+                    dialog.showDialog("Close Deal", <CloseDealFinalConfirmation socket={socket} bid={bid} user={user} activeRoom={activeBidRoom} />)
 
                 }
             }

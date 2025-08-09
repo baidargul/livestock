@@ -9,16 +9,16 @@ type Props = {
     user: any
     bid: any
     activeRoom: any
+    socket: any
 }
 
 const CloseDealFinalConfirmation = (props: Props) => {
     const dialog = useDialog()
     const isThisUserBid = props.bid.userId === props.user?.id
-    const socket = useSocket()
 
     const handleYes = () => {
-        if (socket) {
-            socket.emit("close-deal", serialize({ room: props.activeRoom, userId: props.user.id, bid: props.bid }))
+        if (props.socket) {
+            props.socket.emit("close-deal", serialize({ room: props.activeRoom, userId: props.user.id, bid: props.bid }))
             dialog.closeDialog()
         }
     }
