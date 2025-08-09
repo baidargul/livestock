@@ -16,9 +16,7 @@ const CloseDealFinalConfirmation = (props: Props) => {
     const isThisUserBid = props.bid.userId === props.user?.id
 
     const handleYes = () => {
-        console.log(props.socket)
         if (props.socket) {
-            console.log(`Sending closing signal`)
             props.socket.emit("close-deal", serialize({ room: props.activeRoom, userId: props.user.id, bid: props.bid }))
             dialog.closeDialog()
         }
