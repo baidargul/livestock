@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
 import { doQuery } from "./Query/Query";
+import { calculatePricing } from "@/lib/utils";
 async function listAll(value?: string, key?: string) {
   const response = {
     status: 500,
@@ -343,10 +344,6 @@ async function GetCustomerContact(postId: string, userId: string) {
   try {
     let isExists = await prisma.animal.findFirst({
       where: { id: postId },
-      select: {
-        id: true,
-        userId: true,
-      },
     });
 
     if (!isExists) {
@@ -363,6 +360,8 @@ async function GetCustomerContact(postId: string, userId: string) {
       select: {
         id: true,
         balance: true,
+        city: true,
+        province: true,
       },
     });
 
@@ -411,6 +410,17 @@ async function GetCustomerContact(postId: string, userId: string) {
               sold: true,
             },
           }),
+          await actions.server.orders.create(
+            isExists.userId,
+            userId,
+            isExists.id,
+            isExists.maleQuantityAvailable ?? 0,
+            isExists.femaleQuantityAvailable ?? 0,
+            calculatePricing(isExists).price,
+            isExists.deliveryOptions,
+            user.province ?? "",
+            user.city ?? ""
+          ),
         ]);
       }
     }
