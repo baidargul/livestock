@@ -49,7 +49,7 @@ const AnimalMarquee = (props: Props) => {
                                 <Image src={animal.images.length > 0 ? animal.images[0].image ? animal.images[0].image : images.chickens.images[1] : images.chickens.images[1]} alt={`${animal.title}, ${animal.type} - ${animal.breed}`} width={100} height={100} layout='fixed' className='w-[80px] h-[80px] object-contain bg-black' />
                                 <div className='text-xs'>
                                     <div className='font-bold line-clamp-2'>{formalizeText(animal.title)}</div>
-                                    <div className='text-zinc-700 italic line-clamp-2'>{formalizeText(animal.description)}</div>
+                                    <div className='text-zinc-700 italic line-clamp-2 max-w-20'>{formalizeText(animal.description)}</div>
                                     <div className='text-zinc-500'>{formalizeText(animal.breed)} {animal.type}</div>
                                     <div className='text-emerald-700 text-sm font-bold'>{formatCurrency(calculatePricing(animal).price)}</div>
                                 </div>
