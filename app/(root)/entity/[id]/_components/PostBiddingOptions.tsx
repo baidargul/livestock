@@ -37,6 +37,10 @@ const PostBiddingOptions = (props: Props) => {
     const socket = useSocket()
     const dialog = useDialog()
 
+    useEffect(() => {
+        props.setPostBiddingOptions((prev) => ({ ...prev, maleQuantityAvailable: Number(props.animal.maleQuantityAvailable) ?? 0, femaleQuantityAvailable: Number(props.animal.femaleQuantityAvailable) ?? 0 }))
+    }, [props.animal])
+
     const handleOpen = () => {
         setisOpen(!isOpen)
     }
@@ -116,6 +120,8 @@ const PostBiddingOptions = (props: Props) => {
         }
     }
 
+    const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
+
 
     return (
         <>
@@ -123,7 +129,7 @@ const PostBiddingOptions = (props: Props) => {
                 <div className='w-full h-full'>
                     <div className='-mt-2 flex flex-col gap-2 w-full h-full'>
                         <div className='w-full h-full'>
-                            <div className='text-emerald-700 font-semibold text-xl tracking-wide'>Customize your offer</div>
+                            <div className='text-emerald-700 font-semibold text-xl tracking-wide'>Flat Rate Purchase | No Bargain</div>
                             <div className='flex flex-col gap-2'>
                                 <div className='font-semibold'>Delivery Options</div>
                                 <div className='grid grid-cols-2 gap-2 w-full'>
@@ -131,26 +137,26 @@ const PostBiddingOptions = (props: Props) => {
                                     <Button onClick={() => addDeliveryOption("SELLER_DELIVERY")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELLER_DELIVERY") ? "btn-primary" : "btn-secondary"} ><DeliveryIcon icon='SELLER_DELIVERY' /> Cargo</Button>
                                 </div>
                             </div>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-2 mt-4'>
                                 <div className='font-semibold'>Gender Quantity</div>
                                 <div className='grid grid-cols-2 gap-2 w-full -mt-2'>
-                                    <Textbox disabled={props.animal.maleQuantityAvailable < 1} label='Male' type='number' onChange={(e: any) => handleChangeValue("maleQuantityAvailable", Number(e) > props.animal.maleQuantityAvailable || Number(e) < 0 ? props.animal.maleQuantityAvailable : e)} value={props.postBiddingOptions.maleQuantityAvailable} className='w-full' />
-                                    <Textbox disabled={props.animal.femaleQuantityAvailable < 1} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
+                                    <Textbox disabled={true} label='Male' type='number' onChange={(e: any) => handleChangeValue("maleQuantityAvailable", Number(e) > props.animal.maleQuantityAvailable || Number(e) < 0 ? props.animal.maleQuantityAvailable : e)} value={props.postBiddingOptions.maleQuantityAvailable} className='w-full' />
+                                    <Textbox disabled={true} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
                                 </div>
                             </div>
-                            <div className='mt-2 w-full'>
-                                <div onClick={handleChangeUnit} className='w-full text-right underline underline-offset-2 text-emerald-700 cursor-pointer'>Switch {mode.toLocaleLowerCase()}.</div>
-                            </div>
-                            <div className={`${"flex gap-2 justify-between items-center"}`}>
+                            <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
                                 {!props.directCTO && <Textbox disabled label={`Seller offer`} type='number' value={sellerOffer} />}
-                                <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
+                                <div className='relative'>
+                                    <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
+                                    <div className='text-xs pt-1'>{formatCurrency(props.postBiddingOptions.amount / totalQuantity)} per animal.</div>
+                                </div>
                             </div>
-                            {props.directCTO && <div className='text-sm p-2 text-amber-700 bg-yellow-50'>This is a flat rate offer, which means you are not allowed to negotiate with the buyer.</div>}
+                            {props.directCTO && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
                         </div>
                         <div className={`mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
-                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0} onClick={handlePostOffer} className='w-full'>Post Offer</Button>
+                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0} onClick={handlePostOffer} className='w-full'>Purchase</Button>
                         </div>
                     </div>
                 </div>
