@@ -50,7 +50,7 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
-                                <div className="flex gap-4 flex-wrap">
+                                {quantity > 0 && <div className="flex gap-4 flex-wrap">
                                     <div>
                                         <span className="font-semibold">{quantity}</span> {animal.type}
                                     </div>
@@ -62,7 +62,7 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                                             Avg. age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
-                                </div>
+                                </div>}
                             </td>
                         </tr>
 
@@ -123,7 +123,7 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
-                                <div className="flex gap-4 flex-wrap">
+                                {quantity > 0 && <div className="flex gap-4 flex-wrap">
                                     {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
@@ -135,7 +135,7 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                                             Avg. age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
-                                </div>
+                                </div>}
                             </td>
                         </tr>
 
@@ -194,7 +194,7 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
-                                <div className="flex gap-4 flex-wrap">
+                                {quantity > 0 && <div className="flex gap-4 flex-wrap">
                                     {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
@@ -206,7 +206,7 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                                             Age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
-                                </div>
+                                </div>}
                             </td>
                         </tr>
 
