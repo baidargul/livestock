@@ -16,7 +16,7 @@ const TitleAndDescription = (props: Props) => {
     return (
         <div className='w-full select-none min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
             <div>
-                <div className='text-xl font-semibold tracking-tight text-center'>{`Add some info for your ${formalizeText(props.animal.breed)} ${props.animal.type}`}</div>
+                <div className='text-xl font-semibold tracking-tight text-center'>{`Where you want ${formalizeText(props.animal.breed)} ${props.animal.type} to be delivered?`}</div>
                 <div>
                     <div className='flex flex-col gap-2 mt-4'>
                         <div className='flex gap-2 justify-evenly items-center'>
