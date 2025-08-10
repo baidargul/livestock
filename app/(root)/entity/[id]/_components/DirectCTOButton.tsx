@@ -6,11 +6,13 @@ import Button from '@/components/ui/Button'
 import { useContacts } from '@/hooks/useContacts'
 import { useDialog } from '@/hooks/useDialog'
 import { useSession } from '@/hooks/useSession'
-import { useUser } from '@/socket-client/SocketWrapper'
+import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import { BanknoteArrowDownIcon, PhoneIcon } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
+import { deserialize } from 'bson'
+import { useRouter } from 'next/navigation'
 
 type Props = {
     children: React.ReactNode
@@ -25,6 +27,8 @@ const DirectCTOButton = (props: Props) => {
     const [user, setUser] = useState<any>(null)
     const [costString, setCostString] = useState('')
     const fetchBalance = useSession((state: any) => state.fetchBalance)
+    const socket = useSocket()
+    const router = useRouter()
     const [postBiddingOptions, setPostBiddingOptions] = useState<{
         deliveryOptions: string[],
         maleQuantityAvailable: number,
@@ -38,6 +42,28 @@ const DirectCTOButton = (props: Props) => {
         amount: 0,
         posted: false
     })
+
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("sold", (binaryData: any) => {
+                const { animalId, room } = deserialize(binaryData);
+                if (animalId === props.animal.id) {
+                    dialog.showDialog("Sold", null, `The animal has been sold.`);
+                }
+                const route = window.location.pathname
+                if (route.includes(`entity/${animalId}`)) {
+                    router.refresh()
+                }
+            })
+
+            return () => {
+                if (socket) {
+                    socket?.off("sold")
+                }
+            };
+        }
+    }, [])
 
 
     useEffect(() => {
@@ -57,6 +83,7 @@ const DirectCTOButton = (props: Props) => {
             if (response.status === 200) {
                 Contact.addToContact(response.data)
                 setCostString(`-${response.data.cost} coins`)
+                router.refresh()
                 fetchBalance()
             } else if (response.status === 302) {
                 dialog.showDialog(`Insufficient balance`, <LowBalanceDialog dialog={dialog} />)

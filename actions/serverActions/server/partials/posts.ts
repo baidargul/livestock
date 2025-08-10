@@ -401,6 +401,16 @@ async function GetCustomerContact(postId: string, userId: string) {
             isExists.userId,
             `Seller`
           ),
+          await prisma.animal.update({
+            where: {
+              id: isExists.id,
+            },
+            data: {
+              maleQuantityAvailable: 0,
+              femaleQuantityAvailable: 0,
+              sold: true,
+            },
+          }),
         ]);
       }
     }
