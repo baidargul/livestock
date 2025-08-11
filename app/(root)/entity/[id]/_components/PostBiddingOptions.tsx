@@ -66,12 +66,17 @@ const PostBiddingOptions = (props: Props) => {
     }
 
     useEffect(() => {
-        const amount = calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price
-        setSellerOffer(amount)
-        props.setPostBiddingOptions((prev) => ({ ...prev, amount: amount }))
+        let amount = calculatePricing({ ...props.animal }).price
+        setSellerOffer(Number(Number(amount).toFixed(0)) ?? 0)
+        const totalQuantity = Number(props.postBiddingOptions.femaleQuantityAvailable) + Number(props.postBiddingOptions.maleQuantityAvailable)
+        amount = Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0))
+        if (props.directCTO) {
+            props.setPostBiddingOptions((prev) => ({ ...prev, amount: Number(Number(amount / totalQuantity).toFixed(0)) }))
+        }
     }, [props.postBiddingOptions.femaleQuantityAvailable, props.postBiddingOptions.maleQuantityAvailable])
 
     const handlePostOffer = () => {
+        if (Number(props.postBiddingOptions.amount) < 1) return
         setIsWorking(true)
         if (props.directCTO) {
             if (props.directCTOAction) {
@@ -105,21 +110,6 @@ const PostBiddingOptions = (props: Props) => {
         setIsWorking(false)
     }
 
-    const handleChangeUnit = () => {
-        const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
-        if (mode === "per unit") {
-            const seller = Number(Number(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price / totalQuantity).toFixed(0))
-            const user = Number(Number(props.postBiddingOptions.amount / totalQuantity).toFixed(0))
-            setSellerOffer(seller)
-            props.setPostBiddingOptions((prev) => ({ ...prev, amount: user }))
-            setMode("to total")
-        } else {
-            setSellerOffer(calculatePricing({ ...props.animal, ...props.postBiddingOptions }).price)
-            props.setPostBiddingOptions((prev) => ({ ...prev, amount: props.postBiddingOptions.amount * totalQuantity }))
-            setMode("per unit")
-        }
-    }
-
     const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
 
 
@@ -129,7 +119,7 @@ const PostBiddingOptions = (props: Props) => {
                 <div className='w-full h-full'>
                     <div className='-mt-2 flex flex-col gap-2 w-full h-full'>
                         <div className='w-full h-full'>
-                            <div className='text-emerald-700 font-semibold text-xl tracking-wide'>Flat Rate Purchase | No Bargain</div>
+                            <div className='text-emerald-700 font-semibold text-xl tracking-wide'>{props.directCTO ? `Flat Rate Purchase | No Bargain` : `Customize your offer`}</div>
                             <div className='flex flex-col gap-2'>
                                 <div className='font-semibold'>Delivery Options</div>
                                 <div className='grid grid-cols-2 gap-2 w-full'>
@@ -146,20 +136,20 @@ const PostBiddingOptions = (props: Props) => {
                             </div>
                             <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
-                                {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${sellerOffer} per animal.`} />}
+                                {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${Number(Number(sellerOffer / totalQuantity).toFixed(0))} per animal.`} />}
                                 <div className='relative'>
                                     <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                                 </div>
                             </div>
                             {!props.directCTO && <div className='flex flex-col items-center justify-center text-center mt-8'>
-                                <div className='border-b-4 border-zinc-700 p-2 bg-amber-50'>{formatCurrency(props.postBiddingOptions.amount * totalQuantity)}</div>
-                                <div className='p-2 bg-zinc-100 border-b line-clamp-1'>{formatCurrency(Number(Number(calculatePricing(props.animal).price * totalQuantity).toFixed(0)))}</div>
+                                <div className='border-b-4 border-zinc-700 p-2 bg-amber-50'>{formatCurrency(props.postBiddingOptions.amount * (Number(props.postBiddingOptions.maleQuantityAvailable) + Number(props.postBiddingOptions.femaleQuantityAvailable)))}</div>
+                                <div className='p-2 bg-zinc-100 border-b line-clamp-1'>{formatCurrency(Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0)))}</div>
                             </div>}
                             {props.directCTO && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
                         </div>
                         <div className={`mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
-                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0} onClick={handlePostOffer} className='w-full'>Purchase</Button>
+                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0 || Number(props.postBiddingOptions.amount) < 1} onClick={handlePostOffer} className='w-full'>Purchase</Button>
                         </div>
                     </div>
                 </div>
