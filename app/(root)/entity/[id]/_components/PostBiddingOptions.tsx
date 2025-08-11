@@ -33,12 +33,11 @@ const PostBiddingOptions = (props: Props) => {
     const [isOpen, setisOpen] = useState(false)
     const [isWorking, setIsWorking] = useState(false)
     const [sellerOffer, setSellerOffer] = useState(0)
-    const [mode, setMode] = useState<"per unit" | "to total">('to total')
     const socket = useSocket()
     const dialog = useDialog()
 
     useEffect(() => {
-        props.setPostBiddingOptions((prev) => ({ ...prev, maleQuantityAvailable: Number(props.animal.maleQuantityAvailable) ?? 0, femaleQuantityAvailable: Number(props.animal.femaleQuantityAvailable) ?? 0 }))
+        props.setPostBiddingOptions((prev) => ({ ...prev, maleQuantityAvailable: Number(props.animal.maleQuantityAvailable) ?? 0, femaleQuantityAvailable: Number(props.animal.femaleQuantityAvailable) ?? 0, deliveryOptions: props.animal.deliveryOptions.length === 1 ? props.animal.deliveryOptions : props.postBiddingOptions.deliveryOptions }))
     }, [props.animal])
 
     const handleOpen = () => {
@@ -123,8 +122,8 @@ const PostBiddingOptions = (props: Props) => {
                             <div className='flex flex-col gap-2'>
                                 <div className='font-semibold'>Delivery Options</div>
                                 <div className='grid grid-cols-2 gap-2 w-full'>
-                                    <Button onClick={() => addDeliveryOption("SELF_PICKUP")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELF_PICKUP") ? "btn-primary" : "btn-secondary"}> <DeliveryIcon icon='SELF_PICKUP' /> I'll Pickup</Button>
-                                    <Button onClick={() => addDeliveryOption("SELLER_DELIVERY")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELLER_DELIVERY") ? "btn-primary" : "btn-secondary"} ><DeliveryIcon icon='SELLER_DELIVERY' /> Cargo</Button>
+                                    {props.animal.deliveryOptions.includes("SELF_PICKUP") && <Button onClick={() => addDeliveryOption("SELF_PICKUP")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELF_PICKUP") ? "btn-primary" : "btn-secondary"}> <DeliveryIcon icon='SELF_PICKUP' /> I'll Pickup</Button>}
+                                    {props.animal.deliveryOptions.includes("SELLER_DELIVERY") && <Button onClick={() => addDeliveryOption("SELLER_DELIVERY")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELLER_DELIVERY") ? "btn-primary" : "btn-secondary"} ><DeliveryIcon icon='SELLER_DELIVERY' /> Cargo</Button>}
                                 </div>
                             </div>
                             <div className='flex flex-col gap-2 mt-4'>
