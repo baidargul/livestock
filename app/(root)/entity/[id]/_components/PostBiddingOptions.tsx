@@ -89,7 +89,7 @@ const PostBiddingOptions = (props: Props) => {
                     authorId: props.animal.userId,
                     userId: props.user.id,
                     key: `${props.animal.id}-${props.animal.userId}-${props.user.id}`,
-                    offer: Number(props.postBiddingOptions.amount),
+                    offer: props.postBiddingOptions.amount * (Number(props.postBiddingOptions.maleQuantityAvailable) + Number(props.postBiddingOptions.femaleQuantityAvailable)),
                     deliveryOptions: props.postBiddingOptions.deliveryOptions,
                     maleQuantityAvailable: Number(props.postBiddingOptions.maleQuantityAvailable) ?? 0,
                     femaleQuantityAvailable: Number(props.postBiddingOptions.femaleQuantityAvailable) ?? 0
