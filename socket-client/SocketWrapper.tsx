@@ -56,7 +56,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             let socket: any = null;
             if (user) {
                 // let socket = io({
-                let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com', {
+                let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com/', {
                     query: {
                         userId: user.id, // Send user details as query
                     },
