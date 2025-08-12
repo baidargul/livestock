@@ -136,13 +136,20 @@ const PostBiddingOptions = (props: Props) => {
                             <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
                                 {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${Number(Number(sellerOffer / totalQuantity).toFixed(0))} per animal.`} />}
-                                <div className='relative'>
+                                <div className='relative flex items-center group'>
+                                    <div className='absolute top-1/2 right-2 text-zinc-500 pointer-events-none group-hover:opacity-0 transition duration-600 ease-in-out'>per animal</div>
                                     <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                                 </div>
                             </div>
-                            {!props.directCTO && <div className='flex flex-col items-center justify-center text-center mt-8'>
-                                <div className='border-b-4 border-zinc-700 p-2 bg-amber-50'>{formatCurrency(props.postBiddingOptions.amount * (Number(props.postBiddingOptions.maleQuantityAvailable) + Number(props.postBiddingOptions.femaleQuantityAvailable)))}</div>
-                                <div className='p-2 bg-zinc-100 border-b line-clamp-1'>{formatCurrency(Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0)))}</div>
+                            {!props.directCTO && <div className='flex justify-center items-center text-center mt-8'>
+                                <div className='relative flex justify-center items-center'>
+                                    <div className='border-b-4 border-zinc-700 p-2 bg-amber-50 px-4'>{formatCurrency(props.postBiddingOptions.amount * (Number(props.postBiddingOptions.maleQuantityAvailable) + Number(props.postBiddingOptions.femaleQuantityAvailable)))}</div>
+                                    <div className='absolute -bottom-5 text-xs text-nowrap'>Your offer</div>
+                                </div>
+                                <div className='relative flex justify-center items-center'>
+                                    <div className='p-2 bg-zinc-100 border-b line-clamp-1'>{formatCurrency(Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0)))}</div>
+                                    <div className='absolute -bottom-5 text-zinc-600 text-xs text-nowrap'>Seller offer</div>
+                                </div>
                             </div>}
                             {props.directCTO && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
                         </div>
