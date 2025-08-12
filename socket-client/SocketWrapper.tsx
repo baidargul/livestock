@@ -60,6 +60,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     query: {
                         userId: user.id, // Send user details as query
                     },
+                    transports: ["websocket", "polling"], // ensure correct handshake
+                    withCredentials: false
                 });
                 socket.on("user-joined-bidroom", (binaryData) => {
                     const { room, userId }: any = deserialize(binaryData);
