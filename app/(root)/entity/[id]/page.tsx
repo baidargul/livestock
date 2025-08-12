@@ -21,6 +21,7 @@ import SoldOverlay from '@/components/ui/SoldOverlay'
 import OnSoldProtection from './_components/OnSoldProtection'
 import SidebarButtons from './_components/SidebarButtons'
 import DeliveryIcon from '@/components/Animals/DeliveryIcon'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic';
 
@@ -38,8 +39,19 @@ const page = async (props: Props) => {
     const { params } = props
     const { id } = await params
     const response = await actions.server.post.list(id, 'id');
+    if (response.status !== 200) {
+
+        return (
+            <div className='w-full min-h-[100dvh] flex justify-center items-center text-center'>
+                <div className='w-full'>
+                    <h1 className='text-2xl font-semibold w-full'>Animal not found</h1>
+                    <Link href={'/home'} className='underline underline-offset-2 cursor-pointer'>Go back to homepage</Link>
+                </div>
+            </div>
+        )
+    }
     const animal = response.data as any
-    const breedObj = images[animal.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
+    const breedObj = images[animal?.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
     const info = breedObj?.info;
     return (
         animal && <div className='w-full h-full relative' key={timestamp}>
