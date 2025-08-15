@@ -62,36 +62,50 @@ async function uploadImages(images: ImagePayload[]) {
 
 async function fetchImages(images: any) {
   const isInDevelopment = process.env.NODE_ENV === "development";
-  let rawImages: any = [];
+  const baseUrl =
+    process.env.IMAGE_BASE_URL ||
+    "https://pub-2af91482241043e491600e0712bb4806.r2.dev";
+
   if (isInDevelopment) {
     console.info(`[CLOUDFLARE BYPASS]::💡 IN DEVELOPMENT MODE`);
-    return rawImages;
+    return [];
   }
 
-  if (images && images.length > 0) {
-    for (const img of images) {
-      try {
-        const imageURL = `https://pub-2af91482241043e491600e0712bb4806.r2.dev/${img.Key}`;
-        const response = await fetch(imageURL);
+  if (!images || images.length === 0) return [];
 
-        const contentType = response.headers.get("Content-Type");
-        const imageBuffer = await response.arrayBuffer();
+  try {
+    const results = await Promise.all(
+      images.map(async (img: any) => {
+        try {
+          const key = typeof img === "string" ? img : img.Key;
+          const imageURL = `${baseUrl}/${key}`;
+          const response = await fetch(imageURL);
 
-        // Dynamically assign the correct MIME type
-        const image = `data:${contentType};base64,${Buffer.from(
-          imageBuffer
-        ).toString("base64")}`;
-        rawImages.push({ name: img.Key, image });
-      } catch (error) {
-        console.error(
-          ` @FUN FETCH IMAGES: Error fetching image ${img.Key}:`,
-          error
-        );
-      }
-    }
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+          const contentType = response.headers.get("Content-Type");
+          const buffer = await response.arrayBuffer();
+          const base64 = Buffer.from(buffer).toString("base64");
+
+          return {
+            name: key,
+            image: `data:${contentType};base64,${base64}`,
+          };
+        } catch (err: any) {
+          console.error(
+            `❌ Error fetching image ${img.Key || img}:`,
+            err.message
+          );
+          return null; // skip failed image
+        }
+      })
+    );
+
+    return results.filter(Boolean); // remove nulls
+  } catch (error: any) {
+    console.error(`@CLOUDFLARE IMAGES:`, error.message);
+    return [];
   }
-
-  return rawImages;
 }
 
 async function deleteImages(images: any[]) {
