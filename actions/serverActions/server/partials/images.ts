@@ -79,24 +79,14 @@ async function fetchImages(images: any) {
         try {
           const key = typeof img === "string" ? img : img.Key;
           const imageURL = `${baseUrl}/${key}`;
-          const response = await fetch(imageURL);
+          const response = await fetch(imageURL, { method: "HEAD" }); // HEAD is fast, checks existence
 
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-          const contentType = response.headers.get("Content-Type");
-          const buffer = await response.arrayBuffer();
-          const base64 = Buffer.from(buffer).toString("base64");
-
-          return {
-            name: key,
-            image: `data:${contentType};base64,${base64}`,
-          };
+          return { name: key, url: imageURL };
         } catch (err: any) {
-          console.error(
-            `❌ Error fetching image ${img.Key || img}:`,
-            err.message
-          );
-          return null; // skip failed image
+          console.error(`❌ Image missing: ${img.Key || img}`, err.message);
+          return null;
         }
       })
     );
