@@ -26,35 +26,25 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       demandId
         ? prisma.demands.findUnique({ where: { id: demandId } })
         : Promise.resolve(null),
-      prisma.bidRoom.findUnique({
-        where: {
-          key: room.key,
-        },
-      }),
+      prisma.bidRoom.findUnique({ where: { key: room.key } }),
     ]);
 
-    if (!user) {
-      response.status = 404;
-      response.message = `User that requested the bid room does not exist.`;
-      return response;
-    }
-    if (!postUser) {
-      response.status = 404;
-      response.message = `Post author does not exist.`;
-      return response;
-    }
-    if (!animal) {
-      response.status = 404;
-      response.message = `Animal does not exist.`;
-      return response;
-    }
-    if (demandId) {
-      if (!demand) {
-        response.status = 404;
-        response.message = `Demand does not exist.`;
-        return response;
-      }
-    }
+    if (!user)
+      return {
+        status: 404,
+        message: "User that requested the bid room does not exist.",
+        data: null,
+      };
+    if (!postUser)
+      return {
+        status: 404,
+        message: "Post author does not exist.",
+        data: null,
+      };
+    if (!animal)
+      return { status: 404, message: "Animal does not exist.", data: null };
+    if (demandId && !demand)
+      return { status: 404, message: "Demand does not exist.", data: null };
 
     if (!isExists) {
       let newRoom: any = await prisma.bidRoom.create({
@@ -72,13 +62,13 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
         },
       });
 
-      if (!newRoom) {
-        response.status = 500;
-        response.message = "Failed to create bid room.";
-        return response;
-      }
+      if (!newRoom)
+        return {
+          status: 500,
+          message: "Failed to create bid room.",
+          data: null,
+        };
 
-      // AUTHOR OFFER
       await prisma.bids.create({
         data: {
           price: calculatePricing({
@@ -94,7 +84,6 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       });
 
       if (!demandId) {
-        // FOR DEMANDS USER FIRST OFFER
         await prisma.bids.create({
           data: {
             price: room.offer ?? calculatePricing(animal).price,
@@ -107,20 +96,16 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       }
 
       isExists = newRoom;
-      newRoom = null;
     }
 
     const allExceptThis: any = isExists?.activeUsers.filter(
-      (user) => user !== userId
+      (u) => u !== userId
     );
     const newUsers = [...allExceptThis, userId];
+
     let updated: any = await prisma.bidRoom.update({
-      where: {
-        id: isExists?.id,
-      },
-      data: {
-        activeUsers: newUsers,
-      },
+      where: { id: isExists?.id },
+      data: { activeUsers: newUsers },
       include: {
         animal: true,
         bids: {
@@ -136,9 +121,7 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
               },
             },
           },
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: { createdAt: "desc" },
         },
         user: {
           select: {
@@ -150,47 +133,33 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           },
         },
         author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
+          select: { id: true, name: true, connectionIds: true },
         },
       },
     });
 
-    let contact: any = await actions.server.user.contacts.list(
-      updated.authorId,
-      updated.userId
-    );
-    if (contact.status === 200) {
-      contact = contact.data;
-    } else {
-      contact = null;
-    }
+    // Parallel fetch for contact and images
+    const [contactRes, animalImages] = await Promise.all([
+      actions.server.user.contacts.list(updated.authorId, updated.userId),
+      actions.server.images.fetchImages(updated.animal.images || []),
+    ]);
 
-    const images = await actions.server.images.fetchImages(
-      updated.animal.images
-    );
+    const contact = contactRes.status === 200 ? contactRes.data : null;
 
     updated = {
       ...updated,
-      contact: contact,
-      animal: {
-        ...updated.animal,
-        images: images,
-      },
+      contact,
+      animal: { ...updated.animal, images: animalImages },
     };
 
-    response.status = 200;
-    response.message = "Bid room created successfully.";
-    response.data = updated;
-    return response;
+    return {
+      status: 200,
+      message: "Bid room created successfully.",
+      data: updated,
+    };
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return { status: 500, message: error.message, data: null };
   }
 }
 async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
@@ -367,7 +336,8 @@ async function closeDeal(room: any, userId: string, bid: any) {
       }
     }
 
-    let theRoom = await actions.server.bidRoom.list(room.id, "id");
+    let theRoom: any = await actions.server.bidRoom.list(room.id, "id");
+    if (theRoom.status !== 200) return theRoom;
     theRoom = theRoom.data;
 
     response.status = 200;
@@ -392,19 +362,11 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
     data: null,
   } as any;
 
-  let extraClause = {};
-  if (bidLimit) {
-    extraClause = {
-      ...extraClause,
-      take: bidLimit,
-    };
-  }
-
   try {
+    const extraClause = bidLimit ? { take: bidLimit } : {};
+
     let rooms: any = await prisma.bidRoom.findFirst({
-      where: {
-        [key]: value,
-      },
+      where: { [key]: value },
       include: {
         animal: true,
         user: {
@@ -417,11 +379,7 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
           },
         },
         author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
+          select: { id: true, name: true, connectionIds: true },
         },
         bids: {
           ...extraClause,
@@ -437,47 +395,40 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
             },
             BidRoom: true,
           },
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: { createdAt: "desc" },
         },
       },
     });
 
-    let contact: any = await actions.server.user.contacts.list(
-      rooms.authorId,
-      rooms.userId
-    );
-    if (contact.status === 200) {
-      contact = contact.data;
-    } else {
-      contact = null;
+    if (!rooms) {
+      return { status: 404, message: "Bid room not found", data: null };
     }
 
-    const images = await actions.server.images.fetchImages(
-      rooms?.animal?.images
-    );
+    // Contact & images ko parallel fetch karna
+    const [contactRes, animalImages] = await Promise.all([
+      actions.server.user.contacts.list(rooms.authorId, rooms.userId),
+      actions.server.images.fetchImages(rooms?.animal?.images || []),
+    ]);
+
+    const contact = contactRes.status === 200 ? contactRes.data : null;
 
     rooms = {
       ...rooms,
-      contact: contact,
-      animal: {
-        ...rooms.animal,
-        images,
-      },
+      contact,
+      animal: { ...rooms.animal, images: animalImages },
     };
 
-    response.status = 200;
-    response.message = "Bid rooms listed successfully.";
-    response.data = rooms;
-    return response;
+    return {
+      status: 200,
+      message: "Bid rooms listed successfully.",
+      data: rooms,
+    };
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return { status: 500, message: error.message, data: null };
   }
 }
+
 async function listByUser(
   userId: string,
   animalId?: any,
@@ -687,7 +638,7 @@ async function leaveBidRoom(room: RoomType, userId: string) {
 
     const newUsers = existingRoom.activeUsers.filter((user) => user !== userId);
 
-    let updated = await prisma.bidRoom.update({
+    let updated: any = await prisma.bidRoom.update({
       where: {
         id: existingRoom.id,
       },
