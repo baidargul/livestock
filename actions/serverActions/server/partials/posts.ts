@@ -8,53 +8,51 @@ async function listAll(value?: string, key?: string) {
     message: "Internal Server Error",
     data: null as any,
   };
+
   try {
-    let all: any;
-    if (value && key) {
-      all = await prisma.animal.findMany({
-        where: {
-          [key]: value,
-        },
-        include: {
-          user: {
-            omit: {
-              password: true,
-              email: true,
-            },
-          },
-        },
-      });
-    } else {
-      all = await prisma.animal.findMany({
-        include: {
-          user: {
-            omit: {
-              password: true,
-              email: true,
-            },
-          },
-        },
-      });
-    }
+    const whereClause = value && key ? { [key]: value } : undefined;
 
-    let animals: any = [];
-    for (const animal of all) {
-      const images = await actions.server.images.fetchImages(animal?.images);
-      animals.push({ ...animal, images });
-    }
+    const all = await prisma.animal.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          omit: { password: true, email: true },
+        },
+      },
+    });
 
-    response.status = 200;
-    response.message = "Posts fetched successfully";
-    response.data = animals;
-    return response;
+    const isInDevelopment = process.env.NODE_ENV === "development";
+
+    // Fetch all animals' images in parallel
+    const animals = await Promise.all(
+      all.map(async (animal) => {
+        let images: any[] = [];
+
+        if (!isInDevelopment) {
+          images = await actions.server.images.fetchImages(
+            animal?.images || []
+          );
+        }
+
+        return { ...animal, images };
+      })
+    );
+
+    return {
+      status: 200,
+      message: "Posts fetched successfully",
+      data: animals,
+    };
   } catch (error: any) {
     console.log(`[SERVER ERROR] @POST LIST ALL: ${error.message}`);
-    response.status = 500;
-    response.message = error.message;
-    response.data = null;
-    return response;
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
   }
 }
+
 async function list(val: any, key: string, directReturn?: boolean) {
   const response = {
     status: 500,
