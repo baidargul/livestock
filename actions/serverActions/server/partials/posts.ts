@@ -61,66 +61,63 @@ async function list(val: any, key: string, directReturn?: boolean) {
     message: "Internal Server Error",
     data: null as any,
   };
+
   try {
-    const whereClause = {
-      [key]: val,
-    };
+    const whereClause = { [key]: val };
 
     const target: any = await prisma.animal.findFirst({
-      where: { ...whereClause },
+      where: whereClause,
       include: {
         user: {
-          omit: {
-            password: true,
-            email: true,
-          },
+          omit: { password: true, email: true },
         },
       },
     });
 
     if (!target) {
-      response.status = 400;
-      response.message = `Animal not found`;
-      response.data = null;
-      return response;
+      return { status: 400, message: "Animal not found", data: null };
     }
-    let images = [];
-    let profileImage: any = [];
-    let coverImage: any = [];
-    let animal = { ...target };
+
     const isInDevelopment = process.env.NODE_ENV === "development";
+
+    let animal = { ...target };
+    let images: any[] = [];
+    let profileImage: any[] = [];
+    let coverImage: any[] = [];
+
     if (!isInDevelopment) {
-      Promise.all([
-        (images = await actions.server.images.fetchImages(target.images)),
+      // Fetch all images in parallel
+      const [animalImages, profileImages, coverImages] = await Promise.all([
+        actions.server.images.fetchImages(target.images || []),
+        actions.server.images.fetchImages(target.user?.profileImage || []),
+        actions.server.images.fetchImages(target.user?.coverImage || []),
       ]);
-      animal = { ...target, images };
-      Promise.all([
-        (profileImage = await actions.server.images.fetchImages(
-          animal.user.profileImage
-        )),
-        (coverImage = await actions.server.images.fetchImages(
-          animal.user.coverImage
-        )),
-      ]);
+
+      images = animalImages;
+      profileImage = profileImages;
+      coverImage = coverImages;
     }
 
-    animal.user.profileImage = profileImage;
-    animal.user.coverImage = coverImage;
+    animal = {
+      ...animal,
+      images,
+      user: {
+        ...animal.user,
+        profileImage,
+        coverImage,
+      },
+    };
 
-    if (directReturn) {
-      return animal;
-    }
+    if (directReturn) return animal;
 
-    response.status = 200;
-    response.message = "Animal fetched successfully";
-    response.data = animal;
-    return response;
+    return {
+      status: 200,
+      message: "Animal fetched successfully",
+      data: animal,
+    };
   } catch (error: any) {
     console.log(`[SERVER ERROR @POST LIST]: ${error.message}`);
-    response.status = 500;
-    response.message = error.message;
-    response.data = null;
-    return response;
+    return { status: 500, message: error.message, data: null };
   }
 }
 async function removePost(id: string) {
