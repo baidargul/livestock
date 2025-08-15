@@ -86,7 +86,7 @@ async function list(val: any, key: string, directReturn?: boolean) {
     }
     let images = [];
     let profileImage: any = [];
-    let coverImage = [];
+    let coverImage: any = [];
     let animal = { ...target };
     const isInDevelopment = process.env.NODE_ENV === "development";
     if (!isInDevelopment) {

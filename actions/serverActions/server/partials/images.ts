@@ -67,43 +67,46 @@ async function fetchImages(images: any) {
     "https://pub-2af91482241043e491600e0712bb4806.r2.dev";
 
   if (isInDevelopment) {
-    console.info(`[CLOUDFLARE BYPASS]::💡 IN DEVELOPMENT MODE`);
+    console.info(
+      "[CLOUDFLARE BYPASS] 💡 Development mode — skipping image fetch"
+    );
     return [];
   }
 
-  if (!images || images.length === 0) return [];
+  if (!Array.isArray(images) || images.length === 0) return [];
 
   try {
     const results = await Promise.all(
       images.map(async (img: any) => {
-        try {
-          const key = typeof img === "string" ? img : img.Key;
-          const imageURL = `${baseUrl}/${key}`;
-          const response = await fetch(imageURL);
+        const key = typeof img === "string" ? img : img.Key;
+        if (!key) return null;
 
+        const imageURL = `${baseUrl}/${key}`;
+
+        try {
+          const response = await fetch(imageURL);
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-          const contentType = response.headers.get("Content-Type");
+          const contentType =
+            response.headers.get("Content-Type") || "image/jpeg";
           const buffer = await response.arrayBuffer();
-          const base64 = Buffer.from(buffer).toString("base64");
 
           return {
             name: key,
-            image: `data:${contentType};base64,${base64}`,
+            image: `data:${contentType};base64,${Buffer.from(buffer).toString(
+              "base64"
+            )}`,
           };
         } catch (err: any) {
-          console.error(
-            `❌ Error fetching image ${img.Key || img}:`,
-            err.message
-          );
-          return null; // skip failed image
+          console.error(`❌ Failed to fetch ${key}:`, err.message);
+          return null;
         }
       })
     );
 
-    return results.filter(Boolean); // remove nulls
+    return results.filter(Boolean);
   } catch (error: any) {
-    console.error(`@CLOUDFLARE IMAGES:`, error.message);
+    console.error("@CLOUDFLARE IMAGES:", error.message);
     return [];
   }
 }
