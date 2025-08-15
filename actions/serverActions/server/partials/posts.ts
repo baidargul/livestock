@@ -21,22 +21,60 @@ async function listAll(value?: string, key?: string) {
       },
     });
 
+    if (!all.length) {
+      return {
+        status: 200,
+        message: "No posts found",
+        data: [],
+      };
+    }
+
     const isInDevelopment = process.env.NODE_ENV === "development";
+    if (isInDevelopment) {
+      return {
+        status: 200,
+        message: "Posts fetched successfully",
+        data: all.map((animal) => ({
+          ...animal,
+          images: [],
+          user: { ...animal.user, profileImage: [], coverImage: [] },
+        })),
+      };
+    }
 
-    // Fetch all animals' images in parallel
-    const animals = await Promise.all(
-      all.map(async (animal) => {
-        let images: any[] = [];
+    // Collect all keys in one go
+    const allAnimalImages = all.flatMap((a) => a?.images || []);
+    const allProfileImages = all.flatMap((a) => a?.user?.profileImage || []);
+    const allCoverImages = all.flatMap((a) => a?.user?.coverImage || []);
 
-        if (!isInDevelopment) {
-          images = await actions.server.images.fetchImages(
-            animal?.images || []
-          );
-        }
+    // Fetch all images in parallel
+    const [animalImagesFetched, profileImagesFetched, coverImagesFetched] =
+      await Promise.all([
+        actions.server.images.fetchImages(allAnimalImages),
+        actions.server.images.fetchImages(allProfileImages),
+        actions.server.images.fetchImages(allCoverImages),
+      ]);
 
-        return { ...animal, images };
-      })
-    );
+    // Map back images to each animal
+    const animals = all.map((animal: any) => ({
+      ...animal,
+      images: animalImagesFetched.filter((img: any) =>
+        (animal?.images || []).some((orig: any) => orig.Key === img.name)
+      ),
+      user: {
+        ...animal.user,
+        profileImage: profileImagesFetched.filter((img: any) =>
+          (animal?.user?.profileImage || []).some(
+            (orig: any) => orig.Key === img.name
+          )
+        ),
+        coverImage: coverImagesFetched.filter((img: any) =>
+          (animal?.user?.coverImage || []).some(
+            (orig: any) => orig.Key === img.name
+          )
+        ),
+      },
+    }));
 
     return {
       status: 200,
