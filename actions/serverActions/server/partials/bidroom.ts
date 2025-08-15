@@ -372,7 +372,7 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
 
 async function listByUser(
   userId: string,
-  animalId?: string,
+  animalId?: string | null,
   bidLimit?: number | null
 ) {
   try {
