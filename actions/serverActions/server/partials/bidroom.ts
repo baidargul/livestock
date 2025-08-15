@@ -163,142 +163,91 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
   }
 }
 async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
-  const response = {
-    status: 500,
-    message: "Failed to close bid room",
-    data: null,
-  } as any;
-
   try {
     const existingRoom = await prisma.bidRoom.findFirst({
-      where: {
-        [key]: value,
-      },
+      where: { [key]: value },
       include: {
-        user: {
-          select: {
-            connectionIds: true,
-          },
-        },
-        author: {
-          select: {
-            connectionIds: true,
-          },
-        },
+        user: { select: { connectionIds: true } },
+        author: { select: { connectionIds: true } },
       },
     });
 
     if (!existingRoom) {
-      response.status = 404;
-      response.message = `Bid room does not exist.`;
-      return response;
+      return { status: 404, message: "Bid room does not exist.", data: null };
     }
 
-    Promise.all([
-      await prisma.bids.deleteMany({
+    // Delete bids and room in parallel (no await inside Promise.all)
+    await Promise.all([
+      prisma.bids.deleteMany({
         where: { OR: [{ bidRoomId: null }, { bidRoomId: existingRoom.id }] },
       }),
-      await prisma.bidRoom.delete({
-        where: {
-          id: existingRoom.id,
-        },
-      }),
+      prisma.bidRoom.delete({ where: { id: existingRoom.id } }),
     ]);
 
-    response.status = 200;
-    response.message = "Bid room closed successfully.";
-    response.data = existingRoom;
-    return response;
+    return {
+      status: 200,
+      message: "Bid room closed successfully.",
+      data: existingRoom,
+    };
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return { status: 500, message: error.message, data: null };
   }
 }
 async function closeDeal(room: any, userId: string, bid: any) {
-  const response = {
-    status: 500,
-    message: "Failed to close deal",
-    data: null,
-  } as any;
-
   try {
     const activeRoom = await prisma.bidRoom.findUnique({
-      where: {
-        id: room.id,
-      },
+      where: { id: room.id },
     });
-
-    if (!activeRoom) {
-      response.status = 404;
-      response.message = `Bid room does not exist.`;
-      return response;
-    }
+    if (!activeRoom)
+      return { status: 404, message: "Bid room does not exist.", data: null };
 
     if (activeRoom.closedAt || activeRoom.closedAmount) {
-      response.status = 404;
-      response.message = `Bid room has already been closed.`;
-      return response;
+      return {
+        status: 404,
+        message: "Bid room has already been closed.",
+        data: null,
+      };
     }
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!user) {
-      response.status = 404;
-      response.message = `User does not exist.`;
-      return response;
-    }
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user)
+      return { status: 404, message: "User does not exist.", data: null };
 
     if (activeRoom.userId !== userId && activeRoom.authorId !== userId) {
-      response.status = 404;
-      response.message = `You are not authorized to close this deal.`;
-      return response;
+      return {
+        status: 404,
+        message: "You are not authorized to close this deal.",
+        data: null,
+      };
     }
 
-    const selectedBid = await prisma.bids.findUnique({
-      where: {
-        id: bid.id,
-      },
-    });
+    const [selectedBid, authorLastBid] = await Promise.all([
+      prisma.bids.findUnique({ where: { id: bid.id } }),
+      prisma.bids.findFirst({
+        where: { bidRoomId: activeRoom.id, userId: activeRoom.authorId },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
 
-    if (!selectedBid) {
-      response.status = 404;
-      response.message = `Bid does not exist.`;
-      return response;
-    }
-
-    const authorLastBid = await prisma.bids.findFirst({
-      where: {
-        bidRoomId: activeRoom.id,
-        userId: activeRoom.authorId,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    if (!authorLastBid) {
-      response.status = 404;
-      response.message = `Unable to fetch author bids`;
-      return response;
-    }
+    if (!selectedBid)
+      return { status: 404, message: "Bid does not exist.", data: null };
+    if (!authorLastBid)
+      return {
+        status: 404,
+        message: "Unable to fetch author bids",
+        data: null,
+      };
 
     const bothHasSamePrice =
       Number(authorLastBid.price) === Number(selectedBid.price);
-
     const OfferAccepted = bothHasSamePrice
       ? true
       : selectedBid.userId !== activeRoom.authorId;
 
+    // Update room close details
     await prisma.bidRoom.update({
-      where: {
-        id: room.id,
-      },
+      where: { id: room.id },
       data: {
         closedAt: new Date(),
         closedAmount: selectedBid.price ?? 0,
@@ -307,14 +256,10 @@ async function closeDeal(room: any, userId: string, bid: any) {
     });
 
     if (OfferAccepted) {
-      let updatedAnimal = await prisma.animal.update({
-        where: {
-          id: room.animalId,
-        },
+      const updatedAnimal = await prisma.animal.update({
+        where: { id: room.animalId },
         data: {
-          maleQuantityAvailable: {
-            decrement: room.maleQuantityAvailable ?? 0,
-          },
+          maleQuantityAvailable: { decrement: room.maleQuantityAvailable ?? 0 },
           femaleQuantityAvailable: {
             decrement: room.femaleQuantityAvailable ?? 0,
           },
@@ -324,37 +269,33 @@ async function closeDeal(room: any, userId: string, bid: any) {
       const remainingQuantity =
         Number(updatedAnimal.maleQuantityAvailable ?? 0) +
         Number(updatedAnimal.femaleQuantityAvailable ?? 0);
+
       if (remainingQuantity <= 0) {
         await prisma.animal.update({
-          where: {
-            id: room.animalId,
-          },
-          data: {
-            sold: true,
-          },
+          where: { id: room.animalId },
+          data: { sold: true },
         });
       }
     }
 
-    let theRoom: any = await actions.server.bidRoom.list(room.id, "id");
-    if (theRoom.status !== 200) return theRoom;
-    theRoom = theRoom.data;
+    const theRoomResp = await actions.server.bidRoom.list(room.id, "id");
+    if (theRoomResp.status !== 200) return theRoomResp;
 
-    response.status = 200;
-    response.message = "Deal closed successfully.";
-    response.data = {
-      room: theRoom,
-      bid: selectedBid,
-      sold: theRoom.animal.sold,
+    return {
+      status: 200,
+      message: "Deal closed successfully.",
+      data: {
+        room: theRoomResp.data,
+        bid: selectedBid,
+        sold: theRoomResp.data.animal.sold,
+      },
     };
-    return response;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return { status: 500, message: error.message, data: null };
   }
 }
+
 async function list(value: string, key: "id" | "key", bidLimit?: number) {
   const response = {
     status: 500,
@@ -431,284 +372,26 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
 
 async function listByUser(
   userId: string,
-  animalId?: any,
+  animalId?: string,
   bidLimit?: number | null
 ) {
-  const response = {
-    status: 500,
-    message: "Failed to list bid rooms by user id",
-    data: null,
-  } as any;
-
-  let extraClause = {};
-  if (bidLimit) {
-    extraClause = {
-      ...extraClause,
-      take: bidLimit,
-    };
-  }
-
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
-    let whereClause: any = {
-      userId: userId,
-    };
-
-    if (animalId) {
-      whereClause = { ...whereClause, animalId: animalId };
-    }
-
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
-      response.status = 404;
-      response.message = `User with ID ${userId} not found`;
-      response.data = null;
-      return new Response(JSON.stringify(response));
+      return {
+        status: 404,
+        message: `User with ID ${userId} not found`,
+        data: null,
+      };
     }
 
-    let otherRooms: any = await prisma.bidRoom.findMany({
-      where: whereClause,
-      include: {
-        animal: true,
-        bids: {
-          ...extraClause,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-                province: true,
-                connectionIds: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            city: true,
-            province: true,
-            connectionIds: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const extraClause = bidLimit ? { take: bidLimit } : {};
 
-    whereClause = {
-      authorId: userId,
-    };
-
-    if (animalId) {
-      whereClause = { ...whereClause, animalId: animalId };
-    }
-
-    let myRooms: any = await prisma.bidRoom.findMany({
-      where: whereClause,
-      include: {
-        animal: true,
-        bids: {
-          ...extraClause,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-                province: true,
-                connectionIds: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            city: true,
-            province: true,
-            connectionIds: true,
-          },
-        },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            connectionIds: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    const [resolvedMyRooms, resolvedOtherRooms] = await Promise.all([
-      Promise.all(
-        myRooms.map(async (room: any) => {
-          const images = await actions.server.images.fetchImages(
-            room.animal.images
-          );
-          return {
-            ...room,
-            animal: {
-              ...room.animal,
-              images,
-            },
-          };
-        })
-      ),
-      Promise.all(
-        otherRooms.map(async (room: any) => {
-          const images = await actions.server.images.fetchImages(
-            room.animal.images
-          );
-          return {
-            ...room,
-            animal: {
-              ...room.animal,
-              images,
-            },
-          };
-        })
-      ),
-    ]);
-
-    myRooms = resolvedMyRooms;
-    otherRooms = resolvedOtherRooms;
-
-    const rooms = {
-      myRooms: myRooms,
-      otherRooms: otherRooms,
-    };
-
-    response.status = 200;
-    response.message = `${
-      Number(otherRooms.length) + Number(myRooms.length)
-    } bid rooms listed successfully.`;
-    response.data = rooms;
-    return response;
-  } catch (error: any) {
-    console.log("[SERVER ERROR]:" + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
-  }
-}
-async function leaveBidRoom(room: RoomType, userId: string) {
-  const response = {
-    status: 500,
-    message: "Failed to leave bid room",
-    data: null,
-  } as any;
-
-  try {
-    const existingRoom = await prisma.bidRoom.findUnique({
-      where: {
-        key: room.key,
-      },
-    });
-
-    if (!existingRoom) {
-      response.status = 404;
-      response.message = `Bid room does not exist.`;
-      return response;
-    }
-
-    const newUsers = existingRoom.activeUsers.filter((user) => user !== userId);
-
-    let updated: any = await prisma.bidRoom.update({
-      where: {
-        id: existingRoom.id,
-      },
-      data: {
-        activeUsers: newUsers,
-      },
-    });
-
-    updated = await actions.server.bidRoom.list(existingRoom.id, "id", 0);
-
-    response.status = 200;
-    response.message = "Bid room left successfully.";
-    response.data = updated;
-    return response;
-  } catch (error: any) {
-    console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
-  }
-}
-async function leaveAllBidRooms(userId: string) {
-  const response = {
-    status: 500,
-    message: "Failed to leave all bid rooms",
-    data: null,
-  } as any;
-
-  try {
-    const existingRooms = await prisma.bidRoom.findMany({
-      where: {
-        activeUsers: {
-          has: userId,
-        },
-      },
-    });
-
-    if (existingRooms.length === 0) {
-      response.status = 404;
-      response.message = `No bid rooms found.`;
-      return response;
-    }
-
-    for (const room of existingRooms) {
-      const newUsers = room.activeUsers.filter((user) => user !== userId);
-      await prisma.bidRoom.update({
-        where: {
-          id: room.id,
-        },
-        data: {
-          activeUsers: newUsers,
-        },
+    const commonInclude: any = {
+      animal: true,
+      bids: {
+        ...extraClause,
         include: {
-          bids: {
-            take: 5,
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  city: true,
-                  province: true,
-                  connectionIds: true,
-                },
-              },
-            },
-            orderBy: {
-              createdAt: "desc",
-            },
-          },
           user: {
             select: {
               id: true,
@@ -718,46 +401,200 @@ async function leaveAllBidRooms(userId: string) {
               connectionIds: true,
             },
           },
-          author: {
-            select: {
-              id: true,
-              name: true,
-              connectionIds: true,
-            },
-          },
         },
-      });
-    }
+        orderBy: { createdAt: "desc" },
+      },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          city: true,
+          province: true,
+          connectionIds: true,
+        },
+      },
+      author: {
+        select: {
+          id: true,
+          name: true,
+          connectionIds: true,
+        },
+      },
+    };
 
-    response.status = 200;
-    response.message = "Bid rooms left successfully.";
-    response.data = existingRooms;
-    return response;
+    // Parallel fetching
+    const [otherRooms, myRooms] = await Promise.all([
+      prisma.bidRoom.findMany({
+        where: { userId, ...(animalId && { animalId }) },
+        include: commonInclude,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.bidRoom.findMany({
+        where: { authorId: userId, ...(animalId && { animalId }) },
+        include: commonInclude,
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+    // Helper to attach images
+    const attachImages = async (rooms: any[]) =>
+      Promise.all(
+        rooms.map(async (room) => ({
+          ...room,
+          animal: {
+            ...room.animal,
+            images: await actions.server.images.fetchImages(room.animal.images),
+          },
+        }))
+      );
+
+    const [resolvedMyRooms, resolvedOtherRooms] = await Promise.all([
+      attachImages(myRooms),
+      attachImages(otherRooms),
+    ]);
+
+    const totalRooms = resolvedMyRooms.length + resolvedOtherRooms.length;
+
+    return {
+      status: 200,
+      message: `${totalRooms} bid rooms listed successfully.`,
+      data: {
+        myRooms: resolvedMyRooms,
+        otherRooms: resolvedOtherRooms,
+      },
+    };
   } catch (error: any) {
-    console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    console.log("[SERVER ERROR]:" + error.message);
+    return { status: 500, message: error.message, data: null };
   }
 }
-async function lockBidAsFinalOffer(roomId: string, userId: string) {
-  const response = {
-    status: 500,
-    message: "Failed to lock bid as final offer",
-    data: null,
-  } as any;
 
+async function leaveBidRoom(room: RoomType, userId: string) {
   try {
     const existingRoom = await prisma.bidRoom.findUnique({
-      where: {
-        id: roomId,
+      where: { key: room.key },
+    });
+
+    if (!existingRoom) {
+      return {
+        status: 404,
+        message: "Bid room does not exist.",
+        data: null,
+      };
+    }
+
+    const updatedRoom = await prisma.bidRoom.update({
+      where: { id: existingRoom.id },
+      data: {
+        activeUsers: existingRoom.activeUsers.filter((user) => user !== userId),
       },
+    });
+
+    const refreshedRoom = await actions.server.bidRoom.list(
+      updatedRoom.id,
+      "id",
+      0
+    );
+
+    return {
+      status: 200,
+      message: "Bid room left successfully.",
+      data: refreshedRoom,
+    };
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+}
+
+async function leaveAllBidRooms(userId: string) {
+  try {
+    const existingRooms = await prisma.bidRoom.findMany({
+      where: {
+        activeUsers: { has: userId },
+      },
+    });
+
+    if (!existingRooms.length) {
+      return {
+        status: 404,
+        message: "No bid rooms found.",
+        data: null,
+      };
+    }
+
+    const updatedRooms = await Promise.all(
+      existingRooms.map((room) =>
+        prisma.bidRoom.update({
+          where: { id: room.id },
+          data: {
+            activeUsers: room.activeUsers.filter((user) => user !== userId),
+          },
+          include: {
+            bids: {
+              take: 5,
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    city: true,
+                    province: true,
+                    connectionIds: true,
+                  },
+                },
+              },
+              orderBy: { createdAt: "desc" },
+            },
+            user: {
+              select: {
+                id: true,
+                name: true,
+                city: true,
+                province: true,
+                connectionIds: true,
+              },
+            },
+            author: {
+              select: {
+                id: true,
+                name: true,
+                connectionIds: true,
+              },
+            },
+          },
+        })
+      )
+    );
+
+    return {
+      status: 200,
+      message: "Bid rooms left successfully.",
+      data: updatedRooms,
+    };
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
+  }
+}
+
+async function lockBidAsFinalOffer(roomId: string, userId: string) {
+  try {
+    const existingRoom = await prisma.bidRoom.findUnique({
+      where: { id: roomId },
       include: {
         bids: {
           take: 1,
-          where: {
-            userId: userId,
-          },
+          where: { userId },
+          orderBy: { createdAt: "desc" },
           include: {
             user: {
               select: {
@@ -769,117 +606,106 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
               },
             },
           },
-          orderBy: {
-            createdAt: "desc",
-          },
         },
       },
     });
 
     if (!existingRoom) {
-      response.status = 404;
-      response.message = `You cannot lock this room`;
-      return response;
+      return {
+        status: 404,
+        message: "You cannot lock this room",
+        data: null,
+      };
     }
 
+    if (!existingRoom.bids.length) {
+      return {
+        status: 400,
+        message: "No bid found for this user in this room",
+        data: null,
+      };
+    }
+
+    const bidToLock = existingRoom.bids[0];
+
     await prisma.bids.update({
-      where: {
-        id: existingRoom.bids[0].id,
-        userId: userId,
-        bidRoomId: roomId,
-      },
+      where: { id: bidToLock.id },
       data: {
         isFinalOffer: true,
         isSeen: false,
       },
     });
 
+    // Optional: Fetch top 2 offers (could be used for extra business logic)
     const offers = await prisma.bids.findMany({
-      where: {
-        bidRoomId: roomId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+      where: { bidRoomId: roomId },
+      orderBy: { createdAt: "desc" },
       take: 2,
+      select: { id: true, price: true, userId: true },
     });
 
-    // if (offers.length > 1) {
-    //   const userOffer = offers.find((offer) => offer.userId === userId);
-    //   const otherUserOffer = offers.find((offer) => offer.userId !== userId);
-    //   if (userOffer && otherUserOffer) {
-    //     if (userOffer.price === otherUserOffer.price) {
-    //       await closeDeal(existingRoom, userId, otherUserOffer);
-    //     }
-    //   }
+    // // Example price match logic
+    // if (offers.length === 2 && offers[0].price === offers[1].price && offers[0].userId !== offers[1].userId) {
+    //   await closeDeal(existingRoom, userId, offers.find(o => o.userId !== userId)!);
     // }
 
     const room = await actions.server.bidRoom.list(roomId, "id", 5);
 
-    response.status = 200;
-    response.message = "Bid locked as final offer successfully.";
-    response.data = room;
-    return response;
+    return {
+      status: 200,
+      message: "Bid locked as final offer successfully.",
+      data: room,
+    };
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
   }
 }
+
 async function bidSeen(bidId: string) {
-  const response = {
-    status: 500,
-    message: "Failed to lock bid as final offer",
-    data: null,
-  } as any;
-
   try {
+    // Update bid and fetch user connectionIds in one go
     const bid = await prisma.bids.update({
-      where: {
-        id: bidId,
-      },
-      data: {
-        isSeen: true,
-      },
-    });
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: bid.userId ?? "",
+      where: { id: bidId },
+      data: { isSeen: true },
+      include: {
+        user: {
+          select: { connectionIds: true },
+        },
       },
     });
 
-    response.status = 200;
-    response.message = "Bid seen successfully.";
-    response.data = user?.connectionIds;
-    return response;
+    if (!bid) {
+      return {
+        status: 404,
+        message: "Bid not found",
+        data: null,
+      };
+    }
+
+    return {
+      status: 200,
+      message: "Bid seen successfully.",
+      data: bid.user?.connectionIds ?? [],
+    };
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return {
+      status: 500,
+      message: error.message,
+      data: null,
+    };
   }
 }
-async function GetCustomerContact(activeBidRoomId: string, userId: string) {
-  const response = {
-    status: 500,
-    message: "Failed to get customer contact",
-    data: null,
-  } as any;
 
+async function GetCustomerContact(activeBidRoomId: string, userId: string) {
   try {
     const activeBidRoom = await prisma.bidRoom.findUnique({
-      where: {
-        id: activeBidRoomId,
-      },
+      where: { id: activeBidRoomId },
       include: {
         user: {
           select: {
@@ -895,15 +721,11 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
     });
 
     if (!activeBidRoom) {
-      response.status = 404;
-      response.message = `Room does not exist.`;
-      return response;
+      return { status: 404, message: "Room does not exist.", data: null };
     }
 
-    if (!activeBidRoom?.user && !activeBidRoom?.user?.id) {
-      response.status = 404;
-      response.message = `User does not exist.`;
-      return response;
+    if (!activeBidRoom.user || !activeBidRoom.user.id) {
+      return { status: 404, message: "User does not exist.", data: null };
     }
 
     const isAuthor = activeBidRoom.authorId === userId;
@@ -911,51 +733,42 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
     const protocol = await actions.server.protocols.BusinessProtocols.list(
       isAuthor ? "SellerHandShakeCost" : "BuyerHandShakeCost"
     );
-    if (protocol && protocol.status === 200) {
+
+    if (protocol?.status === 200) {
       const cost = Number(protocol.data?.value ?? 0);
-      const thisUserBalance = await prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-        select: {
-          balance: true,
-        },
+
+      const thisUser = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { balance: true },
       });
-      if (Number(Number(thisUserBalance?.balance ?? 0) - cost) < 0) {
-        response.status = 302;
-        response.message = `Insufficient balance`;
-        return response;
+
+      if (Number(thisUser?.balance ?? 0) - cost < 0) {
+        return { status: 302, message: "Insufficient balance", data: null };
       }
+
       if (cost > 0) {
-        Promise.all([
-          await prisma.user.update({
-            where: {
-              id: userId,
-            },
-            data: {
-              balance: {
-                decrement: cost,
-              },
-            },
+        await Promise.all([
+          prisma.user.update({
+            where: { id: userId },
+            data: { balance: { decrement: cost } },
           }),
-          await actions.server.user.contacts.createContact(
+          actions.server.user.contacts.createContact(
             activeBidRoom.authorId,
             activeBidRoom.userId,
-            `Buyer`
+            "Buyer"
           ),
         ]);
       }
     }
 
-    response.status = 200;
-    response.message = "Customer contact fetched successfully.";
-    response.data = activeBidRoom.user;
-    return response;
+    return {
+      status: 200,
+      message: "Customer contact fetched successfully.",
+      data: activeBidRoom.user,
+    };
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
-    response.status = 500;
-    response.message = error.message;
-    return response;
+    return { status: 500, message: error.message, data: null };
   }
 }
 
