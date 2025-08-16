@@ -31,7 +31,7 @@ const page = async (props: Props) => {
     const breedObj = images[demand.type].breeds.find((b: any) => b.name.toLowerCase() === demand.breed);
     const info = breedObj?.info;
     return (
-        demand && <div className='relative w-full min-h-[100vh] flex flex-col justify-between'>
+        demand && <div className='relative w-full min-h-[100vh] flex flex-col bg-white'>
             <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                 <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
             </BackNavigator>
@@ -90,7 +90,9 @@ const page = async (props: Props) => {
                     </FulFilmentUserProtection>
                 </div>
             </div>
-            <GeneralFooter />
+            <div className='mt-auto'>
+                <GeneralFooter />
+            </div>
         </div >
     )
 }
