@@ -43,6 +43,7 @@ const SectionProductListRow = (props: Props) => {
 
     const sellerCargo = animal?.deliveryOptions.includes("SELLER_DELIVERY")
     const selfPickup = animal?.deliveryOptions.includes("SELF_PICKUP")
+
     return (
         animal && <SoldOverlay animal={animal}>
             <Link href={`/entity/${animal?.id}`} prefetch={true} className={`break-inside-avoid-column w-full shadow-sm p-2 z-0 ${user?.id === animal.userId ? "bg-white" : "bg-white"}  hover:outline-2 hover:outline-zinc-300 group h-full flex flex-col justify-between`}>
@@ -63,6 +64,7 @@ const SectionProductListRow = (props: Props) => {
                                 }
                             </div>}
                         <div className='bg-gradient-to-t from-black/50 to-transparent w-full h-[40%] absolute bottom-0 left-0'></div>
+                        {animal.userId === user?.id && <div className='absolute z-[2] text-xs top-2 left-0 p-1 px-2 bg-emerald-700 text-white rounded-r-full'>Your</div>}
                         <Image src={animal.images.length > 0 ? animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[150px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-contain' />
                     </div>
                     <div className='w-full pt-4'>
