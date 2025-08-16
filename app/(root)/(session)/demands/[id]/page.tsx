@@ -72,7 +72,7 @@ const page = async (props: Props) => {
                     </div>
                     <div>required in {demand.city}, {demand.province}.</div>
                 </div>
-                <div className=''>{demand.description}</div>
+                {demand.description && String(demand.description).length > 0 && <div className='text-xl my-2 font-serif px-2 bg-yellow-100'>{`${demand.description}`}</div>}
                 <div>Posted: {formatDate(demand.createdAt)}</div>
                 <div className='flex gap-2 items-center mt-2'>
                     {demand.averageAge > 0 && (
