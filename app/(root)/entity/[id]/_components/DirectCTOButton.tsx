@@ -96,7 +96,7 @@ const DirectCTOButton = (props: Props) => {
     }
 
     return (
-        <PostBiddingOptions directCTO directCTOAction={handleClick} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
+        currentUser && <PostBiddingOptions directCTO directCTOAction={handleClick} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
             <>
                 {!currentUser && <div title='Please login to continue' className={`w-full cursor-not-allowed ${isFetching ? 'opacity-50 pointer-events-none grayscale-100' : ''}`}>
                     <div className='w-full'>{props.children}</div>

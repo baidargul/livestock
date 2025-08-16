@@ -3,7 +3,8 @@ import prisma from "@/lib/prisma";
 async function createContact(
   authorId: string,
   userId: string,
-  remarks?: string
+  remarks?: string,
+  postId?: string
 ) {
   const response = {
     status: 500,
@@ -12,7 +13,7 @@ async function createContact(
   };
 
   try {
-    const isExists = await prisma.contactBook.findFirst({
+    let isExists = await prisma.contactBook.findFirst({
       where: {
         authorId: authorId,
         userId: userId,
@@ -29,13 +30,42 @@ async function createContact(
         },
       });
     } else {
-      await prisma.contactBook.create({
+      isExists = await prisma.contactBook.create({
         data: {
           authorId: authorId,
           userId: userId,
           remarks: remarks || "",
         },
       });
+    }
+
+    if (postId) {
+      const animal = await prisma.animal.findUnique({
+        where: {
+          id: postId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (animal) {
+        const post = await prisma.boughtPosts.findFirst({
+          where: {
+            contactId: isExists.id,
+            animalId: animal.id,
+          },
+        });
+
+        if (!post) {
+          await prisma.boughtPosts.create({
+            data: {
+              contactId: isExists.id,
+              animalId: animal.id,
+            },
+          });
+        }
+      }
     }
 
     response.status = 200;
@@ -67,6 +97,25 @@ async function listAll(userId: string) {
           select: {
             id: true,
             name: true,
+          },
+        },
+        boughtPosts: {
+          include: {
+            animal: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+                price: true,
+                type: true,
+                breed: true,
+                maleQuantityAvailable: true,
+                femaleQuantityAvailable: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
           },
         },
       },

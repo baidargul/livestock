@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
 import { formalizeText } from '@/lib/utils'
@@ -49,6 +50,32 @@ const TheContact = (props: Props) => {
                 </div>
             </div>
             <Button onClick={handleDeleteButton} className='w-full' variant='btn-secondary'>Delete Contact</Button>
+            <div className='bg-white p-1'>
+                <div className='font-bold'>Last transactions</div>
+                <div className='flex flex-col gap-2 mt-2'>
+                    {
+                        contact.boughtPosts.length > 0 && contact.boughtPosts.map((post: any, index: number) => {
+
+                            const totalQuantity = Number(post.animal.maleQuantityAvailable || 0) + Number(post.animal.femaleQuantityAvailable || 0)
+
+                            return (
+                                <Link href={`/entity/${post.animal.id}`} key={`${post.id}-${index}`} className='bg-white p-1 border-b border-zinc-300 hover:bg-emerald-50'>
+                                    <div className='flex justify-between items-center'>
+                                        <div className='text-black text-lg'>{post.animal.title}</div>
+                                        <ElapsedTimeControl date={post.createdAt} />
+                                    </div>
+                                    <div className='text-zinc-700'>{post.animal.description}</div>
+                                    <div className='flex gap-1 items-center tracking-tight'>
+                                        <div>{formalizeText(post.animal.breed)}</div>
+                                        <div>{post.animal.type}</div>
+                                        <div>x {totalQuantity}.</div>
+                                    </div>
+                                </Link>
+                            )
+                        })
+                    }
+                </div>
+            </div>
         </div>
     )
 }

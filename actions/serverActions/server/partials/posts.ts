@@ -431,18 +431,19 @@ async function GetCustomerContact(postId: string, userId: string) {
           actions.server.user.contacts.createContact(
             userId,
             isExists.userId,
-            `Seller`
+            `Seller`,
+            isExists.id
           ),
-          await prisma.animal.update({
-            where: {
-              id: isExists.id,
-            },
-            data: {
-              maleQuantityAvailable: 0,
-              femaleQuantityAvailable: 0,
-              sold: true,
-            },
-          }),
+          // await prisma.animal.update({
+          //   where: {
+          //     id: isExists.id,
+          //   },
+          //   data: {
+          //     maleQuantityAvailable: 0,
+          //     femaleQuantityAvailable: 0,
+          //     sold: true,
+          //   },
+          // }),
           await actions.server.orders.create(
             isExists.userId,
             userId,

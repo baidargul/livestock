@@ -151,7 +151,9 @@ const PostBiddingOptions = (props: Props) => {
                                     <div className='absolute -bottom-5 text-zinc-600 text-xs text-nowrap'>Seller offer</div>
                                 </div>
                             </div>}
-                            {props.directCTO && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
+                            {props.directCTO && !props.animal.allowBidding && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
+                            {props.directCTO && props.animal.allowBidding && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The price is fixed and non-negotiable. Please confirm your preferred delivery method so we can create the order, after which we’ll share the seller’s phone number with you to complete the transaction.</div>}
+
                         </div>
                         <div className={`mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>

@@ -65,14 +65,25 @@ model User {
 }
 
 model ContactBook {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  authorId  String   @db.ObjectId // ID of the user who created the contact
-  author    User?    @relation("UserContactBook", fields: [authorId], references: [id])
-  userId    String   @db.ObjectId // ID of the user this contact belongs to
-  remarks   String? // Optional remarks for the contact
-  favourite Boolean  @default(false) // Whether this contact is a favorite
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  authorId    String        @db.ObjectId // ID of the user who created the contact
+  author      User?         @relation("UserContactBook", fields: [authorId], references: [id])
+  userId      String        @db.ObjectId // ID of the user this contact belongs to
+  remarks     String? // Optional remarks for the contact
+  favourite   Boolean       @default(false) // Whether this contact is a favorite
+  boughtPosts BoughtPosts[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model BoughtPosts {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  contactId String      @db.ObjectId
+  contact   ContactBook @relation(fields: [contactId], references: [id])
+  animalId  String      @db.ObjectId
+  animal    Animal      @relation(fields: [animalId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model Animal {
@@ -109,6 +120,7 @@ model Animal {
   rank                    Int               @default(0)
   Interactions            Interaction[]
   orders                  Orders[]
+  boughtPosts             BoughtPosts[]
 
   @@index([type, breed, price]) // Index for efficient queries
 }

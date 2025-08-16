@@ -4,7 +4,7 @@ import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import MediaViewer from '@/components/controls/MediaViewer'
 import Button from '@/components/ui/Button'
 import { formalizeText, } from '@/lib/utils'
-import { ArrowLeftCircleIcon, CandlestickChartIcon, HeartIcon, MenuIcon, ShareIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
+import { ArrowLeftCircleIcon, CandlestickChartIcon, HeartIcon, MenuIcon, PhoneIcon, ShareIcon, SquareUserIcon, Trash2Icon, TruckIcon } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 import prisma from '@/lib/prisma'
@@ -155,20 +155,17 @@ const page = async (props: Props) => {
                     {animal.priceUnit && <span className='text-base uppercase '>{`${animal.priceUnit === "per Set" ? "Whole set" : animal.priceUnit}`}</span>}
                 </div> */}
                 </div>
-                {!animal?.sold && <div className='mb-2 px-4 flex justify-center items-center w-full'>
+                {!animal?.sold && <div className='mb-2 px-4 flex flex-col gap-2 justify-center items-center w-full'>
                     {animal.allowBidding &&
                         <BidProtection animal={animal}>
-                            <Button className='w-full flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Buy Now</Button>
+                            <Button className='w-full flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Bargain</Button>
                         </BidProtection>
                     }
-                    {
-                        !animal.allowBidding &&
-                        <DirectCTOButton animal={animal}>
-                            <Button className='w-full'>
-                                Buy Now
-                            </Button>
-                        </DirectCTOButton>
-                    }
+                    <DirectCTOButton animal={animal}>
+                        <Button variant={'btn-secondary'} className='w-full flex justify-center items-center gap-2'>
+                            <Image src={images.site.coins.gold.shine} alt='coin-logo' width={100} height={100} className='w-6 h-6 object-contain pointer-events-none select-none' /> Show Number
+                        </Button>
+                    </DirectCTOButton>
                 </div>}
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />
