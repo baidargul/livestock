@@ -129,8 +129,8 @@ const PostBiddingOptions = (props: Props) => {
                             <div className='flex flex-col gap-2 mt-4'>
                                 <div className='font-semibold'>Gender Quantity</div>
                                 <div className='grid grid-cols-2 gap-2 w-full -mt-2'>
-                                    <Textbox disabled={props.directCTO ? true : Number(props.animal.maleQuantityAvailable) < 1} label='Male' type='number' onChange={(e: any) => handleChangeValue("maleQuantityAvailable", Number(e) > props.animal.maleQuantityAvailable || Number(e) < 0 ? props.animal.maleQuantityAvailable : e)} value={props.postBiddingOptions.maleQuantityAvailable} className='w-full' />
-                                    <Textbox disabled={props.directCTO ? true : Number(props.animal.femaleQuantityAvailable) < 1} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
+                                    <Textbox disabled={props.directCTO ? props.animal.priceUnit === "per Set" ? true : Number(props.animal.maleQuantityAvailable) < 1 : false} label='Male' type='number' onChange={(e: any) => handleChangeValue("maleQuantityAvailable", Number(e) > props.animal.maleQuantityAvailable || Number(e) < 0 ? props.animal.maleQuantityAvailable : e)} value={props.postBiddingOptions.maleQuantityAvailable} className='w-full' />
+                                    <Textbox disabled={props.directCTO ? props.animal.priceUnit === "per Set" ? true : Number(props.animal.femaleQuantityAvailable) < 1 : false} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
                                 </div>
                             </div>
                             <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
@@ -138,7 +138,7 @@ const PostBiddingOptions = (props: Props) => {
                                 {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${Number(Number(sellerOffer / totalQuantity).toFixed(0))} per animal.`} />}
                                 <div className='relative flex items-center group'>
                                     {!props.directCTO && <div className='absolute top-1/2 right-2 text-zinc-500 pointer-events-none group-hover:opacity-0 transition duration-600 ease-in-out'>per animal</div>}
-                                    <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type='number' value={props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
+                                    <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type={props.directCTO ? 'text' : 'number'} value={props.directCTO ? formatCurrency(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price.toFixed(0))) : props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                                 </div>
                             </div>
                             {!props.directCTO && <div className='flex justify-center items-center text-center mt-8'>
@@ -151,7 +151,8 @@ const PostBiddingOptions = (props: Props) => {
                                     <div className='absolute -bottom-5 text-zinc-600 text-xs text-nowrap'>Seller offer</div>
                                 </div>
                             </div>}
-                            {props.directCTO && !props.animal.allowBidding && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
+                            {props.directCTO && !props.animal.allowBidding && props.animal.priceUnit !== "per Set" && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Kindly confirm only your preferred mode of delivery.</div>}
+                            {props.directCTO && !props.animal.allowBidding && props.animal.priceUnit === "per Set" && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The seller has set a flat rate, meaning the price is final and not open to bargaining. Also he want's to sale these animals as a complete set which means you cannot negotiate on the quantity also, so Kindly confirm only your preferred mode of delivery.</div>}
                             {props.directCTO && props.animal.allowBidding && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The price is fixed and non-negotiable. Please confirm your preferred delivery method so we can create the order, after which we’ll share the seller’s phone number with you to complete the transaction.</div>}
 
                         </div>
