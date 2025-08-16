@@ -19,9 +19,24 @@ export const useContacts = create<any>()((set) => ({
     );
     set(prev);
   },
-  find: (userId: string) => {
+  find: (userId: string, postId?: string) => {
     const prev = useContacts.getState();
-    return prev.contacts.find((contact: any) => contact?.userId === userId);
+    const contact = prev.contacts.find(
+      (contact: any) => contact?.userId === userId
+    );
+
+    if (postId) {
+      const post = contact?.boughtPosts?.find(
+        (post: any) => post.animalId === postId
+      );
+      if (post) {
+        return contact;
+      } else {
+        return null;
+      }
+    } else {
+      return contact;
+    }
   },
   fetchContacts: async (userId: string) => {
     const response = await actions.client.user.contacts.listAll(userId);

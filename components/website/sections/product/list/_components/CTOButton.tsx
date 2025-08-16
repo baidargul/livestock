@@ -18,7 +18,7 @@ const CTOButton = (props: Props) => {
     const find = useContacts((state: any) => state.find)
 
     useEffect(() => {
-        setContact(find(props.animal?.userId))
+        setContact(find(props.animal?.userId, props.animal?.id))
     }, [contacts])
 
     if (contact && user) {

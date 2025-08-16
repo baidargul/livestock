@@ -214,11 +214,24 @@ async function deleteContact(contactId: string) {
   };
 
   try {
-    await prisma.contactBook.delete({
+    const contact = await prisma.contactBook.findUnique({
       where: {
         id: contactId,
       },
     });
+
+    if (contact) {
+      await prisma.boughtPosts.deleteMany({
+        where: {
+          contactId: contact.id,
+        },
+      });
+      await prisma.contactBook.delete({
+        where: {
+          id: contact.id,
+        },
+      });
+    }
 
     response.status = 200;
     response.message = "Contact deleted successfully";

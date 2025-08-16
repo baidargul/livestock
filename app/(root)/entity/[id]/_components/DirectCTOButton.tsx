@@ -67,7 +67,7 @@ const DirectCTOButton = (props: Props) => {
 
 
     useEffect(() => {
-        const contact = Contact.find(props.animal.userId)
+        const contact = Contact.find(props.animal.userId, props.animal.id)
         if (contact) {
             setUser(contact.user)
         } else {
