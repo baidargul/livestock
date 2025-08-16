@@ -5,20 +5,18 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ProfileMenuWrapper from './_components/ProfileMenuWrapper'
 import { useSession } from '@/hooks/useSession'
+import { useUser } from '@/socket-client/SocketWrapper'
 
 type Props = {}
 
 const UserProfileIcon = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false);
-    const [currentUser, setCurrentUser] = useState<any>(null);
-    const getUser = useSession((state: any) => state.getUser);
+    const currentUser = useUser()
+
 
     useEffect(() => {
-        const rawUser = getUser();
-        setCurrentUser(rawUser);
-        setIsMounted(true);
+        setIsMounted(true)
     }, [])
-
 
     if (!isMounted) {
         return (
