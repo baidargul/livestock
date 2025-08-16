@@ -223,7 +223,19 @@ async function closeDeal(room: any, userId: string, bid: any) {
     }
 
     const [selectedBid, authorLastBid] = await Promise.all([
-      prisma.bids.findUnique({ where: { id: bid.id } }),
+      prisma.bids.findUnique({
+        where: { id: bid.id },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              province: true,
+            },
+          },
+        },
+      }),
       prisma.bids.findFirst({
         where: { bidRoomId: activeRoom.id, userId: activeRoom.authorId },
         orderBy: { createdAt: "desc" },
@@ -256,26 +268,17 @@ async function closeDeal(room: any, userId: string, bid: any) {
     });
 
     if (OfferAccepted) {
-      const updatedAnimal = await prisma.animal.update({
-        where: { id: room.animalId },
-        data: {
-          maleQuantityAvailable: { decrement: room.maleQuantityAvailable ?? 0 },
-          femaleQuantityAvailable: {
-            decrement: room.femaleQuantityAvailable ?? 0,
-          },
-        },
-      });
-
-      const remainingQuantity =
-        Number(updatedAnimal.maleQuantityAvailable ?? 0) +
-        Number(updatedAnimal.femaleQuantityAvailable ?? 0);
-
-      if (remainingQuantity <= 0) {
-        await prisma.animal.update({
-          where: { id: room.animalId },
-          data: { sold: true },
-        });
-      }
+      const neworder = await actions.server.orders.create(
+        room.authorId,
+        room.userId,
+        room.animalId,
+        room.maleQuantityAvailable,
+        room.femaleQuantityAvailable,
+        selectedBid.price,
+        room.deliveryOptions,
+        selectedBid?.user?.province ?? "",
+        selectedBid?.user?.city ?? ""
+      );
     }
 
     const theRoomResp = await actions.server.bidRoom.list(room.id, "id");

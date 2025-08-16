@@ -11,7 +11,6 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { room, userId, bid } = data;
-
     const response = await actions.server.bidRoom.closeDeal(room, userId, bid);
     return new Response(JSON.stringify(response));
   } catch (error: any) {

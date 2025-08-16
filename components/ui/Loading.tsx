@@ -36,7 +36,7 @@ const Loading = (props: Props) => {
                     </div>
                 </div>
             </div>}
-            <div className={`${loading ? "pointer-events-none" : ""} transition-all duration-200 ease-in-out`}>
+            <div inert={loading} className={`${loading ? "pointer-events-none" : ""} transition-all duration-200 ease-in-out`}>
                 {props.children}
             </div>
         </>
