@@ -17,6 +17,7 @@ model Demands {
   // Basic Info
   type                    String
   breed                   String
+  description             String?
   averageAge              Float? // Age in years or months, adjust accordingly
   ageUnit                 String?
   averageWeight           Float? // Weight in kilograms or pounds

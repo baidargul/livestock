@@ -19,14 +19,18 @@ const TitleAndDescription = (props: Props) => {
                 <div className='text-xl font-semibold tracking-tight text-center'>{`Where you want ${formalizeText(props.animal.breed)} ${props.animal.type} to be delivered?`}</div>
                 <div>
                     <div className='flex flex-col gap-2 mt-4'>
+                        <div className='flex flex-col gap-2 my-2'>
+                            <label htmlFor="title" className='text-sm font-semibold'>Description</label>
+                            <textarea rows={5} className='w-full p-1 outline-none border border-zinc-200' id='description' placeholder={`Enter any specific details in your mind`} onChange={(e: any) => props.setAnimal({ ...props.animal, description: e })} value={props.animal?.description} />
+                        </div>
                         <div className='flex gap-2 justify-evenly items-center'>
                             <div className='flex flex-col gap-2 my-2'>
-                                <label htmlFor="title" className='text-sm font-semibold'>Province</label>
-                                <Textbox id='title' placeholder={`Punjab`} onChange={(e: any) => props.setAnimal({ ...props.animal, province: e })} value={props.animal.province} />
+                                <label htmlFor="province" className='text-sm font-semibold'>Province</label>
+                                <Textbox id='province' placeholder={`Punjab`} onChange={(e: any) => props.setAnimal({ ...props.animal, province: e })} value={props.animal.province} />
                             </div>
                             <div className='flex flex-col gap-2 my-2'>
-                                <label htmlFor="title" className='text-sm font-semibold'>District</label>
-                                <Textbox id='title' placeholder={`Multan`} onChange={(e: any) => props.setAnimal({ ...props.animal, city: e })} value={props.animal.city} />
+                                <label htmlFor="city" className='text-sm font-semibold'>District</label>
+                                <Textbox id='city' placeholder={`Multan`} onChange={(e: any) => props.setAnimal({ ...props.animal, city: e })} value={props.animal.city} />
                             </div>
                         </div>
                         <label className='p-1 text-sm text-center bg-amber-50 rounded-md border-amber-100 border tracking-tight'>⚠️ Avoid sharing phone numbers, email addresses, or other contact details, or your account might get banned.</label>
