@@ -3,7 +3,7 @@ import { actions } from '@/actions/serverActions/actions'
 import { images } from '@/consts/images'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
-import { List, PlusCircleIcon, SquareUserIcon, TrendingUpIcon, X } from 'lucide-react'
+import { List, LucideLayoutDashboard, PlusCircleIcon, SquareUserIcon, TrendingUpIcon, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -167,6 +167,19 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                     <div className=''>
                                         <div className='font-semibold tracking-wide'>Contacts</div>
                                         <div className='text-xs tracking-wide italic text-black/60'>All your saved connections.</div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                        <div className='active:scale-90 transition-all duration-200 ease-in-out cursor-pointer p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
+                            <Link href={'/orders'}>
+                                <div className='flex flex-col gap-2 items-start'>
+                                    <div>
+                                        <LucideLayoutDashboard />
+                                    </div>
+                                    <div className=''>
+                                        <div className='font-semibold tracking-wide'>Orders</div>
+                                        <div className='text-xs tracking-wide italic text-black/60'>Your orders dashboard.</div>
                                     </div>
                                 </div>
                             </Link>
