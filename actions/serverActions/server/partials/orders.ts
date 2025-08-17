@@ -204,8 +204,70 @@ async function getPurchaseOrders(userId: string, page: number, limit: number) {
   }
 }
 
+async function withdraw(userId: string, orderId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    const order = await prisma.orders.findUnique({
+      where: {
+        id: orderId,
+      },
+    });
+
+    if (!order) {
+      response.status = 400;
+      response.message = "Order not found";
+      response.data = null;
+      return response;
+    }
+
+    await prisma.$transaction([
+      prisma.orders.delete({
+        where: {
+          id: orderId,
+        },
+      }),
+      prisma.bidRoom.deleteMany({
+        where: {
+          OR: [{ userId: userId }, { authorId: userId }],
+          animalId: order.animalId,
+        },
+      }),
+    ]);
+
+    response.status = 200;
+    response.message = "Order withdrawn successfully";
+    response.data = null;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @WITHDRAW ORDER: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const orders = {
   create,
+  withdraw,
   getOrderCount,
   getPurchaseOrders,
 };

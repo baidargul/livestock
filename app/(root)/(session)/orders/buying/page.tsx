@@ -49,7 +49,7 @@ const page = (props: Props) => {
                 <div className='columns-1 sm:columns-2'>
                     {
                         orders && orders.map((order, index) => {
-                            return <PurchaseOrderRow key={index} order={order} />
+                            return <PurchaseOrderRow key={index} order={order} refresh={fetchOrders} />
                         })
                     }
                 </div>

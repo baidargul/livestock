@@ -182,6 +182,13 @@ async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
         where: { OR: [{ bidRoomId: null }, { bidRoomId: existingRoom.id }] },
       }),
       prisma.bidRoom.delete({ where: { id: existingRoom.id } }),
+      prisma.orders.deleteMany({
+        where: {
+          animalId: existingRoom.animalId,
+          userId: existingRoom.userId,
+          authorId: existingRoom.authorId,
+        },
+      }),
     ]);
 
     return {

@@ -12,7 +12,15 @@ async function getPurchaseOrders(userId: string, page: number, limit: number) {
   return response.data;
 }
 
+async function withdraw(userId: string, orderId: string) {
+  const response = await axios.get(
+    `/api/orders/withdraw?userId=${userId}&orderId=${orderId}`
+  );
+  return response.data;
+}
+
 export const orders = {
+  withdraw,
   getOrderCount,
   getPurchaseOrders,
 };
