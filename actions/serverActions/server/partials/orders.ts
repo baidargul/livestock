@@ -92,6 +92,58 @@ async function create(
   }
 }
 
+async function getOrderCount(userId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        userOrders: {
+          select: {
+            id: true,
+          },
+        },
+        authorOrders: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    response.status = 200;
+    response.message = `Found ${
+      user?.userOrders?.length + user?.authorOrders?.length
+    } orders`;
+    response.data = {
+      buying: user?.userOrders?.length,
+      selling: user?.authorOrders?.length,
+    };
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @GET ORDER COUNT: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const orders = {
   create,
+  getOrderCount,
 };
