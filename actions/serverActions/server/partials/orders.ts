@@ -143,7 +143,69 @@ async function getOrderCount(userId: string) {
   }
 }
 
+async function getPurchaseOrders(userId: string, page: number, limit: number) {
+  const response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    const [total, orders] = await Promise.all([
+      prisma.orders.count({
+        where: {
+          userId: user.id,
+        },
+      }),
+      prisma.orders.findMany({
+        where: {
+          userId: user.id,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          author: {
+            select: {
+              city: true,
+              province: true,
+              name: true,
+              phone: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+    ]);
+
+    response.status = 200;
+    response.message = `Found ${orders.length} orders`;
+    response.data = { orders, total };
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @GET PURCHASE ORDERS: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const orders = {
   create,
   getOrderCount,
+  getPurchaseOrders,
 };

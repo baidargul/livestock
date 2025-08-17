@@ -5,6 +5,14 @@ async function getOrderCount(userId: string) {
   return response.data;
 }
 
+async function getPurchaseOrders(userId: string, page: number, limit: number) {
+  const response = await axios.get(
+    `/api/orders/buying?userId=${userId}&page=${page}&limit=${limit}`
+  );
+  return response.data;
+}
+
 export const orders = {
   getOrderCount,
+  getPurchaseOrders,
 };
