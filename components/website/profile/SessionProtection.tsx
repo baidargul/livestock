@@ -1,30 +1,41 @@
 'use client'
 import { useSession } from '@/hooks/useSession'
+import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 
-type Props = {}
+type Props = {
+    hidden?: boolean
+    matchId?: string
+}
 
 const SessionProtection = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
-    const [user, setUser] = useState<any>(null)
-    const getUser = useSession((state: any) => state.getUser)
+    const user = useUser()
 
     useEffect(() => {
         if (isMounted) {
-            const rawUser = getUser()
-            setUser(rawUser)
-            window.location.replace("/home")
+            if (!user) {
+                window.location.replace("/home")
+            }
+            if (props.matchId) {
+                if (props.matchId !== user?.id) {
+                    window.location.replace("/home")
+                }
+            }
         }
-
-    }, [isMounted])
+    }, [user, isMounted])
 
     useEffect(() => {
         setIsMounted(true)
     }, [])
 
-    return (
-        <span className='font-bold tracking-wide'>{user?.name ? user.name : "man"}</span>
-    )
+    if (!props.hidden) {
+        return (
+            <span className='font-bold tracking-wide'>{user?.name ? user.name : "man"}</span>
+        )
+    } else {
+        return null
+    }
 }
 
 export default SessionProtection
