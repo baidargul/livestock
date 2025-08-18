@@ -200,7 +200,7 @@ model Orders {
   user          User     @relation("OrderUser", fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  Animal        Animal?  @relation(fields: [animalId], references: [id])
+  animal        Animal?  @relation(fields: [animalId], references: [id])
   animalId      String?  @db.ObjectId
   // Basic Info
   type          String

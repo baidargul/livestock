@@ -19,8 +19,14 @@ async function withdraw(userId: string, orderId: string) {
   return response.data;
 }
 
+async function getOrderPreview(orderId: string) {
+  const response = await axios.get(`/api/orders/preview?orderId=${orderId}`);
+  return response.data;
+}
+
 export const orders = {
   withdraw,
+  getOrderPreview,
   getOrderCount,
   getPurchaseOrders,
 };

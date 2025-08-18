@@ -16,6 +16,7 @@ type Props = {
 
 const PurchaseOrderRow = (props: Props) => {
     const [isWithdrawing, setIsWithdrawing] = useState(false)
+    const [isPreviewing, setIsPreviewing] = useState(false)
     const dialog = useDialog()
     const user = useUser()
 
@@ -37,10 +38,27 @@ const PurchaseOrderRow = (props: Props) => {
         dialog.showDialog('Withdraw Deal', <WithdrawConfirmationBox isWithdrawing={isWithdrawing} onYes={handleWithdraw} closeDialog={() => dialog.closeDialog()} order={props.order} />)
     }
 
+    const handleOrderPreview = (orderId: string) => {
+        if (!orderId || orderId.length === 0) return
+
+        const getPreview = async (orderId: string) => {
+            setIsPreviewing(true)
+            const response = await actions.client.orders.getOrderPreview(orderId)
+            if (response.status === 200) {
+
+            } else {
+                dialog.showDialog(`Unable to get order preview`, null, `Error: ${response.message}`)
+            }
+            setIsPreviewing(false)
+        }
+
+        getPreview(orderId)
+    }
+
     const totalQuantity = Number(props.order.maleQuantityAvailable || 0) + Number(props.order.femaleQuantityAvailable || 0)
 
     return (
-        <div inert={isWithdrawing} className='relative flex flex-col my-1 sm:my-0 sm:mx-1 border border-zinc-200 sm:flex-row justify-between gap-4 sm:gap-0 text-center sm:text-start items-center sm:items-start bg-white rounded p-4 shadow-sm'>
+        <div inert={isWithdrawing || isPreviewing} className='relative flex flex-col my-1 sm:my-0 sm:mx-1 border border-zinc-200 sm:flex-row justify-between gap-4 sm:gap-0 text-center sm:text-start items-center sm:items-start bg-white rounded p-4 shadow-sm'>
             {props.index && props.index > 0 && <div className='absolute left-1 top-1 text-zinc-400 pointer-events-none'>{props.index} - </div>}
             <div>
                 <div className='text-lg sm:text-md font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
@@ -53,8 +71,8 @@ const PurchaseOrderRow = (props: Props) => {
                 </div>
                 <div className='text-xl sm:text-lg font-bold'>{formatCurrency(calculatePricing(props.order).price)}</div>
             </div>
-            <div className='flex flex-col gap-1 w-full sm:w-fit'>
-                <Button variant={'btn-secondary'} className='w-full text-nowrap'>Open</Button>
+            <div className={`flex flex-col gap-1 w-full sm:w-fit ${isPreviewing || isWithdrawing ? 'pointer-events-none grayscale-100' : ''}`}>
+                <Button onClick={() => handleOrderPreview(props.order.id)} variant={'btn-secondary'} className='w-full text-nowrap'>Preview</Button>
                 <Button onClick={handleWithdrawDeal} variant={'btn-secondary'} className='w-full text-nowrap'>Withdraw order</Button>
             </div>
         </div>

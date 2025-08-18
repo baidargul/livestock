@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { actions } from "../../actions";
 
 async function create(
   authorId: string,
@@ -71,6 +72,7 @@ async function create(
       deliveryOptions: orderDeliveryOptions,
       province: deliveryProvince,
       city: deliveryCity,
+      animalId: animalId,
       authorId,
       userId,
     };
@@ -203,7 +205,6 @@ async function getPurchaseOrders(userId: string, page: number, limit: number) {
     return response;
   }
 }
-
 async function withdraw(userId: string, orderId: string) {
   let response = {
     status: 500,
@@ -265,9 +266,65 @@ async function withdraw(userId: string, orderId: string) {
   }
 }
 
+async function getOrderPreview(orderId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    let order: any = await prisma.orders.findUnique({
+      where: {
+        id: orderId,
+      },
+      include: {
+        author: {
+          select: {
+            city: true,
+            province: true,
+            name: true,
+            phone: true,
+          },
+        },
+        user: {
+          select: {
+            city: true,
+            province: true,
+            name: true,
+            phone: true,
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      response.status = 400;
+      response.message = "Order not found";
+      response.data = null;
+      return response;
+    }
+
+    const animal = await actions.server.post.list(order.animalId, "id");
+    order = { ...order, animal: animal.data };
+
+    response.status = 200;
+    response.message = "Order found";
+    response.data = order;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @GET ORDER PREVIEW: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const orders = {
   create,
   withdraw,
+  getOrderPreview,
   getOrderCount,
   getPurchaseOrders,
 };
