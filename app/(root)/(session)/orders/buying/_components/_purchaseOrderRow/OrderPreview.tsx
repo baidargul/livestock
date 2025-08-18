@@ -26,7 +26,7 @@ const OrderPreview = (props: Props) => {
                     <div className='flex gap-1 items-center -mt-1'> {props.order.maleQuantityAvailable && props.order.maleQuantityAvailable > 0 && <div>{`${props.order.maleQuantityAvailable} Male,`}</div>} {props.order.femaleQuantityAvailable && props.order.femaleQuantityAvailable > 0 && <div>{`${props.order.femaleQuantityAvailable} Female.`}</div>}</div>
                     <div className='pl-4 border-l-4 border-zinc-200'>
                         <div className='text-lg'>{props.order.animal?.title}</div>
-                        <div className='text-zinc-600 italic line-clamp-2 -mt-2'>'{props.order.animal?.description}'</div>
+                        <div className='text-zinc-600 italic line-clamp-2 -mt-1'>'{props.order.animal?.description}'</div>
                     </div>
                     <div className='flex flex-wrap justify-start items-start gap-2'>
                         {props.order.animal.images.map((item: any, index: number) => {
@@ -37,7 +37,7 @@ const OrderPreview = (props: Props) => {
                             )
                         })}
                     </div>
-                    <div className='flex flex-col justify-start gap-2 items-start w-full'>{
+                    <div className='flex flex-col justify-start gap-2 items-start w-full my-2'>{
                         props.order.deliveryOptions.map((option: any, index: number) => {
                             const Icon = String(option).toLocaleLowerCase() === "self_pickup" ? SquareUserIcon : TruckIcon
                             return (
