@@ -11,6 +11,7 @@ import React, { useState } from 'react'
 type Props = {
     order: any
     refresh: () => void
+    index?: number
 }
 
 const PurchaseOrderRow = (props: Props) => {
@@ -39,7 +40,8 @@ const PurchaseOrderRow = (props: Props) => {
     const totalQuantity = Number(props.order.maleQuantityAvailable || 0) + Number(props.order.femaleQuantityAvailable || 0)
 
     return (
-        <div inert={isWithdrawing} className='flex flex-col my-1 sm:my-0 sm:mx-1 border border-zinc-200 sm:flex-row justify-between gap-4 sm:gap-0 text-center sm:text-start items-center sm:items-start bg-white rounded p-4 shadow-sm'>
+        <div inert={isWithdrawing} className='relative flex flex-col my-1 sm:my-0 sm:mx-1 border border-zinc-200 sm:flex-row justify-between gap-4 sm:gap-0 text-center sm:text-start items-center sm:items-start bg-white rounded p-4 shadow-sm'>
+            {props.index && props.index > 0 && <div className='absolute left-1 top-1 text-zinc-400 pointer-events-none'>{props.index} - </div>}
             <div>
                 <div className='text-lg sm:text-md font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
                 <div className='text-xs text-zinc-700 -mt-2 flex gap-1 items-center'>{`${props.order.author.city}, ${props.order.author.province}`}<MoveRightIcon /> {`${formalizeText(props.order.city)}, ${formalizeText(props.order.province)}`} </div>
