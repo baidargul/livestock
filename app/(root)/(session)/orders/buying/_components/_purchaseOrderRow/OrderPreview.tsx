@@ -18,7 +18,7 @@ const OrderPreview = (props: Props) => {
     const totalQuantity = Number(props.order.maleQuantityAvailable || 0) + Number(props.order.femaleQuantityAvailable || 0)
 
     return (
-        <div className={`fixed inset-0 z-50 px-3 flex justify-center items-center`}>
+        <div className={`fixed inset-0 bg-black/40 blur-[1px] z-50 px-3 flex justify-center items-center`}>
             <div className='bg-white p-2 px-4 pb-4 rounded-md shadow-lg flex flex-col gap-2 border border-zinc-200'>
                 <div className='text-lg font-bold text-zinc-700'>Order Preview</div>
                 <div>
