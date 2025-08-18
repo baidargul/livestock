@@ -9,7 +9,7 @@ type Props = {}
 const PhoneHeaderHome = (props: Props) => {
 
     return (
-        <div className='sticky top-0 left-0 z-50 w-full bg-white'>
+        <div className='sticky top-0 left-0 z-40 w-full bg-white'>
             <div className='flex justify-between items-center w-full  pr-2'>
                 <div className='flex items-center gap-2'>
                     <SiteLogo />
