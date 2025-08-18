@@ -22,10 +22,12 @@ const OrderPreview = (props: Props) => {
             <div className='bg-white min-w-[90%] p-2 px-4 rounded-md shadow-lg flex flex-col gap-2 border border-zinc-200'>
                 <div className='text-lg font-bold text-zinc-700'>Order Preview</div>
                 <div>
-                    <div className='text-lg font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
+                    <div className='text-xl font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
                     <div className='flex gap-1 items-center -mt-1'> {props.order.maleQuantityAvailable && props.order.maleQuantityAvailable > 0 && <div>{`${props.order.maleQuantityAvailable} Male,`}</div>} {props.order.femaleQuantityAvailable && props.order.femaleQuantityAvailable > 0 && <div>{`${props.order.femaleQuantityAvailable} Female.`}</div>}</div>
-                    <div className='text-lg'>{props.order.animal?.title}</div>
-                    <div className='text-zinc-600 italic line-clamp-2'>'{props.order.animal?.description}'</div>
+                    <div className='pl-4 border-l-4 border-zinc-200'>
+                        <div className='text-lg'>{props.order.animal?.title}</div>
+                        <div className='text-zinc-600 italic line-clamp-2 -mt-2'>'{props.order.animal?.description}'</div>
+                    </div>
                     <div className='flex flex-wrap justify-start items-start gap-2'>
                         {props.order.animal.images.map((item: any, index: number) => {
                             return (
