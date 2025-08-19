@@ -164,7 +164,7 @@ const PostBiddingOptions = (props: Props) => {
                                     <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type={props.directCTO ? 'text' : 'number'} value={props.directCTO ? formatCurrency(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price.toFixed(0))) : props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                                 </div>
                             </div>
-                            {!props.directCTO && <div className='flex justify-center items-center text-center mt-8'>
+                            {!props.directCTO && <div className='flex justify-center items-center text-center mt-4 mb-5'>
                                 <div className='relative flex justify-center items-center'>
                                     <div className='border-b-4 border-zinc-700 p-2 bg-amber-50 px-4'>{formatCurrency(props.postBiddingOptions.amount * (Number(props.postBiddingOptions.maleQuantityAvailable) + Number(props.postBiddingOptions.femaleQuantityAvailable)))}</div>
                                     <div className='absolute -bottom-5 text-xs text-nowrap'>Your offer</div>
