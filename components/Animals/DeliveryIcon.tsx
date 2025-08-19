@@ -8,6 +8,7 @@ type Props = {
     size?: number
     animal?: any
     description?: boolean
+    className?: string
 }
 
 const DeliveryIcon = (props: Props) => {
@@ -43,7 +44,7 @@ const DeliveryIcon = (props: Props) => {
 
         return (
             <div className='flex gap-4 items-center'>
-                <PiFireTruckDuotone size={props.size ?? 20} title='Seller Delivery' />
+                <PiFireTruckDuotone size={props.size ?? 20} title='Seller Delivery' className={props.className} />
                 {props.description && <div>
                     {description === "Buyer" && <div>Seller can deliver it inside the city or cargo to you.</div>}
                     {description === "Seller" && <div>You will deliver it inside the city or cargo.</div>}

@@ -105,6 +105,7 @@ model Animal {
   // Commercial Info
   price                   Float
   priceUnit               String?
+  cargoPrice              Float?            @default(0)
   maleQuantityAvailable   Int?
   femaleQuantityAvailable Int?
   city                    String

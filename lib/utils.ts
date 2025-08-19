@@ -49,6 +49,10 @@ export function calculatePricing(animal: Animal) {
     priceString = `Fixed price · ${formatCurrency(totalPrice)}`;
   }
 
+  if (animal.deliveryOptions.includes("SELLER_DELIVERY")) {
+    totalPrice = Number(totalPrice) + Number(animal.cargoPrice ?? 0);
+  }
+
   return {
     price: Math.round(totalPrice * 100) / 100, // Ensure 2 decimal places
     text: priceString,

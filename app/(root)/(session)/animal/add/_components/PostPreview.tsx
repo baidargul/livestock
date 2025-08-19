@@ -1,4 +1,5 @@
 import { actions } from '@/actions/serverActions/actions'
+import DeliveryIcon from '@/components/Animals/DeliveryIcon'
 import Button from '@/components/ui/Button'
 import { useLoader } from '@/hooks/useLoader'
 import { useSession } from '@/hooks/useSession'
@@ -63,6 +64,8 @@ const PostPreview = (props: Props) => {
     }
 
     const totalQuantity = checkQuantity()
+    let totalAmount = Number(props.animal.price * (props.animal.priceUnit === "per Kg" ? Number(totalQuantity * props.animal.averageWeight) : props.animal.priceUnit === "per Set" ? 1 : checkQuantity()))
+    totalAmount = Number(totalAmount) + Number(props.animal.cargoPrice)
     return (
         <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
             <div className='w-full'>
@@ -97,6 +100,7 @@ const PostPreview = (props: Props) => {
                             {totalQuantity > 1 && <div><label className='font-medium text-xl text-emerald-700'>{totalQuantity} {props.animal.type}</label> in total.</div>}
                             <div className='flex gap-1 items-center'><WeightIcon size={20} className='text-emerald-700' />Average weight: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</label></div>
                             <div className='flex gap-1 items-center'><CalendarIcon size={20} className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>
+                            {props.animal.deliveryOptions?.length > 0 && props.animal.deliveryOptions.includes("SELLER_DELIVERY") && <div className='flex gap-1 items-center'><DeliveryIcon size={20} icon='SELLER_DELIVERY' className='text-emerald-700' />Average age: <label className='font-medium text-xl text-emerald-700'>{props.animal.averageAge} {props.animal.ageUnit}</label></div>}
                             <div>{
                                 props.animal?.deliveryOptions?.map((option: any) => {
                                     return (
@@ -104,7 +108,7 @@ const PostPreview = (props: Props) => {
                                     )
                                 })
                             }</div>
-                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(Number(props.animal.price * (props.animal.priceUnit === "per Kg" ? Number(totalQuantity * props.animal.averageWeight) : props.animal.priceUnit === "per Set" ? 1 : checkQuantity())))}</div>
+                            <div className='w-full font-sans text-right text-3xl text-emerald-700 font-semibold tracking-wide'>{formatCurrency(totalAmount)}</div>
                         </div>}
                     </div>
                 </div>

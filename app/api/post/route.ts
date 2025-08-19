@@ -68,6 +68,9 @@ export async function POST(req: NextRequest) {
       maleQuantityAvailable: Number(data.maleQuantityAvailable) ?? 0,
       femaleQuantityAvailable: Number(data.femaleQuantityAvailable) ?? 0,
       price: Number(data.price) ?? 0,
+      cargoPrice: data.deliveryOptions?.includes("SELLER_DELIVERY")
+        ? Number(data.cargoPrice ?? 0)
+        : 0,
       userId: postUser?.id,
     };
 
