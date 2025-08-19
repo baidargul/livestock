@@ -20,7 +20,7 @@ const OrderPreview = (props: Props) => {
     return (
         <>
             <div className={`fixed inset-0 z-50 px-3 flex justify-center items-center`}>
-                <div className='bg-white p-2 px-4 pb-4 rounded-md shadow-lg flex flex-col gap-2 border border-zinc-200'>
+                <div className='fixed z-50 mx-4 bg-white p-2 px-4 pb-4 rounded-md shadow-lg flex flex-col gap-2 border border-zinc-200'>
                     <div className='text-lg font-bold text-zinc-700'>Order Preview</div>
                     <div>
                         <div className='text-xl font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
@@ -68,6 +68,7 @@ const OrderPreview = (props: Props) => {
                         <Button onClick={props.togglePreview} className='w-full' variant='btn-secondary'>Close</Button>
                     </div>
                 </div>
+                <div className='fixed inset-0 bg-black/40 blur-[1px]'></div>
             </div>
         </>
     )
