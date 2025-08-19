@@ -163,6 +163,8 @@ model BidRoom {
   deliveryOptions         DeliveryOptions[]
   maleQuantityAvailable   Int
   femaleQuantityAvailable Int
+  city                    String?
+  province                String?
   closedAt                DateTime?
   closedAmount            Float?
   userOfferAccepted       Boolean?          @default(false)

@@ -59,6 +59,12 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           deliveryOptions: room.deliveryOptions,
           activeUsers: [userId],
           demandId: demandId ?? null,
+          city: room.deliveryOptions.includes("SELLER_DELIVERY")
+            ? room.city
+            : "",
+          province: room.deliveryOptions.includes("SELLER_DELIVERY")
+            ? room.province
+            : "",
         },
       });
 

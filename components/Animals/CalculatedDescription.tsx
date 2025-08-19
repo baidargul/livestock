@@ -1,5 +1,5 @@
 'use client'
-import { formalizeText, formatCurrency } from '@/lib/utils'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import { Animal } from '@prisma/client'
 import { InfoIcon } from 'lucide-react'
 import React, { useState } from 'react'
@@ -143,9 +143,9 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2 pr-4 font-medium">Pricing</td>
                             <td className="py-2">
                                 <div className="flex flex-col">
-                                    <span>{formatCurrency(animal.price ?? 0)} /piece</span>
+                                    <span>{formatCurrency(animal.price / quantity)} /piece</span>
                                     <span className="font-semibold">
-                                        Total: {formatCurrency(animal.price * quantity)}
+                                        Total: {formatCurrency(calculatePricing(animal).price)}
                                     </span>
                                 </div>
                             </td>
@@ -216,7 +216,7 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                                 <div className="flex flex-col">
                                     <span>{formatCurrency(animal.price ?? 0)} /piece</span>
                                     <span className="font-semibold">
-                                        Total: {formatCurrency(animal.price * quantity)}
+                                        Total: {formatCurrency(calculatePricing(animal).price)}
                                     </span>
                                 </div>
                             </td>

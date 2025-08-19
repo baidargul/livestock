@@ -27,12 +27,16 @@ const BidProtection = (props: Props) => {
         femaleQuantityAvailable: number,
         amount: number,
         posted: boolean
+        province: string,
+        city: string
     }>({
         deliveryOptions: [],
         maleQuantityAvailable: 0,
         femaleQuantityAvailable: 0,
         amount: 0,
         posted: false
+        , province: ""
+        , city: ""
     })
     const rooms = useRooms((state: any) => state.rooms)
     const find = useRooms((state: any) => state.find)

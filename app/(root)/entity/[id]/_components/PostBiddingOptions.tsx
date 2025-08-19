@@ -19,9 +19,11 @@ type Props = {
         maleQuantityAvailable: number,
         femaleQuantityAvailable: number,
         amount: number,
-        posted: boolean
+        posted: boolean,
+        province: string,
+        city: string,
     },
-    setPostBiddingOptions: React.Dispatch<React.SetStateAction<{ deliveryOptions: string[], maleQuantityAvailable: number, femaleQuantityAvailable: number, amount: number, posted: boolean }>>
+    setPostBiddingOptions: React.Dispatch<React.SetStateAction<{ deliveryOptions: string[], maleQuantityAvailable: number, femaleQuantityAvailable: number, amount: number, posted: boolean, province: string, city: string }>>
     children: React.ReactNode
     staticStyle?: boolean
     user: any
@@ -84,7 +86,7 @@ const PostBiddingOptions = (props: Props) => {
             }
         } else {
             if (socket && props.user) {
-                const room = {
+                let room: any = {
                     animalId: props.animal.id,
                     authorId: props.animal.userId,
                     userId: props.user.id,
@@ -93,6 +95,14 @@ const PostBiddingOptions = (props: Props) => {
                     deliveryOptions: props.postBiddingOptions.deliveryOptions,
                     maleQuantityAvailable: Number(props.postBiddingOptions.maleQuantityAvailable) ?? 0,
                     femaleQuantityAvailable: Number(props.postBiddingOptions.femaleQuantityAvailable) ?? 0
+                }
+
+                if (props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY")) {
+                    room = {
+                        ...room,
+                        province: props.postBiddingOptions.province || props.user.province || '',
+                        city: props.postBiddingOptions.city || props.user.city || '',
+                    }
                 }
 
 
@@ -114,9 +124,9 @@ const PostBiddingOptions = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
+            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'} overflow-y-auto select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
                 <div className='w-full h-full'>
-                    <div className='-mt-2 flex flex-col gap-2 w-full h-full'>
+                    <div className='-mt-2 flex flex-col gap-2 w-full'>
                         <div className='w-full h-full'>
                             <div className='text-emerald-700 font-semibold text-xl tracking-wide'>{props.directCTO ? `Flat Rate Purchase | No Bargain` : `Customize your offer`}</div>
                             <div className='flex flex-col gap-2'>
@@ -125,6 +135,19 @@ const PostBiddingOptions = (props: Props) => {
                                     {props.animal.deliveryOptions.includes("SELF_PICKUP") && <Button onClick={() => addDeliveryOption("SELF_PICKUP")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELF_PICKUP") ? "btn-primary" : "btn-secondary"}> <DeliveryIcon icon='SELF_PICKUP' /> I'll Pickup</Button>}
                                     {props.animal.deliveryOptions.includes("SELLER_DELIVERY") && <Button onClick={() => addDeliveryOption("SELLER_DELIVERY")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELLER_DELIVERY") ? "btn-primary" : "btn-secondary"} ><DeliveryIcon icon='SELLER_DELIVERY' /> Cargo</Button>}
                                 </div>
+                                {props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") && <div className='p-2 bg-emerald-100 relative mt-2'>
+                                    <label className='tracking-tight p-1 px-2 bg-emerald-100 rounded absolute -top-2 left-0 text-xs'>Location where you want this animal to be delivered</label>
+                                    <div className='flex gap-2 justify-between items-center'>
+                                        <div className='flex flex-col gap-2 my-2'>
+                                            <label htmlFor="State" className='text-sm font-semibold'>Province</label>
+                                            <Textbox className='bg-white' id='State' placeholder={`Punjab`} onChange={(e: any) => props.setPostBiddingOptions({ ...props.postBiddingOptions, province: e })} value={props.postBiddingOptions.province} />
+                                        </div>
+                                        <div className='flex flex-col gap-2 my-2'>
+                                            <label htmlFor="City" className='text-sm font-semibold'>District</label>
+                                            <Textbox className='bg-white' id='City' placeholder={`Multan`} onChange={(e: any) => props.setPostBiddingOptions({ ...props.postBiddingOptions, city: e })} value={props.postBiddingOptions.city} />
+                                        </div>
+                                    </div>
+                                </div>}
                             </div>
                             <div className='flex flex-col gap-2 mt-4'>
                                 <div className='font-semibold'>Gender Quantity</div>
@@ -156,7 +179,7 @@ const PostBiddingOptions = (props: Props) => {
                             {props.directCTO && props.animal.allowBidding && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The price is fixed and non-negotiable. Please confirm your preferred delivery method so we can create the order, after which we’ll share the seller’s phone number with you to complete the transaction.</div>}
 
                         </div>
-                        <div className={`mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
+                        <div className={`${props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") ? "pb-10" : "pb-10"}   mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
                             <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0 || Number(props.postBiddingOptions.amount) < 1} onClick={handlePostOffer} className='w-full'>Purchase</Button>
                         </div>
