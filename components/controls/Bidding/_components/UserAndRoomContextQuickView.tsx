@@ -35,7 +35,7 @@ const UserAndRoomContextQuickView = (props: Props) => {
                     </div>
                     <XIcon onClick={() => handleToggle(false)} className='cursor-pointer' />
                 </div>
-                <div className='text-xs tracking-tight'>{formalizeText(props.room?.user?.city)}, {formalizeText(props.room?.user?.province)}</div>
+                <div className='text-xs tracking-tight'>{props.room.city ? `${formalizeText(props.room.city)}, ${formalizeText(props.room.province)}` : `${formalizeText(props.room.user.city)}, ${formalizeText(props.room.user.province)}`}</div>
                 <div className='mt-4'>
                     <div className='font-semibold'>Demands</div>
                     <div className='text-xs'>
