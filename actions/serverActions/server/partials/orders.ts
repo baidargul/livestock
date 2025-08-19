@@ -186,6 +186,20 @@ async function getPurchaseOrders(userId: string, page: number, limit: number) {
               phone: true,
             },
           },
+          user: {
+            select: {
+              city: true,
+              province: true,
+              name: true,
+              phone: true,
+            },
+          },
+          animal: {
+            select: {
+              city: true,
+              province: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

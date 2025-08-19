@@ -77,7 +77,7 @@ const PurchaseOrderRow = (props: Props) => {
                 {props.index && props.index > 0 && <div className='absolute left-1 top-1 text-zinc-400 pointer-events-none'>{props.index} - </div>}
                 <div>
                     <div className='text-lg sm:text-md font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
-                    <div className='text-xs text-zinc-700 -mt-2 flex gap-1 items-center'>{`${props.order.author.city}, ${props.order.author.province}`}<MoveRightIcon /> {`${formalizeText(props.order.city)}, ${formalizeText(props.order.province)}`} </div>
+                    <div className='text-xs text-zinc-700 -mt-2 flex gap-1 items-center'>{`${props.order.animal.city}, ${props.order.animal.province}`}<MoveRightIcon /> {`${formalizeText(props.order.city)}, ${formalizeText(props.order.province)}`} </div>
                     <div className='text-xs text-zinc-500 -mt-1 flex gap-1 items-center justify-center text-center'>
                         {
                             `${new Date(props.order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })},`
@@ -87,7 +87,7 @@ const PurchaseOrderRow = (props: Props) => {
                     <div className='text-xl sm:text-lg font-bold'>{formatCurrency(calculatePricing(props.order).price)}</div>
                 </div>
                 <div className={`flex flex-col gap-1 w-full sm:w-fit ${isPreviewing || isWithdrawing ? 'pointer-events-none grayscale-100' : ''}`}>
-                    <Button onClick={() => handleOrderPreview(props.order.id)} variant={'btn-secondary'} className='w-full text-nowrap'>Preview</Button>
+                    <Button onClick={() => handleOrderPreview(props.order.id)} variant={'btn-secondary'} className='w-full text-nowrap'>{isPreviewing ? "Previewing..." : "Preview"} </Button>
                     <Button onClick={handleWithdrawDeal} variant={'btn-secondary'} className='w-full text-nowrap'>Withdraw order</Button>
                 </div>
             </div>
