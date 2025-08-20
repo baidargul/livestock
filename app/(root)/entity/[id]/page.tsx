@@ -120,7 +120,7 @@ const page = async (props: Props) => {
                         <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding is active for this animal.</div>
                     </Marquee>}
                     <h2 className='text-2xl mb-1 font-bold text-gray-800'>{animal.title}</h2>
-                    <p className='text-sm p-1 text-zinc-800 tracking-tight bg-slate-50 h-auto min-h-[100px]'>'{animal.description}'</p>
+                    <p className='text-sm p-1 text-zinc-800 tracking-tight bg-amber-50 h-auto min-h-[100px]'>'{animal.description}'</p>
                     <ElapsedTimeControl date={animal.createdAt} />
                     <div className='border-t-2 border-zinc-300 my-2 p-1 w-full flex justify-end items-center'>
                         <div className='text-xs font-bold tracking-wide'>{formalizeText(animal.city)}, {formalizeText(animal.province)}</div>
