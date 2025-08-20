@@ -54,7 +54,7 @@ const SelectBreed = (props: Props) => {
         <div className='w-full min-h-[93dvh] flex flex-col items-center gap-4 p-4'>
             <div className='flex flex-col gap-4 w-full'>
                 <div className='text-xl font-semibold tracking-tight text-center'>{`Select ${props.animal.type} breed`}</div>
-                <div className='grid grid-cols-2 sm:grid-cols-3 md:gap-2 w-full h-full max-h-[60vh] overflow-y-auto'>
+                <div className='grid grid-cols-2 sm:grid-cols-3 md:gap-2 w-full h-full max-h-[50vh] overflow-y-auto'>
                     {
                         !isCustom && images[props.animal?.type].breeds.map((animal: any, index: number) => {
                             return (
