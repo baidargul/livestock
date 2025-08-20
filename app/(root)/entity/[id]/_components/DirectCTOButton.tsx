@@ -35,12 +35,16 @@ const DirectCTOButton = (props: Props) => {
         femaleQuantityAvailable: number,
         amount: number,
         posted: boolean
+        city: string,
+        province: string
     }>({
         deliveryOptions: [],
         maleQuantityAvailable: 0,
         femaleQuantityAvailable: 0,
         amount: 0,
         posted: false
+        , city: '',
+        province: ''
     })
 
 
