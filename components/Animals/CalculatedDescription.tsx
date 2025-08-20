@@ -83,7 +83,7 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                                         <div>{formatCurrency(animal.price ?? 0)}/{animal.priceUnit?.toLowerCase()} or</div>
                                         <div>{formatCurrency(Number(animal.price * Number(animal.averageWeight ?? 0)))}/per piece</div>
                                     </div>
-                                    {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
+                                    {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span className='mt-2'>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
                                     <span className="font-semibold">
                                         {formatCurrency(calculatePricing(animal).price)}
                                     </span>
@@ -157,7 +157,7 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2">
                                 <div className="flex flex-col">
                                     <span>{formatCurrency(animal.price / quantity)} /piece</span>
-                                    {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
+                                    {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span className='mt-4'>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
                                     <span className="font-semibold">
                                         Total: {formatCurrency(calculatePricing(animal).price)}
                                     </span>
@@ -230,7 +230,7 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2">
                                 <div className="flex flex-col">
                                     <span>{formatCurrency(animal.price ?? 0)} /piece</span>
-                                    {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
+                                    {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span className='mt-4'>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
                                     <span className="font-semibold">
                                         Total: {formatCurrency(calculatePricing(animal).price)}
                                     </span>

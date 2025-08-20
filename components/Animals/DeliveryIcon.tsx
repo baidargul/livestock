@@ -32,10 +32,10 @@ const DeliveryIcon = (props: Props) => {
     if (props.icon === "SELF_PICKUP") {
 
         return (
-            <div className='flex gap-4 items-center'>
+            <div className={props.description ? "grid grid-cols-[1fr_auto] gap-4 w-full" : ""}>
                 <PiHandshakeDuotone size={props.size ?? 20} title='Self Pickup' />
                 {props.description && <div>
-                    {description === "Buyer" && <div>You're welcome to visit and pick it up yourself.</div>}
+                    {description === "Buyer" && <div><span className='font-bold'>Self Pickup</span> - Pick it up yourself from the animal's location.</div>}
                     {description === "Seller" && <div>Buyer can visit and pick it up.</div>}
                 </div>}
             </div>
@@ -43,10 +43,10 @@ const DeliveryIcon = (props: Props) => {
     } else if (props.icon === "SELLER_DELIVERY") {
 
         return (
-            <div className='flex gap-4 items-center'>
+            <div className={props.description ? "grid grid-cols-[1fr_auto] gap-4 w-full" : ""}>
                 <PiFireTruckDuotone size={props.size ?? 20} title='Seller Delivery' className={props.className} />
                 {props.description && <div>
-                    {description === "Buyer" && <div>Seller can deliver it inside the city or cargo to you.</div>}
+                    {description === "Buyer" && <div><span className='font-bold'>Cargo</span> - For delivering animals to other districts/tehsils through the bus stand/station of that district.</div>}
                     {description === "Seller" && <div>You will deliver it inside the city or cargo.</div>}
                 </div>}
             </div>
