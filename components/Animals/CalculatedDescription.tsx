@@ -62,7 +62,16 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                                             Avg. age: {animal.averageAge} {animal.ageUnit.toLowerCase()}
                                         </div>
                                     )}
+
                                 </div>}
+                                <div className='flex gap-1 items-center'>
+                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
+                                        <div className="font-semibold">{animal.maleQuantityAvailable}</div>
+                                    </div>}
+                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Female:
+                                        <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
+                                    </div>}
+                                </div>
                             </td>
                         </tr>
 
@@ -70,8 +79,10 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2 pr-4 font-medium">Pricing</td>
                             <td className="py-2">
                                 <div className="flex flex-col">
-                                    <span>{formatCurrency(animal.price ?? 0)}/{animal.priceUnit?.toLowerCase()}</span>
-                                    <span>{formatCurrency(Number(animal.price * Number(animal.averageWeight ?? 0)))}/per piece</span>
+                                    <div className=''>
+                                        <div>{formatCurrency(animal.price ?? 0)}/{animal.priceUnit?.toLowerCase()} or</div>
+                                        <div>{formatCurrency(Number(animal.price * Number(animal.averageWeight ?? 0)))}/per piece</div>
+                                    </div>
                                     {animal.deliveryOptions.includes("SELLER_DELIVERY") && <span>{formatCurrency(Number(animal.cargoPrice))} Cargo</span>}
                                     <span className="font-semibold">
                                         {formatCurrency(calculatePricing(animal).price)}
@@ -124,6 +135,7 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
+                                <div>{quantity} {animal.type}.</div>
                                 {quantity > 0 && <div className="flex gap-4 flex-wrap">
                                     {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
@@ -196,6 +208,7 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                         <tr className="border-b border-gray-200">
                             <td className="py-2 pr-4 font-medium">Quantity</td>
                             <td className="py-2">
+                                <div>{quantity} {animal.type}.</div>
                                 {quantity > 0 && <div className="flex gap-4 flex-wrap">
                                     {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
