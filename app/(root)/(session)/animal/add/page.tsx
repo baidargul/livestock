@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { useLoader } from '@/hooks/useLoader'
 import ProgressCells from '@/components/ui/ProgressCells'
 import { useUser } from '@/socket-client/SocketWrapper'
+import { formalizeText } from '@/lib/utils'
 
 type Props = {}
 
@@ -68,7 +69,7 @@ const page = (props: Props) => {
 
     const autoFill = () => {
         if (user) {
-            let autoDetails = { province: user?.province, city: user?.city, }
+            let autoDetails = { province: formalizeText(user?.province ?? ""), city: formalizeText(user?.city ?? ""), }
             if (!animal.province && !animal.city) {
                 setAnimal({ ...animal, ...autoDetails, })
             } else {

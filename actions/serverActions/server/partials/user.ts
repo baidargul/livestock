@@ -80,7 +80,14 @@ async function signin(email: string, password: string) {
         email: email,
         password: password,
       },
-      select: { name: true, email: true, profileImage: true, id: true },
+      select: {
+        name: true,
+        email: true,
+        profileImage: true,
+        id: true,
+        city: true,
+        province: true,
+      },
     });
 
     if (!isExits) {
@@ -192,6 +199,8 @@ async function list(value: string, key: "id" | "email") {
         id: true,
         name: true,
         email: true,
+        city: true,
+        province: true,
         bids: true,
         profileImage: true,
         coverImage: true,
