@@ -12,6 +12,7 @@ import { useSession } from '@/hooks/useSession'
 import { useRouter } from 'next/navigation'
 import { useLoader } from '@/hooks/useLoader'
 import ProgressCells from '@/components/ui/ProgressCells'
+import { useUser } from '@/socket-client/SocketWrapper'
 
 type Props = {}
 
@@ -19,8 +20,7 @@ const page = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [animal, setAnimal] = useState<Animal | null>()
     const [currentScreen, setCurrentScreen] = useState(1)
-    const [user, setUser] = useState<any>(null)
-    const getuser = useSession((state: any) => state.getUser)
+    const user = useUser()
     const setLoading = useLoader((state: any) => state.setLoading)
 
     const router = useRouter()
@@ -31,7 +31,6 @@ const page = (props: Props) => {
         return () => {
             setAnimal(null)
             setCurrentScreen(1)
-            setUser(null)
         }
     }, [])
 
@@ -49,22 +48,15 @@ const page = (props: Props) => {
 
     useEffect(() => {
         if (isMounted) {
-
             setLoading(true)
-            const rawUser = getuser()
-            if (rawUser) {
-                setUser(rawUser)
-            } else {
-                setUser(null)
-            }
-            if (!rawUser) {
+            if (!user) {
                 router.push('/home')
             }
             setLoading(false)
             const rawPost = JSON.stringify(animal)
             localStorage.setItem('demand', rawPost)
         }
-    }, [currentScreen, animal])
+    }, [currentScreen, animal, user])
 
     const handleMoveNext = () => {
         setCurrentScreen((prev) => prev + 1)

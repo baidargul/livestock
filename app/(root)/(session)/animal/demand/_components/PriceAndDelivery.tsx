@@ -73,10 +73,17 @@ const PriceAndDelivery = (props: Props) => {
             setPriceUnits(["per Piece"])
             handlePriceUnit("per Piece")
         } else if (val > 1) {
-            setPriceUnits(["per Piece", `per ${formalizeText(props.animal.weightUnit ?? "Kg")}`, "per Set"])
-            if (!props.animal.priceUnit) {
-                handlePriceUnit(`per ${formalizeText(props.animal.weightUnit ?? "Kg")}`)
+            if (props.animal.weightUnit && Number(props.animal.averageWeight ?? 0) > 0) {
+                setPriceUnits(["per Piece", `per ${formalizeText(props.animal.weightUnit ?? "Kg")}`, "per Set"])
+                if (!props.animal.priceUnit) {
+                    handlePriceUnit(`per ${formalizeText(props.animal.weightUnit ?? "Kg")}`)
+                }
+            } else {
+                setPriceUnits(["per Piece", "per Set"])
             }
+        } else {
+            setPriceUnits(["per Piece"])
+            handlePriceUnit("per Piece")
         }
     }, [])
 

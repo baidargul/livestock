@@ -87,13 +87,13 @@ const SelectAnimal = (props: Props) => {
         <div className='w-full min-h-[95dvh] flex flex-col items-center p-4'>
             <div className='flex flex-col gap-4'>
                 <div className='text-xl font-semibold tracking-tight text-center'>Select the animal you want to buy</div>
-                <div className='flex flex-wrap items-center justify-center gap-4 w-full h-full max-h-[60vh] overflow-y-auto'>
+                <div className='grid grid-cols-2 sm:grid-cols-3 md:gap-2 w-full h-full max-h-[60vh] overflow-x-hidden overflow-y-auto'>
                     {
                         animals.map((animal: any) => {
                             return (
                                 <div
                                     key={animal.id}
-                                    className={`relative w-56 sm:w-[400px] h-32 transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer ${props.animal?.type && props.animal?.type === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"
+                                    className={`relative min-w-36 w-full h-32 break-inside-avoid-column transition-all duration-200 ease-in-out flex flex-col items-center justify-center border-2 border-gray-300 rounded-lg p-4 cursor-pointer  ${props.animal?.type && props.animal?.type === animal.name.toLocaleLowerCase() ? "" : "hover:bg-gray-100"
                                         }`}
                                     onClick={() => handleSelectAnimal(animal)}
                                 >

@@ -27,10 +27,10 @@ const SelectAgeGenderWeight = (props: Props) => {
 
     useEffect(() => {
         if (!props.animal.averageWeight) {
-            props.setAnimal((prev: any) => ({ ...prev, averageWeight: 0 }))
+            props.setAnimal((prev: any) => ({ ...prev, averageWeight: '' }))
         }
         if (!props.animal.averageAge) {
-            props.setAnimal((prev: any) => ({ ...prev, averageAge: 0 }))
+            props.setAnimal((prev: any) => ({ ...prev, averageAge: '' }))
         }
 
         const validated = validate()
@@ -69,14 +69,14 @@ const SelectAgeGenderWeight = (props: Props) => {
     }
 
     const handleWeightChange = (val: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, averageWeight: Number(val) < 0 ? 0 : Number(val) }))
+        props.setAnimal((prev: any) => ({ ...prev, averageWeight: String(val).length > 0 ? Number(val) : null }))
     }
     const handleAgeChange = (val: string | number) => {
-        props.setAnimal((prev: any) => ({ ...prev, averageAge: Number(val) < 0 ? 0 : Number(val) }))
+        props.setAnimal((prev: any) => ({ ...prev, averageAge: String(val).length > 0 ? Number(val) : null }))
     }
 
     const handleQuantityChange = (val: string | number, key: string) => {
-        props.setAnimal((prev: any) => ({ ...prev, [key]: Number(val) < 0 ? 0 : Number(val) }))
+        props.setAnimal((prev: any) => ({ ...prev, [key]: String(val).length > 0 ? Number(val) : null }))
     }
 
     const handleAgeUnitChange = (val: string) => {
@@ -122,24 +122,18 @@ const SelectAgeGenderWeight = (props: Props) => {
             <div className='flex flex-col gap-4'>
                 <div className='text-xl font-semibold tracking-tight text-center'>{`More about ${formalizeText(props.animal.breed)} ${props.animal.type}`}</div>
                 <div className='flex flex-col gap-4 w-full '>
-                    {/* <Radiogroup options={["Male", "Female"]} onChange={handleGenderChange} value={props.animal.gender} label='Gender' /> */}
                     <div className='flex flex-col gap-4'>
                         <div className='flex gap-4'>
-                            <Textbox label='Male quantity' type='number' labelClassName='text-nowrap' value={Number(props.animal.maleQuantityAvailable ?? null) ?? null} onChange={(val: string | number) => handleQuantityChange(val, 'maleQuantityAvailable')} />
-                            {/* <Textbox label='Mix' type='number' labelClassName='text-nowrap' value={String(props.animal.quantityAvailable) ?? 1} onChange={handleQuantityChange} /> */}
-                            <Textbox label='Female quantity' type='number' labelClassName='text-nowrap' value={Number(props.animal.femaleQuantityAvailable ?? null) ?? null} onChange={(val: string | number) => handleQuantityChange(val, 'femaleQuantityAvailable')} />
+                            <Textbox label='Male quantity' type='number' labelClassName='text-nowrap' value={props.animal.maleQuantityAvailable ?? ''} onChange={(val: string | number) => handleQuantityChange(val, 'maleQuantityAvailable')} />
+                            <Textbox label='Female quantity' type='number' labelClassName='text-nowrap' value={props.animal.femaleQuantityAvailable ?? ''} onChange={(val: string | number) => handleQuantityChange(val, 'femaleQuantityAvailable')} />
                         </div>
-                        {/* <div className={`flex flex-col gap-2`}>
-                            <Checkbox onChange={handleAllowMinimumChange} value={props.animal.isQuantityNegotiable ?? false} label='کم سے کم کتنی تعداد؟' />
-                            {props.animal.isQuantityNegotiable && props.animal.isQuantityNegotiable === true && <Textbox type='number' placeholder='Minimum quantity allowed' value={String(props.animal.minimumOrderQuantity) ?? 1} onChange={handleMinimumQuantityChange} />}
-                        </div> */}
                     </div>
                     <div className='flex items-center justify-between gap-2'>
-                        <Textbox label='Average age' type='number' value={Number(props.animal.averageAge ?? 0)} onChange={handleAgeChange} />
+                        <Textbox label='Average age' type='number' value={props.animal.averageAge ?? ''} onChange={handleAgeChange} />
                         <Selectbox label='Unit' options={["Days", "Months", "Years"]} value={props.animal.ageUnit ?? ""} className={Number(props.animal.averageAge ?? 0) > 0 ? '' : 'opacity-50 grayscale-100'} onChange={handleAgeUnitChange} />
                     </div>
                     <div className='flex items-center justify-between gap-2'>
-                        <Textbox label={`Average weight`} type='number' value={Number(props.animal.averageWeight ?? 0)} onChange={handleWeightChange} />
+                        <Textbox label={`Average weight`} type='number' value={props.animal.averageWeight ?? ''} onChange={handleWeightChange} />
                         <Selectbox label='Unit' options={["Kg", "Grams"]} value={props.animal.weightUnit ?? ""} className={Number(props.animal.averageWeight ?? 0) > 0 ? '' : 'opacity-50 grayscale-100'} onChange={handleWeightUnitChange} />
                     </div>
                 </div>
