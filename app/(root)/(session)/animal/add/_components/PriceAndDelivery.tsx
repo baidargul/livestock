@@ -150,7 +150,7 @@ const PriceAndDelivery = (props: Props) => {
                 </div>
             </div>
             <div className='w-full p-4 mt-auto'>
-                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Clear Post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
                     <Button onClick={props.moveNext} className='w-full' disabled={!props.animal.price || Number(props.animal.price) < 0 || props.animal.deliveryOptions && props.animal.deliveryOptions.length === 0}>{props.animal?.breed && props.animal?.breed !== "" ? `Next` : "Select"}</Button>

@@ -128,7 +128,7 @@ const SelectAnimal = (props: Props) => {
                 </div>
             </div>
             <div className='w-full p-4 mt-auto'>
-                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Clear Post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={() => { window.history.back() }} className='w-full flex gap-1 items-center justify-center' variant='btn-secondary'><HomeIcon size={20} className='text-emerald-700' /> Back</Button>
                     <Button onClick={props.moveNext} className='w-full' disabled={props.animal?.type && props.animal?.type !== "" ? false : true}>{props.animal?.type && props.animal?.type !== "" ? `Next` : "Select"}</Button>

@@ -129,7 +129,7 @@ const SelectAgeGenderWeight = (props: Props) => {
                 </div>
             </div>
             <div className='w-full mt-auto p-4'>
-                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Delete post</div>}
+                {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Clear Post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
                     <Button onClick={handleMoveNext} disabled={isDisabledForward} className='w-full'>Next</Button>
