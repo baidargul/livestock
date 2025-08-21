@@ -8,7 +8,7 @@ type Props = {
 
 const ProgressCells = (props: Props) => {
     return (
-        <div className={`flex gap-0 w-full ${props.className}`}>
+        <div className={`flex gap-0 w-full ${props.className} max-w-screen`}>
             {
                 Array.from({ length: props.max }).map((_, index) => {
                     return (

@@ -84,7 +84,7 @@ const SelectAnimal = (props: Props) => {
 
 
     return (
-        <div className='w-full min-h-[95dvh] flex flex-col items-center gap-0 p-4'>
+        <div className='w-full min-h-[95dvh] p-4 flex flex-col items-center justify-center'>
             <div className='flex flex-col gap-4'>
                 <div className='text-xl font-semibold tracking-tight text-center'>Select the animal you wish to sell</div>
                 <div className='grid grid-cols-2 sm:grid-cols-3 md:gap-2 w-full h-full max-h-[60vh] overflow-x-hidden overflow-y-auto'>

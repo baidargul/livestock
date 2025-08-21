@@ -89,10 +89,17 @@ const PriceAndDelivery = (props: Props) => {
             setPriceUnits(["per Piece"])
             handlePriceUnit("per Piece")
         } else if (val > 1) {
-            setPriceUnits(["per Piece", `per ${formalizeText(props.animal.weightUnit ?? "Kg")}`, "per Set"])
-            if (!props.animal.priceUnit) {
-                handlePriceUnit(`per ${formalizeText(props.animal.weightUnit ?? "Kg")}`)
+            if (props.animal.weightUnit && Number(props.animal.averageWeight ?? 0) > 0) {
+                setPriceUnits(["per Piece", `per ${formalizeText(props.animal.weightUnit ?? "Kg")}`, "per Set"])
+                if (!props.animal.priceUnit) {
+                    handlePriceUnit(`per ${formalizeText(props.animal.weightUnit ?? "Kg")}`)
+                }
+            } else {
+                setPriceUnits(["per Piece", "per Set"])
             }
+        } else {
+            setPriceUnits(["per Piece"])
+            handlePriceUnit("per Piece")
         }
     }, [])
 
@@ -100,43 +107,45 @@ const PriceAndDelivery = (props: Props) => {
     const seller = isExists('SELLER_DELIVERY')
 
     return (
-        <div className='w-full min-h-[95dvh] flex flex-col items-center gap-4 p-4'>
-            <div className='flex flex-col gap-4 mx-4'>
+        <div className='w-full min-h-[95dvh] flex flex-col gap-4 p-4'>
+            <div className='flex flex-col gap-2'>
                 <div className='text-xl font-semibold tracking-tight text-center'>{`Commericial Information`}</div>
-                <div className='w-full flex flex-col items-start p-4 gap-4'>
+                <div className='w-full flex flex-col items-start p-4 gap-4 -mt-4'>
                     <div className='flex flex-col gap-2'>
                         <div className='relative flex items-center'>
                             <label className='absolute left-0 text-2xl'>Rs </label>
-                            <input ref={txtRef} onFocus={handleOnFocus} onChange={(e: any) => handlePriceChange(e.target.value)} value={props.animal.price} placeholder='0/-' type='number' className='w-fit text-2xl font-bold border-b border-black selection:bg-emerald-100 text-left pl-8 p-2 outline-0 text-emerald-600' />
+                            <input ref={txtRef} onFocus={handleOnFocus} onChange={(e: any) => handlePriceChange(e.target.value)} value={props.animal.price} placeholder='0/-' type='number' className='w-fit max-w-[80%] tracking-wide text-2xl font-bold border-b border-black selection:bg-emerald-100 text-left pl-8 p-2 outline-0 text-emerald-600' />
                         </div>
                         <Selectbox options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
                     </div>
-                    {props.animal.deliveryOptions?.includes('SELLER_DELIVERY') && <div>
-                        <label className='font-bold text-zinc-700'>Cargo charges</label>
-                        <div className='relative flex items-center'>
-                            <div className='absolute flex items-center left-2 pointer-events-none'>
-                                <DeliveryIcon icon='SELLER_DELIVERY' />
-                            </div>
-                            <input value={props.animal.cargoPrice ?? ''} onChange={(e) => handleCargoPrice(e.target.value)} type='number' className='p-2 pl-10 outline-none text-2xl border-b border-black selection:bg-emerald-100 text-left outline-0 text-amber-600 font-bold' />
-                        </div>
-                    </div>}
+
                     {selectedUnit !== "per Set" && selectedUnit !== "per Kg" && <div>
                         <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
                     </div>}
                     {selectedUnit === "per Kg" && <div className='flex flex-col gap-1'>
                         <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
                         <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
-                        <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                        {props.animal.deliveryOptions?.includes('SELLER_DELIVERY') && <div className='flex items-center gap-2'>
-                            <div className=''>Cargo charges: <span className='text-amber-700'>{formatCurrency(props.animal.cargoPrice ?? 0)} = </span></div>
-                            <div className='border-b-4 border-double text-lg font-bold text-emerald-700'>
-                                {formatCurrency((Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity()) + Number(props.animal.cargoPrice))}
-                            </div>
-                        </div>}
+                        <div className=''> {formalizeText(props.animal.breed)} {`${String(props.animal.type).slice(0, props.animal.type.length - 1)}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
+
                     </div>}
                     <div className='flex flex-col justify-between gap-4 w-full'>
                         <Checkbox label='SELF PICKUP AVAILABLE' value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
                         <Checkbox label='CARGO AVAILABLE' value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />
+                        {props.animal.deliveryOptions?.includes('SELLER_DELIVERY') && <div>
+                            <label className='font-bold text-zinc-700'>Cargo charges</label>
+                            <div className='relative flex items-center'>
+                                <div className='absolute flex items-center left-2 pointer-events-none'>
+                                    <DeliveryIcon icon='SELLER_DELIVERY' />
+                                </div>
+                                <input value={props.animal.cargoPrice ?? ''} onChange={(e) => handleCargoPrice(e.target.value)} type='number' className='p-2 max-w-[80%] pl-10 outline-none text-2xl border-b border-black selection:bg-emerald-100 text-left outline-0 text-amber-600 font-bold' />
+                            </div>
+                        </div>}
+                        {props.animal.deliveryOptions?.includes('SELLER_DELIVERY') && <div className='-mb-4'>
+                            <div className=''>After including cargo charges</div>
+                            <div className='text-lg text-center p-2 border border-dashed mt-4 font-bold tracking-wide'>
+                                {formatCurrency((Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity()) + Number(isNaN(props.animal.cargoPrice) ? 0 : props.animal.cargoPrice ?? 0))}
+                            </div>
+                        </div>}
                     </div>
                 </div>
             </div>

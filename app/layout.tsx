@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-w-[350px] overflow-x-hidden antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-w-[320px] overflow-x-hidden antialiased`}
       >
         <SocketProvider>
           <Loading>
