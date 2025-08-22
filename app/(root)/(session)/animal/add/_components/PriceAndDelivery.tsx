@@ -124,7 +124,7 @@ const PriceAndDelivery = (props: Props) => {
                     </div>}
                     {selectedUnit === "per Kg" && <div className='flex flex-col gap-1'>
                         <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
-                        <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
+                        <div className=''>Per {String(props.animal.type).slice(0, props.animal.type.length - 1)} rate: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
                         <div className=''> {formalizeText(props.animal.breed)} {`${String(props.animal.type).slice(0, props.animal.type.length - 1)}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
 
                     </div>}
