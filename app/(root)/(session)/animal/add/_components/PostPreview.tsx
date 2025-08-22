@@ -116,7 +116,7 @@ const PostPreview = (props: Props) => {
             </div>
             <div className='flex items-center justify-between gap-4 w-full p-4 mt-auto'>
                 <Button onClick={props.moveBack} className='w-full' variant='btn-secondary' disabled={isPosting || !props.user.id}>Go Back</Button>
-                <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Yes Create Post</Button>
+                <Button onClick={handleHitApi} className='w-full' disabled={isPosting}>Create Post</Button>
             </div>
         </div>
     )

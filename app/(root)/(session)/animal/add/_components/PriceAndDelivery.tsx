@@ -5,7 +5,7 @@ import Radiogroup from '@/components/ui/radiogroup'
 import Selectbox from '@/components/ui/selectbox'
 import Textbox from '@/components/ui/Textbox'
 import { images } from '@/consts/images'
-import { formalizeText, formatCurrency } from '@/lib/utils'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import axios from 'axios'
 import { Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
@@ -109,7 +109,7 @@ const PriceAndDelivery = (props: Props) => {
     return (
         <div className='w-full min-h-[95dvh] flex flex-col gap-4 p-4'>
             <div className='flex flex-col gap-2'>
-                <div className='text-xl font-semibold tracking-tight text-center'>{`Commericial Information`}</div>
+                <div className='text-xl font-semibold tracking-tight text-center'>{`Commercial Information`}</div>
                 <div className='w-full flex flex-col items-start p-4 gap-4 -mt-4'>
                     <div className='flex flex-col gap-2'>
                         <div className='relative flex items-center'>
@@ -143,7 +143,7 @@ const PriceAndDelivery = (props: Props) => {
                         {props.animal.deliveryOptions?.includes('SELLER_DELIVERY') && <div className='-mb-4'>
                             <div className=''>After including cargo charges</div>
                             <div className='text-lg text-center p-2 border border-dashed mt-4 font-bold tracking-wide'>
-                                {formatCurrency((Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity()) + Number(isNaN(props.animal.cargoPrice) ? 0 : props.animal.cargoPrice ?? 0))}
+                                {formatCurrency(calculatePricing(props.animal).price)}
                             </div>
                         </div>}
                     </div>
