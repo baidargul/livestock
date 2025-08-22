@@ -141,7 +141,7 @@ const PriceAndDelivery = (props: Props) => {
                             </div>
                         </div>}
                         {props.animal.deliveryOptions?.includes('SELLER_DELIVERY') && <div className='-mb-4'>
-                            <div className=''>After including cargo charges</div>
+                            <div className=''>{Number(props.animal.cargoPrice ?? 0) > 0 ? "After including cargo charges" : "Total price"}</div>
                             <div className='text-lg text-center p-2 border border-dashed mt-4 font-bold tracking-wide'>
                                 {formatCurrency(calculatePricing(props.animal).price)}
                             </div>
