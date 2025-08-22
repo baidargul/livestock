@@ -26,7 +26,7 @@ const TitleAndDescription = (props: Props) => {
                         <label htmlFor="description" className='text-sm font-semibold'>Description</label>
                         <textarea rows={4} id='description' placeholder={`e.g. ${props.animal.breed} is a friendly ${props.animal.type}.`} className='w-full p-2 border border-gray-300 rounded-md' onChange={(e) => props.setAnimal({ ...props.animal, description: e.target.value })} value={props.animal.description} />
                         <div className='p-2 bg-emerald-100 relative mt-2'>
-                            <label className='tracking-tight p-1 px-2 bg-emerald-100 rounded absolute -top-2 left-0 text-xs'>Location of this animal</label>
+                            <label className='tracking-tight p-1 px-2 bg-emerald-100 rounded absolute -top-2 left-0 text-xs font-bold'>Location of this animal</label>
                             <div className='flex gap-2 justify-between items-center'>
                                 <div className='flex flex-col gap-2 my-2'>
                                     <label htmlFor="State" className='text-sm font-semibold'>Province</label>

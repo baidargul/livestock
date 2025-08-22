@@ -136,7 +136,7 @@ const PostBiddingOptions = (props: Props) => {
                                     {props.animal.deliveryOptions.includes("SELLER_DELIVERY") && <Button onClick={() => addDeliveryOption("SELLER_DELIVERY")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELLER_DELIVERY") ? "btn-primary" : "btn-secondary"} ><DeliveryIcon icon='SELLER_DELIVERY' /> Cargo</Button>}
                                 </div>
                                 {props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") && <div className='p-2 bg-emerald-100 relative mt-2'>
-                                    <label className='tracking-tight p-1 px-2 bg-emerald-100 rounded absolute -top-2 left-0 text-xs'>Location where you want this animal to be delivered</label>
+                                    <label className='tracking-tight p-1 px-2 bg-emerald-100 rounded absolute -top-2 left-0 text-xs font-bold'>Location where you want this animal to be delivered</label>
                                     <div className='flex gap-2 justify-between items-center'>
                                         <div className='flex flex-col gap-2 my-2'>
                                             <label htmlFor="State" className='text-sm font-semibold'>Province</label>
