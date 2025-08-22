@@ -101,27 +101,27 @@ const PriceAndDelivery = (props: Props) => {
                                 <div className='text-xs -mb-2'>- Minimum Budget</div>
                                 <div className='relative flex items-center'>
                                     <label className='absolute left-0 text-lg'>Rs </label>
-                                    <input onChange={(e: any) => handlePriceChange(Number(e.target.value), "minPrice")} value={props.animal.minPrice ?? ""} placeholder='0/-' type='number' className='text-lg border-b border-black selection:bg-emerald-100 text-left pl-6 p-2 outline-0 text-emerald-600' />
+                                    <input onChange={(e: any) => handlePriceChange(Number(e.target.value), "minPrice")} value={props.animal.minPrice ?? ""} placeholder='0/-' type='number' className='max-w-[80%] text-lg border-b border-black selection:bg-emerald-100 text-left pl-6 p-2 outline-0 text-emerald-600' />
                                 </div>
                             </div>
                             <div>
                                 <div className='text-xs -mb-2'>- Maximum Budget</div>
                                 <div className='relative flex items-center'>
                                     <label className='absolute left-0 text-lg'>Rs </label>
-                                    <input onChange={(e: any) => handlePriceChange(Number(e.target.value), "maxPrice")} value={props.animal.maxPrice ?? ""} placeholder='0/-' type='number' className='text-lg border-b border-black selection:bg-emerald-100 text-left pl-6 p-2 outline-0 text-emerald-600' />
+                                    <input onChange={(e: any) => handlePriceChange(Number(e.target.value), "maxPrice")} value={props.animal.maxPrice ?? ""} placeholder='0/-' type='number' className='max-w-[80%] text-lg border-b border-black selection:bg-emerald-100 text-left pl-6 p-2 outline-0 text-emerald-600' />
                                 </div>
                             </div>
                         </div>
                         <Selectbox autoSelectSingle options={priceUnits} value={props.animal.priceUnit} onChange={handlePriceUnit} />
                     </div>
-                    {selectedUnit !== "per Set" && selectedUnit !== "per Kg" && <div>
+                    {/* {selectedUnit !== "per Set" && selectedUnit !== "per Kg" && <div>
                         <div> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='font-semibold text-emerald-700 pb-1 border-b border-emerald-700'>{formatCurrency(Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
                     </div>}
                     {selectedUnit === "per Kg" && <div className='flex flex-col gap-1'>
                         <div className=''>Per piece weight: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{props.animal.averageWeight} {props.animal.weightUnit}</span></div>
                         <div className=''>Price per {props.animal.weightUnit}: <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0))}</span></div>
                         <div className=''> {formalizeText(props.animal.breed)} {`${props.animal.type}${checkQuantity() > 1 ? "s" : ""}`} x {checkQuantity()} = <span className='tracking-widest mx-2 font-semibold text-emerald-700 border-b border-emerald-700'>{formatCurrency(Number(props.animal.averageWeight) * Number(props.animal.price ?? 0) * checkQuantity())}</span></div>
-                    </div>}
+                    </div>} */}
                     <div className='flex flex-col justify-between gap-4 w-full'>
                         <Checkbox label={`I'll visit and self pick up.`} value={self ?? false} onChange={(val: boolean) => handleDelivery(val, "SELF_PICKUP")} />
                         <Checkbox label={'You can cargo and deliver to me.'} value={seller ?? false} onChange={(val: boolean) => handleDelivery(val, "SELLER_DELIVERY")} />

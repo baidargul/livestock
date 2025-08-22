@@ -74,16 +74,18 @@ const PostPreview = (props: Props) => {
             <div className='w-full'>
                 <h1 className='text-2xl font-bold mb-10'>Demand Preview</h1>
                 <div className='w-full'>
-                    <div className='grid grid-cols-[1fr_auto] gap-2 text-base w-full max-w-[400px] items-center leading-tight tracking-tight text-start p-4 rounded-lg bg-white drop-shadow-sm'>
+                    <div className='grid grid-cols-1 sm:grid-cols-[auto_auto] gap-2 text-base w-full max-w-[400px] items-center leading-tight tracking-tight text-start p-4 rounded-lg bg-white drop-shadow-sm'>
                         <Image src={images[props.animal.type].images[1]} alt={props.animal.type} width={100} height={100} className='w-full h-full object-cover' />
                         <div className='text-base'>
-                            {
-                                Number(totalQuantity) < 1 && <div className=''>
-                                    {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
-                                    {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className=''>{props.animal.femaleQuantityAvailable} Female</label>}
-                                    <label> {props.animal.breed} {props.animal.type}.</label>
-                                </div>
-                            }
+                            <div className=''>
+                                {
+                                    Number(totalQuantity) < 1 && <div className=''>
+                                        {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className='font-bold sm:font-normal'>{props.animal.maleQuantityAvailable} Male</label>}
+                                        {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className='font-bold sm:font-normal'>{props.animal.femaleQuantityAvailable} Female</label>}
+                                        <label className='font-bold sm:font-normal'> {props.animal.breed} {props.animal.type}.</label>
+                                    </div>
+                                }
+                            </div>
                             {Number(totalQuantity) > 0 && <div className='text-base'>
                                 {props.animal.maleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && <label className=''>{props.animal.maleQuantityAvailable} Male</label>}
                                 {props.animal.maleQuantityAvailable && props.animal.femaleQuantityAvailable && props.animal.maleQuantityAvailable > 0 && props.animal.femaleQuantityAvailable > 0 && <label> and </label>} {props.animal.femaleQuantityAvailable && props.animal.femaleQuantityAvailable > 0 && <label className='text-black/80 text-base'>{props.animal.femaleQuantityAvailable} Female</label>}
