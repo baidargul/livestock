@@ -116,13 +116,21 @@ async function create(animalId: string, userId: string) {
   };
 
   try {
-    const [user, animal, protocols] = await Promise.all([
+    const [user, animal, protocols, BuyerDirectHandShake] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId } }),
       prisma.animal.findUnique({
         where: { id: animalId },
         select: { id: true, userId: true },
       }),
       prisma.businessProtocol.findMany({}),
+      prisma.businessProtocol.findFirst({
+        where: {
+          name: "BuyerDirectHandShakeCost",
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
     ]);
 
     if (!user) {
@@ -143,6 +151,10 @@ async function create(animalId: string, userId: string) {
       return response;
     }
 
+    const BuyerDirectHandShakeCost = BuyerDirectHandShake?.value || 0;
+
+    console.log(BuyerDirectHandShakeCost);
+
     const isExists = await hasLead(animal.id, user.id);
     if (isExists.status === 200) {
       if (isExists.data) {
@@ -156,6 +168,23 @@ async function create(animalId: string, userId: string) {
       response.message = isExists.message;
       response.data = isExists.data;
       return response;
+    }
+
+    if (Number(BuyerDirectHandShakeCost) > Number(user.balance ?? 0)) {
+      response.status = 305;
+      response.message = "You don't have enough balance to create a lead";
+      return response;
+    } else {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          balance: {
+            decrement: Number(BuyerDirectHandShakeCost),
+          },
+        },
+      });
     }
 
     const newLead = await prisma.leads.create({
@@ -254,7 +283,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
       return response;
     }
 
-    const [lead, protocol] = await Promise.all([
+    const [lead, protocol, protocolBuyer] = await Promise.all([
       prisma.leads.findUnique({
         where: { id: leadId },
         include: {
@@ -265,6 +294,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
               phone: true,
               province: true,
               city: true,
+              balance: true,
             },
           },
           animal: {
@@ -288,6 +318,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
         },
       }),
       actions.server.protocols.BusinessProtocols.list("SellerHandShakeCost"),
+      actions.server.protocols.BusinessProtocols.list("BuyerHandShakeCost"),
     ]);
 
     if (!lead) {
@@ -308,9 +339,22 @@ async function convertToSale(currentUserId: string, leadId: string) {
         : 0
       : 0;
 
+    const buyerHandShakeCost = protocolBuyer
+      ? protocolBuyer.status === 200
+        ? protocolBuyer.data.value
+        : 0
+      : 0;
+
     if (Number(author.balance ?? 0) < Number(sellerHandShakeCost ?? 0)) {
       response.status = 305;
       response.message = "Insufficient balance to perform this action";
+      return response;
+    }
+
+    if (Number(lead.user.balance ?? 0) < Number(buyerHandShakeCost ?? 0)) {
+      response.status = 305;
+      response.message =
+        "Buyer is on a low balance, cannot proceed with this action";
       return response;
     }
 
@@ -337,6 +381,14 @@ async function convertToSale(currentUserId: string, leadId: string) {
         data: {
           balance: {
             decrement: Number(sellerHandShakeCost ?? 0),
+          },
+        },
+      }),
+      prisma.user.update({
+        where: { id: lead.userId },
+        data: {
+          balance: {
+            decrement: Number(buyerHandShakeCost ?? 0),
           },
         },
       }),

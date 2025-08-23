@@ -1,7 +1,9 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
+import { useSession } from '@/hooks/useSession'
 import { formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
@@ -15,6 +17,7 @@ const CreateLeadButton = (props: Props) => {
     const [isCreating, setIsCreating] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
+    const session: any = useSession()
     const [HandShakeCost, setHandshakeCost] = useState({
         buyer: 0,
         seller: 0
@@ -33,7 +36,7 @@ const CreateLeadButton = (props: Props) => {
     const fetchHandshakes = async () => {
         setFetchingHandshake(true)
         const [buyer, seller] = await Promise.all([
-            actions.client.protocols.BusinessProtocols.list("BuyerHandShakeCost"),
+            actions.client.protocols.BusinessProtocols.list("BuyerDirectHandShakeCost"),
             actions.client.protocols.BusinessProtocols.list("SellerHandShakeCost")
         ])
         const temp = { ...HandShakeCost, buyer: Number(buyer.data?.value ?? 0), seller: Number(seller.data?.value ?? 0) }
@@ -62,14 +65,21 @@ const CreateLeadButton = (props: Props) => {
         if (response) {
             if (response.status === 200) {
                 const data = response.data
+                if (session) {
+                    session.fetchBalance()
+                }
                 setLead(data)
                 if (data.user.balance < 1) {
-                    dialog.showDialog('Low Balance', null, "Your lead has been created and the author has been notified. However, your balance is low. Please recharge your account so that author can see your contact details when they check their leads.")
+                    dialog.showDialog('Low Balance', null, "Your lead has been created and the author has been notified. However, your balance is low. Please recharge your account so that author can see your contact details when they check their leads and select you.")
                 }
-            } else {
+            } else if (response.status === 305) {
+                dialog.showDialog('Insufficient balance', <RechargeDialog />)
+            }
+            else {
                 dialog.showDialog('Error', null, response.message)
             }
         }
+        dialog.closeDialog()
         setIsCreating(false)
     }
 
@@ -124,7 +134,7 @@ const CreateLeadConfirmationDialog = (props: { text: string, onYes?: () => void 
             <div className='mb-4'>{props.text}</div>
             <div className='w-full gap-2 flex items-center'>
                 <Button onClick={() => dialog.closeDialog()} className='w-full' variant='btn-secondary' >No</Button>
-                <Button className='w-full'>Yes</Button>
+                <Button onClick={props.onYes} className='w-full'>Yes</Button>
             </div>
         </div>
     )
