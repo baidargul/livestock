@@ -1,5 +1,5 @@
 'use client'
-import { CompassIcon, HouseIcon, PlusCircleIcon, ShoppingBagIcon, SquareUserIcon, UserIcon } from 'lucide-react'
+import { CompassIcon, HouseIcon, PlusCircleIcon, ShoppingBagIcon, ShuffleIcon, SquareUserIcon, UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import ProfileMenuWrapper from '../profile/_components/ProfileMenuWrapper'
@@ -10,6 +10,7 @@ import ContactsWrapper from './_components/ContactsWrapper'
 import Image from 'next/image'
 import { images } from '@/consts/images'
 import NewContactAnimationWrapper from '@/components/animation-wrappers/NewContactAnimationWrapper'
+import LeadsWrapper from './_components/LeadsWrapper'
 
 type Props = {}
 
@@ -67,6 +68,14 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </ContactsWrapper>}
+            {user && <LeadsWrapper>
+                <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                    <ShuffleIcon />
+                    <div>
+                        Leads
+                    </div>
+                </div>
+            </LeadsWrapper>}
             <ProfileMenuWrapper>
                 <div className={`${route.includes("profile") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <UserIcon />

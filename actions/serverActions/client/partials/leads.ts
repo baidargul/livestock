@@ -2,6 +2,13 @@ import axios from "axios";
 
 const apiPath = "/api/leads";
 
+async function forAnimal(animalId: string) {
+  if (!animalId) return null;
+  const response: any = await axios.get(
+    `${apiPath}/forAnimal?animalId=${animalId}`
+  );
+  return response.data;
+}
 async function hasLead(animalId: string, userId: string) {
   if (!animalId || !userId) return null;
   const response: any = await axios.get(
@@ -31,6 +38,7 @@ async function listAll() {
 export const leads = {
   listAll,
   create,
+  forAnimal,
   hasLead,
   remove,
 };
