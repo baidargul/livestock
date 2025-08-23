@@ -22,6 +22,7 @@ import OnSoldProtection from './_components/OnSoldProtection'
 import SidebarButtons from './_components/SidebarButtons'
 import DeliveryIcon from '@/components/Animals/DeliveryIcon'
 import Link from 'next/link'
+import CreateLeadButton from './_components/CreateLeadButton'
 
 export const dynamic = 'force-dynamic';
 
@@ -158,18 +159,21 @@ const page = async (props: Props) => {
                     {animal.priceUnit && <span className='text-base uppercase '>{`${animal.priceUnit === "per Set" ? "Whole set" : animal.priceUnit}`}</span>}
                 </div> */}
                 </div>
-                {!animal?.sold && <div className='mb-2 px-4 flex flex-col gap-2 justify-center items-center w-full'>
+                {!animal?.sold && Number(animal.user.balance ?? 0) < 1 && <div className='mb-2 px-4 flex flex-col gap-2 justify-center items-center w-full'>
                     {animal.allowBidding &&
                         <BidProtection animal={animal}>
                             <Button className='w-full flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Bargain</Button>
                         </BidProtection>
                     }
-                    <DirectCTOButton animal={animal}>
+                    {/* <DirectCTOButton animal={animal}>
                         <Button variant={'btn-secondary'} className='w-full flex justify-center items-center gap-2'>
                             <Image src={images.site.coins.gold.shine} alt='coin-logo' width={100} height={100} className='w-6 h-6 object-contain pointer-events-none select-none' /> Show Number
                         </Button>
-                    </DirectCTOButton>
+                    </DirectCTOButton> */}
                 </div>}
+                {
+                    <CreateLeadButton animal={animal} />
+                }
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />
             </section >

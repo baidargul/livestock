@@ -58,6 +58,7 @@ model User {
   Interaction   Interaction[]
   authorOrders  Orders[]      @relation("OrderAuthor")
   userOrders    Orders[]      @relation("OrderUser")
+  leads         leads[]
 
   @@index([name]) // Index for efficient queries
   @@index([name, email]) // Composite index for name and email
@@ -122,6 +123,7 @@ model Animal {
   Interactions            Interaction[]
   orders                  Orders[]
   boughtPosts             BoughtPosts[]
+  leads                   leads[]
 
   @@index([type, breed, price]) // Index for efficient queries
 }
@@ -222,6 +224,15 @@ model Orders {
   city                    String
   province                String
   deliveryOptions         DeliveryOptions[]
+}
+
+model leads {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  animalId  String   @db.ObjectId
+  animal    Animal   @relation(fields: [animalId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 enum InteractionType {

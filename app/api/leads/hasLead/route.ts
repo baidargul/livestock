@@ -1,0 +1,30 @@
+import { actions } from "@/actions/serverActions/actions";
+import { NextRequest } from "next/server";
+
+export async function GET(req: NextRequest) {
+  let response: any = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const animalId = new URL(req.url).searchParams.get("animalId");
+    const userId = new URL(req.url).searchParams.get("userId");
+
+    if (!animalId || !userId) {
+      response.status = 400;
+      response.message = "Bad Request: Missing animalId or userId";
+      return new Response(JSON.stringify(response));
+    }
+
+    response = await actions.server.leads.hasLead(animalId, userId);
+    return new Response(JSON.stringify(response));
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return new Response(JSON.stringify(response));
+  }
+}
