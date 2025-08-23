@@ -2,6 +2,7 @@
 import { actions } from '@/actions/serverActions/actions'
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
+import { formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 
@@ -13,6 +14,11 @@ const CreateLeadButton = (props: Props) => {
     const [isChecking, setIsChecking] = useState(false)
     const [isCreating, setIsCreating] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
+    const [fetchingHandshake, setFetchingHandshake] = useState(false)
+    const [HandShakeCost, setHandshakeCost] = useState({
+        buyer: 0,
+        seller: 0
+    })
     const [lead, setLead] = useState<any>(null)
     const { animal } = props
     const dialog = useDialog()
@@ -20,9 +26,21 @@ const CreateLeadButton = (props: Props) => {
 
     useEffect(() => {
         if (user) {
-            hasLead()
+            fetchHandshakes()
         }
     }, [user])
+
+    const fetchHandshakes = async () => {
+        setFetchingHandshake(true)
+        const [buyer, seller] = await Promise.all([
+            actions.client.protocols.BusinessProtocols.list("BuyerHandShakeCost"),
+            actions.client.protocols.BusinessProtocols.list("SellerHandShakeCost")
+        ])
+        const temp = { ...HandShakeCost, buyer: Number(buyer.data?.value ?? 0), seller: Number(seller.data?.value ?? 0) }
+        setHandshakeCost(temp)
+        hasLead()
+        setFetchingHandshake(false)
+    }
 
     const hasLead = async () => {
         if (!user) return;
@@ -38,8 +56,7 @@ const CreateLeadButton = (props: Props) => {
         setIsChecking(false)
     }
 
-    const handleCreateLead = async () => {
-        if (!user) return;
+    const continueLead = async () => {
         setIsCreating(true)
         const response: any = await actions.client.leads.create(animal.id, user.id)
         if (response) {
@@ -54,6 +71,16 @@ const CreateLeadButton = (props: Props) => {
             }
         }
         setIsCreating(false)
+    }
+
+    const handleCreateLead = async () => {
+        if (!user) return;
+        if (Number(HandShakeCost.buyer) > 0) {
+            dialog.showDialog('Creating Lead', <CreateLeadConfirmationDialog onYes={continueLead} text={`You are about to create a lead for this animal. This will cost you ${formatCurrency(HandShakeCost.buyer)}. Do you want to continue?`} />)
+        } else {
+            console.log(Number(HandShakeCost.buyer))
+            continueLead()
+        }
     }
 
     const handleRemoveLead = async () => {
@@ -72,9 +99,9 @@ const CreateLeadButton = (props: Props) => {
     }
 
     return (
-        user && user?.id !== animal.user.id && <div className='w-full px-2'>
+        user && user?.id !== animal.user.id && <div inert={fetchingHandshake} className={`w-full px-2 ${fetchingHandshake ? "opacity-50 pointer-events-none grayscale-100" : ""}`}>
             {
-                Number(animal.user.balance ?? 0) > 0 &&
+                Number(HandShakeCost.seller) > Number(animal.user.balance ?? 0) &&
                 <div className='w-full'>
                     <div className='p-1 px-4 tracking-tight bg-amber-50'>
                         Author of this post has insufficient balance to exchange his phone number. Please wait until he recharge and get coins to his account. You can still use the "I'm interested" button to notify him that you are interested in his animal.
@@ -88,3 +115,17 @@ const CreateLeadButton = (props: Props) => {
 }
 
 export default CreateLeadButton
+
+const CreateLeadConfirmationDialog = (props: { text: string, onYes?: () => void }) => {
+    const dialog = useDialog()
+
+    return (
+        <div className='px-4'>
+            <div className='mb-4'>{props.text}</div>
+            <div className='w-full gap-2 flex items-center'>
+                <Button onClick={() => dialog.closeDialog()} className='w-full' variant='btn-secondary' >No</Button>
+                <Button className='w-full'>Yes</Button>
+            </div>
+        </div>
+    )
+}
