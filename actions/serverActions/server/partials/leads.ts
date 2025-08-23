@@ -308,6 +308,12 @@ async function convertToSale(currentUserId: string, leadId: string) {
         : 0
       : 0;
 
+    if (Number(author.balance ?? 0) < Number(sellerHandShakeCost ?? 0)) {
+      response.status = 305;
+      response.message = "Insufficient balance to perform this action";
+      return response;
+    }
+
     const [order, contact] = await Promise.all([
       actions.server.orders.create(
         author.id,
@@ -323,7 +329,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
       actions.server.user.contacts.createContact(
         author.id,
         lead.user.id,
-        "Converted lead to sale",
+        "Buyer",
         lead.animal.id
       ),
       prisma.user.update({
@@ -344,7 +350,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
 
     response.status = 200;
     response.message = "Lead converted to sale successfully";
-    response.data = order.data;
+    response.data = { order: order.data, contact: contact?.data };
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR] LEAD CONVERT TO SALE: " + error.message);

@@ -8,6 +8,7 @@ import LeadRow from './LeadRow'
 
 type Props = {
     selectedAnimal: any
+    setIsFetching?: (val: boolean) => void
 }
 
 const SelectedAnimal = (props: Props) => {
@@ -23,13 +24,16 @@ const SelectedAnimal = (props: Props) => {
     }, [user, props.selectedAnimal])
 
     const fetchLeads = async () => {
+        setLeads([])
         if (!props.selectedAnimal) return
+        props.setIsFetching && props.setIsFetching(true)
         const response = await actions.client.leads.forAnimal(props.selectedAnimal.id)
         if (response.status === 200) {
             setLeads(response.data)
         } else {
             setLeads([])
         }
+        props.setIsFetching && props.setIsFetching(false)
     }
 
 

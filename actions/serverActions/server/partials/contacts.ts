@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { actions } from "../../actions";
 
 async function createContact(
   authorId: string,
@@ -21,7 +22,7 @@ async function createContact(
     });
 
     if (isExists) {
-      await prisma.contactBook.update({
+      isExists = await prisma.contactBook.update({
         where: {
           id: isExists.id,
         },
@@ -68,9 +69,12 @@ async function createContact(
       }
     }
 
+    const contact = await actions.server.user.contacts.list(authorId, userId);
+    isExists = contact.data;
+
     response.status = 200;
     response.message = "Contact created successfully";
-    response.data = null;
+    response.data = isExists;
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
     response.status = 500;

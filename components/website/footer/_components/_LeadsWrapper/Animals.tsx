@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react'
 type Props = {
     selectAnimal: (animal: any) => void
     selectedAnimal: any
+    setIsFetching?: (val: boolean) => void
 }
 
 const Animals = (props: Props) => {
@@ -24,6 +25,7 @@ const Animals = (props: Props) => {
 
     const fetchUserAnimals = async () => {
         if (!user) return
+        props.setIsFetching && props.setIsFetching(true)
         const response = await actions.client.posts.listByUser(user.id)
         if (response.status === 200) {
             setAnimals(response.data)
@@ -31,6 +33,7 @@ const Animals = (props: Props) => {
         } else {
             setAnimals([])
         }
+        props.setIsFetching && props.setIsFetching(false)
     }
 
     return (

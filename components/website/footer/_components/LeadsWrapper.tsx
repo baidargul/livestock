@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, ChevronLeftIcon, MoveRightIcon, PanelLeftIcon, SearchIcon } from 'lucide-react'
+import { ChevronLeft, ChevronLeftIcon, MoveRightIcon, PanelLeftIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import Animals from './_LeadsWrapper/Animals'
 import SelectedAnimal from './_LeadsWrapper/SelectedAnimal'
@@ -11,6 +11,7 @@ type Props = {
 
 const LeadsWrapper = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
+    const [isFetching, setIsFetching] = useState(false)
     const [selectedAnimal, setSelectedAnimal] = useState<any>(null)
 
 
@@ -41,15 +42,18 @@ const LeadsWrapper = (props: Props) => {
                         <CoinsAvailable />
                     </div>
                 </div>
-                <div className='text-zinc-500 font-bold p-1 px-4 border-y border-zinc-500'>
-                    Your Animals and their leads are listed below
+                <div className='text-zinc-500 font-bold p-1 px-4 border-y border-zinc-500 flex items-center gap-2'>
+                    {isFetching && <RefreshCcwIcon size={16} className='animate-spin' />}
+                    <div>
+                        Your Animals and their leads are listed below
+                    </div>
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
                     <section className='p-1 h-[calc(100vh-140px)] overflow-y-auto bg-white'>
-                        {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} />}
+                        {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />}
                     </section>
                     <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-100'>
-                        <SelectedAnimal selectedAnimal={selectedAnimal} />
+                        <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />
                     </section>
                 </div>
             </div>
