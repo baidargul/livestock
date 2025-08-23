@@ -135,7 +135,6 @@ async function create(animalId: string, userId: string) {
     return response;
   }
 }
-
 async function remove(leadId: string) {
   let response = {
     status: 500,
@@ -161,8 +160,32 @@ async function remove(leadId: string) {
   }
 }
 
+async function listAll() {
+  const response = await prisma.leads.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          balance: true,
+        },
+      },
+      animal: {
+        select: {
+          id: true,
+          userId: true,
+          type: true,
+          breed: true,
+        },
+      },
+    },
+  });
+  return response;
+}
+
 export const leads = {
   create,
   hasLead,
   remove,
+  listAll,
 };

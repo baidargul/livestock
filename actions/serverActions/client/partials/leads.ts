@@ -23,7 +23,13 @@ async function remove(leadId: string) {
   return response.data;
 }
 
+async function listAll() {
+  const response = await axios.get(apiPath);
+  return response.data;
+}
+
 export const leads = {
+  listAll,
   create,
   hasLead,
   remove,
