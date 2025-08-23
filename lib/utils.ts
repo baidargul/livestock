@@ -14,7 +14,7 @@ export function formatCurrency(amount: number, ignoreSymbol?: boolean) {
   }
 }
 
-export function calculatePricing(animal: Animal) {
+export function calculatePricing(animal: Animal | any) {
   if (!animal) return { price: 0, text: "", unit: "" };
   const quantity =
     Number(animal.maleQuantityAvailable || 0) +

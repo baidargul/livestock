@@ -35,10 +35,19 @@ async function listAll() {
   return response.data;
 }
 
+async function convertToSale(currentUserId: string, leadId: string) {
+  const response = await axios.post(`${apiPath}/convertToSale`, {
+    userId: currentUserId,
+    leadId,
+  });
+  return response.data;
+}
+
 export const leads = {
   listAll,
   create,
   forAnimal,
   hasLead,
+  convertToSale,
   remove,
 };

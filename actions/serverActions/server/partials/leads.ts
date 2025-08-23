@@ -1,4 +1,6 @@
 import prisma from "@/lib/prisma";
+import { actions } from "../../actions";
+import { calculatePricing } from "@/lib/utils";
 
 async function hasLead(animalId: string, userId: string) {
   let response = {
@@ -53,7 +55,6 @@ async function hasLead(animalId: string, userId: string) {
     return response;
   }
 }
-
 async function forAnimal(animalId: string) {
   let response = {
     status: 500,
@@ -107,7 +108,6 @@ async function forAnimal(animalId: string) {
     return response;
   }
 }
-
 async function create(animalId: string, userId: string) {
   let response = {
     status: 500,
@@ -237,10 +237,129 @@ async function listAll() {
   return response;
 }
 
+async function convertToSale(currentUserId: string, leadId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const author = await prisma.user.findUnique({
+      where: { id: currentUserId },
+    });
+    if (!author) {
+      response.status = 404;
+      response.message = "User not found";
+      return response;
+    }
+
+    const [lead, protocol] = await Promise.all([
+      prisma.leads.findUnique({
+        where: { id: leadId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              phone: true,
+              province: true,
+              city: true,
+            },
+          },
+          animal: {
+            select: {
+              id: true,
+              userId: true,
+              type: true,
+              breed: true,
+              maleQuantityAvailable: true,
+              femaleQuantityAvailable: true,
+              cargoPrice: true,
+              price: true,
+              priceUnit: true,
+              averageAge: true,
+              averageWeight: true,
+              ageUnit: true,
+              weightUnit: true,
+              deliveryOptions: true,
+            },
+          },
+        },
+      }),
+      actions.server.protocols.BusinessProtocols.list("SellerHandShakeCost"),
+    ]);
+
+    if (!lead) {
+      response.status = 404;
+      response.message = "Lead not found";
+      return response;
+    }
+
+    if (!lead.animal) {
+      response.status = 404;
+      response.message = "Animal not found for this lead";
+      return response;
+    }
+
+    const sellerHandShakeCost = protocol
+      ? protocol.status === 200
+        ? protocol.data.value
+        : 0
+      : 0;
+
+    const [order, contact] = await Promise.all([
+      actions.server.orders.create(
+        author.id,
+        lead.userId,
+        lead.animalId,
+        Number(lead.animal.maleQuantityAvailable ?? 0),
+        Number(lead.animal.femaleQuantityAvailable ?? 0),
+        calculatePricing(lead.animal).price,
+        lead.animal.deliveryOptions,
+        lead.user.province || "",
+        lead.user.city || ""
+      ),
+      actions.server.user.contacts.createContact(
+        author.id,
+        lead.user.id,
+        "Converted lead to sale",
+        lead.animal.id
+      ),
+      prisma.user.update({
+        where: { id: author.id },
+        data: {
+          balance: {
+            decrement: Number(sellerHandShakeCost ?? 0),
+          },
+        },
+      }),
+    ]);
+
+    if (order.status !== 200) {
+      return order;
+    }
+
+    await actions.server.leads.remove(lead.id);
+
+    response.status = 200;
+    response.message = "Lead converted to sale successfully";
+    response.data = order.data;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR] LEAD CONVERT TO SALE: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const leads = {
   create,
   hasLead,
   forAnimal,
+  convertToSale,
   remove,
   listAll,
 };
