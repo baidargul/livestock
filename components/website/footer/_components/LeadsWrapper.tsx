@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronLeftIcon, MoveRightIcon, PanelLeftIcon, SearchIcon 
 import React, { useState } from 'react'
 import Animals from './_LeadsWrapper/Animals'
 import SelectedAnimal from './_LeadsWrapper/SelectedAnimal'
+import CoinsAvailable from '../../profile/_components/CoinsAvailable'
 
 type Props = {
     children: React.ReactNode
@@ -31,21 +32,23 @@ const LeadsWrapper = (props: Props) => {
                         </div>
                         <div className='leading-3'>
                             <div className='text-lg font-bold'>Leads</div>
-                            <div className='text-zinc-600'>Your leads</div>
+                            <div className='leading-1'>
+                                <div className='text-zinc-600 text-sm'>Leads are buyers which are interested in buying your animal</div>
+                            </div>
                         </div>
                     </div>
                     <div className='pr-4'>
-                        <SearchIcon />
+                        <CoinsAvailable />
                     </div>
                 </div>
                 <div className='text-zinc-500 font-bold p-1 px-4 border-y border-zinc-500'>
-                    Leads are listed below
+                    Your Animals and their leads are listed below
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
-                    <section className='p-1 h-[calc(100vh-110px)] overflow-y-auto bg-white'>
+                    <section className='p-1 h-[calc(100vh-140px)] overflow-y-auto bg-white'>
                         {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} />}
                     </section>
-                    <section className='p-2 h-[calc(100vh-110px)] overflow-y-auto bg-zinc-100'>
+                    <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-100'>
                         <SelectedAnimal selectedAnimal={selectedAnimal} />
                     </section>
                 </div>
