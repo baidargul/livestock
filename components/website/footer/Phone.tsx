@@ -47,7 +47,7 @@ const PhoneFooter = (props: Props) => {
                 <div className={`${route.includes("cart") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShoppingBagIcon />
                     <div>
-                        BidRooms
+                        Bargains
                     </div>
                 </div>
             </RoomsWrapper>}
