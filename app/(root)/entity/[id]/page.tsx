@@ -122,7 +122,10 @@ const page = async (props: Props) => {
                     {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
                         <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding is active for this animal.</div>
                     </Marquee>}
-                    <YoutubeVideoPlayer className='mb-4' src='https://www.youtube.com/watch?v=H3Uk9WAOI08' autoPlay muted loop />
+                    <div className='relative'>
+                        <div className='text-black px-4 font-semibold bg-zinc-100 p-1 text-sm absolute rounded-r pointer-events-none select-none top-4 -left-4 z-[1]'>Janwar Markaz</div>
+                        <YoutubeVideoPlayer className='mb-4' src='https://www.youtube.com/watch?v=H3Uk9WAOI08' autoPlay muted loop />
+                    </div>
                     <ByYouTag animal={animal} />
                     <h2 className='text-2xl mb-1 font-bold text-gray-800'>{animal.title}</h2>
                     <p className='text-sm p-1 text-zinc-800 tracking-tight bg-amber-50 h-auto min-h-[100px]'>'{animal.description}'</p>
