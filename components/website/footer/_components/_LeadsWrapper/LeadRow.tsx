@@ -6,10 +6,12 @@ import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
 import { useContacts } from '@/hooks/useContacts'
 import { useDialog } from '@/hooks/useDialog'
+import { useProtocols } from '@/hooks/useProtocols'
 import { useSession } from '@/hooks/useSession'
 import { formalizeText } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
+import { PiExclamationMark } from 'react-icons/pi'
 
 type Props = {
     lead: any
@@ -17,10 +19,20 @@ type Props = {
 }
 
 const LeadRow = (props: Props) => {
+    const [buyerCost, setBuyerCost] = useState(0)
+    const [sellerCost, setSellerCost] = useState(0)
     const user = useUser()
     const contacts = useContacts()
     const session: any = useSession()
     const dialog = useDialog()
+    const protocols = useProtocols()
+
+    useEffect(() => {
+        if (protocols.protocols) {
+            setBuyerCost(protocols.get(`BuyerHandShakeCost`) ?? 0)
+            setSellerCost(protocols.get(`SellerHandShakeCost`) ?? 0)
+        }
+    }, [protocols])
 
 
     const fetchUserDetails = async () => {
@@ -48,7 +60,8 @@ const LeadRow = (props: Props) => {
 
     return (
         <div className='bg-white border border-zinc-200 p-2 rounded h-full'>
-            <div className='font-bold'>{props.lead.user.name}</div>
+            <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.user.name)}</div>
+            {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
             <div className='text-zinc-600 text-xs'>{formalizeText(props.lead.user.city)}, {formalizeText(props.lead.user.province)}</div>
             <ElapsedTimeControl date={props.lead.createdAt} />
             <div className='flex gap-1 text-xs items-center mb-4'>
@@ -74,20 +87,18 @@ const CostConfirmationDialog = (props: { onContinue: () => void }) => {
     const [cost, setCost] = useState<number | null>(null)
     const userSession: any = useSession()
     const dialog = useDialog()
+    const protocols = useProtocols()
     if (!userSession) return null;
 
     useEffect(() => {
-        fetchHandShakeProtocol()
-    }, [])
+        if (protocols.protocols) {
+            fetchHandShakeProtocol()
+        }
+    }, [protocols])
 
     const fetchHandShakeProtocol = async () => {
         setIsLoading(true)
-        const response = await actions.client.protocols.BusinessProtocols.list('SellerHandShakeCost')
-        if (response.status === 200) {
-            setCost(response.data.value)
-        } else {
-            setCost(0)
-        }
+        setCost(protocols.get('SellerHandShakeCost') ?? 0)
         setIsLoading(false)
     }
 

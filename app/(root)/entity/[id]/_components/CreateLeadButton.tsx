@@ -33,7 +33,7 @@ const CreateLeadButton = (props: Props) => {
         if (protocols.protocols) {
             fetchHandshakes()
         }
-    }, [protocols])
+    }, [protocols, user])
 
     const fetchHandshakes = async () => {
         setFetchingHandshake(true)
@@ -41,7 +41,9 @@ const CreateLeadButton = (props: Props) => {
         const seller = protocols.get("SellerHandShakeCost")
         const temp = { ...HandShakeCost, buyer: Number(buyer ?? 0), seller: Number(seller ?? 0) }
         setHandshakeCost(temp)
-        hasLead()
+        if (user) {
+            hasLead()
+        }
         setFetchingHandshake(false)
     }
 
