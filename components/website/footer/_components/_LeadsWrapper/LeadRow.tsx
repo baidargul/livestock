@@ -73,7 +73,7 @@ const LeadRow = (props: Props) => {
                 </div>
             </div>
             <div>
-                <Button onClick={handleFetchNumber} className='w-full'>Show Number</Button>
+                <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>
             </div>
         </div>
     )
