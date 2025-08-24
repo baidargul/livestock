@@ -50,8 +50,8 @@ const YoutubeVideoPlayer = (props: Props) => {
 }`
                 }
             </style>
-            <div className={`youtube-video-wrapper ${props.className}`}>
-                <div className="frame-container pointer-events-none">
+            <div className={`youtube-video-wrapper overflow-hidden ${props.className}`}>
+                <div className="frame-container overflow-hidden pointer-events-none">
                     <iframe
                         width="100%"
                         height="315"
