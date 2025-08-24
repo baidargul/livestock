@@ -32,9 +32,9 @@ const LeadsWrapper = (props: Props) => {
                             <ChevronLeftIcon />
                         </div>
                         <div className='leading-3'>
-                            <div className='text-lg font-bold'>Leads</div>
+                            <div className='text-lg font-bold'>Requests</div>
                             <div className='leading-1'>
-                                <div className='text-zinc-600 text-sm'>Leads are buyers which are interested in buying your animal</div>
+                                <div className='text-zinc-600 text-sm'>Requests are from buyers which are interested in buying your animal</div>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@ const LeadsWrapper = (props: Props) => {
                 <div className='text-zinc-500 font-bold p-1 px-4 border-y border-zinc-500 flex items-center gap-2'>
                     {isFetching && <RefreshCcwIcon size={16} className='animate-spin' />}
                     <div>
-                        Your Animals and their leads are listed below
+                        Your Animals and their requests are listed below
                     </div>
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
