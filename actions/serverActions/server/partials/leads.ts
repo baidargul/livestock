@@ -153,8 +153,6 @@ async function create(animalId: string, userId: string) {
 
     const BuyerDirectHandShakeCost = BuyerDirectHandShake?.value || 0;
 
-    console.log(BuyerDirectHandShakeCost);
-
     const isExists = await hasLead(animal.id, user.id);
     if (isExists.status === 200) {
       if (isExists.data) {

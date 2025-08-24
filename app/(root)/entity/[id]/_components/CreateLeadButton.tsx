@@ -60,11 +60,13 @@ const CreateLeadButton = (props: Props) => {
     }
 
     const continueLead = async () => {
+        dialog.closeDialog()
         setIsCreating(true)
         const response: any = await actions.client.leads.create(animal.id, user.id)
         if (response) {
             if (response.status === 200) {
                 const data = response.data
+                dialog.closeDialog()
                 if (session) {
                     session.fetchBalance()
                 }
@@ -79,7 +81,6 @@ const CreateLeadButton = (props: Props) => {
                 dialog.showDialog('Error', null, response.message)
             }
         }
-        dialog.closeDialog()
         setIsCreating(false)
     }
 
