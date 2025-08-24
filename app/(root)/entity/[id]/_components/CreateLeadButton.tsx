@@ -74,6 +74,7 @@ const CreateLeadButton = (props: Props) => {
                 if (data.user.balance < 1) {
                     dialog.showDialog('Low Balance', null, "Your lead has been created and the author has been notified. However, your balance is low. Please recharge your account so that author can see your contact details when they check their leads and select you.")
                 }
+                dialog.showDialog("Lead created", null, "Your lead has been created and the author has been notified. Please wait for the seller to accept your lead.")
             } else if (response.status === 305) {
                 dialog.showDialog('Insufficient balance', <RechargeDialog />)
             }
@@ -119,8 +120,8 @@ const CreateLeadButton = (props: Props) => {
                     </div>
                 </div>
             }
-            {!lead && <Button onClick={handleCreateLead} className='w-full mt-2'>{isCreating ? "..." : "I'm interested"}</Button>}
-            {lead !== null && <Button variant='btn-secondary' onClick={handleRemoveLead} className='w-full mt-2'>{isRemoving ? "..." : "Not interested Anymore"}</Button>}
+            {!lead && <Button disabled={isChecking || isCreating} onClick={handleCreateLead} className='w-full mt-2'>{isCreating ? "..." : "I'm interested"}</Button>}
+            {lead !== null && <Button disabled={isChecking || isCreating || isRemoving} variant='btn-secondary' onClick={handleRemoveLead} className='w-full mt-2'>{isRemoving ? "..." : "Not interested Anymore"}</Button>}
         </div>
     )
 }

@@ -350,9 +350,9 @@ async function convertToSale(currentUserId: string, leadId: string) {
     }
 
     if (Number(lead.user.balance ?? 0) < Number(buyerHandShakeCost ?? 0)) {
-      response.status = 305;
+      response.status = 306;
       response.message =
-        "Buyer is on a low balance, cannot proceed with this action";
+        "Buyer is on a low balance, please wait while he recharges his account.";
       return response;
     }
 

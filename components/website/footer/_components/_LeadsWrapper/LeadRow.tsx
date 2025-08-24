@@ -33,6 +33,8 @@ const LeadRow = (props: Props) => {
             dialog.showDialog('Lead converted', null, 'The lead has been converted to a sale. You can now contact the buyer via your contacts.')
         } else if (response.status === 305) {
             dialog.showDialog('Insufficient balance', <RechargeDialog />)
+        } else if (response.status === 306) {
+            dialog.showDialog('Buyer on low balance', null, response.message)
         }
         else {
             alert("Error: " + response.message)
