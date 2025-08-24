@@ -133,7 +133,8 @@ const AddMedia = (props: Props) => {
                 {props.animal && <div className='my-4 cursor-pointer flex gap-1 items-center' onClick={props.deletePost}><Trash2Icon size={20} /> Clear Post</div>}
                 <div className='flex items-center justify-between gap-4 w-full'>
                     <Button onClick={props.moveBack} className='w-full' variant='btn-secondary'>Back</Button>
-                    <Button onClick={props.moveNext} className='w-full' disabled={images && images.length === 3 ? false : true}>Next</Button>
+                    <Button onClick={props.moveNext} className='w-full' disabled={false}>Next</Button>
+                    {/* <Button onClick={props.moveNext} className='w-full' disabled={images && images.length === 3 ? false : true}>Next</Button> */}
                 </div>
             </div>
         </div >
