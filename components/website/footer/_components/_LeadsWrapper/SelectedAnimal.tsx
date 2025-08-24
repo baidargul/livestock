@@ -37,7 +37,7 @@ const SelectedAnimal = (props: Props) => {
     }
 
 
-    leads.length === 0 && <div className='w-full h-full flex items-center justify-center'>No leads yet for this animal.</div>
+    leads.length === 0 && <div className='w-full h-full flex items-center justify-center'>No requests yet for this animal.</div>
 
     return (
         leads && leads.length > 0 && <div className='grid grid-cols-1 gap-2 pr-2 w-full h-full overflow-y-auto'>

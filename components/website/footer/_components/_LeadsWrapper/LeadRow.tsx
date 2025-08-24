@@ -42,7 +42,7 @@ const LeadRow = (props: Props) => {
             session.fetchBalance()
             props.fetchLeads && props.fetchLeads()
             contacts.addToContact(response.data.contact)
-            dialog.showDialog('Lead converted', null, 'The lead has been converted to a sale. You can now contact the buyer via your contacts.')
+            dialog.showDialog('Request converted to sale', null, 'Sale order of this animal has been created.')
         } else if (response.status === 305) {
             dialog.showDialog('Insufficient balance', <RechargeDialog />)
         } else if (response.status === 306) {
