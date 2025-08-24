@@ -3,6 +3,7 @@ import { actions } from '@/actions/serverActions/actions'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
+import { useProtocols } from '@/hooks/useProtocols'
 import { useSession } from '@/hooks/useSession'
 import { formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
@@ -16,6 +17,7 @@ const CreateLeadButton = (props: Props) => {
     const [isChecking, setIsChecking] = useState(false)
     const [isCreating, setIsCreating] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
+    const protocols = useProtocols()
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
     const session: any = useSession()
     const [HandShakeCost, setHandshakeCost] = useState({
@@ -28,18 +30,16 @@ const CreateLeadButton = (props: Props) => {
     const user = useUser()
 
     useEffect(() => {
-        if (user) {
+        if (protocols.protocols) {
             fetchHandshakes()
         }
-    }, [user])
+    }, [protocols])
 
     const fetchHandshakes = async () => {
         setFetchingHandshake(true)
-        const [buyer, seller] = await Promise.all([
-            actions.client.protocols.BusinessProtocols.list("BuyerDirectHandShakeCost"),
-            actions.client.protocols.BusinessProtocols.list("SellerHandShakeCost")
-        ])
-        const temp = { ...HandShakeCost, buyer: Number(buyer.data?.value ?? 0), seller: Number(seller.data?.value ?? 0) }
+        const buyer = protocols.get("BuyerDirectHandShakeCost")
+        const seller = protocols.get("SellerHandShakeCost")
+        const temp = { ...HandShakeCost, buyer: Number(buyer ?? 0), seller: Number(seller ?? 0) }
         setHandshakeCost(temp)
         hasLead()
         setFetchingHandshake(false)
