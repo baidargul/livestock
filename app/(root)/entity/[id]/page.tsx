@@ -124,7 +124,7 @@ const page = async (props: Props) => {
                     </Marquee>}
                     <div className='relative'>
                         <div className='text-black px-4 font-semibold bg-zinc-100 p-1 text-sm absolute rounded-r pointer-events-none select-none top-4 -left-0 z-[1]'>Janwar Markaz</div>
-                        <YoutubeVideoPlayer className='mb-4' src='https://www.youtube.com/watch?v=H3Uk9WAOI08' autoPlay muted loop />
+                        <YoutubeVideoPlayer className='mb-4' src='https://www.youtube.com/watch?v=4sH-V35-5Yg' autoPlay muted loop />
                     </div>
                     <ByYouTag animal={animal} />
                     <h2 className='text-2xl mb-1 font-bold text-gray-800'>{animal.title}</h2>
