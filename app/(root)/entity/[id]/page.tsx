@@ -43,7 +43,6 @@ const page = async (props: Props) => {
     const { id } = await params
     const response = await actions.server.post.list(id, 'id');
     if (response.status !== 200) {
-
         return (
             <div className='w-full min-h-[100dvh] flex justify-center items-center text-center'>
                 <div className='w-full'>
@@ -56,6 +55,8 @@ const page = async (props: Props) => {
     const animal = response.data as any
     const breedObj = images[animal?.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
     const info = breedObj?.info;
+
+    console.log(animal)
     return (
         animal && <div className='w-full h-full relative' key={timestamp}>
             <OnSoldProtection animal={animal} />
@@ -168,7 +169,7 @@ const page = async (props: Props) => {
                 </div> */}
                 </div>
                 {
-                    !animal?.sold && Number(animal.user.balance ?? 0) < 1 && <div className='mb-2 px-4 flex flex-col gap-2 justify-center items-center w-full'>
+                    !animal.sold && <div className='mb-2 px-4 flex flex-col gap-2 justify-center items-center w-full'>
                         {animal.allowBidding &&
                             <BidProtection animal={animal}>
                                 <Button className='w-full flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Bargain</Button>
@@ -182,7 +183,9 @@ const page = async (props: Props) => {
                     </div>
                 }
                 {
-                    <CreateLeadButton animal={animal} />
+                    <div className='w-full px-2'>
+                        <CreateLeadButton animal={animal} />
+                    </div>
                 }
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />
