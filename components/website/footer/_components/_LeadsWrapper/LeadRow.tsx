@@ -5,6 +5,7 @@ import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import ExpiryTimeControl from '@/components/controls/ExpiryTimeControl'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
 import Button from '@/components/ui/Button'
+import SoldOverlay from '@/components/ui/SoldOverlay'
 import { useContacts } from '@/hooks/useContacts'
 import { useDialog } from '@/hooks/useDialog'
 import { useProtocols } from '@/hooks/useProtocols'
@@ -14,6 +15,7 @@ import { useUser } from '@/socket-client/SocketWrapper'
 import { number } from 'framer-motion'
 import React, { use, useEffect, useState } from 'react'
 import { PiExclamationMark } from 'react-icons/pi'
+import StatusWindow from './StatusWindow'
 
 type Props = {
     lead: any
@@ -64,9 +66,6 @@ const LeadRow = (props: Props) => {
     const animal = {
         ...props.lead.animal, ...props.lead
     }
-    console.log(`animal`)
-    console.log(animal)
-
     delete animal?.user
     delete animal?.animal
 
@@ -117,7 +116,23 @@ const LeadRow = (props: Props) => {
                 }
             </div>
             <div className='mt-auto'>
-                <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>
+                {!props.lead.sold && <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>}
+                {props.lead.sold &&
+                    <div>
+                        <div>
+                            <div>
+                                Status:
+                            </div>
+                            <div></div>
+                        </div>
+                        <div className='w-full flex flex-col gap-2'>
+                            <StatusWindow lead={props.lead}>
+                                <Button className='w-full'>{formalizeText(props.lead.status)}</Button>
+                            </StatusWindow>
+                            <Button className='w-full' variant='btn-secondary'>Remove</Button>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     )

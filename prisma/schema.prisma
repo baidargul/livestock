@@ -236,6 +236,8 @@ model leads {
   city                    String
   province                String
   amount                  Float             @default(0)
+  sold                    Boolean?          @default(false)
+  status                  String            @default("pending")
   userId                  String            @db.ObjectId
   user                    User              @relation(fields: [userId], references: [id])
   createdAt               DateTime          @default(now())
