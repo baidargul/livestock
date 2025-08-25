@@ -127,7 +127,7 @@ const LeadRow = (props: Props) => {
 
                         return (
                             <div key={`${method}-${index}`} className='flex gap-1 items-center text-nowrap text-xs'>
-                                <DeliveryIcon icon={method} /> - {method === "SELF_PICKUP" ? "I'll Self Pickup." : "Cargo/Delivery me."}
+                                <DeliveryIcon icon={method} /> - {method === "SELF_PICKUP" ? "I'll Self Pickup." : "Cargo/Deliver me."}
                             </div>
                         )
                     })
