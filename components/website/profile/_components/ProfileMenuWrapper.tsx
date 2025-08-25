@@ -178,7 +178,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                         <LucideLayoutDashboard />
                                     </div>
                                     <div className=''>
-                                        <div className='font-semibold tracking-wide'>Orders</div>
+                                        <div className='font-semibold tracking-wide'>Orders History</div>
                                         <div className='text-xs tracking-wide italic text-black/60'>Your orders dashboard.</div>
                                     </div>
                                 </div>
