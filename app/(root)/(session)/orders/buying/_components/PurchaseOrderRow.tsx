@@ -88,7 +88,7 @@ const PurchaseOrderRow = (props: Props) => {
                 </div>
                 <div className={`flex flex-col gap-1 w-full sm:w-fit ${isPreviewing || isWithdrawing ? 'pointer-events-none grayscale-100' : ''}`}>
                     <Button onClick={() => handleOrderPreview(props.order.id)} variant={'btn-secondary'} className='w-full text-nowrap'>{isPreviewing ? "Previewing..." : "Preview"} </Button>
-                    <Button onClick={handleWithdrawDeal} variant={'btn-secondary'} className='w-full text-nowrap'>Withdraw order</Button>
+                    <Button onClick={handleWithdrawDeal} variant={'btn-secondary'} className='w-full text-nowrap'>Delete Receipt</Button>
                 </div>
             </div>
         </>

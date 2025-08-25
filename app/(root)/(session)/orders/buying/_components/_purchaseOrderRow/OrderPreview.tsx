@@ -16,15 +16,30 @@ type Props = {
 const OrderPreview = (props: Props) => {
 
     const totalQuantity = Number(props.order.maleQuantityAvailable || 0) + Number(props.order.femaleQuantityAvailable || 0)
+    const male = Number(props.order.maleQuantityAvailable || 0)
+    const female = Number(props.order.femaleQuantityAvailable || 0)
 
     return (
         <>
             <div className={`fixed inset-0 z-50 px-3 flex justify-center items-center`}>
                 <div className='fixed z-50 mx-4 bg-white p-2 px-4 pb-4 rounded-md shadow-lg flex flex-col gap-2 border border-zinc-200'>
-                    <div className='text-lg font-bold text-zinc-700'>Order Preview</div>
                     <div>
+                        <div className='text-lg font-bold text-zinc-700'>Order Receipt</div>
+                        <div className='-mt-1 tracking-tight'>{props.order.id}</div>
+                    </div>
+                    <div>
+                        <div>
+                            <div className='flex gap-1 items-center'>
+                                From:
+                                <div>{props.order.author.name}</div>
+                            </div>
+                            <div className='flex gap-1 items-center'>
+                                <div>To: </div>
+                                <div className='font-bold'>{props.order.user.name}</div>
+                            </div>
+                        </div>
                         <div className='text-xl font-bold'>{formalizeText(props.order.breed)} {props.order.type} x {totalQuantity}</div>
-                        <div className='flex gap-1 items-center -mt-1'> {props.order.maleQuantityAvailable && props.order.maleQuantityAvailable > 0 && <div>{`${props.order.maleQuantityAvailable} Male,`}</div>} {props.order.femaleQuantityAvailable && props.order.femaleQuantityAvailable > 0 && <div>{`${props.order.femaleQuantityAvailable} Female.`}</div>}</div>
+                        <div className='flex gap-1 items-center -mt-1'> {Number(male ?? 0) > 0 && <div>{`${male} Male,`}</div>} {Number(female) > 0 && <div>{`${female ?? 0} Female.`}</div>}</div>
                         <div className='pl-4 border-l-4 border-zinc-200'>
                             <div className='text-lg'>{props.order.animal?.title}</div>
                             <div className='text-zinc-600 italic line-clamp-2 -mt-1'>'{props.order.animal?.description}'</div>
