@@ -49,7 +49,7 @@ const page = (props: Props) => {
         <div className='flex flex-col w-full min-h-[100dvh] select-none text-zinc-800'>
             <GeneralHeader />
             <div className='w-full h-full px-4'>
-                <h1 className='text-2xl font-semibold mb-2'>Purchase orders</h1>
+                <h1 className='text-2xl font-semibold mb-2'>Purchase order receipts</h1>
                 <div className='flex flex-col gap-2 sm:flex-row max-h-[55dvh] overflow-x-hidden overflow-y-auto'>
                     {
                         orders && orders.map((order, index) => {

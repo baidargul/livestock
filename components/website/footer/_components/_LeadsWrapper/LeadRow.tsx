@@ -16,6 +16,7 @@ import { number } from 'framer-motion'
 import React, { use, useEffect, useState } from 'react'
 import { PiExclamationMark } from 'react-icons/pi'
 import StatusWindow from './StatusWindow'
+import Link from 'next/link'
 
 type Props = {
     lead: any
@@ -143,6 +144,9 @@ const LeadRow = (props: Props) => {
                             <div></div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
+                            {props.lead.status === "dispatched" && String(props.lead.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.user.phone}`}>
+                                <Button className='w-full'>Call</Button>
+                            </Link>}
                             <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
                                 <Button className={`w-full ${props.lead.status === "dispatched" && "pointer-events-none grayscale-100"}`}>{formalizeText(props.lead.status)}</Button>
                             </StatusWindow>

@@ -63,7 +63,7 @@ async function forAnimal(animalId: string) {
   };
 
   try {
-    const leads = await prisma.leads.findMany({
+    let leads = await prisma.leads.findMany({
       where: {
         animalId: animalId,
       },
@@ -75,6 +75,7 @@ async function forAnimal(animalId: string) {
             balance: true,
             city: true,
             province: true,
+            phone: true,
           },
         },
         animal: true,
@@ -83,15 +84,16 @@ async function forAnimal(animalId: string) {
         createdAt: "desc",
       },
     });
-    if (leads.length > 0) {
-      response.status = 200;
-      response.message = "Leads found";
-      response.data = leads;
-    } else {
-      response.status = 404;
-      response.message = "No leads found for this animal";
-      response.data = null;
-    }
+    leads = leads.map((lead) => ({
+      ...lead,
+      user: {
+        ...lead.user,
+        phone: lead.sold ? lead.user.phone : null,
+      },
+    }));
+    response.status = 200;
+    response.message = `${leads.length} Leads found`;
+    response.data = leads;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR] LEAD FOR ANIMAL: " + error.message);
@@ -266,6 +268,7 @@ async function listAll() {
           id: true,
           name: true,
           balance: true,
+          phone: true,
         },
       },
       animal: {
@@ -278,7 +281,13 @@ async function listAll() {
       },
     },
   });
-  return response;
+  return response.map((lead) => ({
+    ...lead,
+    user: {
+      ...lead.user,
+      phone: lead.sold ? lead.user.phone : null,
+    },
+  }));
 }
 async function convertToSale(currentUserId: string, leadId: string) {
   let response = {
