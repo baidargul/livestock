@@ -55,8 +55,6 @@ const page = async (props: Props) => {
     const animal = response.data as any
     const breedObj = images[animal?.type].breeds.find((b: any) => b.name.toLowerCase() === animal.breed);
     const info = breedObj?.info;
-
-    console.log(animal)
     return (
         animal && <div className='w-full h-full relative' key={timestamp}>
             <OnSoldProtection animal={animal} />

@@ -77,14 +77,7 @@ async function forAnimal(animalId: string) {
             province: true,
           },
         },
-        animal: {
-          select: {
-            id: true,
-            userId: true,
-            type: true,
-            breed: true,
-          },
-        },
+        animal: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -112,7 +105,7 @@ async function create(
   animalId: string,
   userId: string,
   request: {
-    deliveryOptions: string[];
+    deliveryOptions: any[];
     maleQuantityAvailable: number;
     femaleQuantityAvailable: number;
     amount: number;
@@ -205,6 +198,7 @@ async function create(
         femaleQuantityAvailable: Number(request.femaleQuantityAvailable ?? 0),
         city: request.city,
         province: request.province,
+        deliveryOptions: request.deliveryOptions || [],
         amount: Number(request.amount) ?? 0,
       },
       select: {
