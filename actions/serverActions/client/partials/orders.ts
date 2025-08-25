@@ -24,7 +24,14 @@ async function getOrderPreview(orderId: string) {
   return response.data;
 }
 
+async function create(order: any) {
+  const data = { order };
+  const response = await axios.post(`/api/orders`, order);
+  return response.data;
+}
+
 export const orders = {
+  create,
   withdraw,
   getOrderPreview,
   getOrderCount,
