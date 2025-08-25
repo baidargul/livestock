@@ -44,7 +44,7 @@ const LeadsWrapper = (props: Props) => {
                 </div>
                 <div className='text-zinc-500 font-bold p-1 px-4 border-y border-zinc-500 flex items-center gap-2'>
                     {isFetching && <RefreshCcwIcon size={16} className='animate-spin' />}
-                    <div>
+                    <div className='line-clamp-1'>
                         Your Animals and their requests are listed below
                     </div>
                 </div>
