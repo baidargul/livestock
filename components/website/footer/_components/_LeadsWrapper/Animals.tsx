@@ -38,10 +38,10 @@ const Animals = (props: Props) => {
     }
 
     return (
-        <div className='w-full h-full pt-2 flex flex-col gap-2'>
+        <div className='w-full h-full pt-1 flex flex-col gap-2'>
             {animals.length > 0 ? (
                 animals.map((animal, index: number) => (
-                    <div onClick={() => props.selectAnimal && props.selectAnimal(animal)} key={`${animal.id}-${index}`} className={`p-2 cursor-pointer rounded border-b border-zinc-200 ${props.selectedAnimal && props.selectedAnimal.id === animal.id ? "bg-emerald-100" : "bg-zinc-100"}`}>
+                    <div onClick={() => props.selectAnimal && props.selectAnimal(animal)} key={`${animal.id}-${index}`} className={`p-2 cursor-pointer rounded border-b border-zinc-200 ${props.selectedAnimal ? props.selectedAnimal.id === animal.id ? "bg-amber-100" : "bg-zinc-100" : "bg-white"}`}>
                         <Image src={animal.images.length > 0 ? animal.images[0].image : images.chickens.images[1]} loading='lazy' layout='fixed' alt='Product List Row' width={1000} height={1000} draggable={false} className='w-full h-[100px] group-hover:scale-105 transition-all duration-300 ease-in-out bg-black select-none object-contain' />
                         <div className='text-sm'>{Number(animal.maleQuantityAvailable ?? 0) + Number(animal.femaleQuantityAvailable ?? 0)} {animal.breed} {animal.type}</div>
                         <div className='text-xs text-zinc-700'>'{animal.title}'</div>

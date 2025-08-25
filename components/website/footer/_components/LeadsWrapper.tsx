@@ -52,7 +52,7 @@ const LeadsWrapper = (props: Props) => {
                     <section className='p-1 h-[calc(100vh-140px)] overflow-y-auto bg-white'>
                         {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />}
                     </section>
-                    <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-100'>
+                    <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-400'>
                         <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />
                     </section>
                 </div>
