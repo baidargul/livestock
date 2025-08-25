@@ -136,7 +136,7 @@ const CreateLeadButton = (props: Props) => {
                 Number(HandShakeCost.seller) > Number(animal.user.balance ?? 0) &&
                 <div className='w-full'>
                     <div className='p-1 px-4 tracking-tight bg-amber-50'>
-                        Author of this post has insufficient balance to exchange his phone number. Please wait until he recharge and get coins to his account. You can still use the "I'm interested" button to notify him that you are interested in his animal.
+                        Author of this post has insufficient balance to exchange his phone number. Please wait until he recharge and get coins to his account. You can still use the "Request Number" button to notify him that you are interested in his animal.
                     </div>
                 </div>
             }
