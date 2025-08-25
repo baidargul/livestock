@@ -179,7 +179,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                     </div>
                                     <div className=''>
                                         <div className='font-semibold tracking-wide'>Orders History</div>
-                                        <div className='text-xs tracking-wide italic text-black/60'>Your orders dashboard.</div>
+                                        <div className='text-xs tracking-wide italic text-black/60'>List of all your orders.</div>
                                     </div>
                                 </div>
                             </Link>
