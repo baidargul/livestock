@@ -57,6 +57,23 @@ const LeadRow = (props: Props) => {
         }
     }
 
+    const continueRemoveLead = async () => {
+        const response: any = await actions.client.leads.remove(props.lead.id)
+        if (response) {
+            if (response.status === 200) {
+                props.fetchLeads && props.fetchLeads()
+                dialog.closeDialog()
+            } else {
+                dialog.showDialog(`Error`, null, response.message)
+            }
+        }
+    }
+
+    const handleRemoveLead = async () => {
+        if (!user || !props.lead) return;
+        dialog.showDialog("Remove Lead", <RemoveLeadConfirmationDialog onYes={continueRemoveLead} />)
+    }
+
     const handleFetchNumber = async () => {
         if (!user) return
         dialog.showDialog('Charges', <CostConfirmationDialog onContinue={fetchUserDetails} />)
@@ -129,7 +146,7 @@ const LeadRow = (props: Props) => {
                             <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
                                 <Button className='w-full'>{formalizeText(props.lead.status)}</Button>
                             </StatusWindow>
-                            <Button className='w-full' variant='btn-secondary'>Remove</Button>
+                            <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
                         </div>
                     </div>
                 }
@@ -182,6 +199,20 @@ const CostConfirmationDialog = (props: { onContinue: () => void }) => {
             <div className='mt-4 flex gap-2 items-center w-full'>
                 <Button onClick={handleClose} variant='btn-secondary' className='w-full'>Cancel</Button>
                 <Button disabled={isLoading} onClick={handleContinue} className='w-full'>Continue</Button>
+            </div>
+        </div>
+    )
+}
+
+const RemoveLeadConfirmationDialog = (props: { onYes: () => void }) => {
+    const dialog = useDialog()
+
+    return (
+        <div className='px-4 flex flex-col gap-2'>
+            <div className='font-bold'>Are you sure to remove this lead</div>
+            <div className='flex gap-2 w-full'>
+                <Button onClick={props.onYes} variant={`btn-secondary`} className='w-full'>Yes</Button>
+                <Button onClick={() => dialog.closeDialog()} variant={`btn-secondary`} className='w-full'>No</Button>
             </div>
         </div>
     )
