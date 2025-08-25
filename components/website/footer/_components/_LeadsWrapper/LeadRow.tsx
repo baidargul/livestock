@@ -69,7 +69,7 @@ const LeadRow = (props: Props) => {
     delete animal?.animal
 
     return (
-        <div className='bg-white border border-zinc-200 p-2 rounded h-full'>
+        <div className='bg-white border border-zinc-200 p-2 rounded flex flex-col h-full'>
             <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.user.name)}</div>
             {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
             {String(props.lead.city).length > 0 && String(props.lead.province).length > 0 && <div className='text-zinc-600 text-xs'>Delivery location: <span className='font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</span></div>}
@@ -102,7 +102,7 @@ const LeadRow = (props: Props) => {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className='mt-auto'>
                 <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>
             </div>
         </div>
