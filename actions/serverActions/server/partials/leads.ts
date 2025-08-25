@@ -108,7 +108,19 @@ async function forAnimal(animalId: string) {
     return response;
   }
 }
-async function create(animalId: string, userId: string) {
+async function create(
+  animalId: string,
+  userId: string,
+  request: {
+    deliveryOptions: string[];
+    maleQuantityAvailable: number;
+    femaleQuantityAvailable: number;
+    amount: number;
+    posted: boolean;
+    city: string;
+    province: string;
+  }
+) {
   let response = {
     status: 500,
     message: "Internal Server Error",
@@ -189,12 +201,23 @@ async function create(animalId: string, userId: string) {
       data: {
         animalId: animal.id,
         userId: user.id,
+        maleQuantityAvailable: Number(request.maleQuantityAvailable ?? 0),
+        femaleQuantityAvailable: Number(request.femaleQuantityAvailable ?? 0),
+        city: request.city,
+        province: request.province,
+        amount: Number(request.amount) ?? 0,
       },
       select: {
         id: true,
         createdAt: true,
         animalId: true,
         userId: true,
+        maleQuantityAvailable: true,
+        femaleQuantityAvailable: true,
+        city: true,
+        province: true,
+        amount: true,
+        deliveryOptions: true,
         user: {
           select: {
             id: true,

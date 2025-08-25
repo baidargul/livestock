@@ -227,12 +227,18 @@ model Orders {
 }
 
 model leads {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  animalId  String   @db.ObjectId
-  animal    Animal   @relation(fields: [animalId], references: [id])
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  id                      String            @id @default(auto()) @map("_id") @db.ObjectId
+  animalId                String            @db.ObjectId
+  animal                  Animal            @relation(fields: [animalId], references: [id])
+  deliveryOptions         DeliveryOptions[]
+  maleQuantityAvailable   Int?
+  femaleQuantityAvailable Int?
+  city                    String
+  province                String
+  amount                  Float             @default(0)
+  userId                  String            @db.ObjectId
+  user                    User              @relation(fields: [userId], references: [id])
+  createdAt               DateTime          @default(now())
 }
 
 enum InteractionType {

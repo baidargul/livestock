@@ -8,6 +8,7 @@ import { useSession } from '@/hooks/useSession'
 import { formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
+import PostBiddingOptions from './PostBiddingOptions'
 
 type Props = {
     animal: any
@@ -23,6 +24,23 @@ const CreateLeadButton = (props: Props) => {
     const [HandShakeCost, setHandshakeCost] = useState({
         buyer: 0,
         seller: 0
+    })
+    const [postBiddingOptions, setPostBiddingOptions] = useState<{
+        deliveryOptions: string[],
+        maleQuantityAvailable: number,
+        femaleQuantityAvailable: number,
+        amount: number,
+        posted: boolean
+        city: string,
+        province: string
+    }>({
+        deliveryOptions: [],
+        maleQuantityAvailable: 0,
+        femaleQuantityAvailable: 0,
+        amount: 0,
+        posted: false
+        , city: '',
+        province: ''
     })
     const [lead, setLead] = useState<any>(null)
     const { animal } = props
@@ -64,7 +82,7 @@ const CreateLeadButton = (props: Props) => {
     const continueLead = async () => {
         dialog.closeDialog()
         setIsCreating(true)
-        const response: any = await actions.client.leads.create(animal.id, user.id)
+        const response: any = await actions.client.leads.create(animal.id, user.id, postBiddingOptions)
         if (response) {
             if (response.status === 200) {
                 const data = response.data
@@ -122,7 +140,11 @@ const CreateLeadButton = (props: Props) => {
                     </div>
                 </div>
             }
-            {!lead && <Button disabled={isChecking || isCreating} onClick={handleCreateLead} className='w-full mt-2'>{isCreating ? "..." : "I'm interested"}</Button>}
+            {!lead &&
+                <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
+                    <Button disabled={isChecking || isCreating} className='w-full mt-2'>{isCreating ? "..." : "Request Number"}</Button>
+                </PostBiddingOptions>
+            }
             {lead !== null && <Button disabled={isChecking || isCreating || isRemoving} variant='btn-secondary' onClick={handleRemoveLead} className='w-full mt-2'>{isRemoving ? "..." : "Not interested Anymore"}</Button>}
         </div>
     )

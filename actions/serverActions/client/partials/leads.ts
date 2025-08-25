@@ -17,9 +17,21 @@ async function hasLead(animalId: string, userId: string) {
   return response.data;
 }
 
-async function create(animalId: string, userId: string) {
+async function create(
+  animalId: string,
+  userId: string,
+  request: {
+    deliveryOptions: string[];
+    maleQuantityAvailable: number;
+    femaleQuantityAvailable: number;
+    amount: number;
+    posted: boolean;
+    city: string;
+    province: string;
+  }
+) {
   if (!animalId || !userId) return null;
-  const data = { animalId, userId };
+  const data = { animalId, userId, request };
   const response = await axios.post(`${apiPath}`, data);
   return response.data;
 }

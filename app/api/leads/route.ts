@@ -10,14 +10,14 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    const { animalId, userId } = data;
-    if (!animalId || !userId) {
+    const { animalId, userId, request } = data;
+    if (!animalId || !userId || !request) {
       response.status = 400;
-      response.message = "Bad Request: Missing animalId or userId";
+      response.message = "Bad Request: Missing animalId or userId or request";
       return new Response(JSON.stringify(response));
     }
 
-    response = await actions.server.leads.create(animalId, userId);
+    response = await actions.server.leads.create(animalId, userId, request);
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);
@@ -52,7 +52,6 @@ export async function DELETE(req: NextRequest) {
     return new Response(JSON.stringify(response));
   }
 }
-
 export async function GET(req: NextRequest) {
   const response = {
     status: 500,

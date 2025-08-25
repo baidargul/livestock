@@ -176,10 +176,10 @@ const page = async (props: Props) => {
                             </BidProtection>
                         }
                         {/* <DirectCTOButton animal={animal}>
-                        <Button variant={'btn-secondary'} className='w-full flex justify-center items-center gap-2'>
-                            <Image src={images.site.coins.gold.shine} alt='coin-logo' width={100} height={100} className='w-6 h-6 object-contain pointer-events-none select-none' /> Show Number
-                        </Button>
-                    </DirectCTOButton> */}
+                            <Button variant={'btn-secondary'} className='w-full flex justify-center items-center gap-2'>
+                                <Image src={images.site.coins.gold.shine} alt='coin-logo' width={100} height={100} className='w-6 h-6 object-contain pointer-events-none select-none' /> Show Number
+                            </Button>
+                        </DirectCTOButton> */}
                     </div>
                 }
                 {
