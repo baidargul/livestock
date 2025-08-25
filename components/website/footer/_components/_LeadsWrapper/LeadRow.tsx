@@ -126,7 +126,7 @@ const LeadRow = (props: Props) => {
                             <div></div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
-                            <StatusWindow lead={props.lead}>
+                            <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
                                 <Button className='w-full'>{formalizeText(props.lead.status)}</Button>
                             </StatusWindow>
                             <Button className='w-full' variant='btn-secondary'>Remove</Button>

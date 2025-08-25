@@ -280,7 +280,6 @@ async function listAll() {
   });
   return response;
 }
-
 async function convertToSale(currentUserId: string, leadId: string) {
   let response = {
     status: 500,
@@ -431,10 +430,39 @@ async function convertToSale(currentUserId: string, leadId: string) {
   }
 }
 
+async function changeStatus(leadId: string, status: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const lead = await prisma.leads.update({
+      where: { id: leadId },
+      data: {
+        status: status,
+      },
+    });
+
+    response.status = 200;
+    response.message = "Lead status changed successfully";
+    response.data = lead;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR] LEAD CHANGE STATUS: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const leads = {
   create,
   hasLead,
   forAnimal,
+  changeStatus,
   convertToSale,
   remove,
   listAll,

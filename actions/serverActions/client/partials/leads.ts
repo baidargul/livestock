@@ -55,11 +55,18 @@ async function convertToSale(currentUserId: string, leadId: string) {
   return response.data;
 }
 
+async function changeStatus(leadId: string, status: string) {
+  const data = { leadId, status };
+  const response = await axios.post(`${apiPath}/changeStatus`, data);
+  return response.data;
+}
+
 export const leads = {
   listAll,
   create,
   forAnimal,
   hasLead,
+  changeStatus,
   convertToSale,
   remove,
 };

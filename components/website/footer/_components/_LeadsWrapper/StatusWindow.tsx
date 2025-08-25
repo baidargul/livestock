@@ -1,19 +1,36 @@
 'use client'
+import { actions } from '@/actions/serverActions/actions'
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import Button from '@/components/ui/Button'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     children: React.ReactNode
     lead: any
+    fetchLeads?: () => void
 }
 
 const StatusWindow = (props: Props) => {
+    const [newStatus, setNewStatus] = useState('')
     const [isOpen, setIsOpen] = useState(false)
+
+    useEffect(() => {
+        setNewStatus('')
+    }, [isOpen])
 
     const handleOpen = (val: boolean) => {
         setIsOpen(val)
+    }
+
+    const handleChangeStatus = async (val: string) => {
+        setNewStatus(val)
+        const response = await actions.client.leads.changeStatus(props.lead.id, val)
+        if (response.status === 200) {
+            props.fetchLeads && props.fetchLeads()
+        }
+        setNewStatus('')
+
     }
 
     return (
@@ -46,9 +63,9 @@ const StatusWindow = (props: Props) => {
                     <div className='my-2'>
                         <div className='font-bold mb-2'>Order Status</div>
                         <div className='grid grid-cols-3 gap-2'>
-                            <Button variant={props.lead.status === 'pending' ? "btn-primary" : "btn-secondary"}>Pending</Button>
-                            <Button variant={props.lead.status === 'dispatched' ? "btn-primary" : "btn-secondary"}>Dispatched</Button>
-                            <Button variant={props.lead.status === 'cancelled' ? "btn-primary" : "btn-secondary"}>Cancelled</Button>
+                            <Button disabled={newStatus.length > 0} onClick={() => handleChangeStatus('pending')} variant={props.lead.status === 'pending' ? "btn-primary" : "btn-secondary"}>Pending</Button>
+                            <Button disabled={newStatus.length > 0} onClick={() => handleChangeStatus('dispatched')} variant={props.lead.status === 'dispatched' ? "btn-primary" : "btn-secondary"}>Dispatched</Button>
+                            <Button disabled={newStatus.length > 0} onClick={() => handleChangeStatus('cancelled')} variant={props.lead.status === 'cancelled' ? "btn-primary" : "btn-secondary"}>Cancelled</Button>
                         </div>
                     </div>
                     <Button onClick={() => handleOpen(false)} className='w-full'>Close</Button>
