@@ -156,6 +156,7 @@ const PostBiddingOptions = (props: Props) => {
                                     <Textbox disabled={props.directCTO ? props.animal.priceUnit === "per Set" ? true : Number(props.animal.femaleQuantityAvailable) < 1 : false} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
                                 </div>
                             </div>
+                            {Number(props.animal.cargoPrice ?? 0) > 0 && <div>{formatCurrency(props.animal.cargoPrice ?? 0)}</div>}
                             <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
                                 {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${Number(Number(sellerOffer / totalQuantity).toFixed(0))} per animal.`} />}

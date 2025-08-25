@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import DeliveryIcon from '@/components/Animals/DeliveryIcon'
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import ExpiryTimeControl from '@/components/controls/ExpiryTimeControl'
 import RechargeDialog from '@/components/Recharge/RechargeDialog'
@@ -10,6 +11,7 @@ import { useProtocols } from '@/hooks/useProtocols'
 import { useSession } from '@/hooks/useSession'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
+import { number } from 'framer-motion'
 import React, { use, useEffect, useState } from 'react'
 import { PiExclamationMark } from 'react-icons/pi'
 
@@ -101,6 +103,18 @@ const LeadRow = (props: Props) => {
                         <ExpiryTimeControl date={props.lead.createdAt} period='1day' />
                     </div>
                 </div>
+            </div>
+            <div className='flex flex-col'>
+                {
+                    props.lead.deliveryOptions.map((method: any, index: number) => {
+
+                        return (
+                            <div key={`${method}-${index}`} className='flex gap-1 items-center text-nowrap text-xs'>
+                                <DeliveryIcon icon={method} /> - {method === "SELF_PICKUP" ? "I'll Self Pickup." : "Cargo/Delivery me."}
+                            </div>
+                        )
+                    })
+                }
             </div>
             <div className='mt-auto'>
                 <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>
