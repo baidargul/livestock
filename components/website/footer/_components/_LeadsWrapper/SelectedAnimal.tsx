@@ -16,6 +16,10 @@ const SelectedAnimal = (props: Props) => {
     const [leads, setLeads] = useState([])
 
     useEffect(() => {
+        setLeads([])
+    }, [])
+
+    useEffect(() => {
         if (user) {
             fetchLeads()
         } else {

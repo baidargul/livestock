@@ -1,6 +1,6 @@
 'use client'
 import { ChevronLeft, ChevronLeftIcon, MoveRightIcon, PanelLeftIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Animals from './_LeadsWrapper/Animals'
 import SelectedAnimal from './_LeadsWrapper/SelectedAnimal'
 import CoinsAvailable from '../../profile/_components/CoinsAvailable'
@@ -14,6 +14,10 @@ const LeadsWrapper = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
     const [selectedAnimal, setSelectedAnimal] = useState<any>(null)
+
+    useEffect(() => {
+        setSelectedAnimal(null)
+    }, [])
 
 
     const handleOpen = (val: boolean) => {
