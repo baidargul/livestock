@@ -76,14 +76,14 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </LeadsWrapper>}
-            <ProfileMenuWrapper>
+            {/* <ProfileMenuWrapper>
                 <div className={`${route.includes("profile") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <UserIcon />
                     <div className='line-clamp-1 max-w-20'>
                         {user ? user?.name : "Login"}
                     </div>
                 </div>
-            </ProfileMenuWrapper>
+            </ProfileMenuWrapper> */}
         </div>
     )
 }
