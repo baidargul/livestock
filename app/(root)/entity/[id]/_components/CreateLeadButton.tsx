@@ -149,6 +149,7 @@ const CreateLeadButton = (props: Props) => {
             }
 
             {<div className='w-full mt-2'>
+                <div className='text-xs'>Your requests:</div>
                 <table className='w-full text-xs my-2'>
                     <thead>
                         <tr>
@@ -167,7 +168,7 @@ const CreateLeadButton = (props: Props) => {
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.city && String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.maleQuantityAvailable ?? 0} pc</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.femaleQuantityAvailable ?? 0} pc</td>
-                                        <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...lead.animal, ...lead }).price)}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.animal, ...lead }).price)}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l border-r"> <XIcon size={16} onClick={() => handleRemoveLead(lead.id)} className='mx-auto cursor-pointer' /> </td>
                                     </tr>
                                 )
