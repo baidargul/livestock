@@ -7,6 +7,7 @@ import CoinsAvailable from '../../profile/_components/CoinsAvailable'
 
 type Props = {
     children: React.ReactNode
+    defaultAnimalId?: string
 }
 
 const LeadsWrapper = (props: Props) => {
@@ -50,7 +51,7 @@ const LeadsWrapper = (props: Props) => {
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
                     <section className='p-1 h-[calc(100vh-140px)] overflow-y-auto bg-white'>
-                        {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />}
+                        {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
                     </section>
                     <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-400'>
                         <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />
