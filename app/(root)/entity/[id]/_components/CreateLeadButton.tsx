@@ -5,10 +5,12 @@ import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
 import { useProtocols } from '@/hooks/useProtocols'
 import { useSession } from '@/hooks/useSession'
-import { formatCurrency } from '@/lib/utils'
+import { calculatePricing, formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
+import { XIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 type Props = {
     animal: any
@@ -18,6 +20,7 @@ const CreateLeadButton = (props: Props) => {
     const [isChecking, setIsChecking] = useState(false)
     const [isCreating, setIsCreating] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
+    const router = useRouter()
     const protocols = useProtocols()
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
     const session: any = useSession()
@@ -42,7 +45,7 @@ const CreateLeadButton = (props: Props) => {
         , city: '',
         province: ''
     })
-    const [lead, setLead] = useState<any>(null)
+    const [leads, setLeads] = useState<any>([])
     const { animal } = props
     const dialog = useDialog()
     const user = useUser()
@@ -71,9 +74,9 @@ const CreateLeadButton = (props: Props) => {
         const response: any = await actions.client.leads.hasLead(animal.id, user.id)
         if (response) {
             if (response.status === 200) {
-                setLead(response.data)
+                setLeads(response.data ?? [])
             } else {
-                setLead(null)
+                setLeads([])
             }
         }
         setIsChecking(false)
@@ -90,11 +93,12 @@ const CreateLeadButton = (props: Props) => {
                 if (session) {
                     session.fetchBalance()
                 }
-                setLead(data)
+                setLeads((prev: any) => [...prev, data])
                 if (data.user.balance < 1) {
                     dialog.showDialog('Low Balance', null, "Your lead has been created and the author has been notified. However, your balance is low. Please recharge your account so that author can see your contact details when they check their leads and select you.")
                 }
                 dialog.showDialog("Lead created", null, "Your lead has been created and the author has been notified. Please wait for the seller to accept your lead.")
+                router.refresh()
             } else if (response.status === 305) {
                 dialog.showDialog('Insufficient balance', <RechargeDialog />)
             }
@@ -115,20 +119,23 @@ const CreateLeadButton = (props: Props) => {
         }
     }
 
-    const handleRemoveLead = async () => {
-        if (!user || !lead) return;
+    const handleRemoveLead = async (leadId: string) => {
+        if (!user || leads.length === 0) return;
+        if (!leadId || leadId.length === 0) return
         setIsCreating(true)
-        const response: any = await actions.client.leads.remove(lead.id)
+        const response: any = await actions.client.leads.remove(leadId)
         if (response) {
             if (response.status === 200) {
                 dialog.showDialog('Success', null, "You have removed your lead. The author will no longer see your contact details.")
-                setLead(null)
+                hasLead()
             } else {
                 dialog.showDialog('Error', null, response.message)
             }
         }
         setIsCreating(false)
     }
+
+    console.log(leads)
 
     return (
         user && user?.id !== animal.user.id && <div inert={fetchingHandshake} className={`w-full px-2 ${fetchingHandshake ? "opacity-50 pointer-events-none grayscale-100" : ""}`}>
@@ -140,12 +147,38 @@ const CreateLeadButton = (props: Props) => {
                     </div>
                 </div>
             }
-            {!lead &&
-                <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
-                    <Button disabled={isChecking || isCreating} className='w-full mt-2'>{isCreating ? "..." : "Request Number"}</Button>
-                </PostBiddingOptions>
-            }
-            {lead !== null && <Button disabled={isChecking || isCreating || isRemoving} variant='btn-secondary' onClick={handleRemoveLead} className='w-full mt-2'>{isRemoving ? "..." : "Not interested Anymore"}</Button>}
+
+            {<div className='w-full mt-2'>
+                <table className='w-full text-xs my-2'>
+                    <thead>
+                        <tr>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Location</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Male</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Female</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l border-r'>Amount</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l border-r text-center'>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            leads && leads !== null && leads.map((lead: any, index: number) => {
+                                return (
+                                    <tr key={`${lead}-${index + 1}`}>
+                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.city && String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.maleQuantityAvailable ?? 0} pc</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.femaleQuantityAvailable ?? 0} pc</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...lead.animal, ...lead }).price)}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l border-r"> <XIcon size={16} onClick={() => handleRemoveLead(lead.id)} className='mx-auto cursor-pointer' /> </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>}
+            <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
+                <Button disabled={isChecking || isCreating} className='w-full mt-2'>{isCreating ? "..." : `${leads && leads.length > 0 ? "Request More" : "Create Request"}`}</Button>
+            </PostBiddingOptions>
         </div>
     )
 }

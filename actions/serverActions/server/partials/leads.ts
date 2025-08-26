@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { actions } from "../../actions";
-import { calculatePricing } from "@/lib/utils";
 
 async function hasLead(animalId: string, userId: string) {
   let response = {
@@ -10,7 +9,7 @@ async function hasLead(animalId: string, userId: string) {
   };
 
   try {
-    const lead = await prisma.leads.findFirst({
+    const leads = await prisma.leads.findMany({
       where: {
         animalId: animalId,
         userId: userId,
@@ -21,6 +20,8 @@ async function hasLead(animalId: string, userId: string) {
             id: true,
             name: true,
             balance: true,
+            city: true,
+            province: true,
           },
         },
         animal: {
@@ -37,15 +38,9 @@ async function hasLead(animalId: string, userId: string) {
       },
     });
 
-    if (lead) {
-      response.status = 200;
-      response.message = "Lead exists";
-      response.data = lead;
-    } else {
-      response.status = 200;
-      response.message = "No lead found";
-      response.data = null;
-    }
+    response.status = 200;
+    response.message = `${leads.length} Leads found`;
+    response.data = leads;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR] LEAD CHECK: " + error.message);
@@ -159,21 +154,6 @@ async function create(
     }
 
     const BuyerDirectHandShakeCost = BuyerDirectHandShake?.value || 0;
-
-    const isExists = await hasLead(animal.id, user.id);
-    if (isExists.status === 200) {
-      if (isExists.data) {
-        response.status = 400;
-        response.message = "Lead already exists";
-        response.data = isExists.data;
-        return response;
-      }
-    } else {
-      response.status = isExists.status;
-      response.message = isExists.message;
-      response.data = isExists.data;
-      return response;
-    }
 
     if (Number(BuyerDirectHandShakeCost) > Number(user.balance ?? 0)) {
       response.status = 305;

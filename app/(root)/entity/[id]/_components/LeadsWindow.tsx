@@ -24,7 +24,6 @@ const LeadsWindow = (props: Props) => {
         setIsFetching(true)
         const response = await actions.client.leads.forAnimal(props.animal.id)
         if (response.status === 200) {
-            console.log(response.data)
             setLeads(response.data)
         } else {
             setLeads([])
@@ -47,11 +46,10 @@ const LeadsWindow = (props: Props) => {
                     </thead>
                     <tbody>
                         {
-                            leads.map((lead: any, index: number) => {
-
+                            leads && leads?.map((lead: any, index: number) => {
                                 return (
                                     <tr key={`${lead}-${index + 1}`}>
-                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.city}, {lead.province}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l">{String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.maleQuantityAvailable ?? 0} pc</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.femaleQuantityAvailable ?? 0} pc</td>
                                         <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...lead.animal, ...lead }).price)}</td>
