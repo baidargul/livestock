@@ -38,7 +38,7 @@ const LeadsWindow = (props: Props) => {
                 <table className='w-full text-xs my-2'>
                     <thead>
                         <tr>
-                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Location</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Deliver to</td>
                             <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Male</td>
                             <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Female</td>
                             <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l border-r'>Amount</td>
