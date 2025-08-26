@@ -135,7 +135,9 @@ const CreateLeadButton = (props: Props) => {
         setIsCreating(false)
     }
 
-    console.log(leads)
+    const handleConfirmRemoveLead = (leadId: string) => {
+        dialog.showDialog('Remove Lead', <RemoveLeadRequest onYes={() => handleRemoveLead(leadId)} />)
+    }
 
     return (
         user && user?.id !== animal.user.id && <div inert={fetchingHandshake} className={`w-full px-2 ${fetchingHandshake ? "opacity-50 pointer-events-none grayscale-100" : ""}`}>
@@ -169,7 +171,7 @@ const CreateLeadButton = (props: Props) => {
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.maleQuantityAvailable ?? 0} pc</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.femaleQuantityAvailable ?? 0} pc</td>
                                         <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.animal, ...lead }).price)}</td>
-                                        <td className="p-1 border-zinc-200 border-b border-l border-r"> <XIcon size={16} onClick={() => handleRemoveLead(lead.id)} className='mx-auto cursor-pointer' /> </td>
+                                        <td className="p-1 border-zinc-200 border-b border-l border-r"> <XIcon size={16} onClick={() => handleConfirmRemoveLead(lead.id)} className='mx-auto cursor-pointer' /> </td>
                                     </tr>
                                 )
                             })
@@ -199,3 +201,17 @@ const CreateLeadConfirmationDialog = (props: { text: string, onYes?: () => void 
         </div>
     )
 }
+const RemoveLeadRequest = (props: { onYes?: () => void }) => {
+    const dialog = useDialog()
+
+    return (
+        <div className='px-4'>
+            <div className='mb-4'>Are you sure to remove this request?</div>
+            <div className='w-full gap-2 flex items-center'>
+                <Button onClick={() => dialog.closeDialog()} className='w-full' variant='btn-secondary' >No</Button>
+                <Button onClick={props.onYes} className='w-full'>Yes</Button>
+            </div>
+        </div>
+    )
+}
+
