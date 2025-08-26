@@ -17,6 +17,7 @@ import React, { use, useEffect, useState } from 'react'
 import { PiExclamationMark } from 'react-icons/pi'
 import StatusWindow from './StatusWindow'
 import Link from 'next/link'
+import { PencilIcon, PhoneIcon } from 'lucide-react'
 
 type Props = {
     lead: any
@@ -121,34 +122,42 @@ const LeadRow = (props: Props) => {
                     </div>
                 </div>
             </div>
-            <div className='flex flex-col'>
-                {
-                    props.lead.deliveryOptions.map((method: any, index: number) => {
+            <div className='mb-2'>
+                <div>
+                    Delivery mode:
+                </div>
+                <div className='flex flex-col'>
+                    {
+                        props.lead.deliveryOptions.map((method: any, index: number) => {
 
-                        return (
-                            <div key={`${method}-${index}`} className='flex gap-1 items-center text-nowrap text-xs'>
-                                <DeliveryIcon icon={method} /> - {method === "SELF_PICKUP" ? "I'll Self Pickup." : "Cargo/Deliver me."}
-                            </div>
-                        )
-                    })
-                }
+                            return (
+                                <div key={`${method}-${index}`} className='flex gap-1 items-center text-nowrap text-xs'>
+                                    <DeliveryIcon icon={method} /> - {method === "SELF_PICKUP" ? "I'll Self Pickup." : "Cargo/Deliver me."}
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </div>
             <div className='mt-auto'>
                 {!props.lead.sold && <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>}
                 {props.lead.sold &&
-                    <div>
-                        <div>
+                    <div className='border-t border-zinc-200 pt-4'>
+                        <div className='tracking-tight'>
+                            <div>Phone:</div>
+                            {String(props.lead.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.user.phone}`} className='cursor-pointer'>
+                                <div className='w-full p-2 px-4 text-emerald-800 border border-dashed border-emerald-800 rounded flex items-center gap-2 justify-center text-center'> <PhoneIcon size={16} /> {props.lead.user.phone}</div>
+                            </Link>}
+                        </div>
+                        <div className='mt-4'>
                             <div>
                                 Status:
                             </div>
                             <div></div>
                         </div>
                         <div className='w-full flex flex-col gap-2'>
-                            {props.lead.status === "dispatched" && String(props.lead.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.user.phone}`}>
-                                <Button className='w-full'>Call</Button>
-                            </Link>}
                             <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
-                                <Button className={`w-full ${props.lead.status === "dispatched" && "pointer-events-none grayscale-100"}`}>{formalizeText(props.lead.status)}</Button>
+                                <Button className={`w-full ${props.lead.status === "dispatched" && "pointer-events-none grayscale-100"} flex gap-2 justify-center items-center text-center`}> {props.lead.status !== "dispatched" && <PencilIcon size={16} />} {formalizeText(props.lead.status)}</Button>
                             </StatusWindow>
                             <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
                         </div>
