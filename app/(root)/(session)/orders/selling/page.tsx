@@ -4,9 +4,9 @@ import GeneralFooter from '@/components/website/footer/GeneralFooter'
 import GeneralHeader from '@/components/website/header/GeneralHeader'
 import { MoveLeftIcon, MoveRightIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import PurchaseOrderRow from './_components/PurchaseOrderRow'
 import { useUser } from '@/socket-client/SocketWrapper'
 import { actions } from '@/actions/serverActions/actions'
+import SaleOrderRow from './_components/SaleOrderRow'
 
 type Props = {}
 
@@ -40,7 +40,7 @@ const page = (props: Props) => {
     const fetchOrders = async () => {
         if (!user) return
         setIsFetching(true)
-        const response = await actions.client.orders.getPurchaseOrders(user.id, currentPage, orderLimit)
+        const response = await actions.client.orders.getSellingOrders(user.id, currentPage, orderLimit)
         if (response.status === 200) {
             setOrders(response.data.orders)
             setTotalOrders(response.data.total)
@@ -52,11 +52,11 @@ const page = (props: Props) => {
         <div className='flex flex-col w-full min-h-[100dvh] select-none text-zinc-800'>
             <GeneralHeader />
             <div className='w-full h-full px-4'>
-                <h1 className='text-2xl font-semibold mb-2'>Purchase order receipts</h1>
+                <h1 className='text-2xl font-semibold mb-2'>Sold order receipts</h1>
                 <div className='flex flex-col gap-2 sm:flex-row max-h-[55dvh] overflow-x-hidden overflow-y-auto'>
                     {
                         orders && orders.map((order, index) => {
-                            return <PurchaseOrderRow key={index} order={order} refresh={fetchOrders} index={currentPage * orderLimit - orderLimit + index + 1} />
+                            return <SaleOrderRow key={index} order={order} refresh={fetchOrders} index={currentPage * orderLimit - orderLimit + index + 1} />
                         })
                     }
                     {
