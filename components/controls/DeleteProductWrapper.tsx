@@ -54,7 +54,7 @@ const DeleteProductWrapper = (props: Props) => {
     if (!isAuthor) return null
 
     return (
-        <div onClick={triggerDialog} className='cursor-pointer select-none md:hidden'>{props.children}</div>
+        <div onClick={triggerDialog} className='w-full cursor-pointer select-none md:hidden'>{props.children}</div>
     )
 }
 
@@ -62,7 +62,7 @@ export default DeleteProductWrapper
 
 const AreYouSureModal = (props: { handleDelete: () => void, handleClose: () => void }) => {
     return (
-        <div>
+        <div className=''>
             <div className='flex justify-evenly gap-2 px-4 items-center'>
                 <Button onClick={props.handleDelete} className='w-full'>Yes</Button>
                 <Button onClick={props.handleClose} variant='btn-secondary' className='w-full'>No</Button>

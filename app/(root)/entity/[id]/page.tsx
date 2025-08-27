@@ -26,6 +26,7 @@ import CreateLeadButton from './_components/CreateLeadButton'
 import ByYouTag from './_components/ByYouTag'
 import YoutubeVideoPlayer from '@/components/ui/YoutubeVideoPlayer'
 import LeadsWindow from './_components/LeadsWindow'
+import PostControls from './_components/PostControls'
 
 export const dynamic = 'force-dynamic';
 
@@ -187,6 +188,7 @@ const page = async (props: Props) => {
                     </div>
                 }
                 <LeadsWindow animal={animal} />
+                <PostControls animal={animal} />
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />
             </section >
