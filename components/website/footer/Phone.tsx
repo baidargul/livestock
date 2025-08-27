@@ -25,7 +25,7 @@ const PhoneFooter = (props: Props) => {
 
 
     return (
-        <div className='mt-10 bg-zinc-100 border-t border-zinc-200 text-zinc-600 select-none z-30 sticky bottom-0 left-0 w-full h-14 flex justify-evenly items-center'>
+        <div className='mt-10 bg-zinc-100 border-t border-zinc-200 text-zinc-600 select-none z-20 sticky bottom-0 left-0 w-full h-14 flex justify-evenly items-center'>
             <FetchLastestRooms />
             <Link href={'/home'}>
                 <div className={`${route.includes("home") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center scale-75 origin-center-left`}>

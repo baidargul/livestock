@@ -49,7 +49,7 @@ export function calculatePricing(animal: Animal | any) {
     priceString = `Fixed price · ${formatCurrency(totalPrice)}`;
   }
 
-  if (animal.deliveryOptions.includes("SELLER_DELIVERY")) {
+  if (animal.deliveryOptions?.includes("SELLER_DELIVERY")) {
     totalPrice = Number(totalPrice) + Number(animal.cargoPrice ?? 0);
   }
 
