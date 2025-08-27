@@ -27,6 +27,7 @@ import ByYouTag from './_components/ByYouTag'
 import YoutubeVideoPlayer from '@/components/ui/YoutubeVideoPlayer'
 import LeadsWindow from './_components/LeadsWindow'
 import PostControls from './_components/PostControls'
+import GeneralHeader from '@/components/website/header/GeneralHeader'
 
 export const dynamic = 'force-dynamic';
 
@@ -90,39 +91,11 @@ const page = async (props: Props) => {
                 <GeneralFooter />
             </section>
             <section className='relative w-full min-h-[100vh] md:hidden' data-value="Phone">
+                <GeneralHeader />
                 <BackNavigator className='absolute top-3 left-3 z-10 bg-black/20 rounded-full p-1'>
                     <ArrowLeftCircleIcon width={32} height={32} className='text-white' />
                 </BackNavigator>
-                <div className='absolute top-3 right-3 z-10'>
-                    <ProductMenu animal={animal} >
-                        <MenuIcon size={32} className='text-black p-1 rounded bg-white' />
-                    </ProductMenu>
-                </div>
-                <div className='relative'>
-                    <Image
-                        src={animal.images.length > 0 ? animal.images[0].image ? animal.images[0].image : images.chickens.images[1] : images.chickens.images[1]}
-                        draggable={false}
-                        priority
-                        layout="fixed"
-                        quality={50}
-                        alt="hen"
-                        width={100}
-                        height={100}
-                        style={{ height: "250px" }}
-                        className="w-full h-[250px] z-0 select-none origin-top-left object-left-top object-cover"
-                    />
-
-                    <div className='bg-emerald-50 p-4 rounded-lg mx-4 absolute -mt-20 z-[1]' style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
-                        <h1 className='text-3xl text-center font-bold text-gray-800 mt-4'>{formalizeText(animal?.breed ?? "")} {formalizeText(animal?.type ?? "")}</h1>
-                        <div className='px-4 py-2'>
-                            <p className='text-sm text-gray-600'>{info ?? ''}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className='mt-40 p-4'>
-                    {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
-                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding is active for this animal.</div>
-                    </Marquee>}
+                <div className='p-4'>
                     <div className='relative'>
                         <div className='text-black px-4 font-semibold bg-zinc-100 p-1 text-sm absolute rounded-r pointer-events-none select-none top-4 -left-0 z-[1]'>Janwar Markaz</div>
                         <YoutubeVideoPlayer className='mb-4' src='https://www.youtube.com/watch?v=4sH-V35-5Yg' autoPlay muted loop />
@@ -131,6 +104,7 @@ const page = async (props: Props) => {
                     <h2 className='text-2xl mb-1 font-bold text-gray-800'>{animal.title}</h2>
                     <p className='text-sm p-1 text-zinc-800 tracking-tight bg-amber-50 h-auto min-h-[100px]'>'{animal.description}'</p>
                     <ElapsedTimeControl date={animal.createdAt} />
+
                     <div className='border-t-2 border-zinc-300 my-2 p-1 w-full flex justify-end items-center'>
                         <div className='text-xs font-bold tracking-wide'>{formalizeText(animal.city)}, {formalizeText(animal.province)}</div>
                     </div>
@@ -162,6 +136,9 @@ const page = async (props: Props) => {
                         }</div>
                         {Number(animal.cargoPrice) > 0 && <div className='mt-2 text-lg font-semibold tracking-wider'>Cargo charges: {formatCurrency(animal.cargoPrice)}</div>}
                     </div>
+                    {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
+                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding is active for this animal.</div>
+                    </Marquee>}
                 </div>
                 <div className='px-4 my-2 flex flex-col gap-1 justify-end items-end'>
                     {/* <div className='select-none p-1 bg-green-100 rounded-md scale-75 origin-top-right border border-green-300 w-fit font-bold tracking-wider text-green-800'>
@@ -183,11 +160,11 @@ const page = async (props: Props) => {
                     </div>
                 }
                 {
-                    <div className='w-full px-2'>
+                    !animal.allowBidding && <div className='w-full px-2'>
                         <CreateLeadButton animal={animal} />
                     </div>
                 }
-                <LeadsWindow animal={animal} />
+                {!animal.allowBidding && <LeadsWindow animal={animal} />}
                 <PostControls animal={animal} />
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />

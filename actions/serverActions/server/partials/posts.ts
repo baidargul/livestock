@@ -343,6 +343,30 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
   try {
     let isExists = await prisma.animal.findFirst({
       where: { id: postId },
+      include: {
+        leads: {
+          include: {
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+        BidRoom: {
+          include: {
+            bids: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!isExists) {
@@ -351,6 +375,83 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
       response.data = null;
       return response;
     }
+
+    const transactions = [];
+    let [BuyerHandShakeCost, BuyerDirectHandShakeCost, BuyerBiddingCost]: any =
+      await prisma.$transaction([
+        prisma.businessProtocol.findFirst({
+          where: {
+            name: "BuyerHandShakeCost",
+          },
+        }),
+        prisma.businessProtocol.findFirst({
+          where: {
+            name: "BuyerDirectHandShakeCost",
+          },
+        }),
+        prisma.businessProtocol.findFirst({
+          where: {
+            name: "BuyerBiddingCost",
+          },
+        }),
+      ]);
+
+    BuyerDirectHandShakeCost = Number(BuyerDirectHandShakeCost?.value ?? 0);
+    BuyerHandShakeCost = Number(BuyerHandShakeCost?.value ?? 0);
+    BuyerBiddingCost = Number(BuyerBiddingCost?.value ?? 0);
+
+    if (isExists.allowBidding === false) {
+      for (const lead of isExists.leads) {
+        transactions.push(
+          prisma.user.update({
+            where: { id: lead.user.id },
+            data: {
+              balance: {
+                increment: Number(BuyerHandShakeCost),
+              },
+            },
+          })
+        );
+        transactions.push(
+          prisma.leads.delete({
+            where: {
+              id: lead.id,
+            },
+          })
+        );
+      }
+    } else {
+      for (const room of isExists.BidRoom) {
+        for (const bid of room.bids) {
+          transactions.push(
+            prisma.user.update({
+              where: { id: bid?.user?.id },
+              data: {
+                balance: {
+                  increment: Number(BuyerBiddingCost),
+                },
+              },
+            })
+          );
+          transactions.push(
+            prisma.bids.delete({
+              where: {
+                id: bid.id,
+              },
+            })
+          );
+        }
+        transactions.push(
+          prisma.bidRoom.delete({
+            where: {
+              id: room.id,
+            },
+          })
+        );
+      }
+    }
+
+    const result = await prisma.$transaction(transactions);
 
     let updatedPost: any = await prisma.animal.update({
       where: { id: postId },
