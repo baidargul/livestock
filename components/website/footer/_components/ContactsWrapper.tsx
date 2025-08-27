@@ -38,7 +38,7 @@ const ContactsWrapper = (props: Props) => {
 
     return (
         <>
-            <section className={`w-[95%] h-[90%] ${toggled ? "translate-y-0 pointer-events-auto z-10 opacity-100" : "translate-y-full pointer-events-none opacity-0 z-0"} transition duration-300 ease-in-out bg-white fixed bottom-0 rounded-t-md text-zinc-700 border border-zinc-300 p-2`}>
+            <section className={`w-[95%] h-[90%] ${toggled ? "translate-y-0 pointer-events-auto z-50 opacity-100" : "translate-y-full pointer-events-none opacity-0 z-0"} transition duration-300 ease-in-out bg-white fixed bottom-0 rounded-t-md text-zinc-700 border border-zinc-300 p-2`}>
                 <div className='text-center p-2 text-lg font-bold text-gray-800'>Contacts</div>
                 <Textbox icon={<SearchIcon size={20} className='text-zinc-400' />} iconClassName='pl-10' placeholder='Search contacts' value={searchText} onChange={(val: string) => setSearchText(val)} />
                 <div className='text-xs my-2 tracking-tight'>Each contact has a life time of 1 month, after that the contact will automatically be deleted.</div>
