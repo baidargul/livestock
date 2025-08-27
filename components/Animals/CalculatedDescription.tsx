@@ -65,10 +65,10 @@ const PerWeight = (animal: Animal, inRow?: boolean) => {
 
                                 </div>}
                                 <div className='flex gap-1 items-center'>
-                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
+                                    {Number(animal.maleQuantityAvailable ?? 0) > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
-                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Female:
+                                    {Number(animal.femaleQuantityAvailable ?? 0) > 0 && <div className='flex gap-1 items-center'>Female:
                                         <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
                                     </div>}
                                 </div>
@@ -137,10 +137,10 @@ const PerSet = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2">
                                 <div>{quantity} {animal.type}.</div>
                                 {quantity > 0 && <div className="flex gap-4 flex-wrap">
-                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
+                                    {Number(animal.maleQuantityAvailable ?? 0) > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
-                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Female:
+                                    {Number(animal.femaleQuantityAvailable ?? 0) > 0 && <div className='flex gap-1 items-center'>Female:
                                         <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
                                     </div>}
                                     {animal.ageUnit && animal.ageUnit.length > 0 && (animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (
@@ -210,10 +210,10 @@ const PerPC = (animal: Animal, inRow?: boolean) => {
                             <td className="py-2">
                                 <div>{quantity} {animal.type}.</div>
                                 {quantity > 0 && <div className="flex gap-4 flex-wrap">
-                                    {animal.maleQuantityAvailable && animal.maleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Male:
+                                    {Number(animal.maleQuantityAvailable ?? 0) > 0 && <div className='flex gap-1 items-center'>Male:
                                         <div className="font-semibold">{animal.maleQuantityAvailable}</div>
                                     </div>}
-                                    {animal.femaleQuantityAvailable && animal.femaleQuantityAvailable > 0 && <div className='flex gap-1 items-center'>Female:
+                                    {Number(animal.femaleQuantityAvailable ?? 0) > 0 && <div className='flex gap-1 items-center'>Female:
                                         <div className="font-semibold">{animal.femaleQuantityAvailable}</div>
                                     </div>}
                                     {(animal.averageAge !== null && animal.averageAge > 0 && animal.ageUnit) && (

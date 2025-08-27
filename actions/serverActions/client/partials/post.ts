@@ -97,6 +97,16 @@ async function fetchPosts(take?: number) {
   return response.data;
 }
 
+async function adjustQuantity(
+  animalId: string,
+  userId: string,
+  quantites: { male: number; female: number }
+) {
+  const data = { animalId, userId, quantites };
+  const response = await axios.post(`/api/post/quantity`, data);
+  return response.data;
+}
+
 export const posts = {
   fetchPosts,
   createPost,
@@ -107,4 +117,5 @@ export const posts = {
   listByUser,
   changeBiddingStatus,
   GetCustomerContact,
+  adjustQuantity,
 };

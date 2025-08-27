@@ -558,6 +558,53 @@ async function fetchPosts(take?: number) {
   }
 }
 
+async function adjustQuantity(
+  animalId: string,
+  userId: string,
+  maleQuantityAvailable: number,
+  femaleQuantityAvailable: number
+) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const animal = await prisma.animal.findUnique({
+      where: {
+        id: animalId,
+        userId: userId,
+      },
+    });
+
+    if (!animal) {
+      response.status = 400;
+      response.message = "Animal not found or not owned by you";
+      response.data = null;
+      return response;
+    }
+
+    await prisma.animal.update({
+      where: { id: animalId },
+      data: {
+        maleQuantityAvailable: Number(maleQuantityAvailable ?? 0),
+        femaleQuantityAvailable: Number(femaleQuantityAvailable ?? 0),
+      },
+    });
+    response.status = 200;
+    response.message = "Quantity adjusted successfully";
+    response.data = null;
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @ADJUST QUANTITY: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const post = {
   fetchPosts,
   list,
@@ -568,4 +615,5 @@ export const post = {
   listBids,
   changeBiddingStatus,
   GetCustomerContact,
+  adjustQuantity,
 };
