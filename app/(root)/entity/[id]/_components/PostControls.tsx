@@ -17,10 +17,9 @@ type Props = {
 
 const PostControls = (props: Props) => {
     const user = useUser()
-    const setLoading = useLoader((state: any) => state.setLoading)
     const router = useRouter()
-    if (user && user.id !== props.animal.userId) return null
     const dialog = useDialog()
+    const setLoading = useLoader((state: any) => state.setLoading)
 
     const stopLoading = () => {
         setLoading(false)
@@ -52,7 +51,7 @@ const PostControls = (props: Props) => {
     }
 
     return (
-        <div className='px-4 mt-10'>
+        user && user.id === props.animal.userId && <div className='px-4 mt-10'>
             <div className='flex flex-wrap gap-2'>
                 {props.animal.allowBidding === false && <Button onClick={() => changeBiddingStatus(true)} className='w-full flex gap-2 items-center justify-center text-center'><CandlestickChartIcon /> Allow Bargaining</Button>}
                 {props.animal.allowBidding === true && <Button onClick={() => changeBiddingStatus(false)} className='w-full flex gap-2 items-center justify-center text-center'><DecimalsArrowRightIcon /> Disable Bargaining</Button>}
