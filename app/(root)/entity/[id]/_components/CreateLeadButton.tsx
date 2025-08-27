@@ -5,7 +5,7 @@ import Button from '@/components/ui/Button'
 import { useDialog } from '@/hooks/useDialog'
 import { useProtocols } from '@/hooks/useProtocols'
 import { useSession } from '@/hooks/useSession'
-import { calculatePricing, formatCurrency } from '@/lib/utils'
+import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
@@ -155,10 +155,11 @@ const CreateLeadButton = (props: Props) => {
                 <table className='w-full text-xs my-2'>
                     <thead>
                         <tr>
-                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Deliver to</td>
-                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Male</td>
-                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Female</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-x text-center'>Male</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-x text-center'>Female</td>
                             <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l border-r'>Amount</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Deliver to</td>
+                            <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l '>Status</td>
                             <td className='p-1 bg-zinc-100 border-zinc-200 border-t border-l border-r text-center'>Action</td>
                         </tr>
                     </thead>
@@ -166,11 +167,12 @@ const CreateLeadButton = (props: Props) => {
                         {
                             leads && leads !== null && leads.map((lead: any, index: number) => {
                                 return (
-                                    <tr key={`${lead}-${index + 1}`}>
-                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.city && String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
-                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.maleQuantityAvailable ?? 0} pc</td>
-                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.femaleQuantityAvailable ?? 0} pc</td>
+                                    <tr key={`${lead}-${index + 1}`} className={`${lead.status === "cancelled" ? "line-trough" : ""}`}>
+                                        <td className="p-1 border-zinc-200 border-b border-x text-center">{lead.maleQuantityAvailable ?? 0}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-x text-center">{lead.femaleQuantityAvailable ?? 0}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.animal, ...lead }).price)}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l">{lead.city && String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l">{formalizeText(lead.status)}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l border-r"> <XIcon size={16} onClick={() => handleConfirmRemoveLead(lead.id)} className='mx-auto cursor-pointer' /> </td>
                                     </tr>
                                 )

@@ -14,7 +14,7 @@ const PhoneHeaderHome = (props: Props) => {
                 <div className='flex items-center gap-2'>
                     <SiteLogo />
                     <div className=''>
-                        <div className='heading2'><span className='tracking-tight'>Hello,</span> <Username /></div>
+                        <div className='heading2'><span className='tracking-tight'></span> <Username /></div>
                         <div className='subheading1 -mt-1'>Search for a new animal</div>
                     </div>
                 </div>
