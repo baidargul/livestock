@@ -7,17 +7,19 @@ import TheContact from './ContactsWrapper/TheContact'
 import { SearchIcon } from 'lucide-react'
 import { useContacts } from '@/hooks/useContacts'
 import NewContactAnimationWrapper from '@/components/animation-wrappers/NewContactAnimationWrapper'
+import { useDialog } from '@/hooks/useDialog'
 
 type Props = {
     children: React.ReactNode
 }
 
 const ContactsWrapper = (props: Props) => {
-    const [toggled, setToggled] = useState(false)
     const Contact = useContacts()
     const [searchText, setSearchText] = useState("")
     const [selectedContact, setSelectedContact] = useState<any>(null)
     const user = useUser()
+    const dialog = useDialog()
+    const layer = dialog.layer ?? ''
 
     useEffect(() => {
         if (user) {
@@ -26,7 +28,7 @@ const ContactsWrapper = (props: Props) => {
     }, [user])
 
     const handleToggleMenu = (val: boolean) => {
-        setToggled(val)
+        dialog.setLayer(val ? "footer-contacts" : "")
         if (val) {
             Contact.fetchContacts(user.id)
         }
@@ -38,7 +40,7 @@ const ContactsWrapper = (props: Props) => {
 
     return (
         <>
-            <section className={`w-[95%] h-[90%] ${toggled ? "translate-y-0 pointer-events-auto z-50 opacity-100" : "translate-y-full pointer-events-none opacity-0 z-0"} transition duration-300 ease-in-out bg-white fixed bottom-0 rounded-t-md text-zinc-700 border border-zinc-300 p-2`}>
+            <section className={`w-[95%] h-[90%] ${layer === "footer-contacts" ? "translate-y-0 pointer-events-auto z-50 opacity-100" : "translate-y-full pointer-events-none opacity-0 z-0"} transition duration-300 ease-in-out bg-white fixed bottom-0 rounded-t-md text-zinc-700 border border-zinc-300 p-2`}>
                 <div className='text-center p-2 text-lg font-bold text-gray-800'>Contacts</div>
                 <Textbox icon={<SearchIcon size={20} className='text-zinc-400' />} iconClassName='pl-10' placeholder='Search contacts' value={searchText} onChange={(val: string) => setSearchText(val)} />
                 <div className='text-xs my-2 tracking-tight'>Each contact has a life time of 1 month, after that the contact will automatically be deleted.</div>
@@ -73,12 +75,12 @@ const ContactsWrapper = (props: Props) => {
                 </div>
                 <div onClick={() => { setSelectedContact(null); setSearchText(""); handleToggleMenu(false) }} className='absolute bottom-2 left-1/2 transform -translate-x-1/2 cursor-pointer w-full flex justify-center items-center'>Close</div>
             </section>
-            <div onClick={() => { handleToggleMenu(!toggled) }} className=''>
+            <div onClick={() => { handleToggleMenu(layer === "footer-contacts" ? false : true) }} className=''>
                 <NewContactAnimationWrapper activated={Contact.isAdding}>
                     {props.children}
                 </NewContactAnimationWrapper>
             </div>
-            {toggled && <div onClick={() => { setSelectedContact(null); setSearchText(""); handleToggleMenu(false) }} className='inset-0 bg-black/40 backdrop-blur-[1px] fixed top-0 left-0 z-[1]'></div>}
+            {layer === "footer-contacts" && <div onClick={() => { setSelectedContact(null); setSearchText(""); handleToggleMenu(false) }} className='inset-0 bg-black/40 backdrop-blur-[1px] fixed top-0 left-0 z-[1]'></div>}
         </>
     )
 }

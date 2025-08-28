@@ -1,15 +1,18 @@
+'use client'
 import React from 'react'
 import SiteLogo from '../../logo/SiteLogo'
 import UserProfileIcon from '../../profile/Icon'
 import ProductSearchBar from '../../searchbar/ProductSearchBar'
 import Username from './_components/Username'
+import { useDialog } from '@/hooks/useDialog'
 
 type Props = {}
 
 const PhoneHeaderHome = (props: Props) => {
+    const dialog = useDialog()
 
     return (
-        <div className='sticky top-0 left-0 z-20 w-full bg-white'>
+        <div className={`sticky top-0 left-0 ${dialog.layer === "" ? "z-50" : "z-20"}   w-full bg-white`}>
             <div className='flex justify-between items-center w-full  pr-2'>
                 <div className='flex items-center gap-2'>
                     <SiteLogo />

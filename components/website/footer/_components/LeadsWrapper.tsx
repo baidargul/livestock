@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Animals from './_LeadsWrapper/Animals'
 import SelectedAnimal from './_LeadsWrapper/SelectedAnimal'
 import CoinsAvailable from '../../profile/_components/CoinsAvailable'
+import { useDialog } from '@/hooks/useDialog'
 
 type Props = {
     children: React.ReactNode
@@ -11,9 +12,10 @@ type Props = {
 }
 
 const LeadsWrapper = (props: Props) => {
-    const [isOpen, setIsOpen] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
     const [selectedAnimal, setSelectedAnimal] = useState<any>(null)
+    const dialog = useDialog()
+    const layer = dialog.layer ?? ""
 
     useEffect(() => {
         setSelectedAnimal(null)
@@ -21,7 +23,7 @@ const LeadsWrapper = (props: Props) => {
 
 
     const handleOpen = (val: boolean) => {
-        setIsOpen(val)
+        dialog.setLayer(val ? "footer-leadswrapper" : "")
     }
 
     const handleSelectAnimal = (animal: any) => {
@@ -30,7 +32,7 @@ const LeadsWrapper = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed top-0 left-0 inset-0 ${isOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out w-full h-full text-black bg-white z-50`}>
+            <div className={`fixed top-0 left-0 inset-0 ${layer === "footer-leadswrapper" ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out w-full h-full text-black bg-white z-50`}>
                 <div className='flex justify-between items-center py-2'>
                     <div className='flex gap-5 items-center w-full p-2'>
                         <div onClick={() => handleOpen(false)} className='cursor-pointer'>
@@ -55,7 +57,7 @@ const LeadsWrapper = (props: Props) => {
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
                     <section className='p-1 h-[calc(100vh-140px)] overflow-y-auto bg-white'>
-                        {isOpen && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
+                        {layer === "footer-leadswrapper" && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
                     </section>
                     <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-400'>
                         <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />
