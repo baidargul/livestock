@@ -242,7 +242,9 @@ const BiddingWrapper = (props: Props) => {
         }
     }
     const handleOpen = (val: boolean) => {
-        dialog.setLayer(val ? "bidding" : "")
+        if (layer === "bidding" && val === false) {
+            dialog.setLayer(val ? "bidding" : "")
+        }
         if (val === false) {
             if (props.targetRoomKey) {
                 props.targetRoomKey.refill()
