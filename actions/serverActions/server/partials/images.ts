@@ -99,7 +99,7 @@ async function fetchImages(images: any) {
           };
         } catch (err: any) {
           console.error(`❌ Failed to fetch ${key}:`, err.message);
-          return null;
+          return [];
         }
       })
     );
