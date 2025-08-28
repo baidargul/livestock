@@ -16,9 +16,9 @@ const TheActualBidRoom = (props: Props) => {
     return (
         <div className=''>
             <div className='text-xl font-semibold flex justify-between items-center mt-1'>
-                <div className='flex items-center gap-1'>
+                <div className='flex items-center gap-1 -mt-8'>
                     <div><ChevronLeftIcon onClick={() => props.handleLeaveRoom(!props.isAuthor)} className='w-6 h-6 cursor-pointer' /></div>
-                    <div className='flex items-center gap-1'>{props.socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div className='line-clamp-1'>{props.isAuthor ? props.activeBidRoom.user.name : props.activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{props.isAuthor ? "Buyer" : "Seller"}</div></div></div>
+                    <div className='flex items-center gap-1'>{props.socketState.isOtherUserConnected ? <div className='w-2 h-2 bg-emerald-500 rounded-full'></div> : <div className='w-2 h-2 bg-amber-500 rounded-full'></div>} <div className='line-clamp-1 h-[22px]'>{props.isAuthor ? props.activeBidRoom.user.name : props.activeBidRoom.author.name}<div className='text-xs font-normal italic -mt-1'>{props.isAuthor ? "Buyer" : "Seller"}</div></div></div>
                 </div>
                 <UserAndRoomContextQuickView isAuthor={props.isAuthor} animal={props.animal} otherUser={props.isAuthor ? props.activeBidRoom.user : props.activeBidRoom.author} room={props.activeBidRoom}>
                     <div className='text-sm tracking-wide text-nowrap'>
@@ -33,7 +33,7 @@ const TheActualBidRoom = (props: Props) => {
                     </div>
                 </UserAndRoomContextQuickView>
             </div>
-            <div className="text-xs tracking-wide -mt-3 px-6 flex gap-1 items-center">
+            <div className="text-xs tracking-wide -mt-7 px-6 flex gap-1 items-center">
                 <div className='border-r-2 border-zinc-300 pr-4 flex gap-1 items-center'>
                     {
                         props.activeBidRoom.deliveryOptions.map((option: any, index: number) => <DeliveryIcon icon={option} key={`${option}-${index}`} />)

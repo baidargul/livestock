@@ -18,6 +18,7 @@ interface RoomsState {
     myRooms: Room[]; // Array of rooms created by the current user
     otherRooms: Room[]; // Array of rooms created by other users
   };
+  isFetching: boolean;
   getRooms: () => { myRooms: Room[]; otherRooms: Room[] }; // Function to retrieve all rooms
   addRoom: (room: Room, currentUser: User) => void; // Function to add a room
   removeRoom: (roomKey: string) => void; // Function to remove a room by key
@@ -30,6 +31,7 @@ export const useRooms: any = create<RoomsState>()((set) => ({
     myRooms: [],
     otherRooms: [],
   },
+  isFetching: false,
   getRooms: () => {
     const { rooms } = useRooms.getState();
     return { ...rooms };
@@ -97,6 +99,7 @@ export const useRooms: any = create<RoomsState>()((set) => ({
   },
 
   getLatestRooms: async (userId: string) => {
+    useRooms.setState({ isFetching: true });
     const response = await actions.client.bidRoom.listByUser(userId, null, 5);
     if (response.status === 200) {
       const { myRooms, otherRooms } = response.data;
@@ -111,6 +114,7 @@ export const useRooms: any = create<RoomsState>()((set) => ({
           myRooms: myRooms || [],
           otherRooms: otherRooms || [],
         },
+        isFetching: false,
       });
     }
   },

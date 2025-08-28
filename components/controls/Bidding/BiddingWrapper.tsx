@@ -402,10 +402,11 @@ const BiddingWrapper = (props: Props) => {
                             finalBids.map((theBid: any, index: number) => {
                                 return (
                                     <div className={`w-fit flex flex-col gap-1 items-center p-1 ${index === 0 && "border-b-2 border-zinc-500"}`} key={`${theBid?.id}-${index}`}>
-                                        <div className={`${theBid.user.id === user?.id ? "text-emerald-700" : ""}`}>
+                                        <div className={`${theBid.user.id === user?.id ? "text-emerald-700 relative font-bold tracking-wide flex items-center" : ""}`}>
                                             {
                                                 formatCurrency(theBid.price)
                                             }
+                                            <div className='absolute -right-[140%] text-white bg-emerald-700 p-1 px-2 text-xs rounded z-[1]'>Your offer</div>
                                         </div>
                                     </div>
                                 )
@@ -451,20 +452,7 @@ const BiddingWrapper = (props: Props) => {
                     {/* USER WILL WAIT FOR AUTHOR SELECTION */}
                     {
                         isLocked && !isAuthor && activeBidRoom && !activeBidRoom.closedAt && <div>
-                            <div className='my-4 text-center'>⚠️ Your final offer has been placed, Please wait for the author to make the final decision.</div>
-                            <div className='grid grid-cols-2 place-items-center gap-2 pointer-events-none'>
-                                {
-                                    finalBids.length > 0 && finalBids.map((bid: any, index: number) => {
-                                        if (!bid) return
-                                        return (
-                                            <div key={`${bid.id}-${index}`} className='p-2 bg-white roundedpy-2 w-full flex flex-col justify-center items-center'>
-                                                <div className='text-sm'>{bid.user.id === user.id ? "You" : bid.user.name}</div>
-                                                <div className='tracking-wide'>{formatCurrency(bid.price)}</div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
+                            <div className='text-center'>⚠️ Your final offer has been placed, Please wait for the author to make the final decision.</div>
                         </div>
                     }
                     {/* AUTHOR HAS DECIDED */}
