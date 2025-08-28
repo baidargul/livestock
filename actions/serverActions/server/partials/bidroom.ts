@@ -29,8 +29,6 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       prisma.bidRoom.findUnique({ where: { key: room.key ?? "" } }),
     ]);
 
-    console.log(user, postUser, animal, demand, isExists);
-
     const transactions = [];
 
     if (!user)
@@ -161,6 +159,8 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       let [first, second, third]: any = await prisma.$transaction(transactions);
       updated = third;
     }
+
+    console.log(updated);
 
     // Parallel fetch for contact and images
     const [contactRes, animalImages] = await Promise.all([
