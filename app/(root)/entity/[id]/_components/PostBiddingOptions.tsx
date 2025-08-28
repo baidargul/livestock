@@ -116,7 +116,6 @@ const PostBiddingOptions = (props: Props) => {
                 }
             }
         }
-        setIsWorking(false)
     }
 
     const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
