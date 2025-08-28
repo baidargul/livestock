@@ -23,11 +23,10 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       prisma.user.findUnique({ where: { id: room.userId } }),
       prisma.user.findUnique({ where: { id: room.authorId } }),
       prisma.animal.findUnique({ where: { id: room.animalId } }),
-      demandId
-        ? prisma.demands.findUnique({ where: { id: demandId } })
-        : Promise.resolve(null),
+      prisma.demands.findUnique({ where: { id: demandId } }),
       prisma.bidRoom.findUnique({ where: { key: room.key } }),
     ]);
+    const transactions = [];
 
     if (!user)
       return {
@@ -75,30 +74,33 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           data: null,
         };
 
-      await prisma.bids.create({
-        data: {
-          price: calculatePricing({
-            ...animal,
-            maleQuantityAvailable: room.maleQuantityAvailable,
-            femaleQuantityAvailable: room.femaleQuantityAvailable,
-          }).price,
-          bidRoomId: newRoom.id,
-          userId: animal.userId,
-          intial: true,
-          isSeen: true,
-        },
-      });
-
-      if (!demandId) {
-        await prisma.bids.create({
+      transactions.push(
+        prisma.bids.create({
           data: {
-            price: room.offer ?? calculatePricing(animal).price,
+            price: calculatePricing({
+              ...animal,
+              maleQuantityAvailable: room.maleQuantityAvailable,
+              femaleQuantityAvailable: room.femaleQuantityAvailable,
+            }).price,
             bidRoomId: newRoom.id,
-            userId: newRoom.userId,
-            intial: false,
-            isSeen: false,
+            userId: animal.userId,
+            intial: true,
+            isSeen: true,
           },
-        });
+        })
+      );
+      if (!demandId) {
+        transactions.push(
+          prisma.bids.create({
+            data: {
+              price: room.offer ?? calculatePricing(animal).price,
+              bidRoomId: newRoom.id,
+              userId: newRoom.userId,
+              intial: false,
+              isSeen: false,
+            },
+          })
+        );
       }
 
       isExists = newRoom;
@@ -109,40 +111,51 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
     );
     const newUsers = [...allExceptThis, userId];
 
-    let updated: any = await prisma.bidRoom.update({
-      where: { id: isExists?.id },
-      data: { activeUsers: newUsers },
-      include: {
-        animal: true,
-        bids: {
-          take: 5,
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-                province: true,
-                connectionIds: true,
+    transactions.push(
+      prisma.bidRoom.update({
+        where: { id: isExists?.id },
+        data: { activeUsers: newUsers },
+        include: {
+          animal: true,
+          bids: {
+            take: 5,
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  province: true,
+                  connectionIds: true,
+                },
               },
             },
+            orderBy: { createdAt: "desc" },
           },
-          orderBy: { createdAt: "desc" },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            city: true,
-            province: true,
-            connectionIds: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              province: true,
+              connectionIds: true,
+            },
+          },
+          author: {
+            select: { id: true, name: true, connectionIds: true },
           },
         },
-        author: {
-          select: { id: true, name: true, connectionIds: true },
-        },
-      },
-    });
+      })
+    );
+
+    let updated = null;
+    if (!demandId) {
+      let [first, second]: any = await prisma.$transaction(transactions);
+      updated = second;
+    } else {
+      let [first, second, third]: any = await prisma.$transaction(transactions);
+      updated = third;
+    }
 
     // Parallel fetch for contact and images
     const [contactRes, animalImages] = await Promise.all([
