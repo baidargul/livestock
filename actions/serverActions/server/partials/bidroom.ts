@@ -26,7 +26,10 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       demandId
         ? prisma.demands.findUnique({ where: { id: demandId ?? "" } })
         : null,
-      prisma.bidRoom.findUnique({ where: { key: room.key ?? "" } }),
+      prisma.bidRoom.findUnique({
+        where: { key: room.key ?? "" },
+        include: { author: true, user: true },
+      }),
     ]);
 
     const transactions = [];
