@@ -34,6 +34,8 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
 
     const transactions = [];
 
+    console.log(`was here`);
+
     if (!user)
       return {
         status: 404,
