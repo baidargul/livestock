@@ -34,8 +34,6 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
 
     const transactions = [];
 
-    console.log(`was here`);
-
     if (!user)
       return {
         status: 404,
@@ -160,12 +158,20 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
     if (!demandId) {
       let [first, second]: any = await prisma.$transaction(transactions);
       updated = second;
+      console.log(`first`);
+      console.log(first);
+      console.log(`second`);
+      console.log(second);
     } else {
       let [first, second, third]: any = await prisma.$transaction(transactions);
       updated = third;
+      console.log(`first`);
+      console.log(first);
+      console.log(`second`);
+      console.log(second);
+      console.log(`third`);
+      console.log(third);
     }
-
-    console.log(updated);
 
     // Parallel fetch for contact and images
     const [contactRes, animalImages] = await Promise.all([
