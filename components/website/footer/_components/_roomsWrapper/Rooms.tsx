@@ -66,7 +66,7 @@ const Rooms = ({ rooms, user }: Props) => {
             `${formatCurrency(animal.price)}.`
 
         return (
-            <div key={`group-${animal.id}`} className="flex flex-col gap-2 bg-white p-2">
+            <div key={`group-${animal.id}`} className="flex flex-col gap-2 bg-white p-2 min-h-[180px] overflow-y-hidden">
                 <div className="flex gap-2 items-start w-full h-full">
                     <div className="w-[40%] h-full relative aspect-square">
                         <BiddingWrapper animal={animal} staticStyle>
@@ -74,15 +74,15 @@ const Rooms = ({ rooms, user }: Props) => {
                                 src={animal.images?.length ? animal.images[0].image : images.chickens.images[1]}
                                 alt={animal.breed}
                                 fill
-                                className="rounded-md h-full object-cover"
+                                className="rounded-md h-full object-contain bg-zinc-700"
                             />
                         </BiddingWrapper>
                     </div>
                     <div className="w-full overflow-y-auto max-h-[200px]">
                         <BiddingWrapper animal={animal} staticStyle>
-                            <div className="sticky top-0 pb-2 bg-white z-[1]">
+                            <div className="sticky top-0 bg-white z-[1]">
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                                    <div className="font-semibold tracking-wide">
+                                    <div className="font-semibold tracking-wide line-clamp-1">
                                         {formalizeText(animal.breed)} {animalType}
                                     </div>
                                     <div className="text-sm text-zinc-500">
