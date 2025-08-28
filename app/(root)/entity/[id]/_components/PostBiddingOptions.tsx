@@ -32,26 +32,26 @@ type Props = {
 }
 
 const PostBiddingOptions = (props: Props) => {
-    const [isOpen, setisOpen] = useState(false)
     const [isWorking, setIsWorking] = useState(false)
     const [sellerOffer, setSellerOffer] = useState(0)
     const socket = useSocket()
     const dialog = useDialog()
+    const layer = dialog.layer ?? ''
 
     useEffect(() => {
         props.setPostBiddingOptions((prev) => ({ ...prev, maleQuantityAvailable: Number(props.animal.maleQuantityAvailable) ?? 0, femaleQuantityAvailable: Number(props.animal.femaleQuantityAvailable) ?? 0, deliveryOptions: props.animal.deliveryOptions.length === 1 ? props.animal.deliveryOptions : props.postBiddingOptions.deliveryOptions }))
     }, [props.animal])
 
     const handleOpen = () => {
-        setisOpen(!isOpen)
+        dialog.setLayer(layer === "" ? "post-bidding-options" : "")
     }
 
     const handleClose = (force?: boolean) => {
         if (force) {
-            setisOpen(false)
+            dialog.setLayer("")
             return
         }
-        setisOpen(!isOpen)
+        dialog.setLayer(layer === "post-bidding-options" ? "" : "post-bidding-options")
     }
 
     const addDeliveryOption = (option: string) => {
@@ -121,10 +121,9 @@ const PostBiddingOptions = (props: Props) => {
 
     const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
 
-
     return (
         <>
-            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'} overflow-y-auto select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
+            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'} overflow-y-auto select-none flex flex-col justify-between gap-0 ${layer === "post-bidding-options" ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
                 <div className='w-full h-full'>
                     <div className='-mt-2 flex flex-col gap-2 w-full'>
                         <div className='w-full h-full'>
@@ -182,13 +181,13 @@ const PostBiddingOptions = (props: Props) => {
                         </div>
                         <div className={`${props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") ? "pb-10" : "pb-10"}   mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
-                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0 || Number(props.postBiddingOptions.amount) < 1} onClick={handlePostOffer} className='w-full'>Purchase</Button>
+                            <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0 || Number(props.postBiddingOptions.amount) < 1} onClick={handlePostOffer} className='w-full'>Create Request</Button>
                         </div>
                     </div>
                 </div>
             </div>
             <div onClick={handleOpen} className='w-full'>{props.children}</div>
-            <div onClick={() => handleClose(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
+            <div onClick={() => handleClose(true)} className={`fixed ${layer === "post-bidding-options" ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>
     )
 }
