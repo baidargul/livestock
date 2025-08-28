@@ -35,7 +35,6 @@ type Props = {
 
 const BiddingWrapper = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
     const [offerValue, setOfferValue] = useState<string | number>(0)
     const [myLastOffer, setMyLastOffer] = useState<string | number>(0)
     const [user, setUser] = useState<any>(null);
@@ -62,6 +61,7 @@ const BiddingWrapper = (props: Props) => {
     const setLoading = useLoader((state: any) => state.setLoading)
     const [animal, setAnimal] = useState<any>(null)
     const dialog = useDialog()
+    const layer = dialog.layer
 
     useEffect(() => {
         setAnimal(props.animal)
@@ -242,7 +242,7 @@ const BiddingWrapper = (props: Props) => {
         }
     }
     const handleOpen = (val: boolean) => {
-        setIsOpen(val)
+        dialog.setLayer(val ? "bidding" : "")
         if (val === false) {
             if (props.targetRoomKey) {
                 props.targetRoomKey.refill()
@@ -368,12 +368,12 @@ const BiddingWrapper = (props: Props) => {
 
     return (
         animal && <>
-            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-0 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${isOpen === true ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-50 p-4`}>
+            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-0 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${layer === "bidding" ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-50 p-4`}>
                 {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <GeneralBasicInformation animal={animal} />}
                 <div className={`flex flex-col gap-4 ${activeBidRoom ? "bg-gradient-to-b from-amber-50 to-transparent" : "bg-white"} `}>
                     {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={animal} />}
                     {!activeBidRoom?.userOfferAccepted && <div className='overflow-y-auto h-full max-h-[400px]' style={{ pointerEvents: isLocked && activeBidRoom ? "none" : "auto" }}>
-                        {!activeBidRoom && <Rooms rooms={[...rooms?.myRooms, ...rooms?.otherRooms]} socket={socket} targetRoomKey={props.targetRoomKey} isOpen={isOpen} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
+                        {!activeBidRoom && <Rooms rooms={[...rooms?.myRooms, ...rooms?.otherRooms]} socket={socket} targetRoomKey={props.targetRoomKey} isOpen={layer === "bidding"} setExpectedKey={setExpectedKey} expectedKey={expectedKey} currentUser={user} animal={animal ?? null} isStaticStyle={props.staticStyle ?? false} />}
                         {
                             activeBidRoom && activeBidRoom.bids && finalBids.length !== 2 && activeBidRoom.bids.length > 0 && activeBidRoom?.bids?.map((bid: any, index: number) => {
                                 return (
@@ -487,14 +487,14 @@ const BiddingWrapper = (props: Props) => {
                     }
                 </div>
             </div >
-            <div onClick={handleCreateBidRoom} className={`w-full ${isOpen && "pointer-events-none opacity-50 scale-75"} w-full transition-all duration-100 ease-in-out`}>
+            <div onClick={handleCreateBidRoom} className={`w-full ${layer === "bidding" && "pointer-events-none opacity-50 scale-75"} w-full transition-all duration-100 ease-in-out`}>
                 {props.staticStyle && props.children}
                 {!props.staticStyle && isAuthor ?
                     <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${thisRoomActiveBiders} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
                     : null}
                 {!props.staticStyle && !isAuthor ? props.children : null}
             </div>
-            <div onClick={() => handleLeaveRoom(true)} className={`fixed ${isOpen === true ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
+            <div onClick={() => handleLeaveRoom(true)} className={`fixed ${layer === "bidding" ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
         </>
     )
 }
