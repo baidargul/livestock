@@ -20,11 +20,11 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
 
   try {
     let [user, postUser, animal, demand, isExists] = await Promise.all([
-      prisma.user.findUnique({ where: { id: room.userId } }),
-      prisma.user.findUnique({ where: { id: room.authorId } }),
-      prisma.animal.findUnique({ where: { id: room.animalId } }),
-      prisma.demands.findUnique({ where: { id: demandId } }),
-      prisma.bidRoom.findUnique({ where: { key: room.key } }),
+      prisma.user.findUnique({ where: { id: room.userId ?? "" } }),
+      prisma.user.findUnique({ where: { id: room.authorId ?? "" } }),
+      prisma.animal.findUnique({ where: { id: room.animalId ?? "" } }),
+      prisma.demands.findUnique({ where: { id: demandId ?? "" } }),
+      prisma.bidRoom.findUnique({ where: { key: room.key ?? "" } }),
     ]);
     const transactions = [];
 
