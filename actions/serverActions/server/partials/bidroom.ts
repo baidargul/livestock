@@ -79,6 +79,19 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           message: "Failed to create bid room.",
           data: null,
         };
+      if (!demandId) {
+        transactions.push(
+          prisma.bids.create({
+            data: {
+              price: room.offer ?? calculatePricing(animal).price,
+              bidRoomId: newRoom.id,
+              userId: newRoom.userId,
+              intial: false,
+              isSeen: false,
+            },
+          })
+        );
+      }
 
       transactions.push(
         prisma.bids.create({
@@ -95,19 +108,6 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
           },
         })
       );
-      if (!demandId) {
-        transactions.push(
-          prisma.bids.create({
-            data: {
-              price: room.offer ?? calculatePricing(animal).price,
-              bidRoomId: newRoom.id,
-              userId: newRoom.userId,
-              intial: false,
-              isSeen: false,
-            },
-          })
-        );
-      }
 
       isExists = newRoom;
     }

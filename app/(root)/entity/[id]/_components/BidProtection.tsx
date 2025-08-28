@@ -146,7 +146,7 @@ const BidProtection = (props: Props) => {
                     <div className='text-xs p-1 px-2 bg-emerald-700 text-white rounded-t w-fit'>You're currently bargaining on this animal</div>
                     <div className='w-full rounded-b border-t border-t-emerald-700/30 bg-gradient-to-r from-emerald-100 via-white to-zinc-50 p-2 flex gap-2 justify-evenly text-center items-center'>
                         <div className='flex justify-center items-center gap-2'>
-                            {!bid.isSeen && bid.user !== user.id && <div className='w-4 h-4 left-2 bg-amber-500 rounded-full'></div>} <ChartCandlestickIcon className='w-6 h-6' /><div>{user?.id === bid.userId ? "You" : bid.user.name}</div> <div>({formatCurrency(bid.price)})</div>
+                            {!bid.isSeen && bid.user !== user.id && <div className='w-4 h-4 left-2 bg-amber-500 rounded-full line-clamp-1'></div>} <ChartCandlestickIcon className='w-6 h-6' /><div className='line-clamp-1'>{user?.id === bid.userId ? "You" : bid.user.name}</div> <div>({formatCurrency(bid.price)})</div>
                         </div>
                         <div className={`p-2 ${isOpeningBidRoom ? "bg-amber-700" : "bg-emerald-700"}  text-white rounded`}>{isOpeningBidRoom ? `Loading...` : `Show Bargains`}</div>
                     </div>
