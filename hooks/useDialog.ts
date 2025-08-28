@@ -6,6 +6,7 @@ export const useDialog = create<DialogState>()((set) => ({
   title: "",
   message: "",
   layer: "",
+  secondLayer: "",
   content: null,
   response: null,
   showDialog: (title: string, content?: React.ReactNode, message?: string) =>
@@ -14,5 +15,7 @@ export const useDialog = create<DialogState>()((set) => ({
     set(() => ({ isVisible: false, title: "", content: null, message: "" })),
   setLayer: (newLayer: string) =>
     set((state) => ({ ...state, layer: newLayer })),
+  setSecondLayer: (newLayer: string) =>
+    set((state) => ({ ...state, secondLayer: newLayer })),
   setResponse: (response: any) => set((state) => ({ ...state, response })),
 }));

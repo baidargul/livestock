@@ -5,6 +5,7 @@ export interface DialogState {
   content?: React.ReactNode | null;
   response: any;
   layer: string;
+  secondLayer: string;
   showDialog: (
     title: string,
     content?: React.ReactNode,
@@ -13,4 +14,5 @@ export interface DialogState {
   closeDialog: () => void;
   setResponse: (response: any) => void;
   setLayer: (layer: string) => void;
+  setSecondLayer: (layer: string) => void;
 }
