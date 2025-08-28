@@ -154,23 +154,12 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       })
     );
 
+    let results: any[] = await prisma.$transaction(transactions);
     let updated = null;
     if (!demandId) {
-      let [first, second]: any = await prisma.$transaction(transactions);
-      updated = second;
-      console.log(`first`);
-      console.log(first);
-      console.log(`second`);
-      console.log(second);
+      updated = results[results.length - 1];
     } else {
-      let [first, second, third]: any = await prisma.$transaction(transactions);
-      updated = third;
-      console.log(`first`);
-      console.log(first);
-      console.log(`second`);
-      console.log(second);
-      console.log(`third`);
-      console.log(third);
+      updated = results[results.length - 1];
     }
 
     // Parallel fetch for contact and images
