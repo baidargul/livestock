@@ -162,7 +162,7 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
     // Parallel fetch for contact and images
     const [contactRes, animalImages] = await Promise.all([
       actions.server.user.contacts.list(updated.authorId, updated.userId),
-      actions.server.images.fetchImages(updated.animal.images || []),
+      actions.server.images.fetchImages(updated.animal?.images || []),
     ]);
 
     const contact = contactRes.status === 200 ? contactRes.data : null;
