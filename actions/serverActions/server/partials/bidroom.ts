@@ -23,7 +23,9 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
       prisma.user.findUnique({ where: { id: room.userId ?? "" } }),
       prisma.user.findUnique({ where: { id: room.authorId ?? "" } }),
       prisma.animal.findUnique({ where: { id: room.animalId ?? "" } }),
-      prisma.demands.findUnique({ where: { id: demandId ?? "" } }),
+      demandId
+        ? prisma.demands.findUnique({ where: { id: demandId ?? "" } })
+        : null,
       prisma.bidRoom.findUnique({ where: { key: room.key ?? "" } }),
     ]);
     const transactions = [];
