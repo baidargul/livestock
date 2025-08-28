@@ -368,7 +368,7 @@ const BiddingWrapper = (props: Props) => {
 
     return (
         animal && <>
-            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-0 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${layer === "bidding" ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-50 p-4`}>
+            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-0 h-[80%]'}  select-none flex flex-col justify-between gap-0 ${layer === "bidding" ? "translate-y-0 pointer-events-auto opacity-100 z-50" : " z-30 translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white p-4`}>
                 {!activeBidRoom && [...rooms.myRooms, ...rooms.otherRooms].length === 0 && <GeneralBasicInformation animal={animal} />}
                 <div className={`flex flex-col gap-4 ${activeBidRoom ? "bg-gradient-to-b from-amber-50 to-transparent" : "bg-white"} `}>
                     {activeBidRoom && <TheActualBidRoom handleLeaveRoom={handleLeaveRoom} isAuthor={isAuthor} socketState={socketState} activeBidRoom={activeBidRoom} animal={animal} />}
