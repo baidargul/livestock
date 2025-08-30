@@ -328,8 +328,6 @@ async function closeDeal(room: any, userId: string, bid: any) {
           posted: true,
         }
       );
-
-      console.log(lead);
     }
 
     const theRoomResp = await actions.server.bidRoom.list(room.id, "id");

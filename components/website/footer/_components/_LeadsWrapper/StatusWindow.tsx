@@ -143,7 +143,7 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
         };
 
         const [response, lead] = await Promise.all([
-            actions.client.leads.changeStatus({ ...props.lead, price: Number(postOrder.price) }, "dispatched"),
+            actions.client.leads.changeStatus({ ...props.lead, price: Number(postOrder.price), fixed: true }, "dispatched"),
             actions.client.orders.create(postOrder)
         ])
 
