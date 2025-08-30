@@ -89,7 +89,7 @@ const Mode = (props: { mode: "buying" | "selling", handleChangeMode: (mode: "buy
     return (
         <div onClick={() => props.handleChangeMode(props.mode === "buying" ? "selling" : "buying")} className={`mt-2 group cursor-pointer flex items-center gap-2`}>
             <ChevronDownIcon className='mt-1 group-active:-rotate-90 transition duration-200 ease-in-out' size={16} />
-            {formalizeText(props.mode)}
+            {`I'm ${formalizeText(props.mode)}`}
         </div>
     )
 
