@@ -1,10 +1,11 @@
 'use client'
-import { ChevronLeft, ChevronLeftIcon, MoveRightIcon, PanelLeftIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
+import { ChevronDown, ChevronDownIcon, ChevronLeft, ChevronLeftIcon, MoveRightIcon, PanelLeftIcon, RefreshCcwIcon, SearchIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import Animals from './_LeadsWrapper/Animals'
 import SelectedAnimal from './_LeadsWrapper/SelectedAnimal'
 import CoinsAvailable from '../../profile/_components/CoinsAvailable'
 import { useDialog } from '@/hooks/useDialog'
+import { formalizeText } from '@/lib/utils'
 
 type Props = {
     children: React.ReactNode
@@ -13,6 +14,7 @@ type Props = {
 
 const LeadsWrapper = (props: Props) => {
     const [isFetching, setIsFetching] = useState(false)
+    const [mode, setMode] = useState<"buying" | "selling">("buying")
     const [selectedAnimal, setSelectedAnimal] = useState<any>(null)
     const dialog = useDialog()
     const layer = dialog.layer ?? ""
@@ -30,6 +32,10 @@ const LeadsWrapper = (props: Props) => {
         setSelectedAnimal(animal)
     }
 
+    const handleChangeMode = (mode: "buying" | "selling") => {
+        setMode(mode)
+    }
+
     return (
         <>
             <div className={`fixed top-0 left-0 inset-0 ${layer === "footer-leadswrapper" ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out w-full h-full text-black bg-white z-50`}>
@@ -43,6 +49,7 @@ const LeadsWrapper = (props: Props) => {
                             <div className='leading-1'>
                                 <div className='text-zinc-600 text-sm'>Requests are from buyers which are interested in buying your animal</div>
                             </div>
+                            <Mode mode={mode} handleChangeMode={handleChangeMode} />
                         </div>
                     </div>
                     <div className='pr-4'>
@@ -70,3 +77,15 @@ const LeadsWrapper = (props: Props) => {
 }
 
 export default LeadsWrapper
+
+
+const Mode = (props: { mode: "buying" | "selling", handleChangeMode: (mode: "buying" | "selling") => void }) => {
+
+    return (
+        <div onClick={() => props.handleChangeMode(props.mode === "buying" ? "selling" : "buying")} className={`mt-2 group cursor-pointer flex items-center gap-2`}>
+            <ChevronDownIcon className='mt-1 group-active:-rotate-90 transition duration-200 ease-in-out' size={16} />
+            {formalizeText(props.mode)}
+        </div>
+    )
+
+}

@@ -145,6 +145,7 @@ const page = async (props: Props) => {
                     {animal.priceUnit && <span className='text-base uppercase '>{`${animal.priceUnit === "per Set" ? "Whole set" : animal.priceUnit}`}</span>}
                 </div> */}
                 </div>
+                <LeadsWindow animal={animal} />
                 {
                     !animal.sold && <div className='mb-2 px-4 flex flex-col gap-2 justify-center items-center w-full'>
                         {animal.allowBidding &&
@@ -164,7 +165,6 @@ const page = async (props: Props) => {
                         <CreateLeadButton animal={animal} />
                     </div>
                 }
-                {!animal.allowBidding && <LeadsWindow animal={animal} />}
                 <PostControls animal={animal} />
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />

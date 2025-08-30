@@ -61,10 +61,16 @@ async function changeStatus(leadId: string, status: string) {
   return response.data;
 }
 
+async function forUser(userId: string) {
+  const response = await axios.get(`${apiPath}/forUser?userId=${userId}`);
+  return response.data;
+}
+
 export const leads = {
   listAll,
   create,
   forAnimal,
+  forUser,
   hasLead,
   changeStatus,
   convertToSale,
