@@ -101,7 +101,7 @@ const LeadRow = (props: Props) => {
                         <div className='font-bold'>From:</div>
                         <div>{formalizeText(props.lead.animal.city)}, {formalizeText(props.lead.animal.province)}</div>
                     </div>
-                    <ArrowRightSquareIcon />
+                    <ArrowRightSquareIcon className='mx-auto' />
                     <div>
                         <div className='font-bold'>To:</div>
                         <div>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</div>
