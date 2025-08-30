@@ -64,7 +64,7 @@ const LeadsWrapper = (props: Props) => {
                 <div className='text-zinc-500 font-bold p-1 px-4 border-y border-zinc-500 flex items-center gap-2'>
                     {isFetching && <RefreshCcwIcon size={16} className='animate-spin' />}
                     <div className='line-clamp-1'>
-                        Your Animals and their requests are listed below
+                        {mode === "buying" ? "Animals you requested to buy are listed below" : "Your animals you are selling and their requests"}
                     </div>
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
