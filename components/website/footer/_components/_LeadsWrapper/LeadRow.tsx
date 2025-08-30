@@ -92,11 +92,14 @@ const LeadRow = (props: Props) => {
     const isForBuyer = user && user.id === props.lead.userId
 
     if (isForBuyer) {
+
+        const response = props.lead.sold && props.lead.status === "pending" ? "Request accepted" : props.lead.status === "cancelled" ? "Request cancelled" : props.lead.status === "dispatched" ? "Animal dispatched" : "Request accepted"
+
         return (
             <div className='bg-white border border-zinc-200 p-2 rounded flex flex-col h-full'>
                 {
-                    props.lead.sold && <div className='bg-emerald-500/10 text-emerald-700 mb-2 text-xs p-1 text-center'>
-                        Request accepted
+                    props.lead.sold && <div className={` ${props.lead.status === "pending" ? "bg-lime-500/10 text-lime-700" : props.lead.status === "cancelled" ? "bg-amber-500/10 text-amber-700" : props.lead.status === "dispatched" ? "bg-sky-500/10 text-sky-700" : "bg-emerald-500/10 text-emerald-700"} mb-2 text-xs p-1 text-center`}>
+                        {response}
                     </div>
                 }
                 {/* <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.animal.user.name)}</div> */}
@@ -167,9 +170,9 @@ const LeadRow = (props: Props) => {
                             <div className='border-t border-zinc-200 pt-4'>
                                 <div className='tracking-tight'>
                                     <div>Phone:</div>
-                                    {String(props.lead.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.user.phone}`} className='cursor-pointer'>
+                                    {String(props.lead.animal.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.animal.user.phone}`} className='cursor-pointer'>
                                         <>
-                                            <div className='w-full p-2 px-4 text-emerald-800 border border-dashed border-emerald-800 rounded flex items-center gap-2 justify-center text-center'> <PhoneIcon size={16} /> {props.lead.user.phone}</div>
+                                            <div className='w-full p-2 px-4 text-emerald-800 border border-dashed border-emerald-800 rounded flex items-center gap-2 justify-center text-center'> <PhoneIcon size={16} /> {props.lead.animal.user.phone}</div>
                                             <div className='text-xs text-center mt-1'>{props.lead.animal.user.name}</div>
                                         </>
                                     </Link>}
