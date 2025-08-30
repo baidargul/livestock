@@ -175,10 +175,10 @@ const LeadRow = (props: Props) => {
                                 <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
                                     <Button className={`w-full ${props.lead.status === "dispatched" && "pointer-events-none grayscale-100"} flex gap-2 justify-center items-center text-center`}> {props.lead.status !== "dispatched" && <PencilIcon size={16} />} {formalizeText(props.lead.status)}</Button>
                                 </StatusWindow>
-                                <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
                             </div>
                         </div>
                     }
+                    <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
                 </div>
             </div>
         )
@@ -254,10 +254,10 @@ const LeadRow = (props: Props) => {
                                 <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
                                     <Button className={`w-full ${props.lead.status === "dispatched" && "pointer-events-none grayscale-100"} flex gap-2 justify-center items-center text-center`}> {props.lead.status !== "dispatched" && <PencilIcon size={16} />} {formalizeText(props.lead.status)}</Button>
                                 </StatusWindow>
-                                <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
                             </div>
                         </div>
                     }
+                    <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
                 </div>
             </div>
         )
