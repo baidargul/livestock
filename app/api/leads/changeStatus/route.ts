@@ -11,17 +11,14 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
-    if (!data.leadId || !data.status) {
+    if (!data.lead || !data.status) {
       response.status = 400;
       response.message = "Missing required fields";
       response.data = null;
       return new Response(JSON.stringify(response));
     }
 
-    response = await actions.server.leads.changeStatus(
-      data.leadId,
-      data.status
-    );
+    response = await actions.server.leads.changeStatus(data.lead, data.status);
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

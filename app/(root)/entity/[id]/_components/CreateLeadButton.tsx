@@ -150,7 +150,7 @@ const CreateLeadButton = (props: Props) => {
                 </div>
             }
 
-            {<div className='w-full mt-2'>
+            {leads.length > 0 && <div className='w-full mt-2'>
                 <div className='text-xs'>Your requests:</div>
                 <table className='w-full text-xs my-2'>
                     <thead>

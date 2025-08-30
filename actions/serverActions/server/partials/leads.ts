@@ -614,7 +614,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
     return response;
   }
 }
-async function changeStatus(leadId: string, status: string) {
+async function changeStatus(lead: any, status: string) {
   let response = {
     status: 500,
     message: "Internal Server Error",
@@ -622,16 +622,19 @@ async function changeStatus(leadId: string, status: string) {
   };
 
   try {
-    const lead = await prisma.leads.update({
-      where: { id: leadId },
+    const newLead = await prisma.leads.update({
+      where: { id: lead.id },
       data: {
+        maleQuantityAvailable: lead.maleQuantityAvailable,
+        femaleQuantityAvailable: lead.femaleQuantityAvailable,
+        amount: lead.price,
         status: status,
       },
     });
 
     response.status = 200;
     response.message = "Lead status changed successfully";
-    response.data = lead;
+    response.data = newLead;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR] LEAD CHANGE STATUS: " + error.message);

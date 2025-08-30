@@ -32,7 +32,7 @@ const StatusWindow = (props: Props) => {
             return
         }
         setNewStatus(val)
-        const response = await actions.client.leads.changeStatus(props.lead.id, val)
+        const response = await actions.client.leads.changeStatus(props.lead, val)
         if (response.status === 200) {
             props.fetchLeads && props.fetchLeads()
         }
@@ -59,7 +59,7 @@ const StatusWindow = (props: Props) => {
                             <tr>
                                 <td className="p-1 border-zinc-200 border-b border-l">{props.lead.maleQuantityAvailable ?? 0} pc</td>
                                 <td className="p-1 border-zinc-200 border-b border-l">{props.lead.femaleQuantityAvailable ?? 0} pc</td>
-                                <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.lead.animal, ...props.lead }).price)}</td>
+                                <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.lead.animal, ...props.lead, price: props.lead.amount }).price)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -102,7 +102,7 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
         setOrder({
             maleQuantityAvailable: props.lead.maleQuantityAvailable ?? 0,
             femaleQuantityAvailable: props.lead.femaleQuantityAvailable ?? 0,
-            amount: calculatePricing({ ...props.lead.animal, ...props.lead }).price
+            amount: calculatePricing({ ...props.lead.animal, ...props.lead, price: props.lead.amount }).price
         })
     }, [])
 
@@ -141,7 +141,12 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
             authorId: props.lead.animal.userId,
             userId: props.lead.userId,
         };
-        const response = await actions.client.orders.create(postOrder);
+
+        const [response, lead] = await Promise.all([
+            actions.client.leads.changeStatus({ ...props.lead, price: Number(postOrder.price) }, "dispatched"),
+            actions.client.orders.create(postOrder)
+        ])
+
         if (response.status === 200) {
             props.onYes()
             dialog.closeDialog()
