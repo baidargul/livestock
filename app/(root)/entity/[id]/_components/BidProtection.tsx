@@ -9,6 +9,8 @@ import { deserialize, serialize } from 'bson'
 import { ChartCandlestickIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
+import LeadsWindow from './LeadsWindow'
+import CreateLeadButton from './CreateLeadButton'
 
 type Props = {
     children: React.ReactNode
@@ -117,6 +119,7 @@ const BidProtection = (props: Props) => {
     if (room && room.closedAt && room.userOfferAccepted === true) {
         return (
             <div className='w-full mb-4'>
+                <CreateLeadButton animal={props.animal} />
                 <div className='text-2xl text-center p-2 px-4 text-emerald-700'>
                     You have won the deal at <br />{formatCurrency(room?.closedAmount ?? 0)}
                 </div>
