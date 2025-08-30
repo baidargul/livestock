@@ -52,7 +52,7 @@ const LeadsWrapper = (props: Props) => {
                         <div className='leading-3'>
                             <div className='text-lg font-bold'>Requests</div>
                             <div className='leading-1'>
-                                <div className='text-zinc-600 text-sm'>Requests are from buyers which are interested in buying your animal</div>
+                                <div className='text-zinc-600 text-sm'>All requests, including the animals you intend to buy or sell, are displayed here.</div>
                             </div>
                             <Mode mode={mode} handleChangeMode={handleChangeMode} />
                         </div>
