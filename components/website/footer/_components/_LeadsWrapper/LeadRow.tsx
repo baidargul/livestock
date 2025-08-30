@@ -104,7 +104,7 @@ const LeadRow = (props: Props) => {
                     <ArrowRightSquareIcon className='mx-auto' />
                     <div>
                         <div className='font-bold'>To:</div>
-                        <div>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</div>
+                        <div className='text-emerald-700 font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</div>
                     </div>
                 </div>
                 <table className='w-full text-xs my-2'>
