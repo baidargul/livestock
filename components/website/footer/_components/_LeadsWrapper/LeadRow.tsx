@@ -151,14 +151,14 @@ const LeadRow = (props: Props) => {
                 </div>
                 <div className='flex flex-col items-end justify-end'>
                     <ElapsedTimeControl date={props.lead.createdAt} />
-                    <div className='flex gap-1 text-xs items-center mb-4'>
+                    {!props.lead.sold && <div className='flex gap-1 text-xs items-center mb-4'>
                         <div>
                             Expire in:
                         </div>
                         <div>
                             <ExpiryTimeControl date={props.lead.createdAt} period='1day' />
                         </div>
-                    </div>
+                    </div>}
                 </div>
                 <div className=''>
                     {!props.lead.sold && <div>
@@ -216,14 +216,14 @@ const LeadRow = (props: Props) => {
                 <div className='text-xs'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} {props.lead.animal.breed} {props.lead.animal.type}</div>
                 <div className='flex flex-col items-end justify-end'>
                     <ElapsedTimeControl date={props.lead.createdAt} />
-                    <div className='flex gap-1 text-xs items-center mb-4'>
+                    {!props.lead.sold && <div className='flex gap-1 text-xs items-center mb-4'>
                         <div>
                             Expire in:
                         </div>
                         <div>
                             <ExpiryTimeControl date={props.lead.createdAt} period='1day' />
                         </div>
-                    </div>
+                    </div>}
                 </div>
                 <div className='mb-2'>
                     <div>
