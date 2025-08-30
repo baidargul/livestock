@@ -51,9 +51,9 @@ const SelectedAnimal = (props: Props) => {
     return (
         leads && leads.length > 0 && <div className='grid grid-cols-1 gap-2 pr-2 w-full h-full overflow-y-auto'>
             {
-                leads.map((lead: any, index: number) => {
+                [...leads, ...leads, ...leads, ...leads, ...leads,].map((lead: any, index: number) => {
                     return (
-                        <LeadRow key={`${lead.id}-${index}`} lead={lead} fetchLeads={fetchLeadsForAnimal} />
+                        <LeadRow key={`${lead.id}-${index}`} index={index + 1} lead={lead} fetchLeads={fetchLeadsForAnimal} />
                     )
                 })
             }

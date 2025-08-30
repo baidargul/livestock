@@ -17,10 +17,11 @@ import React, { use, useEffect, useState } from 'react'
 import { PiExclamationMark } from 'react-icons/pi'
 import StatusWindow from './StatusWindow'
 import Link from 'next/link'
-import { ArrowRightSquareIcon, PencilIcon, PhoneIcon } from 'lucide-react'
+import { ArrowRightSquareIcon, ChevronDown, ChevronDownIcon, PencilIcon, PhoneIcon } from 'lucide-react'
 
 type Props = {
     lead: any
+    index?: number
     fetchLeads: () => void
 }
 
@@ -32,6 +33,11 @@ const LeadRow = (props: Props) => {
     const session: any = useSession()
     const dialog = useDialog()
     const protocols = useProtocols()
+    const [toggled, setToggled] = useState(false)
+
+    const handleToggled = (val: boolean) => {
+        setToggled(val)
+    }
 
     useEffect(() => {
         if (protocols.protocols) {
@@ -96,7 +102,10 @@ const LeadRow = (props: Props) => {
         const response = props.lead.sold && props.lead.status === "pending" ? "Request accepted" : props.lead.status === "cancelled" ? "Request cancelled" : props.lead.status === "dispatched" ? "Animal dispatched" : "Request accepted"
 
         return (
-            <div className='bg-white border border-zinc-200 p-2 rounded flex flex-col h-full'>
+            <div className={`bg-white border border-zinc-200 p-2 rounded flex flex-col ${toggled ? "h-[30px] overflow-hidden" : "h-full"}`}>
+                <div onClick={() => handleToggled(!toggled)} className='mb-2 w-full flex gap-4 items-center'>
+                    <ChevronDownIcon size={16} className={`${toggled ? "rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs text-zinc-500'>{props.index} -</div>}  <div className='text-xs'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {props.lead.animal.breed} {props.lead.animal.type}</div>
+                </div>
                 {
                     props.lead.sold && <div className={` ${props.lead.status === "pending" ? "bg-lime-500/10 text-lime-700" : props.lead.status === "cancelled" ? "bg-amber-500/10 text-amber-700" : props.lead.status === "dispatched" ? "bg-sky-500/10 text-sky-700" : "bg-emerald-500/10 text-emerald-700"} mb-2 text-xs p-1 text-center`}>
                         {response}
@@ -192,7 +201,10 @@ const LeadRow = (props: Props) => {
         )
     } else {
         return (
-            <div className='bg-white border border-zinc-200 p-2 rounded flex flex-col h-full'>
+            <div className={`bg-white border border-zinc-200 p-2 rounded flex flex-col ${toggled ? "h-[30px] overflow-hidden" : "h-full"}`}>
+                <div onClick={() => handleToggled(!toggled)} className='mb-2 w-full flex gap-4 items-center'>
+                    <ChevronDownIcon size={16} className={`${toggled ? "rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs text-zinc-500'>{props.index} -</div>}  <div className='text-xs'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {props.lead.animal.breed} {props.lead.animal.type}</div>
+                </div>
                 <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.user.name)}</div>
                 {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
                 {String(props.lead.city).length > 0 && String(props.lead.province).length > 0 && <div className='text-zinc-600 text-xs'>Delivery location: <span className='font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</span></div>}
