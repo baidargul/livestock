@@ -178,7 +178,7 @@ const LeadRow = (props: Props) => {
                             </div>
                         </div>
                     }
-                    <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
+                    <Button onClick={handleRemoveLead} className='w-full mt-1' variant='btn-secondary'>Remove</Button>
                 </div>
             </div>
         )
@@ -257,7 +257,7 @@ const LeadRow = (props: Props) => {
                             </div>
                         </div>
                     }
-                    <Button onClick={handleRemoveLead} className='w-full' variant='btn-secondary'>Remove</Button>
+                    <Button onClick={handleRemoveLead} className='w-full mt-1' variant='btn-secondary'>Remove</Button>
                 </div>
             </div>
         )
