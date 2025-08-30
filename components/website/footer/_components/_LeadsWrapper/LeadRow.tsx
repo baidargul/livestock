@@ -94,6 +94,11 @@ const LeadRow = (props: Props) => {
     if (isForBuyer) {
         return (
             <div className='bg-white border border-zinc-200 p-2 rounded flex flex-col h-full'>
+                {
+                    props.lead.sold && <div className='bg-emerald-500/10 text-emerald-700 mb-2 text-xs p-1 text-center'>
+                        Request accepted
+                    </div>
+                }
                 {/* <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.animal.user.name)}</div> */}
                 {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
                 <div className='flex justify-between items-center gap-2 text-xs'>
@@ -152,32 +157,32 @@ const LeadRow = (props: Props) => {
                         </div>
                     </div>
                 </div>
-                <div className='mt-auto'>
+                <div className=''>
                     {!props.lead.sold && <div>
                         <div className='tracking-tight mb-1'>Seller response:</div>
                         <div className='w-full border border-dashed p-2 text-center'>{formalizeText(props.lead.status)}</div>
                     </div>}
                     {props.lead.sold &&
-                        <div className='border-t border-zinc-200 pt-4'>
-                            <div className='tracking-tight'>
-                                <div>Phone:</div>
-                                {String(props.lead.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.user.phone}`} className='cursor-pointer'>
-                                    <div className='w-full p-2 px-4 text-emerald-800 border border-dashed border-emerald-800 rounded flex items-center gap-2 justify-center text-center'> <PhoneIcon size={16} /> {props.lead.user.phone}</div>
-                                </Link>}
-                            </div>
-                            <div className='mt-4'>
-                                <div>
-                                    Status:
+                        <>
+                            <div className='border-t border-zinc-200 pt-4'>
+                                <div className='tracking-tight'>
+                                    <div>Phone:</div>
+                                    {String(props.lead.user.phone ?? '').length > 0 && <Link href={`tel:${props.lead.user.phone}`} className='cursor-pointer'>
+                                        <>
+                                            <div className='w-full p-2 px-4 text-emerald-800 border border-dashed border-emerald-800 rounded flex items-center gap-2 justify-center text-center'> <PhoneIcon size={16} /> {props.lead.user.phone}</div>
+                                            <div className='text-xs text-center mt-1'>{props.lead.animal.user.name}</div>
+                                        </>
+                                    </Link>}
                                 </div>
-                                <div></div>
                             </div>
-                            <div className='w-full flex flex-col gap-2'>
-                                <StatusWindow lead={props.lead} fetchLeads={props.fetchLeads}>
-                                    <Button className={`w-full ${props.lead.status === "dispatched" && "pointer-events-none grayscale-100"} flex gap-2 justify-center items-center text-center`}> {props.lead.status !== "dispatched" && <PencilIcon size={16} />} {formalizeText(props.lead.status)}</Button>
-                                </StatusWindow>
-                            </div>
-                        </div>
+                        </>
                     }
+                </div>
+                <div className='mt-auto'>
+                    {props.lead.sold && <div>
+                        <div className='tracking-tight mb-1'>Request status:</div>
+                        <div className='w-full border border-dashed p-2 text-center'>{formalizeText(props.lead.status)}</div>
+                    </div>}
                     <Button onClick={handleRemoveLead} className='w-full mt-1' variant='btn-secondary'>Remove</Button>
                 </div>
             </div>
