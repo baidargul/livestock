@@ -170,7 +170,7 @@ const CreateLeadButton = (props: Props) => {
                                     <tr key={`${lead}-${index + 1}`} className={`${lead.status === "cancelled" ? "line-trough" : ""}`}>
                                         <td className="p-1 border-zinc-200 border-b border-x text-center">{lead.maleQuantityAvailable ?? 0}</td>
                                         <td className="p-1 border-zinc-200 border-b border-x text-center">{lead.femaleQuantityAvailable ?? 0}</td>
-                                        <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.animal, ...lead }).price)}</td>
+                                        <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.animal, ...lead, price: lead.amount }).price)}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{lead.city && String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l">{formalizeText(lead.status)}</td>
                                         <td className="p-1 border-zinc-200 border-b border-l border-r"> <XIcon size={16} onClick={() => handleConfirmRemoveLead(lead.id)} className='mx-auto cursor-pointer' /> </td>

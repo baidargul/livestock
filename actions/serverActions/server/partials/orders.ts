@@ -18,11 +18,23 @@ async function create(
     data: null,
   };
   try {
-    const Animal = await prisma.animal.findUnique({
-      where: {
-        id: animalId,
-      },
-    });
+    const [Animal, Author, User] = await Promise.all([
+      prisma.animal.findUnique({
+        where: {
+          id: animalId,
+        },
+      }),
+      prisma.user.findUnique({
+        where: {
+          id: authorId,
+        },
+      }),
+      prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      }),
+    ]);
 
     if (!Animal) {
       response.status = 400;
@@ -31,24 +43,12 @@ async function create(
       return response;
     }
 
-    const Author = await prisma.user.findUnique({
-      where: {
-        id: authorId,
-      },
-    });
-
     if (!Author) {
       response.status = 400;
       response.message = "Author not found";
       response.data = null;
       return response;
     }
-
-    const User = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
 
     if (!User) {
       response.status = 400;

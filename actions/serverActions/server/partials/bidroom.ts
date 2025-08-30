@@ -300,17 +300,36 @@ async function closeDeal(room: any, userId: string, bid: any) {
     });
 
     if (OfferAccepted) {
-      const neworder = await actions.server.orders.create(
-        room.authorId,
-        room.userId,
+      // const neworder = await actions.server.orders.create(
+      //   room.authorId,
+      //   room.userId,
+      //   room.animalId,
+      //   room.maleQuantityAvailable,
+      //   room.femaleQuantityAvailable,
+      //   selectedBid.price,
+      //   room.deliveryOptions,
+      //   selectedBid?.user?.province ?? "",
+      //   selectedBid?.user?.city ?? ""
+      // );
+
+      const totalQuantity =
+        Number(room.maleQuantityAvailable ?? 0) +
+        Number(room.femaleQuantityAvailable ?? 0);
+      const lead = await actions.server.leads.create(
         room.animalId,
-        room.maleQuantityAvailable,
-        room.femaleQuantityAvailable,
-        selectedBid.price,
-        room.deliveryOptions,
-        selectedBid?.user?.province ?? "",
-        selectedBid?.user?.city ?? ""
+        room.userId,
+        {
+          amount: Number(Number(selectedBid.price ?? 0) / totalQuantity),
+          deliveryOptions: room.deliveryOptions,
+          maleQuantityAvailable: room.maleQuantityAvailable,
+          femaleQuantityAvailable: room.femaleQuantityAvailable,
+          province: selectedBid?.user?.province ?? "",
+          city: selectedBid?.user?.city ?? "",
+          posted: true,
+        }
       );
+
+      console.log(lead);
     }
 
     const theRoomResp = await actions.server.bidRoom.list(room.id, "id");

@@ -17,7 +17,7 @@ const ProductSearchBar = (props: Props) => {
         <>
             <div className='flex w-full gap-2 items-center px-4 mb-4 sticky z-[4]'>
                 <div className='w-full mt-2 relative bg-white'>
-                    <Textbox onChange={handleTextChange} value={searchCriteria} placeholder='Search for anything' icon={<Search size={20} className='text-zinc-400 bg-white' />} iconClassName='pl-10' />
+                    <Textbox type='text' onChange={handleTextChange} value={searchCriteria} placeholder='Search for anything' icon={<Search size={20} className='text-zinc-400 bg-white' />} iconClassName='pl-10' />
                     {searchCriteria && searchCriteria.length > 0 && < SearchResults criteria={searchCriteria} setCriteria={setSearchCriteria} />}
                 </div>
             </div>

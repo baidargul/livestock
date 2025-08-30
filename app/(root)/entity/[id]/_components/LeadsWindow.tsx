@@ -57,7 +57,7 @@ const LeadsWindow = (props: Props) => {
                                             <td className="p-1 border-zinc-200 border-b border-l">{lead.deliveryOptions.includes("SELF_PICKUP") ? "Self Pickup" : String(lead.city ?? '').length > 0 ? `${lead.city}, ${lead.province}` : `${lead.user.city}, ${lead.user.province}`}</td>
                                             <td className="p-1 border-zinc-200 border-b border-l">{lead.maleQuantityAvailable ?? 0} pc</td>
                                             <td className="p-1 border-zinc-200 border-b border-l">{lead.femaleQuantityAvailable ?? 0} pc</td>
-                                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...lead.animal, ...lead }).price)}</td>
+                                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...lead.animal, ...lead, price: lead.amount }).price)}</td>
                                         </tr>
                                     )
                                 })

@@ -418,7 +418,6 @@ async function convertToSale(currentUserId: string, leadId: string) {
     return response;
   }
 }
-
 async function changeStatus(leadId: string, status: string) {
   let response = {
     status: 500,
