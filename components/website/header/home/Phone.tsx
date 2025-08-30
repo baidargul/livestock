@@ -12,7 +12,7 @@ const PhoneHeaderHome = (props: Props) => {
     const dialog = useDialog()
 
     return (
-        <div className={`sticky top-0 left-0 ${dialog.layer === "" ? "z-50" : "z-20"}   w-full bg-white`}>
+        <div className={`sticky top-0 left-0 ${dialog.layer === "" ? "z-50" : "z-20"} w-full bg-white pb-1 shadow-sm`}>
             <div className='flex justify-between items-center w-full  pr-2'>
                 <div className='flex items-center gap-2'>
                     <SiteLogo />
