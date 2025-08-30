@@ -628,6 +628,7 @@ async function changeStatus(lead: any, status: string) {
         maleQuantityAvailable: lead.maleQuantityAvailable,
         femaleQuantityAvailable: lead.femaleQuantityAvailable,
         amount: lead.price,
+        fixed: lead.fixed ? lead.fixed : false,
         status: status,
       },
     });
