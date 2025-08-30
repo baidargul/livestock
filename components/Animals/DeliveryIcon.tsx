@@ -32,10 +32,10 @@ const DeliveryIcon = (props: Props) => {
     if (props.icon === "SELF_PICKUP") {
 
         return (
-            <div className={props.description ? "grid grid-cols-[1fr_auto] gap-4 w-full" : ""}>
-                <PiHandshakeDuotone size={props.size ?? 20} title='Self Pickup' />
+            <div className={props.description ? "flex items-start gap-2 w-full" : ""}>
+                <PiHandshakeDuotone size={props.size ?? 20} title='Self Pickup' className='min-w-12' />
                 {props.description && <div>
-                    {description === "Buyer" && <div><span className='font-bold'>Self Pickup</span> - Pick it up yourself from the animal's location.</div>}
+                    {description === "Buyer" && <div><span className='font-bold  min-w-[100px]'>Self Pickup</span> - Pick it up yourself from the animal's location.</div>}
                     {description === "Seller" && <div>Buyer can visit and pick it up.</div>}
                 </div>}
             </div>
@@ -43,10 +43,10 @@ const DeliveryIcon = (props: Props) => {
     } else if (props.icon === "SELLER_DELIVERY") {
 
         return (
-            <div className={props.description ? "grid grid-cols-[1fr_auto] gap-4 w-full" : ""}>
-                <PiFireTruckDuotone size={props.size ?? 20} title='Seller Delivery' className={props.className} />
+            <div className={props.description ? "flex items-start gap-2 w-full" : ""}>
+                <PiFireTruckDuotone size={props.size ?? 20} title='Seller Delivery' className={`${props.className} min-w-12`} />
                 {props.description && <div>
-                    {description === "Buyer" && <div><span className='font-bold'>Cargo</span> - For delivering animals to other districts/tehsils through the bus stand/station of that district.</div>}
+                    {description === "Buyer" && <div><span className='font-bold  min-w-[100px]'>Cargo</span> - For delivering animals to other districts/tehsils through the bus stand/station of that district.</div>}
                     {description === "Seller" && <div>You will deliver it inside the city or cargo.</div>}
                 </div>}
             </div>
