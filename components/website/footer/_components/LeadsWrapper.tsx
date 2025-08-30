@@ -21,6 +21,11 @@ const LeadsWrapper = (props: Props) => {
 
     useEffect(() => {
         setSelectedAnimal(null)
+        if (props.defaultAnimalId && String(props.defaultAnimalId).length > 0) {
+            setMode("selling")
+        } else {
+            setMode("buying")
+        }
     }, [])
 
 
@@ -64,10 +69,10 @@ const LeadsWrapper = (props: Props) => {
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
                     <section className='p-1 h-[calc(100vh-140px)] overflow-y-auto bg-white'>
-                        {layer === "footer-leadswrapper" && <Animals selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
+                        {layer === "footer-leadswrapper" && <Animals mode={mode} selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
                     </section>
                     <section className='p-2 h-[calc(100vh-140px)] overflow-y-auto bg-zinc-400'>
-                        <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} />
+                        <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} mode={mode} />
                     </section>
                 </div>
             </div>

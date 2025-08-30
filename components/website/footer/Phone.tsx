@@ -68,7 +68,7 @@ const PhoneFooter = (props: Props) => {
                 </div>
             </RoomsWrapper>}
 
-            {user && <LeadsWrapper>
+            {user && <LeadsWrapper defaultAnimalId=''>
                 <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShuffleIcon />
                     <div>

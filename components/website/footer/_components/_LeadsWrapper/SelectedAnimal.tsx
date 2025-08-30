@@ -1,7 +1,5 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
-import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
-import { formalizeText } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 import LeadRow from './LeadRow'
@@ -9,6 +7,7 @@ import LeadRow from './LeadRow'
 type Props = {
     selectedAnimal: any
     setIsFetching?: (val: boolean) => void
+    mode: "buying" | "selling"
 }
 
 const SelectedAnimal = (props: Props) => {
@@ -20,18 +19,24 @@ const SelectedAnimal = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (user) {
-            fetchLeads()
+        if (user && props.selectedAnimal && props.mode) {
+            fetchLeadsForAnimal()
         } else {
             setLeads([])
         }
-    }, [user, props.selectedAnimal])
+    }, [user, props.selectedAnimal, props.mode])
 
-    const fetchLeads = async () => {
+    const fetchLeadsForAnimal = async () => {
         setLeads([])
         if (!props.selectedAnimal) return
+        if (!user) return
         props.setIsFetching && props.setIsFetching(true)
-        const response = await actions.client.leads.forAnimal(props.selectedAnimal.id)
+        let response
+        if (props.mode === "buying") {
+            response = await actions.client.leads.ImBuying(user.id)
+        } else {
+            response = await actions.client.leads.ImSelling(user.id)
+        }
         if (response.status === 200) {
             setLeads(response.data)
         } else {
@@ -48,7 +53,7 @@ const SelectedAnimal = (props: Props) => {
             {
                 leads.map((lead: any, index: number) => {
                     return (
-                        <LeadRow key={`${lead.id}-${index}`} lead={lead} fetchLeads={fetchLeads} />
+                        <LeadRow key={`${lead.id}-${index}`} lead={lead} fetchLeads={fetchLeadsForAnimal} />
                     )
                 })
             }

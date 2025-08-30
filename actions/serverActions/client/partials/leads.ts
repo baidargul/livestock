@@ -66,11 +66,27 @@ async function forUser(userId: string) {
   return response.data;
 }
 
+async function ImBuying(userId: string) {
+  const response = await axios.get(
+    `${apiPath}/Im?userId=${userId}&method=buying`
+  );
+  return response.data;
+}
+
+async function ImSelling(userId: string) {
+  const response = await axios.get(
+    `${apiPath}/Im?userId=${userId}&method=selling`
+  );
+  return response.data;
+}
+
 export const leads = {
   listAll,
   create,
   forAnimal,
   forUser,
+  ImBuying,
+  ImSelling,
   hasLead,
   changeStatus,
   convertToSale,

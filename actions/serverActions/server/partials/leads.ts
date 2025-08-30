@@ -76,6 +76,17 @@ async function forUser(userId: string) {
         animal: {
           select: {
             id: true,
+            maleQuantityAvailable: true,
+            femaleQuantityAvailable: true,
+            userId: true,
+            type: true,
+            breed: true,
+            price: true,
+            priceUnit: true,
+            weightUnit: true,
+            averageAge: true,
+            averageWeight: true,
+            ageUnit: true,
             user: {
               select: {
                 id: true,
@@ -96,6 +107,133 @@ async function forUser(userId: string) {
         phone: lead.sold ? lead.user.phone : null,
       },
     }));
+    response.status = 200;
+    response.message = `${leads.length} Leads found`;
+    response.data = leads;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR] LEAD FOR USER: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
+async function ImBuying(userId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    let leads = await prisma.leads.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            balance: true,
+            city: true,
+            province: true,
+            phone: true,
+          },
+        },
+        animal: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    leads = leads.map((lead) => ({
+      ...lead,
+      user: {
+        ...lead.user,
+        phone: lead.sold ? lead.user.phone : null,
+      },
+    }));
+
+    const allFetch = [];
+    for (const lead of leads) {
+      allFetch.push(actions.server.post.list(lead.animalId, "id", true));
+    }
+
+    const fetches = await Promise.all(allFetch);
+    for (let i = 0; i < leads.length; i++) {
+      leads[i].animal = fetches[i];
+    }
+
+    response.status = 200;
+    response.message = `${leads.length} Leads found`;
+    response.data = leads;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR] LEAD FOR USER: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+async function ImSelling(userId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+  try {
+    let leads = await prisma.leads.findMany({
+      where: {
+        animal: {
+          userId: userId,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            balance: true,
+            city: true,
+            province: true,
+            phone: true,
+          },
+        },
+        animal: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    leads = leads.map((lead) => ({
+      ...lead,
+      user: {
+        ...lead.user,
+        phone: lead.sold ? lead.user.phone : null,
+      },
+    }));
+
+    const allFetch = [];
+    for (const lead of leads) {
+      allFetch.push(actions.server.post.list(lead.animalId, "id", true));
+    }
+
+    const fetches = await Promise.all(allFetch);
+    for (let i = 0; i < leads.length; i++) {
+      leads[i].animal = fetches[i];
+    }
+
     response.status = 200;
     response.message = `${leads.length} Leads found`;
     response.data = leads;
@@ -509,6 +647,8 @@ export const leads = {
   hasLead,
   forAnimal,
   forUser,
+  ImBuying,
+  ImSelling,
   changeStatus,
   convertToSale,
   remove,

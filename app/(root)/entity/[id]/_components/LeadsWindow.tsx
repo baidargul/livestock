@@ -20,7 +20,7 @@ const LeadsWindow = (props: Props) => {
     }, [])
 
     const fetchLeads = async () => {
-        if (!props.animal) return
+        if (!props.animal || !user) return
         if (user.id === props?.animal?.userId) {
             setIsFetching(true)
             const response = await actions.client.leads.forAnimal(props.animal.id)

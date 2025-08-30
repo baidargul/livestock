@@ -11,6 +11,7 @@ type Props = {
     selectedAnimal: any
     setIsFetching?: (val: boolean) => void
     defaultAnimalId?: string
+    mode: "buying" | "selling"
 }
 
 const Animals = (props: Props) => {
@@ -19,21 +20,29 @@ const Animals = (props: Props) => {
     const user = useUser()
 
     useEffect(() => {
-        if (user) {
+        setAnimals([])
+        props.selectAnimal && props.selectAnimal(null)
+    }, [props.mode])
+
+    useEffect(() => {
+        if (user && !isFetching) {
             fetchUserAnimals()
         } else {
             setAnimals([])
         }
-    }, [user])
+    }, [user, props.mode])
 
     useEffect(() => {
         if (!isFetching) {
             if (animals.length > 0) {
+                let target = null
                 for (const aa of animals) {
-                    if (aa.id === props.defaultAnimalId) {
-                        props.selectAnimal && props.selectAnimal(aa)
+                    if (aa.animal.id === props.defaultAnimalId) {
+                        target = aa
+                        break
                     }
                 }
+                props.selectAnimal && props.selectAnimal(target)
             }
         }
     }, [isFetching])
@@ -42,9 +51,24 @@ const Animals = (props: Props) => {
         if (!user) return
         setIsFetching(true)
         props.setIsFetching && props.setIsFetching(true)
-        const response = await actions.client.posts.listByUser(user.id)
+        let response
+        if (props.mode === "buying") {
+            response = await actions.client.leads.ImBuying(user.id)
+        } else {
+            response = await actions.client.leads.ImSelling(user.id)
+        }
         if (response.status === 200) {
-            setAnimals(response.data)
+            const raw = []
+            for (const lead of response.data) {
+                let alreadyExists = false
+                for (const temp of raw) {
+                    temp.animal.id === lead.animal.id && (alreadyExists = true)
+                }
+                if (!alreadyExists) {
+                    raw.push(lead)
+                }
+            }
+            setAnimals(raw)
         } else {
             setAnimals([])
         }
@@ -55,7 +79,9 @@ const Animals = (props: Props) => {
     return (
         <div className='w-full h-full pt-1 flex flex-col gap-2'>
             {animals.length > 0 ? (
-                animals.map((animal, index: number) => {
+                [...animals, ...animals, ...animals, ...animals, ...animals, ...animals,].map((lead, index: number) => {
+
+                    const animal = lead.animal
 
                     return (
                         <div onClick={() => props.selectAnimal && props.selectAnimal(animal)} key={`${animal.id}-${index}`} className={`p-2 cursor-pointer rounded border-b border-zinc-200 ${props.selectedAnimal ? props.selectedAnimal.id === animal.id ? "bg-amber-100" : "bg-zinc-100" : "bg-white"}`}>
