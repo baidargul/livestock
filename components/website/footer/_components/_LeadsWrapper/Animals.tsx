@@ -79,7 +79,7 @@ const Animals = (props: Props) => {
     return (
         <div className='w-full h-full pt-1 flex flex-col gap-2'>
             {animals.length > 0 ? (
-                [...animals, ...animals, ...animals, ...animals, ...animals, ...animals,].map((lead, index: number) => {
+                animals.map((lead, index: number) => {
 
                     const animal = lead.animal
 
