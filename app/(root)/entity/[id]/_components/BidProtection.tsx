@@ -120,13 +120,13 @@ const BidProtection = (props: Props) => {
         return (
             <div className='w-full mb-4'>
                 <CreateLeadButton animal={props.animal} />
-                <div className='text-2xl text-center p-2 px-4 text-emerald-700'>
+                {/* <div className='text-2xl text-center p-2 px-4 text-emerald-700'>
                     You have won the deal at <br />{formatCurrency(room?.closedAmount ?? 0)}
                 </div>
                 <div className='w-full flex flex-col gap-2'>
                     <Button variant='btn-primary' className='w-full'>Proceed to Pay</Button>
                     <Button variant='btn-secondary' onClick={handleCloseBidRoom} className='w-full'>Withdraw Deal</Button>
-                </div>
+                </div> */}
             </div>
         )
     }

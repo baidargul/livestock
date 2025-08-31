@@ -625,9 +625,9 @@ async function changeStatus(lead: any, status: string) {
     const newLead = await prisma.leads.update({
       where: { id: lead.id },
       data: {
-        maleQuantityAvailable: lead.maleQuantityAvailable,
-        femaleQuantityAvailable: lead.femaleQuantityAvailable,
-        amount: lead.price,
+        maleQuantityAvailable: Number(lead.maleQuantityAvailable ?? 0),
+        femaleQuantityAvailable: Number(lead.femaleQuantityAvailable ?? 0),
+        amount: Number(lead.price ?? 0),
         fixed: lead.fixed ? lead.fixed : false,
         status: status,
       },

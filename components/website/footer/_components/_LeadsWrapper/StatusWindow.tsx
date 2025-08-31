@@ -30,13 +30,9 @@ const StatusWindow = (props: Props) => {
         if (val === "dispatched" && !force) {
             dialog.showDialog("Dispatch Confirmation", <FinalClosingConfirmationDialog lead={props.lead} onYes={() => handleChangeStatus(val, true)} />)
             return
+        } else {
+            setNewStatus(val)
         }
-        setNewStatus(val)
-        const response = await actions.client.leads.changeStatus(props.lead, val)
-        if (response.status === 200) {
-            props.fetchLeads && props.fetchLeads()
-        }
-        setNewStatus('')
 
     }
 
@@ -91,6 +87,7 @@ export default StatusWindow
 
 
 const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void }) => {
+    const [isWorking, setIsWorking] = useState(false)
     const dialog = useDialog()
     const [order, setOrder] = useState({
         maleQuantityAvailable: 0,
@@ -120,6 +117,8 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
     const totalQuantity = Number(order.maleQuantityAvailable) + Number(order.femaleQuantityAvailable)
 
     const handleConfirm = async () => {
+        if (isWorking) return
+        setIsWorking(true)
         if (totalQuantity < 1) return
         const amount = Number(order.amount) / totalQuantity
         const postOrder = {
@@ -142,9 +141,10 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
             userId: props.lead.userId,
         };
 
+        const newLead = { ...props.lead, price: Number(postOrder.price), maleQuantityAvailable: Number(postOrder.maleQuantityAvailable), femaleQuantityAvailable: Number(postOrder.femaleQuantityAvailable), fixed: true }
         const [response, lead] = await Promise.all([
-            actions.client.leads.changeStatus({ ...props.lead, price: Number(postOrder.price), fixed: true }, "dispatched"),
-            actions.client.orders.create(postOrder)
+            actions.client.orders.create(postOrder),
+            actions.client.leads.changeStatus(newLead, "dispatched"),
         ])
 
         if (response.status === 200) {
@@ -153,6 +153,7 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
         } else {
             dialog.showDialog(`Error`, null, response.message)
         }
+        setIsWorking(false)
     }
 
     return (
@@ -160,13 +161,13 @@ const FinalClosingConfirmationDialog = (props: { lead: any, onYes: () => void })
             <div>You're marking this order as complete by putting it in the dispatched state.</div>
             <div className='font-normal'>Please fill the dispatched quantities and total amount of the order.</div>
             <div>
-                <Textbox disabled={Number(props.lead.maleQuantityAvailable) < 1} onChange={handleMaleQuantityChange} value={order.maleQuantityAvailable} type='number' label='Male Quantity' />
-                <Textbox disabled={Number(props.lead.femaleQuantityAvailable) < 1} onChange={handleFemaleQuantityChange} value={order.femaleQuantityAvailable} type='number' label='Female Quantity' />
-                <Textbox onChange={handleTotalAmountChange} value={order.amount} type='number' label='Total Amount' />
+                <Textbox disabled={Number(props.lead.maleQuantityAvailable) < 1 || isWorking} onChange={handleMaleQuantityChange} value={order.maleQuantityAvailable} type='number' label='Male Quantity' />
+                <Textbox disabled={Number(props.lead.femaleQuantityAvailable) < 1 || isWorking} onChange={handleFemaleQuantityChange} value={order.femaleQuantityAvailable} type='number' label='Female Quantity' />
+                <Textbox disabled={isWorking} onChange={handleTotalAmountChange} value={order.amount} type='number' label='Total Amount' />
             </div>
             <div className='flex justify-end gap-2 items-center'>
-                <Button disabled={totalQuantity < 1 || order.amount < 1} onClick={handleConfirm} className='w-full'>Confirm</Button>
-                <Button onClick={() => dialog.closeDialog()} className='w-full' variant='btn-secondary'>Cancel</Button>
+                <Button disabled={totalQuantity < 1 || order.amount < 1 || isWorking} onClick={handleConfirm} className='w-full'>Confirm</Button>
+                <Button disabled={isWorking} onClick={() => dialog.closeDialog()} className='w-full' variant='btn-secondary'>Cancel</Button>
             </div>
         </div>
     )
