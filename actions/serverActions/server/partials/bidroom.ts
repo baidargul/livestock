@@ -300,21 +300,23 @@ async function closeDeal(room: any, userId: string, bid: any) {
     });
 
     if (OfferAccepted) {
-      // const neworder = await actions.server.orders.create(
-      //   room.authorId,
-      //   room.userId,
-      //   room.animalId,
-      //   room.maleQuantityAvailable,
-      //   room.femaleQuantityAvailable,
-      //   selectedBid.price,
-      //   room.deliveryOptions,
-      //   selectedBid?.user?.province ?? "",
-      //   selectedBid?.user?.city ?? ""
-      // );
-
       const totalQuantity =
         Number(room.maleQuantityAvailable ?? 0) +
         Number(room.femaleQuantityAvailable ?? 0);
+
+      await prisma.$transaction([
+        prisma.bids.deleteMany({
+          where: {
+            bidRoomId: room.id,
+          },
+        }),
+        prisma.bidRoom.delete({
+          where: {
+            id: room.id,
+          },
+        }),
+      ]);
+
       const lead = await actions.server.leads.create(
         room.animalId,
         room.userId,
