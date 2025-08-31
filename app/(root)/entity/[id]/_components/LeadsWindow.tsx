@@ -34,7 +34,7 @@ const LeadsWindow = (props: Props) => {
     }
 
     return (
-        user && user.id === props?.animal?.userId && leads.length > 0 && <div className='px-4 cursor-pointer'>
+        user && user.id === props.animal.userId && leads.length > 0 && <div className='px-4 cursor-pointer'>
             <LeadsWrapper defaultAnimalId={props.animal.id}>
                 <div className='text-xs flex gap-1 items-center'> {isFetching && <RefreshCcwIcon className='text-zinc-700 animate-spin' size={16} />} Requests: {leads.length}</div>
                 <div className='relative'>

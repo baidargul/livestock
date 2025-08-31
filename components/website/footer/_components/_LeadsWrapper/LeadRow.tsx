@@ -121,7 +121,8 @@ const LeadRow = (props: Props) => {
                     <ArrowRightSquareIcon className='mx-auto' />
                     <div>
                         <div className='font-bold'>To:</div>
-                        <div className='text-emerald-700 font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</div>
+                        {props.lead.deliveryOptions.includes("SELLER_DELIVERY") && <div className='text-emerald-700 font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</div>}
+                        {props.lead.deliveryOptions.includes("SELF_PICKUP") && <div className='text-emerald-700 font-bold'>Self Pickup</div>}
                     </div>
                 </div>
                 <table className='w-full text-xs my-2'>
@@ -207,7 +208,7 @@ const LeadRow = (props: Props) => {
                 </div>
                 <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.user.name)}</div>
                 {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
-                {String(props.lead.city).length > 0 && String(props.lead.province).length > 0 && <div className='text-zinc-600 text-xs'>Delivery location: <span className='font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</span></div>}
+                {String(props.lead.city).length > 0 && String(props.lead.province).length > 0 && props.lead.deliveryOptions.includes("SELLER_DELIVERY") && <div className='text-zinc-600 text-xs'>Delivery location: <span className='font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</span></div>}
                 {String(props.lead.city).length === 0 && String(props.lead.province).length === 0 && <div className='text-zinc-600 text-xs'>{formalizeText(props.lead.user.city)}, {formalizeText(props.lead.user.province)}</div>}
                 <table className='w-full text-xs my-2'>
                     <thead>
