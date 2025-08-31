@@ -124,7 +124,7 @@ const PostBiddingOptions = (props: Props) => {
 
     return (
         <>
-            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-14 h-[80%]'} overflow-y-auto select-none flex flex-col justify-between gap-0 ${layer === "post-bidding-options" ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-20 p-4`}>
+            <div className={`fixed ${props.staticStyle ? 'bottom-0 h-[95%]' : 'bottom-0 h-[80%]'} overflow-y-auto select-none flex flex-col justify-between gap-0 ${layer === "post-bidding-options" ? "translate-y-0 pointer-events-auto opacity-100" : "translate-y-full pointer-events-none opacity-0"} transition-all duration-300 drop-shadow-2xl border border-emerald-900/30 w-[96%] mx-2 left-0 rounded-t-xl bg-white z-50 p-4`}>
                 <div className='w-full h-full'>
                     <div className='-mt-2 flex flex-col gap-2 w-full'>
                         <div className='w-full h-full'>
@@ -188,7 +188,7 @@ const PostBiddingOptions = (props: Props) => {
                 </div>
             </div>
             <div onClick={handleOpen} className='w-full'>{props.children}</div>
-            <div onClick={() => handleClose(true)} className={`fixed ${layer === "post-bidding-options" ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-10`}></div>
+            <div onClick={() => handleClose(true)} className={`fixed ${layer === "post-bidding-options" ? "pointer-events-auto opacity-100 backdrop-blur-[1px]" : "pointer-events-none opacity-0"} top-0 left-0 inset-0 w-full h-full bg-black/50 z-30`}></div>
         </>
     )
 }
