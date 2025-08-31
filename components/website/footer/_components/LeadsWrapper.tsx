@@ -6,6 +6,7 @@ import SelectedAnimal from './_LeadsWrapper/SelectedAnimal'
 import CoinsAvailable from '../../profile/_components/CoinsAvailable'
 import { useDialog } from '@/hooks/useDialog'
 import { formalizeText } from '@/lib/utils'
+import { useProtocols } from '@/hooks/useProtocols'
 
 type Props = {
     children: React.ReactNode
@@ -15,6 +16,8 @@ type Props = {
 const LeadsWrapper = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
+    const protocols = useProtocols()
+    const FreeMode = protocols.protocols && protocols.get("FreeMode")
     const [mode, setMode] = useState<"buying" | "selling">("buying")
     const [selectedAnimal, setSelectedAnimal] = useState<any>(null)
     const dialog = useDialog()
@@ -76,10 +79,10 @@ const LeadsWrapper = (props: Props) => {
                 </div>
                 <div className='w-full h-full grid grid-cols-[35%_1fr] bg-zinc-100'>
                     <section className='p-1 h-[calc(100vh-170px)] overflow-y-auto bg-white'>
-                        {layer === "footer-leadswrapper" && <Animals mode={mode} selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
+                        {layer === "footer-leadswrapper" && <Animals FreeMode={FreeMode === 1} mode={mode} selectAnimal={handleSelectAnimal} selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} defaultAnimalId={props.defaultAnimalId} />}
                     </section>
                     <section className='p-2 h-[calc(100vh-170px)] overflow-y-auto bg-zinc-400'>
-                        <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} mode={mode} />
+                        <SelectedAnimal selectedAnimal={selectedAnimal} setIsFetching={setIsFetching} FreeMode={FreeMode === 1} mode={mode} />
                     </section>
                 </div>
             </div>

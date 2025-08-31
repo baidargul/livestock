@@ -348,9 +348,18 @@ async function create(
       return response;
     }
 
-    const BuyerDirectHandShakeCost = BuyerDirectHandShake?.value || 0;
+    let FreeMode: any = protocols.find(
+      (protocol) => protocol.name === "FreeMode"
+    );
+    FreeMode = FreeMode ? (Number(FreeMode.value) === 1 ? true : false) : false;
+    const BuyerDirectHandShakeCost = FreeMode
+      ? 0
+      : BuyerDirectHandShake?.value || 0;
 
-    if (Number(BuyerDirectHandShakeCost) > Number(user.balance ?? 0)) {
+    if (
+      Number(BuyerDirectHandShakeCost) > Number(user.balance ?? 0) &&
+      !FreeMode
+    ) {
       response.status = 305;
       response.message = "You don't have enough balance to create a lead";
       return response;
@@ -419,13 +428,57 @@ async function remove(leadId: string) {
   };
 
   try {
-    const lead = await prisma.leads.delete({
-      where: { id: leadId },
-    });
+    const transactions = [];
+    const [lead, protocols] = await Promise.all([
+      prisma.leads.findUnique({ where: { id: leadId } }),
+      prisma.businessProtocol.findMany({}),
+    ]);
+
+    if (!lead) {
+      response.status = 404;
+      response.message = "Lead not found";
+      return response;
+    }
+
+    if (lead.sold) {
+      let FreeMode: any = protocols.find(
+        (protocol) => protocol.name === "FreeMode"
+      );
+      FreeMode = FreeMode
+        ? Number(FreeMode.value) === 1
+          ? true
+          : false
+        : false;
+
+      let BuyerDirectHandShakeCost: any = protocols.find(
+        (protocol) => protocol.name === "BuyerDirectHandShakeCost"
+      );
+      BuyerDirectHandShakeCost = BuyerDirectHandShakeCost?.value || 0;
+
+      if (!FreeMode) {
+        transactions.push(
+          prisma.user.update({
+            where: {
+              id: lead.userId,
+            },
+            data: {
+              balance: {
+                increment: Number(BuyerDirectHandShakeCost),
+              },
+            },
+          })
+        );
+      }
+    }
+
+    transactions.push(prisma.leads.delete({ where: { id: leadId } }));
+
+    let deletedLead: any = await prisma.$transaction(transactions);
+    deletedLead = deletedLead[1];
 
     response.status = 200;
     response.message = "Lead deleted successfully";
-    response.data = lead;
+    response.data = deletedLead;
     return response;
   } catch (error: any) {
     console.log("[SERVER ERROR] LEAD DELETE: " + error.message);
@@ -481,7 +534,7 @@ async function convertToSale(currentUserId: string, leadId: string) {
       return response;
     }
 
-    const [lead, protocol, protocolBuyer] = await Promise.all([
+    const [lead, protocol, protocolBuyer, protocols] = await Promise.all([
       prisma.leads.findUnique({
         where: { id: leadId },
         include: {
@@ -517,7 +570,13 @@ async function convertToSale(currentUserId: string, leadId: string) {
       }),
       actions.server.protocols.BusinessProtocols.list("SellerHandShakeCost"),
       actions.server.protocols.BusinessProtocols.list("BuyerHandShakeCost"),
+      prisma.businessProtocol.findMany(),
     ]);
+
+    let FreeMode: any = protocols.find(
+      (protocol) => protocol.name === "FreeMode"
+    );
+    FreeMode = FreeMode ? (Number(FreeMode.value) === 1 ? true : false) : false;
 
     if (!lead) {
       response.status = 404;
@@ -531,25 +590,35 @@ async function convertToSale(currentUserId: string, leadId: string) {
       return response;
     }
 
-    const sellerHandShakeCost = protocol
-      ? protocol.status === 200
-        ? protocol.data.value
+    const sellerHandShakeCost = !FreeMode
+      ? protocol
+        ? protocol.status === 200
+          ? protocol.data.value
+          : 0
         : 0
       : 0;
 
-    const buyerHandShakeCost = protocolBuyer
-      ? protocolBuyer.status === 200
-        ? protocolBuyer.data.value
+    const buyerHandShakeCost = !FreeMode
+      ? protocolBuyer
+        ? protocolBuyer.status === 200
+          ? protocolBuyer.data.value
+          : 0
         : 0
       : 0;
 
-    if (Number(author.balance ?? 0) < Number(sellerHandShakeCost ?? 0)) {
+    if (
+      Number(author.balance ?? 0) < Number(sellerHandShakeCost ?? 0) &&
+      !FreeMode
+    ) {
       response.status = 305;
       response.message = "Insufficient balance to perform this action";
       return response;
     }
 
-    if (Number(lead.user.balance ?? 0) < Number(buyerHandShakeCost ?? 0)) {
+    if (
+      Number(lead.user.balance ?? 0) < Number(buyerHandShakeCost ?? 0) &&
+      !FreeMode
+    ) {
       response.status = 306;
       response.message =
         "Buyer is on a low balance, please wait while he recharges his account.";

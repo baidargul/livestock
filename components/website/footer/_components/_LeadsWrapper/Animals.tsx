@@ -12,6 +12,7 @@ type Props = {
     setIsFetching?: (val: boolean) => void
     defaultAnimalId?: string
     mode: "buying" | "selling"
+    FreeMode?: boolean
 }
 
 const Animals = (props: Props) => {

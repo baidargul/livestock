@@ -23,6 +23,7 @@ type Props = {
     lead: any
     index?: number
     fetchLeads: () => void
+    FreeMode?: boolean
 }
 
 const LeadRow = (props: Props) => {
@@ -33,6 +34,7 @@ const LeadRow = (props: Props) => {
     const session: any = useSession()
     const dialog = useDialog()
     const protocols = useProtocols()
+    const [isWorking, setIsWorking] = useState(false)
     const [toggled, setToggled] = useState(false)
 
     const handleToggled = (val: boolean) => {
@@ -49,6 +51,7 @@ const LeadRow = (props: Props) => {
 
     const fetchUserDetails = async () => {
         if (!user || !session) return
+        setIsWorking(true)
         const response = await actions.client.leads.convertToSale(user.id, props.lead.id)
         if (response.status === 200) {
             session.fetchBalance()
@@ -63,6 +66,7 @@ const LeadRow = (props: Props) => {
         else {
             alert("Error: " + response.message)
         }
+        setIsWorking(false)
     }
 
     const continueRemoveLead = async () => {
@@ -84,7 +88,11 @@ const LeadRow = (props: Props) => {
 
     const handleFetchNumber = async () => {
         if (!user) return
-        dialog.showDialog('Charges', <CostConfirmationDialog onContinue={fetchUserDetails} />)
+        if (!props.FreeMode) {
+            dialog.showDialog('Charges', <CostConfirmationDialog onContinue={fetchUserDetails} />)
+        } else {
+            fetchUserDetails()
+        }
     }
 
 
@@ -112,7 +120,7 @@ const LeadRow = (props: Props) => {
                     </div>
                 }
                 {/* <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.animal.user.name)}</div> */}
-                {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
+                {Number(props.lead.user.balance) < Number(buyerCost) && !props.FreeMode && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
                 <div className='flex justify-between items-center gap-2 text-xs'>
                     <div>
                         <div className='font-bold'>From:</div>
@@ -207,7 +215,7 @@ const LeadRow = (props: Props) => {
                     <ChevronDownIcon size={16} className={`${toggled ? "-rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs text-zinc-500'>{props.index} -</div>}  <div className='text-xs line-clamp-1'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {formalizeText(props.lead.animal.breed)} {props.lead.animal.type}</div>
                 </div>
                 <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.user.name)}</div>
-                {Number(props.lead.user.balance) < Number(buyerCost) && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
+                {Number(props.lead.user.balance) < Number(buyerCost) && !props.FreeMode && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
                 {String(props.lead.city).length > 0 && String(props.lead.province).length > 0 && props.lead.deliveryOptions.includes("SELLER_DELIVERY") && <div className='text-zinc-600 text-xs'>Delivery location: <span className='font-bold'>{formalizeText(props.lead.city)}, {formalizeText(props.lead.province)}</span></div>}
                 {String(props.lead.city).length === 0 && String(props.lead.province).length === 0 && <div className='text-zinc-600 text-xs'>{formalizeText(props.lead.user.city)}, {formalizeText(props.lead.user.province)}</div>}
                 <table className='w-full text-xs my-2'>
@@ -256,7 +264,7 @@ const LeadRow = (props: Props) => {
                     </div>
                 </div>
                 <div className='mt-auto'>
-                    {!props.lead.sold && <Button onClick={handleFetchNumber} className='w-full'>View Number</Button>}
+                    {!props.lead.sold && <Button disabled={isWorking} onClick={handleFetchNumber} className='w-full'>View Number</Button>}
                     {props.lead.sold &&
                         <div className='border-t border-zinc-200 pt-4'>
                             <div className='tracking-tight'>

@@ -8,6 +8,7 @@ type Props = {
     selectedAnimal: any
     setIsFetching?: (val: boolean) => void
     mode: "buying" | "selling"
+    FreeMode: boolean
 }
 
 const SelectedAnimal = (props: Props) => {
@@ -53,7 +54,7 @@ const SelectedAnimal = (props: Props) => {
             {
                 leads.map((lead: any, index: number) => {
                     return (
-                        <LeadRow key={`${lead.id}-${index}`} index={index + 1} lead={lead} fetchLeads={fetchLeadsForAnimal} />
+                        <LeadRow key={`${lead.id}-${index}`} FreeMode={props.FreeMode} index={index + 1} lead={lead} fetchLeads={fetchLeadsForAnimal} />
                     )
                 })
             }

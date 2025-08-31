@@ -22,6 +22,7 @@ const CreateLeadButton = (props: Props) => {
     const [fixedAmount, setFixedAmount] = useState(0)
     const router = useRouter()
     const protocols = useProtocols()
+    const FreeMode = protocols.protocols && protocols.get("FreeMode")
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
     const session: any = useSession()
     const [HandShakeCost, setHandshakeCost] = useState({
@@ -105,7 +106,7 @@ const CreateLeadButton = (props: Props) => {
                     session.fetchBalance()
                 }
                 setLeads((prev: any) => [...prev, data])
-                if (data.user.balance < 1) {
+                if (data.user.balance < 1 && FreeMode !== 1) {
                     dialog.showDialog('Low Balance', null, "Your lead has been created and the author has been notified. However, your balance is low. Please recharge your account so that author can see your contact details when they check their leads and select you.")
                 }
                 dialog.showDialog("Lead created", null, "Your lead has been created and the author has been notified. Please wait for the seller to accept your lead.")
@@ -122,10 +123,9 @@ const CreateLeadButton = (props: Props) => {
 
     const handleCreateLead = async () => {
         if (!user) return;
-        if (Number(HandShakeCost.buyer) > 0) {
+        if (Number(HandShakeCost.buyer && FreeMode !== 1) > 0) {
             dialog.showDialog('Creating Lead', <CreateLeadConfirmationDialog onYes={continueLead} text={`You are about to create a lead for this animal. This will cost you ${formatCurrency(HandShakeCost.buyer)}. Do you want to continue?`} />)
         } else {
-            console.log(Number(HandShakeCost.buyer))
             continueLead()
         }
     }

@@ -789,20 +789,33 @@ async function GetCustomerContact(activeBidRoomId: string, userId: string) {
     if (protocol?.status === 200) {
       const cost = Number(protocol.data?.value ?? 0);
 
-      const thisUser = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { balance: true },
-      });
+      let [thisUser, FreeMode]: any = await Promise.all([
+        prisma.user.findUnique({
+          where: { id: userId },
+          select: { balance: true },
+        }),
+        prisma.businessProtocol.findFirst({
+          where: { name: "FreeMode" },
+        }),
+      ]);
 
-      if (Number(thisUser?.balance ?? 0) - cost < 0) {
-        return { status: 302, message: "Insufficient balance", data: null };
+      FreeMode = FreeMode
+        ? Number(FreeMode.value) === 1
+          ? true
+          : false
+        : false;
+
+      if (!FreeMode) {
+        if (Number(thisUser?.balance ?? 0) - cost < 0) {
+          return { status: 302, message: "Insufficient balance", data: null };
+        }
       }
 
       if (cost > 0) {
         await Promise.all([
           prisma.user.update({
             where: { id: userId },
-            data: { balance: { decrement: cost } },
+            data: { balance: { decrement: FreeMode ? 0 : cost } },
           }),
           actions.server.user.contacts.createContact(
             activeBidRoom.authorId,

@@ -214,9 +214,6 @@ async function removePost(id: string) {
     );
 
     const deletedPost = await prisma.$transaction(transactions);
-
-    console.log(deletedPost);
-
     response.status = 200;
     response.message = "Post deleted successfully";
     response.data = deletedPost[0];
@@ -236,11 +233,19 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
     data: null as any,
   };
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+    let [user, room, protocols] = await Promise.all([
+      prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      }),
+      prisma.bidRoom.findFirst({
+        where: {
+          key: roomKey,
+        },
+      }),
+      await prisma.businessProtocol.findMany({}),
+    ]);
 
     if (!user) {
       response.status = 400;
@@ -248,12 +253,6 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
       response.data = null;
       return response;
     }
-
-    const room = await prisma.bidRoom.findFirst({
-      where: {
-        key: roomKey,
-      },
-    });
 
     if (!room) {
       response.status = 400;
@@ -270,12 +269,16 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
     }
 
     const isAuthor = room.authorId === userId;
-    let BusinessProtocol =
-      await actions.server.protocols.BusinessProtocols.list(
-        isAuthor ? "SellerBiddingCost" : "BuyerBiddingCost"
-      );
+    let BusinessProtocol = protocols.find(
+      (protocol) =>
+        protocol.name === (isAuthor ? "SellerBiddingCost" : "BuyerBiddingCost")
+    );
+    let FreeMode: any = protocols.find(
+      (protocol) => protocol.name === "FreeMode"
+    );
+    FreeMode = FreeMode ? (Number(FreeMode.value) === 1 ? true : false) : false;
 
-    if (BusinessProtocol && BusinessProtocol?.status === 200) {
+    if (BusinessProtocol && !FreeMode) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         select: {
@@ -283,36 +286,36 @@ async function placeBid(roomKey: string, userId: string, amount: number) {
         },
       });
       if (
-        !(
-          Number(Number(user?.balance) - Number(BusinessProtocol.data.value)) <
-          0
-        )
+        !(Number(Number(user?.balance) - Number(BusinessProtocol.value)) < 0)
       ) {
         await prisma.user.update({
           where: { id: userId },
           data: {
             balance: {
-              decrement: Number(BusinessProtocol.data.value ?? 0),
+              decrement: FreeMode ? 0 : Number(BusinessProtocol.value ?? 0),
             },
           },
         });
       } else {
-        response.status = 302;
-        response.message = `You don't have enough balance to place this bid.`;
-        response.data = null;
-        return response;
+        if (!FreeMode) {
+          response.status = 302;
+          response.message = `You don't have enough balance to place this bid.`;
+          response.data = null;
+          return response;
+        }
       }
     }
 
-    const bid = await prisma.bids.create({
-      data: {
-        userId,
-        bidRoomId: room.id,
-        price: amount,
-      },
-    });
-
-    let bidRoom: any = await actions.server.bidRoom.list(roomKey, "key", 5);
+    const [bid, bidRoom] = await Promise.all([
+      prisma.bids.create({
+        data: {
+          userId,
+          bidRoomId: room.id,
+          price: amount,
+        },
+      }),
+      actions.server.bidRoom.list(roomKey, "key", 5),
+    ]);
 
     response.status = 200;
     response.message = "Bid placed successfully";
@@ -416,28 +419,38 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
     }
 
     const transactions = [];
-    let [BuyerHandShakeCost, BuyerDirectHandShakeCost, BuyerBiddingCost]: any =
-      await prisma.$transaction([
-        prisma.businessProtocol.findFirst({
-          where: {
-            name: "BuyerHandShakeCost",
-          },
-        }),
-        prisma.businessProtocol.findFirst({
-          where: {
-            name: "BuyerDirectHandShakeCost",
-          },
-        }),
-        prisma.businessProtocol.findFirst({
-          where: {
-            name: "BuyerBiddingCost",
-          },
-        }),
-      ]);
+    let [
+      BuyerHandShakeCost,
+      BuyerDirectHandShakeCost,
+      BuyerBiddingCost,
+      FreeMode,
+    ]: any = await prisma.$transaction([
+      prisma.businessProtocol.findFirst({
+        where: {
+          name: "BuyerHandShakeCost",
+        },
+      }),
+      prisma.businessProtocol.findFirst({
+        where: {
+          name: "BuyerDirectHandShakeCost",
+        },
+      }),
+      prisma.businessProtocol.findFirst({
+        where: {
+          name: "BuyerBiddingCost",
+        },
+      }),
+      prisma.businessProtocol.findFirst({
+        where: {
+          name: "FreeMode",
+        },
+      }),
+    ]);
 
     BuyerDirectHandShakeCost = Number(BuyerDirectHandShakeCost?.value ?? 0);
     BuyerHandShakeCost = Number(BuyerHandShakeCost?.value ?? 0);
     BuyerBiddingCost = Number(BuyerBiddingCost?.value ?? 0);
+    FreeMode = Number(FreeMode?.value ?? 0) === 1 ? true : false;
 
     if (isExists.allowBidding === false) {
       for (const lead of isExists.leads) {
@@ -446,7 +459,7 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
             where: { id: lead.user.id },
             data: {
               balance: {
-                increment: Number(BuyerHandShakeCost),
+                increment: FreeMode ? 0 : Number(BuyerHandShakeCost),
               },
             },
           })
@@ -467,7 +480,7 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
               where: { id: bid?.user?.id },
               data: {
                 balance: {
-                  increment: Number(BuyerBiddingCost),
+                  increment: FreeMode ? 0 : Number(BuyerBiddingCost),
                 },
               },
             })
@@ -545,13 +558,23 @@ async function GetCustomerContact(postId: string, userId: string) {
       return response;
     }
 
-    const protocol = await actions.server.protocols.BusinessProtocols.list(
-      "BuyerDirectHandShakeCost"
-    );
+    let [protocol, FreeMode]: any = await Promise.all([
+      actions.server.protocols.BusinessProtocols.list(
+        "BuyerDirectHandShakeCost"
+      ),
+      prisma.businessProtocol.findFirst({
+        where: {
+          name: "FreeMode",
+        },
+      }),
+    ]);
+
+    FreeMode = FreeMode ? (Number(FreeMode.value) === 1 ? true : false) : false;
+
     if (protocol && protocol.status === 200) {
-      const cost = Number(
-        Number(user.balance ?? 0) - Number(protocol.data.value ?? 0)
-      );
+      const cost = FreeMode
+        ? 0
+        : Number(Number(user.balance ?? 0) - Number(protocol.data.value ?? 0));
       if (cost < 0) {
         response.status = 302;
         response.message = `You don't have enough balance to place this bid.`;
@@ -563,7 +586,7 @@ async function GetCustomerContact(postId: string, userId: string) {
             where: { id: userId },
             data: {
               balance: {
-                decrement: Number(protocol.data.value ?? 0),
+                decrement: FreeMode ? 0 : Number(protocol.data.value ?? 0),
               },
             },
           }),
@@ -574,16 +597,6 @@ async function GetCustomerContact(postId: string, userId: string) {
             `Seller`,
             isExists.id
           ),
-          // await prisma.animal.update({
-          //   where: {
-          //     id: isExists.id,
-          //   },
-          //   data: {
-          //     maleQuantityAvailable: 0,
-          //     femaleQuantityAvailable: 0,
-          //     sold: true,
-          //   },
-          // }),
           await actions.server.orders.create(
             isExists.userId,
             userId,
@@ -633,7 +646,7 @@ async function GetCustomerContact(postId: string, userId: string) {
     response.message = "Customer contact fetched successfully";
     response.data = {
       ...contact,
-      cost: Number(protocol ? protocol.data.value : 0),
+      cost: FreeMode ? 0 : Number(protocol ? protocol.data.value : 0),
     };
     return response;
   } catch (error: any) {
