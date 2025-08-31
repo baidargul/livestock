@@ -93,10 +93,6 @@ const CreateLeadButton = (props: Props) => {
         setIsChecking(false)
     }
 
-    useEffect(() => {
-        console.log(fixedAmount)
-    }, [fixedAmount])
-
     const continueLead = async () => {
         dialog.closeDialog()
         setIsCreating(true)
