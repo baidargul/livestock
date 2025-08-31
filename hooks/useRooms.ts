@@ -37,48 +37,34 @@ export const useRooms: any = create<RoomsState>()((set) => ({
     return { ...rooms };
   },
   addRoom: (room, currentUser) => {
-    if (currentUser.id === room.authorId) {
-      set((state) => {
-        if (state.rooms.myRooms.find((r) => r.key === room.key)) {
-          let newRoom = state.rooms.myRooms.find((r) => r.key === room.key);
-          newRoom = { ...newRoom, ...room };
-          return {
-            rooms: {
-              ...state.rooms,
-              myRooms: [
-                ...state.rooms.myRooms.filter((r) => r.key !== room.key),
-                newRoom,
-              ],
-            },
-          };
-        }
-        return {
-          rooms: { ...state.rooms, myRooms: [...state.rooms.myRooms, room] },
+    set((state) => {
+      const isAuthor = currentUser.id === room.authorId;
+      const roomType = isAuthor ? "myRooms" : "otherRooms";
+
+      const existingIndex = state.rooms[roomType].findIndex(
+        (r) => r.key === room.key
+      );
+
+      const updatedRooms = [...state.rooms[roomType]];
+
+      if (existingIndex >= 0) {
+        // update existing room
+        updatedRooms[existingIndex] = {
+          ...updatedRooms[existingIndex],
+          ...room,
         };
-      });
-    } else {
-      set((state) => {
-        if (state.rooms.otherRooms.find((r) => r.key === room.key)) {
-          let newRoom = state.rooms.otherRooms.find((r) => r.key === room.key);
-          newRoom = { ...newRoom, ...room };
-          return {
-            rooms: {
-              ...state.rooms,
-              otherRooms: [
-                ...state.rooms.otherRooms.filter((r) => r.key !== room.key),
-                newRoom,
-              ],
-            },
-          };
-        }
-        return {
-          rooms: {
-            ...state.rooms,
-            otherRooms: [...state.rooms.otherRooms, room],
-          },
-        };
-      });
-    }
+      } else {
+        // add new room
+        updatedRooms.push(room);
+      }
+
+      return {
+        rooms: {
+          ...state.rooms,
+          [roomType]: updatedRooms,
+        },
+      };
+    });
   },
   removeRoom: (roomKey) => {
     set((state) => {
