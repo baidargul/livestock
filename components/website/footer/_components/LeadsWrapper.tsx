@@ -13,6 +13,7 @@ type Props = {
 }
 
 const LeadsWrapper = (props: Props) => {
+    const [isMounted, setIsMounted] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
     const [mode, setMode] = useState<"buying" | "selling">("buying")
     const [selectedAnimal, setSelectedAnimal] = useState<any>(null)
@@ -20,17 +21,23 @@ const LeadsWrapper = (props: Props) => {
     const layer = dialog.layer ?? ""
 
     useEffect(() => {
+        setIsMounted(true)
         setSelectedAnimal(null)
-        if (props.defaultAnimalId && String(props.defaultAnimalId).length > 0) {
-            setMode("selling")
-        } else {
-            setMode("buying")
-        }
     }, [])
+
+    useEffect(() => {
+    }, [isMounted])
 
 
     const handleOpen = (val: boolean) => {
         dialog.setLayer(val ? "footer-leadswrapper" : "")
+        if (val) {
+            if (props.defaultAnimalId && !isFetching && String(props.defaultAnimalId).length > 0) {
+                setMode("selling")
+            } else {
+                setMode("buying")
+            }
+        }
     }
 
     const handleSelectAnimal = (animal: any) => {
@@ -42,7 +49,7 @@ const LeadsWrapper = (props: Props) => {
     }
 
     return (
-        <>
+        isMounted && <>
             <div className={`fixed top-0 left-0 inset-0 ${layer === "footer-leadswrapper" ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out w-full h-full text-black bg-white z-50`}>
                 <div className='flex justify-between items-center py-2'>
                     <div className='flex gap-5 items-center w-full p-2'>
