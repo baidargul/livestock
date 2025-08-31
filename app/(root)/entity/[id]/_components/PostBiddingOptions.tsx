@@ -55,11 +55,12 @@ const PostBiddingOptions = (props: Props) => {
     }
 
     const addDeliveryOption = (option: string) => {
-        if (props.postBiddingOptions.deliveryOptions.includes(option)) {
-            props.setPostBiddingOptions((prev) => ({ ...prev, deliveryOptions: prev.deliveryOptions.filter((opt: string) => opt !== option) }))
-        } else {
-            props.setPostBiddingOptions((prev) => ({ ...prev, deliveryOptions: [...prev.deliveryOptions, option] }))
-        }
+        // if (props.postBiddingOptions.deliveryOptions.includes(option)) {
+        //     props.setPostBiddingOptions((prev) => ({ ...prev, deliveryOptions: prev.deliveryOptions.filter((opt: string) => opt !== option) }))
+        // } else {
+        //     props.setPostBiddingOptions((prev) => ({ ...prev, deliveryOptions: [...prev.deliveryOptions, option] }))
+        // }
+        props.setPostBiddingOptions((prev) => ({ ...prev, deliveryOptions: [option] }))
     }
 
     const handleChangeValue = (key: string, value: any) => {
