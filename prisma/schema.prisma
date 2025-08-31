@@ -82,7 +82,7 @@ model BoughtPosts {
   contactId String      @db.ObjectId
   contact   ContactBook @relation(fields: [contactId], references: [id], onDelete: Cascade)
   animalId  String      @db.ObjectId
-  animal    Animal      @relation(fields: [animalId], references: [id], onDelete: NoAction)
+  animal    Animal      @relation(fields: [animalId], references: [id], onDelete: Cascade)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
@@ -145,7 +145,7 @@ model Bids {
   price        Float
   isFinalOffer Boolean  @default(false)
   createdAt    DateTime @default(now())
-  BidRoom      BidRoom? @relation(fields: [bidRoomId], references: [id])
+  BidRoom      BidRoom? @relation(fields: [bidRoomId], references: [id], onDelete: Cascade)
   isSeen       Boolean  @default(false)
 }
 
@@ -153,7 +153,7 @@ model BidRoom {
   id                      String            @id @default(auto()) @map("_id") @db.ObjectId
   key                     String?           @unique
   animalId                String?           @db.ObjectId
-  animal                  Animal?           @relation(fields: [animalId], references: [id])
+  animal                  Animal?           @relation(fields: [animalId], references: [id], onDelete: Cascade)
   userId                  String            @db.ObjectId
   user                    User?             @relation(fields: [userId], references: [id])
   authorId                String            @db.ObjectId // ID of the user who created the room
@@ -205,7 +205,7 @@ model Orders {
   user          User     @relation("OrderUser", fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  animal        Animal?  @relation(fields: [animalId], references: [id])
+  animal        Animal?  @relation(fields: [animalId], references: [id], onDelete: Cascade)
   animalId      String?  @db.ObjectId
   // Basic Info
   type          String
@@ -229,7 +229,7 @@ model Orders {
 model leads {
   id                      String            @id @default(auto()) @map("_id") @db.ObjectId
   animalId                String            @db.ObjectId
-  animal                  Animal            @relation(fields: [animalId], references: [id])
+  animal                  Animal            @relation(fields: [animalId], references: [id], onDelete: Cascade)
   deliveryOptions         DeliveryOptions[]
   maleQuantityAvailable   Int?
   femaleQuantityAvailable Int?

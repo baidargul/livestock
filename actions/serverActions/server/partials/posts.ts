@@ -170,17 +170,56 @@ async function removePost(id: string) {
         images: true,
       },
     });
-    const deletedImages = await actions.server.images.deleteImages(
-      images?.images as any
+
+    await actions.server.images.deleteImages(images?.images as any);
+
+    const transactions = [];
+
+    transactions.push(
+      prisma.bidRoom.deleteMany({
+        where: {
+          animalId: id,
+        },
+      })
     );
 
-    const deletedPost = await prisma.animal.delete({
-      where: { id },
-    });
+    transactions.push(
+      prisma.leads.deleteMany({
+        where: {
+          animalId: id,
+        },
+      })
+    );
+
+    transactions.push(
+      prisma.boughtPosts.deleteMany({
+        where: {
+          animalId: id,
+        },
+      })
+    );
+
+    transactions.push(
+      prisma.orders.deleteMany({
+        where: {
+          animalId: id,
+        },
+      })
+    );
+
+    transactions.push(
+      prisma.animal.delete({
+        where: { id },
+      })
+    );
+
+    const deletedPost = await prisma.$transaction(transactions);
+
+    console.log(deletedPost);
 
     response.status = 200;
     response.message = "Post deleted successfully";
-    response.data = deletedPost;
+    response.data = deletedPost[0];
     return response;
   } catch (error: any) {
     console.log(`[SERVER ERROR] @POST REMOVE: ${error.message}`);
