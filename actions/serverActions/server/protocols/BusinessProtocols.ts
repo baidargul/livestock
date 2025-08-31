@@ -21,6 +21,10 @@ const businessProtocols: ProtocolType[] = [
     name: "BuyerDirectHandShakeCost",
     value: "300",
   },
+  {
+    name: "FreeMode",
+    value: "No",
+  },
 ];
 
 const initializeDefaults = async () => {
