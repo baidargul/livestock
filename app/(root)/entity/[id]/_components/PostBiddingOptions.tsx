@@ -40,7 +40,7 @@ const PostBiddingOptions = (props: Props) => {
 
     useEffect(() => {
         props.setPostBiddingOptions((prev) => ({ ...prev, maleQuantityAvailable: Number(props.animal.maleQuantityAvailable) ?? 0, femaleQuantityAvailable: Number(props.animal.femaleQuantityAvailable) ?? 0, deliveryOptions: props.animal.deliveryOptions.length === 1 ? props.animal.deliveryOptions : props.postBiddingOptions.deliveryOptions }))
-    }, [props.animal])
+    }, [])
 
     const handleOpen = () => {
         dialog.setLayer(layer === "" ? "post-bidding-options" : "")
@@ -67,7 +67,8 @@ const PostBiddingOptions = (props: Props) => {
     }
 
     useEffect(() => {
-        let amount = calculatePricing({ ...props.animal }).price
+        let amount = 0
+        amount = calculatePricing(props.animal).price
         setSellerOffer(Number(Number(amount).toFixed(0)) ?? 0)
         const totalQuantity = Number(props.postBiddingOptions.femaleQuantityAvailable) + Number(props.postBiddingOptions.maleQuantityAvailable)
         amount = Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0))

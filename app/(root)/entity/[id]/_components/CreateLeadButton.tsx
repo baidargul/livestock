@@ -19,7 +19,7 @@ type Props = {
 const CreateLeadButton = (props: Props) => {
     const [isChecking, setIsChecking] = useState(false)
     const [isCreating, setIsCreating] = useState(false)
-    const [isRemoving, setIsRemoving] = useState(false)
+    const [fixedAmount, setFixedAmount] = useState(0)
     const router = useRouter()
     const protocols = useProtocols()
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
@@ -75,12 +75,27 @@ const CreateLeadButton = (props: Props) => {
         if (response) {
             if (response.status === 200) {
                 setLeads(response.data ?? [])
+                for (const lead of response.data) {
+                    if (lead.fixed) {
+                        if (lead.userId === user.id) {
+                            let amount = Number(lead.amount)
+                            setFixedAmount(amount)
+                            break
+                        }
+                    } else {
+                        setFixedAmount(0)
+                    }
+                }
             } else {
                 setLeads([])
             }
         }
         setIsChecking(false)
     }
+
+    useEffect(() => {
+        console.log(fixedAmount)
+    }, [fixedAmount])
 
     const continueLead = async () => {
         dialog.closeDialog()
@@ -181,7 +196,7 @@ const CreateLeadButton = (props: Props) => {
                     </tbody>
                 </table>
             </div>}
-            <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={props.animal} user={user}>
+            <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={{ ...props.animal, price: fixedAmount && fixedAmount > 0 ? fixedAmount : props.animal.price }} user={user}>
                 <Button disabled={isChecking || isCreating} className='w-full mt-2'>{isCreating ? "..." : `${leads && leads.length > 0 ? "Request More" : "Create Request"}`}</Button>
             </PostBiddingOptions>
         </div>
