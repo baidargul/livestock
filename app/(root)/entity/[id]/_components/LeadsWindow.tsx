@@ -17,7 +17,7 @@ const LeadsWindow = (props: Props) => {
 
     useEffect(() => {
         fetchLeads()
-    }, [])
+    }, [user])
 
     const fetchLeads = async () => {
         if (!props.animal || !user) return

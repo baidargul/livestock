@@ -119,7 +119,6 @@ async function forUser(userId: string) {
     return response;
   }
 }
-
 async function ImBuying(userId: string) {
   let response = {
     status: 500,
