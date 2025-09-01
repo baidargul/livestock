@@ -18,7 +18,7 @@ const BiddingToFixedToggleButton = (props: Props) => {
     }
 
     const changeBiddingStatus = async (val: boolean) => {
-        setLoading(true, val === true ? 'Enabling bidding' : 'Disabling bidding')
+        setLoading(true, val === true ? 'Activating Bargaining' : 'Disabling Baragaining')
         setIsToggled(val)
         const response: any = await actions.client.posts.changeBiddingStatus(props.animal.id, val)
         if (response.status === 200) {

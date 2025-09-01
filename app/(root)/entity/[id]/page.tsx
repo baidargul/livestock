@@ -137,7 +137,7 @@ const page = async (props: Props) => {
                         {Number(animal.cargoPrice) > 0 && <div className='mt-2 text-lg font-semibold tracking-wider'>Cargo charges: {formatCurrency(animal.cargoPrice)}</div>}
                     </div>
                     {animal.allowBidding && !animal.sold && <Marquee className='mb-4 border-y-2 pointer-events-none border-amber-500 bg-amber-50 w-full'>
-                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bidding is active for this animal.</div>
+                        <div className='font-semibold p-1 tracking-widest italic text-amber-700 scale-75 -mb-2 origin-top-left'>Bargaining is active for this animal.</div>
                     </Marquee>}
                 </div>
                 <div className='px-4 my-2 flex flex-col gap-1 justify-end items-end'>
