@@ -239,12 +239,43 @@ async function list(value: string, key: "id" | "email") {
   }
 }
 
+async function toggleBroker(userId: string, val: boolean) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        broker: val,
+      },
+    });
+
+    response.status = 200;
+    response.message = "User updated successfully";
+    response.data = user;
+    return response;
+  } catch (error: any) {
+    console.log("[SERVER ERROR]: " + error.message);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const user = {
   signin,
   signup,
   signout,
   validateSession,
   list,
+  toggleBroker,
   account,
   contacts,
   interactions,

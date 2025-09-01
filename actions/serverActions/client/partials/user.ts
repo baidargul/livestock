@@ -77,6 +77,16 @@ async function setCoverImage(userId: string, image: any) {
   return response.data;
 }
 
+async function toggleBroker(userId: string, val: boolean) {
+  if (!userId) return null;
+  const data = {
+    userId,
+    val,
+  };
+  const response = await axios.post(apiPath + "/toggleBroker", data);
+  return response.data;
+}
+
 export const user = {
   signin,
   signup,
@@ -85,6 +95,7 @@ export const user = {
   followUser,
   setProfileImage,
   setCoverImage,
+  toggleBroker,
   account,
   contacts,
   interactions,

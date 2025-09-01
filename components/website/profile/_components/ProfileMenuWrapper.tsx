@@ -14,6 +14,7 @@ import CoinsAvailable from './CoinsAvailable'
 import SignInSignOutWrapper from '@/components/wrappers/SignInSignOutWrapper'
 import { useUser } from '@/socket-client/SocketWrapper'
 import { useRooms } from '@/hooks/useRooms'
+import BrokerToggleSwitch from './BrokerToggleSwitch'
 
 type Props = {
     children: React.ReactNode
@@ -97,6 +98,7 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                 <div className=''>
                                     <div className='font-semibold text-xl tracking-wide'>{user?.name}</div>
                                     <div className='text-sm tracking-wide -mt-1 italic text-black/60'>{user?.email}</div>
+                                    <BrokerToggleSwitch />
                                 </div>
                             </div>
                         </Link>
