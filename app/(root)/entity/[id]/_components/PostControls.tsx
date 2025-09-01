@@ -54,7 +54,7 @@ const PostControls = (props: Props) => {
     return (
         user && user.id === props.animal.userId && <div className='px-4 mt-10'>
             <div className='flex flex-wrap gap-2'>
-                <BiddingToFixedToggleButton animal={props.animal} />
+                <BiddingToFixedToggleButton animal={props.animal} className='mb-2 ml-auto' />
                 {/* {props.animal.allowBidding === false && <Button onClick={() => changeBiddingStatus(true)} className='w-full flex gap-2 items-center justify-center text-center'><CandlestickChartIcon /> Allow Bargaining</Button>} */}
                 {/* {props.animal.allowBidding === true && <Button onClick={() => changeBiddingStatus(false)} className='w-full flex gap-2 items-center justify-center text-center'><DecimalsArrowRightIcon /> Disable Bargaining</Button>} */}
                 <div onClick={handleAdjustQuantites} className='cursor-pointer w-full text-center flex justify-center items-center gap-2 border-2 border-zinc-700 p-2'> <CalculatorIcon /> Adjust Quantity</div>

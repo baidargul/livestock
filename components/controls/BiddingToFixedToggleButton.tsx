@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 type Props = {
     animal: any
+    className?: string
 }
 
 const BiddingToFixedToggleButton = (props: Props) => {
@@ -35,7 +36,7 @@ const BiddingToFixedToggleButton = (props: Props) => {
     }, [props.animal])
 
     return (
-        <div className='flex gap-2 items-center'>
+        <div className={`flex gap-2 items-center ${props.className}`}>
             <div className='tracking-tight font-semibold'>{isToggled ? "Disable Bargaining" : "Allow Bargaining"}</div>
             <div onClick={() => changeBiddingStatus(!isToggled)} className={`relative group flex items-center overflow-hidden cursor-pointer rounded p-3 px-8 ${isToggled ? "bg-gradient-to-t from-emerald-700 to-emerald-800" : "bg-gradient-to-b from-zinc-200 to-zinc-200"} transition duration-300 ease-in-out border border-zinc-300`}>
                 <div className={`w-[50%] h-[80%] absolute left-0 bg-white rounded border border-zinc-300 transition duration-300 ease-in-out ${isToggled ? "translate-x-[90%]" : "translate-x-[10%] "}`}></div>
