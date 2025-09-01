@@ -471,6 +471,13 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
             },
           })
         );
+        transactions.push(
+          prisma.bidRoom.deleteMany({
+            where: {
+              animalId: lead.animalId,
+            },
+          })
+        );
       }
     } else {
       for (const room of isExists.BidRoom) {
@@ -497,6 +504,13 @@ async function changeBiddingStatus(postId: string, allowBidding: boolean) {
           prisma.bidRoom.delete({
             where: {
               id: room.id,
+            },
+          })
+        );
+        transactions.push(
+          prisma.leads.deleteMany({
+            where: {
+              animalId: room.animalId ?? postId,
             },
           })
         );
