@@ -7,6 +7,15 @@ export const useContacts = create<any>()((set) => ({
   addToContact: (contact: any) => {
     set({ isAdding: true }); //
 
+    //skip if already exists
+    const exists = useContacts
+      .getState()
+      .contacts.find((c: any) => c.userId === contact.userId);
+    if (exists) {
+      set({ isAdding: false });
+      return;
+    }
+
     set((state: any) => ({
       contacts: [...state.contacts, contact],
       // isAdding: false,

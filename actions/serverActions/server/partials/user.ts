@@ -87,6 +87,7 @@ async function signin(email: string, password: string) {
         id: true,
         city: true,
         province: true,
+        broker: true,
       },
     });
 
@@ -205,6 +206,7 @@ async function list(value: string, key: "id" | "email") {
         profileImage: true,
         coverImage: true,
         connectionIds: true,
+        broker: true,
       },
     });
 

@@ -107,6 +107,13 @@ async function adjustQuantity(
   return response.data;
 }
 
+async function getDirectNumber(userId: string, postId: string) {
+  const response = await axios.get(
+    `/api/post/cto/quick?userId=${userId}&postId=${postId}`
+  );
+  return response.data;
+}
+
 export const posts = {
   fetchPosts,
   createPost,
@@ -118,4 +125,5 @@ export const posts = {
   changeBiddingStatus,
   GetCustomerContact,
   adjustQuantity,
+  getDirectNumber,
 };

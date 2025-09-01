@@ -2,6 +2,7 @@
 import { actions } from '@/actions/serverActions/actions'
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import Button from '@/components/ui/Button'
+import { useContacts } from '@/hooks/useContacts'
 import { useDialog } from '@/hooks/useDialog'
 import { formalizeText } from '@/lib/utils'
 import { ChevronLeftIcon, Clipboard, CopyIcon, PhoneIcon } from 'lucide-react'
@@ -84,6 +85,7 @@ export default TheContact
 
 const DeleteConfirmationBox = (props: { closeDialog: () => void, contact: any, goBack: () => void, fetchContacts: () => void }) => {
     const [isWorking, setIsWorking] = useState(false)
+    const contacts = useContacts()
 
     const handleDeleteContact = async () => {
         setIsWorking(true)
@@ -91,6 +93,7 @@ const DeleteConfirmationBox = (props: { closeDialog: () => void, contact: any, g
         if (response.status === 200) {
             props.closeDialog()
             props.goBack()
+            contacts.removeContact(props.contact.userId)
             props.fetchContacts()
         }
         setIsWorking(false)

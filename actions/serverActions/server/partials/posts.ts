@@ -772,6 +772,85 @@ async function adjustQuantity(
   }
 }
 
+async function getDirectNumber(userId: string, postId: string) {
+  let response = {
+    status: 500,
+    message: "Internal Server Error",
+    data: null as any,
+  };
+
+  try {
+    const [user, animal] = await Promise.all([
+      prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+        },
+      }),
+      prisma.animal.findUnique({
+        where: {
+          id: postId,
+          userId: userId,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              phone: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    if (!user) {
+      response.status = 400;
+      response.message = "User not found";
+      response.data = null;
+      return response;
+    }
+
+    if (!animal) {
+      response.status = 400;
+      response.message = "Animal not found or not owned by you";
+      response.data = null;
+      return response;
+    }
+
+    const transactions = [];
+    transactions.push(
+      prisma.contactBook.create({
+        data: {
+          authorId: user.id,
+          userId: animal.user.id,
+          remarks: "Seller",
+        },
+      })
+    );
+
+    let [contact]: any = await prisma.$transaction(transactions);
+
+    contact = await actions.server.user.contacts.list(user.id, animal.user.id);
+    contact = contact.data;
+
+    response.status = 200;
+    response.message = "Direct number fetched successfully";
+    response.data = { contact: contact };
+    return response;
+  } catch (error: any) {
+    console.log(`[SERVER ERROR] @GET DIRECT NUMBER: ${error.message}`);
+    response.status = 500;
+    response.message = error.message;
+    response.data = null;
+    return response;
+  }
+}
+
 export const post = {
   fetchPosts,
   list,
@@ -783,4 +862,5 @@ export const post = {
   changeBiddingStatus,
   GetCustomerContact,
   adjustQuantity,
+  getDirectNumber,
 };
