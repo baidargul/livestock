@@ -45,6 +45,7 @@ model User {
   profileImage  Json?
   coverImage    Json?
   balance       Float?        @default(0)
+  broker        Boolean?      @default(false)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   connectionIds String[]      @default([])
