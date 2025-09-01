@@ -1,5 +1,6 @@
 'use client'
 import { actions } from '@/actions/serverActions/actions'
+import BiddingToFixedToggleButton from '@/components/controls/BiddingToFixedToggleButton'
 import DeleteProductWrapper from '@/components/controls/DeleteProductWrapper'
 import Button from '@/components/ui/Button'
 import Textbox from '@/components/ui/Textbox'
@@ -53,8 +54,9 @@ const PostControls = (props: Props) => {
     return (
         user && user.id === props.animal.userId && <div className='px-4 mt-10'>
             <div className='flex flex-wrap gap-2'>
-                {props.animal.allowBidding === false && <Button onClick={() => changeBiddingStatus(true)} className='w-full flex gap-2 items-center justify-center text-center'><CandlestickChartIcon /> Allow Bargaining</Button>}
-                {props.animal.allowBidding === true && <Button onClick={() => changeBiddingStatus(false)} className='w-full flex gap-2 items-center justify-center text-center'><DecimalsArrowRightIcon /> Disable Bargaining</Button>}
+                <BiddingToFixedToggleButton animal={props.animal} />
+                {/* {props.animal.allowBidding === false && <Button onClick={() => changeBiddingStatus(true)} className='w-full flex gap-2 items-center justify-center text-center'><CandlestickChartIcon /> Allow Bargaining</Button>} */}
+                {/* {props.animal.allowBidding === true && <Button onClick={() => changeBiddingStatus(false)} className='w-full flex gap-2 items-center justify-center text-center'><DecimalsArrowRightIcon /> Disable Bargaining</Button>} */}
                 <div onClick={handleAdjustQuantites} className='cursor-pointer w-full text-center flex justify-center items-center gap-2 border-2 border-zinc-700 p-2'> <CalculatorIcon /> Adjust Quantity</div>
                 <DeleteProductWrapper id={props.animal.id} animal={props.animal}>
                     <div className='w-full cursor-pointer text-center flex justify-center items-center gap-2 border-2 border-zinc-700 p-2'> <TrashIcon /> Remove Post</div>
