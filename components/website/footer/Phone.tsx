@@ -35,7 +35,7 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </Link>
-            {user && <ContactsWrapper>
+            {user && user.broker && <ContactsWrapper>
                 <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <SquareUserIcon />
                     <div>
@@ -59,7 +59,17 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </Link>}
-            {user && <RoomsWrapper forPhone>
+
+            {user && !user.broker && <ContactsWrapper>
+                <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                    <SquareUserIcon />
+                    <div>
+                        Contacts
+                    </div>
+                </div>
+            </ContactsWrapper>}
+
+            {user && user.broker && <RoomsWrapper forPhone>
                 <div className={`${route.includes("cart") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShoppingBagIcon />
                     <div>
@@ -68,7 +78,7 @@ const PhoneFooter = (props: Props) => {
                 </div>
             </RoomsWrapper>}
 
-            {user && <LeadsWrapper defaultAnimalId=''>
+            {user && user.broker && <LeadsWrapper defaultAnimalId=''>
                 <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShuffleIcon />
                     <div>
@@ -76,14 +86,6 @@ const PhoneFooter = (props: Props) => {
                     </div>
                 </div>
             </LeadsWrapper>}
-            {/* <ProfileMenuWrapper>
-                <div className={`${route.includes("profile") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
-                    <UserIcon />
-                    <div className='line-clamp-1 max-w-20'>
-                        {user ? user?.name : "Login"}
-                    </div>
-                </div>
-            </ProfileMenuWrapper> */}
         </div>
     )
 }
