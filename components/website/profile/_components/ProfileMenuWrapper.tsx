@@ -59,6 +59,12 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
     const clearRooms = useRooms((state: any) => state.clearRooms);
     const user = useUser()
 
+    useEffect(() => {
+        if (!user) {
+            handleToggleMenu(false)
+        }
+    }, [user])
+
     const handleLoggout = async () => {
         setLoading(true)
         handleToggleMenu(false)
