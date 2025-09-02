@@ -10,16 +10,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    const { userId, val } = data;
 
-    if (!userId || !val) {
+    if (!data.userId) {
       response.status = 400;
       response.message = "Missing required fields: userId, val";
-      response.data = null;
+      response.data = data;
       return new Response(JSON.stringify(response));
     }
 
-    response = await actions.server.user.toggleBroker(userId, val);
+    response = await actions.server.user.toggleBroker(data.userId, data.val);
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

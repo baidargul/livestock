@@ -330,8 +330,7 @@ const BiddingWrapper = (props: Props) => {
     }
     const handlePostOffer = async () => {
         if (!user) {
-            alert("Please sign in to place a bid")
-            router.push("/signin")
+            dialog.showDialog('Please sign in to place a bid')
             return
         }
         if (Number(offerValue) <= 0) return

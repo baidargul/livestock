@@ -78,23 +78,20 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
         setLoading(false)
     }
 
+    if (!user) return null
+
     return (
         <div className={`${loading ? "pointer-events-none opacity-0" : ""} fixed top-0 right-0 w-full h-full bg-white text-black z-50 p-2 transition-all duration-200 ease-in-out ${isToggled ? "translate-x-0" : "translate-x-full"}`}>
             <div>
                 <div className='font-bold px-2 tracking-wider text-2xl flex justify-between items-center'>
-                    <div>Menu</div>
+                    <div>
+                        Menu
+                        <BrokerToggleSwitch toggleMenu={handleToggleMenu} />
+                    </div>
                     <div>
                         <X onClick={() => handleToggleMenu(false)} className='cursor-pointer' />
                     </div>
                 </div>
-
-                {!user && <div>
-                    <div className='flex flex-col gap-2 items-center'>
-                        <SiteLogo />
-                        <div className='leading-5'>Hi there! You need an account to perform actions.</div>
-                        <div className='p-2 px-4 tracking-widest bg-zinc-100 rounded-lg '>Go to <Link href={'/signin'} className='text-red-600'>Login</Link></div>
-                    </div>
-                </div>}
 
                 {user && user.id && <div className='flex flex-col gap-2'>
                     <div className='mt-5 p-4 flex gap-2 justify-between bg-white rounded-xl drop-shadow-sm items-center'>
@@ -104,7 +101,6 @@ const MenuWrapper = ({ handleToggleMenu, isToggled }: any) => {
                                 <div className=''>
                                     <div className='font-semibold text-xl tracking-wide'>{user?.name}</div>
                                     <div className='text-sm tracking-wide -mt-1 italic text-black/60'>{user?.email}</div>
-                                    <BrokerToggleSwitch />
                                 </div>
                             </div>
                         </Link>

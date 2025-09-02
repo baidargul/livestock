@@ -78,7 +78,6 @@ async function setCoverImage(userId: string, image: any) {
 }
 
 async function toggleBroker(userId: string, val: boolean) {
-  if (!userId) return null;
   const data = {
     userId,
     val,
