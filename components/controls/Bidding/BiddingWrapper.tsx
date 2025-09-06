@@ -23,6 +23,7 @@ import TheActualBidRoom from './_components/TheActualBidRoom'
 import { useDialog } from '@/hooks/useDialog'
 import CTOButton from './_components/CTOButton'
 import CloseDealFinalConfirmation from './_components/CloseDealFinalConfirmation'
+import BidWindow from '@/app/(root)/entity/[id]/_components/BidWindow'
 
 type Props = {
     children: React.ReactNode
@@ -497,7 +498,7 @@ const BiddingWrapper = (props: Props) => {
             <div onClick={handleCreateBidRoom} className={`w-full ${controlHandler === "bidding" && "pointer-events-none opacity-50 scale-75"} w-full transition-all duration-100 ease-in-out`}>
                 {props.staticStyle && props.children}
                 {!props.staticStyle && isAuthor ?
-                    <Button className='w-full'>{[...rooms.myRooms, ...rooms.otherRooms].length > 0 ? `(${thisRoomActiveBiders} active offer${[...rooms.myRooms, ...rooms.otherRooms].length > 0 && "s"})` : "No active bids"}</Button>
+                    <BidWindow animal={animal} />
                     : null}
                 {!props.staticStyle && !isAuthor ? props.children : null}
             </div>

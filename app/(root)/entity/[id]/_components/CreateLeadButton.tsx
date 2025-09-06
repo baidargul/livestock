@@ -14,6 +14,9 @@ import { useRouter } from 'next/navigation'
 import { useContacts } from '@/hooks/useContacts'
 import Link from 'next/link'
 import BidProtection from './BidProtection'
+import { useRooms } from '@/hooks/useRooms'
+import BidWindow from './BidWindow'
+import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
 
 type Props = {
     animal: any
@@ -32,6 +35,7 @@ const CreateLeadButton = (props: Props) => {
     const FreeMode = protocols.protocols && protocols.get("FreeMode")
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
     const session: any = useSession()
+    const user = useUser()
     const [HandShakeCost, setHandshakeCost] = useState({
         buyer: 0,
         seller: 0
@@ -56,7 +60,6 @@ const CreateLeadButton = (props: Props) => {
     const [leads, setLeads] = useState<any>([])
     const { animal } = props
     const dialog = useDialog()
-    const user = useUser()
 
     useEffect(() => {
         if (protocols.protocols) {
@@ -173,6 +176,17 @@ const CreateLeadButton = (props: Props) => {
         setIsChecking(false)
     }
 
+    //AUTHOR OF THIS ANIMAL
+    if (user && user.id === props.animal.userId && props.animal.allowBidding) {
+        return (
+            <BiddingWrapper animal={animal}>
+                <></>
+            </BiddingWrapper>
+        )
+    }
+
+
+    //BUYER OF THIS ANIMAL
     if (user && user.id !== animal.user.id && !user.broker) {
         return (
             <div className='px-2'>
@@ -183,6 +197,7 @@ const CreateLeadButton = (props: Props) => {
                         <div className='text-xl flex items-center gap-2 font-bold'><PhoneCallIcon /> {ownerContact.user.phone}</div>
                         <div className='tracking-tight'>{ownerContact.user.name}</div>
                     </Link>}
+
             </div>
         )
     } else {
