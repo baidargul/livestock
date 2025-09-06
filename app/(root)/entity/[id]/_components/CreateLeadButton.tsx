@@ -9,10 +9,11 @@ import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
-import { PhoneCallIcon, XIcon } from 'lucide-react'
+import { CandlestickChartIcon, PhoneCallIcon, XIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useContacts } from '@/hooks/useContacts'
 import Link from 'next/link'
+import BidProtection from './BidProtection'
 
 type Props = {
     animal: any
@@ -216,7 +217,7 @@ const CreateLeadButton = (props: Props) => {
                                         <tr key={`${lead}-${index + 1}`} className={`${lead.status === "cancelled" ? "line-trough" : ""}`}>
                                             <td className="p-1 border-zinc-200 border-b border-x text-center">{lead.maleQuantityAvailable ?? 0}</td>
                                             <td className="p-1 border-zinc-200 border-b border-x text-center">{lead.femaleQuantityAvailable ?? 0}</td>
-                                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.animal, ...lead, price: lead.amount }).price)}</td>
+                                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(lead.amount * (lead.maleQuantityAvailable + lead.femaleQuantityAvailable))}</td>
                                             {lead.deliveryOptions.includes("SELF_PICKUP") && <td className="p-1 border-zinc-200 border-b border-l">Self Pickup</td>}
                                             {lead.deliveryOptions.includes("SELLER_DELIVERY") && <td className="p-1 border-zinc-200 border-b border-l">{lead.city && String(lead.city ?? '').length > 0 ? `${formalizeText(lead.city)}, ${formalizeText(lead.province)}` : `${formalizeText(lead.user.city)}, ${formalizeText(lead.user.province)}`}</td>}
                                             <td className="p-1 border-zinc-200 border-b border-l">{formalizeText(lead.status)}</td>
@@ -228,9 +229,14 @@ const CreateLeadButton = (props: Props) => {
                         </tbody>
                     </table>
                 </div>}
-                <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={{ ...props.animal, price: fixedAmount && fixedAmount > 0 ? fixedAmount : props.animal.price }} user={user}>
+                {(leads.length === 0 && isChecking === false) &&
+                    <BidProtection animal={animal}>
+                        <Button className='w-full mt-2 flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Bargain</Button>
+                    </BidProtection>
+                }
+                {(leads.length > 0 || !props.animal.allowBidding) && <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={{ ...props.animal, price: fixedAmount && fixedAmount > 0 ? fixedAmount : props.animal.price }} user={user}>
                     <Button disabled={isChecking || isCreating} className='w-full mt-2'>{isCreating ? "..." : `${leads && leads.length > 0 ? "Request More" : "Create Request"}`}</Button>
-                </PostBiddingOptions>
+                </PostBiddingOptions>}
             </div>
         )
     }

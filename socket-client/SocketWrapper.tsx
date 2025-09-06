@@ -98,10 +98,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                 });
                 socket.on("deal-closed", (binaryData) => {
                     const { room, bid } = deserialize(binaryData);
-                    const rawRoom = { ...room.room };
-                    let newBids = bidsReverse(rawRoom.bids);
-                    rawRoom.bids = newBids;
-                    rooms.addRoom(rawRoom, user);
+                    // const rawRoom = { ...room.room };
+                    // let newBids = bidsReverse(rawRoom.bids);
+                    // rawRoom.bids = newBids;
+                    // rooms.addRoom(rawRoom, user);
+                    rooms.removeRoom(room.key);
                 });
                 socket.on("message-is-seen", (binaryData) => {
                     const { room, bidId } = deserialize(binaryData);

@@ -97,11 +97,18 @@ const BiddingWrapper = (props: Props) => {
                     router.refresh()
                 }
             })
+            socket.on("deal-closed", (binaryData: any) => {
+                const { room, bid } = deserialize(binaryData);
+                if (room.key === activeBidRoom?.key) {
+                    setActiveBidRoom(null)
+                }
+            });
 
             return () => {
                 if (socket) {
                     socket?.off("low-balance");
                     socket?.off("sold")
+                    socket?.off("deal-closed")
                 }
             };
         }

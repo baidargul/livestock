@@ -102,9 +102,7 @@ const LeadRow = (props: Props) => {
     delete animal?.user
     delete animal?.animal
 
-
     const isForBuyer = user && user.id === props.lead.userId
-
     if (isForBuyer) {
 
         const response = props.lead.sold && props.lead.status === "pending" ? "Request accepted" : props.lead.status === "cancelled" ? "Request cancelled" : props.lead.status === "dispatched" ? "Animal dispatched" : "Request accepted"
@@ -112,7 +110,7 @@ const LeadRow = (props: Props) => {
         return (
             <div className={`bg-white border border-zinc-200 p-2 rounded flex flex-col ${toggled ? "h-[30px] overflow-hidden" : "h-full"}`}>
                 <div onClick={() => handleToggled(!toggled)} className='mb-2 w-full flex gap-2 items-center'>
-                    <ChevronDownIcon size={16} className={`${toggled ? "-rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs text-zinc-500'>{props.index} -</div>}  <div className='text-xs line-clamp-1'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {formalizeText(props.lead.animal.breed)} {props.lead.animal.type}</div>
+                    <ChevronDownIcon size={16} className={`${toggled ? "-rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs flex justify-center items-center text-zinc-500'>{props.index} -</div>}  <div className='text-xs line-clamp-1'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {formalizeText(props.lead.animal.breed)} {props.lead.animal.type}</div>
                 </div>
                 {
                     props.lead.sold && <div className={` ${props.lead.status === "pending" ? "bg-lime-500/10 text-lime-700" : props.lead.status === "cancelled" ? "bg-amber-500/10 text-amber-700" : props.lead.status === "dispatched" ? "bg-sky-500/10 text-sky-700" : "bg-emerald-500/10 text-emerald-700"} mb-2 text-xs p-1 text-center`}>
@@ -145,7 +143,7 @@ const LeadRow = (props: Props) => {
                         <tr>
                             <td className="p-1 border-zinc-200 border-b border-l">{props.lead.maleQuantityAvailable ?? 0} pc</td>
                             <td className="p-1 border-zinc-200 border-b border-l">{props.lead.femaleQuantityAvailable ?? 0} pc</td>
-                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.lead.animal, ...props.lead, price: props.lead.amount }).price)}</td>
+                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(Number(props.lead.amount ?? 0) * (Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)))}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -212,7 +210,7 @@ const LeadRow = (props: Props) => {
         return (
             <div className={`bg-white border border-zinc-200 p-2 rounded flex flex-col ${toggled ? "h-[30px] overflow-hidden" : "h-full"}`}>
                 <div onClick={() => handleToggled(!toggled)} className='mb-2 w-full flex gap-2 items-center'>
-                    <ChevronDownIcon size={16} className={`${toggled ? "-rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs text-zinc-500'>{props.index} -</div>}  <div className='text-xs line-clamp-1'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {formalizeText(props.lead.animal.breed)} {props.lead.animal.type}</div>
+                    <ChevronDownIcon size={16} className={`${toggled ? "-rotate-90" : ""} transition duration-300 ease-in-out `} /> {props.index && <div className='text-xs text-zinc-500 flex justify-center items-center'>{props.index} -</div>}  <div className='text-xs line-clamp-1'>{Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)} x {formalizeText(props.lead.animal.breed)} {props.lead.animal.type}</div>
                 </div>
                 <div className='font-bold flex gap-1 items-center'>{formalizeText(props.lead.user.name)}</div>
                 {Number(props.lead.user.balance) < Number(buyerCost) && !props.FreeMode && <div className='flex items-center gap-2'><PiExclamationMark className='text-amber-700 bg-amber-100 border border-amber-700 rounded-full' /> <div className='font-normal text-xs text-amber-700'>on Low balance</div></div>}
@@ -230,7 +228,7 @@ const LeadRow = (props: Props) => {
                         <tr>
                             <td className="p-1 border-zinc-200 border-b border-l">{props.lead.maleQuantityAvailable ?? 0} pc</td>
                             <td className="p-1 border-zinc-200 border-b border-l">{props.lead.femaleQuantityAvailable ?? 0} pc</td>
-                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(calculatePricing({ ...props.lead.animal, ...props.lead, price: props.lead.amount }).price)}</td>
+                            <td className="p-1 border-zinc-200 border-b border-l border-r">{formatCurrency(Number(props.lead.amount ?? 0) * (Number(props.lead.maleQuantityAvailable ?? 0) + Number(props.lead.femaleQuantityAvailable ?? 0)))}</td>
                         </tr>
                     </tbody>
                 </table>

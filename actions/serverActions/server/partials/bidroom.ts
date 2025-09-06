@@ -316,7 +316,6 @@ async function closeDeal(room: any, userId: string, bid: any) {
           },
         }),
       ]);
-
       const lead = await actions.server.leads.create(
         room.animalId,
         room.userId,
@@ -332,16 +331,16 @@ async function closeDeal(room: any, userId: string, bid: any) {
       );
     }
 
-    const theRoomResp = await actions.server.bidRoom.list(room.id, "id");
-    if (theRoomResp.status !== 200) return theRoomResp;
+    // const theRoomResp = await actions.server.bidRoom.list(room.id, "id");
+    // if (theRoomResp.status !== 200) return theRoomResp;
 
     return {
       status: 200,
       message: "Deal closed successfully.",
       data: {
-        room: theRoomResp.data,
+        room: room, //theRoomResp.data,
         bid: selectedBid,
-        sold: theRoomResp.data.animal.sold,
+        sold: true, //theRoomResp.data.animal.sold,
       },
     };
   } catch (error: any) {
