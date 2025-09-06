@@ -115,6 +115,8 @@ const BiddingWrapper = (props: Props) => {
     }, [animal, socket])
 
     useEffect(() => {
+        console.log(`rooms changed`)
+        console.log(rooms)
         if (isMounted && user) {
             let room: any = null;
             let activeBidders = 0
