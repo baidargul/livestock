@@ -65,6 +65,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                 });
                 socket.on("user-joined-bidroom", (binaryData) => {
                     const { room, userId }: any = deserialize(binaryData);
+                    console.log(`User joined room: `);
+                    console.log(room)
                     let newBids = bidsReverse(room.bids);
                     room.bids = newBids;
                     rooms.addRoom(room, user);
