@@ -51,7 +51,7 @@ const BidProtection = (props: Props) => {
 
     useEffect(() => {
         if (socket) {
-            socket.on("user-joined-bidroom", (binaryData) => {
+            socket?.on("user-joined-bidroom", (binaryData) => {
                 const { room, userId }: any = deserialize(binaryData);
                 const route = window.location.pathname;
                 if (route === `/entity/${room.animalId}` && userId === user?.id) {
@@ -59,9 +59,9 @@ const BidProtection = (props: Props) => {
                 }
             });
 
-            return () => {
-                socket.off("user-joined-bidroom");
-            };
+            // return () => {
+            //     socket?.off("user-joined-bidroom");
+            // };
         }
     }, [socket])
 
