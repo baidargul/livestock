@@ -49,6 +49,7 @@ import plusIcon from "@/public/system/ui/plusIcon.png";
 import sold from "@/public/system/ui/sold.png";
 import skulls from "@/public/system/media/skulls.png";
 import cash from "@/public/system/media/cash.png";
+import tiredFarmer from "@/public/system/ui/waiting.png";
 
 export const images = {
   site: {
@@ -74,6 +75,7 @@ export const images = {
       plusIcon: plusIcon,
       flatrate: flatrate,
       sold: sold,
+      tiredFarmer: tiredFarmer,
     },
     coins: {
       gold: {
