@@ -13,6 +13,7 @@ type Props = {
 const BidWindow = (props: Props) => {
     const [rooms, setRooms] = useState([])
     const user = useUser()
+    const isFetching = useRooms((state: any) => state.isFetching)
     const Systemrooms = useRooms()
 
     useEffect(() => {
@@ -27,10 +28,28 @@ const BidWindow = (props: Props) => {
 
     return (
         <div className='px-3 cursor-pointer'>
-            <div className='p-1 bg-zinc-100 border border-zinc-200 font-mono '>Active bargainers ({rooms.length})</div>
+            <div className='p-1 bg-zinc-100 border border-zinc-200 font-mono '>Active bargainers ({isFetching ? "..." : rooms.length})</div>
             <div className='p-1 text-xs relative'>
                 {
-                    rooms.map((room: any, index: number) => {
+                    isFetching && <div>
+                        {
+                            [...Array(4)].map((_, index) => {
+                                return (
+                                    <div key={index}>
+                                        <div className='w-full grid grid-cols-[2fr_1fr] gap-2 border-b border-zinc-200 pb-2'>
+                                            <div className='w-full mt-2 p-2 animate-pulse bg-zinc-100 border border-zinc-200 rounded-md -mx-1'>
+                                            </div>
+                                            <div className='w-full mt-2 p-2 animate-pulse bg-zinc-100 border border-zinc-200 rounded-md -mx-1'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                }
+                {
+                    !isFetching && rooms.map((room: any, index: number) => {
 
                         return (
                             <div key={`${room.key}${room.id}-${index}`}>
@@ -52,7 +71,7 @@ const BidWindow = (props: Props) => {
                         )
                     })
                 }
-                <div className='w-full h-[50%] absolute bottom-0 left-0 bg-gradient-to-t from-white to-transparent z-[1]'></div>
+                {!isFetching && <div className='w-full h-[50%] absolute bottom-0 left-0 bg-gradient-to-t from-white to-transparent z-[1]'></div>}
             </div>
         </div>
     )
