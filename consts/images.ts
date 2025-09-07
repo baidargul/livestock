@@ -50,6 +50,8 @@ import sold from "@/public/system/ui/sold.png";
 import skulls from "@/public/system/media/skulls.png";
 import cash from "@/public/system/media/cash.png";
 import tiredFarmer from "@/public/system/ui/waiting.png";
+import hand from "@/public/system/ui/hand.png";
+import handDown from "@/public/system/ui/hand-down.png";
 
 export const images = {
   site: {
@@ -76,6 +78,8 @@ export const images = {
       flatrate: flatrate,
       sold: sold,
       tiredFarmer: tiredFarmer,
+      hand: hand,
+      handDown: handDown,
     },
     coins: {
       gold: {

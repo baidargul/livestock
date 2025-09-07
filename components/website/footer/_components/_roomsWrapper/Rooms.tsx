@@ -130,8 +130,11 @@ const Rooms = ({ rooms, user }: Props) => {
                 onClick={(e) => handleSelectSection(e, "myRooms")}
                 className={`flex p-2 justify-between items-center ${currentSection === "myRooms" ? "bg-emerald-200" : "bg-zinc-100"}  cursor-pointer`}
             >
-                <div className="font-semibold text-lg tracking-tight">
-                    Selling Rooms
+                <div className="font-semibold text-lg tracking-tight flex items-center gap-2">
+                    <Image src={images.site.ui.handDown} className='w-10' layout='fixed' quality={50} alt='tiredFarmer' width={100} height={100} />
+                    <div>
+                        Selling Rooms
+                    </div>
                 </div>
                 <ChevronLeftIcon
                     size={20}
@@ -158,8 +161,11 @@ const Rooms = ({ rooms, user }: Props) => {
                 onClick={(e) => handleSelectSection(e, "otherRooms")}
                 className={`flex p-2 justify-between items-center ${currentSection === "otherRooms" ? "bg-emerald-200" : "bg-zinc-100"} cursor-pointer`}
             >
-                <div className="font-semibold text-lg tracking-tight">
-                    Buying Rooms
+                <div className="font-semibold text-lg tracking-tight flex gap-1 items-center">
+                    <Image src={images.site.ui.hand} className='w-10' layout='fixed' quality={50} alt='tiredFarmer' width={100} height={100} />
+                    <div>
+                        Buying Rooms
+                    </div>
                 </div>
                 <ChevronLeftIcon
                     size={20}
