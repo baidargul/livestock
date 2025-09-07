@@ -112,6 +112,16 @@ const Rooms = ({ rooms, user }: Props) => {
 
     if (!isMounted) return null
 
+    if ([...myRooms, ...otherRooms].length === 0) {
+
+
+        return (
+            <div className='w-full h-full p-2 flex justify-center items-center'>
+                <div>You have not started bargaining yet.</div>
+            </div>
+        )
+    }
+
     return (
         <div className="w-full h-full text-zinc-700">
             {/* Selling Rooms Section */}
