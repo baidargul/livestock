@@ -116,7 +116,7 @@ const Rooms = ({ rooms, user }: Props) => {
 
 
         return (
-            <div className='w-full h-full p-2 flex flex-col justify-center items-center pointer-events-none'>
+            <div className='w-full h-full p-2 flex flex-col justify-center items-center pointer-events-none bg-gradient-to-b from-amber-100 to-transparent'>
                 <Image src={images.site.ui.tiredFarmer} className='w-full' layout='fixed' quality={100} alt='tiredFarmer' width={100} height={100} />
                 <div>You have not started bargaining yet.</div>
             </div>
