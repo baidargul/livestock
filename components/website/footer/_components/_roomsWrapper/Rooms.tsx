@@ -6,6 +6,7 @@ import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
 import Image from 'next/image'
 import { images } from '@/consts/images'
 import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
+import { useRooms } from '@/hooks/useRooms'
 
 type Props = {
     rooms: any
@@ -15,6 +16,7 @@ type Props = {
 const Rooms = ({ rooms, user }: Props) => {
     const [currentSection, setCurrentSection] = useState<"" | "myRooms" | "otherRooms">("")
     const [isMounted, setIsMounted] = useState(false)
+    const isFetching = useRooms((state: any) => state.isFetching)
 
     // Memoize grouped rooms calculation
     const { myRooms, otherRooms } = useMemo(() => {
@@ -112,9 +114,17 @@ const Rooms = ({ rooms, user }: Props) => {
 
     if (!isMounted) return null
 
-    if ([...myRooms, ...otherRooms].length === 0) {
 
+    if (isFetching) {
+        return (
+            <div className='w-full h-full p-2 flex flex-col justify-center items-center pointer-events-none bg-gradient-to-b from-amber-100 to-transparent'>
+                <Image src={images.site.ui.tiredFarmer} className='w-full' priority layout='fixed' quality={100} alt='tiredFarmer' width={100} height={100} />
+                <div>Loading...</div>
+            </div>
+        )
+    }
 
+    if ([...myRooms, ...otherRooms].length === 0 && !isFetching) {
         return (
             <div className='w-full h-full p-2 flex flex-col justify-center items-center pointer-events-none bg-gradient-to-b from-amber-100 to-transparent'>
                 <Image src={images.site.ui.tiredFarmer} className='w-full' layout='fixed' quality={100} alt='tiredFarmer' width={100} height={100} />
