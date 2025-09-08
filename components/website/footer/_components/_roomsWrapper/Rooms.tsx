@@ -128,17 +128,17 @@ const Rooms = ({ rooms, user }: Props) => {
             {/* Selling Rooms Section */}
             <div
                 onClick={(e) => handleSelectSection(e, "myRooms")}
-                className={`flex p-2 justify-between items-center ${currentSection === "myRooms" ? "bg-emerald-200" : "bg-zinc-100"}  cursor-pointer`}
+                className={`flex p-2 justify-between items-center border ${currentSection === "myRooms" ? "bg-white border-zinc-200 shadow-sm" : "bg-gradient-to-b from-zinc-100 to-white border-transparent"}  cursor-pointer`}
             >
                 <div className="font-semibold text-lg tracking-tight flex items-center gap-2">
-                    <Image src={images.site.ui.handDown} className='w-10' layout='fixed' quality={50} alt='tiredFarmer' width={100} height={100} />
-                    <div>
+                    <Image src={images.site.ui.handDown} className={`w-10 ${currentSection === "myRooms" ? "rotate-[-25deg]" : "rotate-0"} transition delay-300 duration-700 ease-in-out`} layout='fixed' priority quality={50} alt='tiredFarmer' width={100} height={100} />
+                    <div className={`${currentSection === "myRooms" && "tracking-tighter"} transition-all ease-in-out delay-500 duration-300`}>
                         Selling Rooms
                     </div>
                 </div>
                 <ChevronLeftIcon
                     size={20}
-                    className={`transition-transform duration-300 ${currentSection === "myRooms" ? "-rotate-90" : ""
+                    className={`transition-transform duration-300 ${currentSection === "myRooms" ? "-rotate-90" : "text-zinc-400"
                         }`}
                 />
             </div>
@@ -147,7 +147,7 @@ const Rooms = ({ rooms, user }: Props) => {
                     height: currentSection === "myRooms" ? "85%" :
                         currentSection === "otherRooms" ? "0" : "50%"
                 }}
-                className="p-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
+                className={`p-2 ${currentSection === "myRooms" && "from-zinc-300"} bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden`}
             >
                 {myRooms.length > 0 && (
                     <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
@@ -159,17 +159,17 @@ const Rooms = ({ rooms, user }: Props) => {
             {/* Buying Rooms Section */}
             <div
                 onClick={(e) => handleSelectSection(e, "otherRooms")}
-                className={`flex p-2 justify-between items-center ${currentSection === "otherRooms" ? "bg-emerald-200" : "bg-zinc-100"} cursor-pointer`}
+                className={`flex p-2 justify-between items-center border  ${currentSection === "otherRooms" ? "bg-white border-zinc-200 shadow-sm" : "bg-gradient-to-b from-zinc-100 to-white border-transparent"} cursor-pointer`}
             >
                 <div className="font-semibold text-lg tracking-tight flex gap-1 items-center">
-                    <Image src={images.site.ui.hand} className='w-10' layout='fixed' quality={50} alt='tiredFarmer' width={100} height={100} />
-                    <div>
+                    <Image src={images.site.ui.hand} className={`w-10 ${currentSection === "otherRooms" ? "rotate-[25deg]" : "rotate-0"} transition delay-300 duration-700 ease-in-out`} layout='fixed' priority quality={50} alt='tiredFarmer' width={100} height={100} />
+                    <div className={`${currentSection === "otherRooms" && "tracking-tighter"} transition-all ease-in-out delay-500 duration-300`}>
                         Buying Rooms
                     </div>
                 </div>
                 <ChevronLeftIcon
                     size={20}
-                    className={`transition-transform duration-300 ${currentSection === "otherRooms" ? "-rotate-90" : ""
+                    className={`transition-transform duration-300 ${currentSection === "otherRooms" ? "-rotate-90" : "text-zinc-400"
                         }`}
                 />
             </div>
@@ -178,7 +178,7 @@ const Rooms = ({ rooms, user }: Props) => {
                     height: currentSection === "otherRooms" ? "85%" :
                         currentSection === "myRooms" ? "0" : "50%"
                 }}
-                className="p-2 bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden"
+                className={`p-2 ${currentSection === "otherRooms" && "from-zinc-300"} bg-gradient-to-b from-zinc-100 to-transparent transition-all duration-300 overflow-hidden`}
             >
                 {otherRooms.length > 0 && (
                     <div className="flex flex-col gap-4 h-full overflow-y-auto pr-2">
