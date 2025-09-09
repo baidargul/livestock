@@ -87,8 +87,8 @@ const BidProtection = (props: Props) => {
 
     if (!user) {
         return (
-            <div className='w-full bg-zinc-100 p-2 border-b-2 border-zinc-200 flex justify-center items-center text-center'>
-                <Button onClick={() => dialog.showDialog("Login", null, "You need an account to view the number.")} className='text-sm'>View Number</Button>
+            <div className='w-full flex justify-center items-center text-center px-4'>
+                <Button onClick={() => dialog.showDialog("Login", null, "You need an account to view the number.")} className='w-full'>View Number</Button>
             </div>
         )
     }
