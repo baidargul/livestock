@@ -176,6 +176,15 @@ const CreateLeadButton = (props: Props) => {
         setIsChecking(false)
     }
 
+    // NO SESSION
+    if (!user) {
+        return (
+            <div className='w-full  flex justify-center items-center text-center px-4'>
+                <Button onClick={() => dialog.showDialog("Login", null, "You need an account to view the number.")} className='w-full'>View Number</Button>
+            </div>
+        )
+    }
+
     //AUTHOR OF THIS ANIMAL
     if (user && user.id === props.animal.userId && props.animal.allowBidding) {
         return (

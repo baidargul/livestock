@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
 import LeadsWindow from './LeadsWindow'
 import CreateLeadButton from './CreateLeadButton'
+import { useDialog } from '@/hooks/useDialog'
 
 type Props = {
     children: React.ReactNode
@@ -43,6 +44,7 @@ const BidProtection = (props: Props) => {
     const rooms = useRooms((state: any) => state.rooms)
     const isFetching = useRooms((state: any) => state.isFetching)
     const find = useRooms((state: any) => state.find)
+    const dialog = useDialog()
     const socket = useSocket()
 
     useEffect(() => {
@@ -86,7 +88,7 @@ const BidProtection = (props: Props) => {
     if (!user) {
         return (
             <div className='w-full bg-zinc-100 p-2 border-b-2 border-zinc-200 flex justify-center items-center text-center'>
-                <div className='text-sm'>⚠️ Please login to bid</div>
+                <Button onClick={() => dialog.showDialog("Login", null, "You need an account to view the number.")} className='text-sm'>View Number</Button>
             </div>
         )
     }
