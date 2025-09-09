@@ -36,8 +36,9 @@ export const useRooms: any = create<RoomsState>()((set) => ({
     const { rooms } = useRooms.getState();
     return { ...rooms };
   },
-  addRoom: (room, currentUser) => {
+  addRoom: (room, currentUser: any) => {
     set((state) => {
+      if (!currentUser && !currentUser.id) return state;
       const isAuthor = currentUser.id === room.authorId;
       const roomType = isAuthor ? "myRooms" : "otherRooms";
 
