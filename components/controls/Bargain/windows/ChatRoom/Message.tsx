@@ -20,7 +20,7 @@ const Message = (props: Props) => {
 
     useEffect(() => {
         if (!isMyMessage && !message.isSeen) handleMessageSeen()
-    }, [])
+    }, [user, socket, isMyMessage, message])
 
     const handleMessageSeen = () => {
         if (socket) {
