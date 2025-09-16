@@ -12,6 +12,7 @@ type Props = {
 const LastMessage = (props: Props) => {
     const user = useUser();
     const lastBid = props.lastBid
+    if (!lastBid) return null
     const isMyMessage = user.id === lastBid.userId
 
     if (isMyMessage) {

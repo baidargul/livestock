@@ -8,6 +8,7 @@ import { RiCheckDoubleFill } from 'react-icons/ri'
 
 type Props = {
     message: Bids
+    isPlaceHolder?: boolean
 }
 
 const Message = (props: Props) => {
@@ -19,9 +20,9 @@ const Message = (props: Props) => {
         return (
             <div className='ml-auto rounded p-2 w-fit pl-4 flex flex-col justify-end text-end items-end bg-lime-100 shadow-sm'>
                 <div className='flex gap-1 items-center'>
-                    <RiCheckDoubleFill size={24} className={message.isSeen ? "text-blue-400" : "text-zinc-400"} />
+                    {!props.isPlaceHolder && <RiCheckDoubleFill size={24} className={message.isSeen ? "text-blue-400" : "text-zinc-400"} />}
                     <div className='font-bold'>{formatCurrency(message.price)}</div>
-                    <FaLock className='ml-4' />
+                    {!props.isPlaceHolder && <FaLock className='ml-4' />}
                 </div >
                 <ElapsedTimeControl date={new Date(message.createdAt).toString()} />
             </div >

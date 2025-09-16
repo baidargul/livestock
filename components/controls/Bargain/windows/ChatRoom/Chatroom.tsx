@@ -1,25 +1,75 @@
 import { images } from '@/consts/images'
-import { useUser } from '@/socket-client/SocketWrapper'
+import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoReturnUpBackSharp } from 'react-icons/io5'
 import AuthorCard from './AuthorCard'
 import UserCard from './UserCard'
 import Message from './Message'
+import Textbox from '@/components/ui/Textbox'
+import Button from '@/components/ui/Button'
+import { serialize } from 'bson'
+import { useDialog } from '@/hooks/useDialog'
+import { useRooms } from '@/hooks/useRooms'
+import { Bids } from '@prisma/client'
 
 type Props = {
     animal: any
     currentRoom: any
     handleSelectCurrentRoom: (room: any) => void
+    refresh: () => void
 }
 
 const Chatroom = (props: Props) => {
-    console.log(props.currentRoom)
-    const currentRoom = props.currentRoom
+    const [value, setValue] = useState<number | null>(0)
+    const [tempMessage, setTempMessage] = useState<Bids | null>(null)
     const user = useUser();
+    const isLastMessageWasMine = props.currentRoom.bids[props.currentRoom.bids.length - 1].userId === user.id
     const isAuthor = props.animal.userId === user?.id
+    const socket = useSocket();
+    const dialog = useDialog();
+    const Rooms = useRooms();
 
-    const totalQuantity = Number(currentRoom.maleQuantityAvailable || 0) + Number(currentRoom.femaleQuantityAvailable || 0)
+    useEffect(() => {
+        props.refresh()
+        setTempMessage(null)
+    }, [Rooms.rooms.myRooms, Rooms.rooms.otherRooms])
+
+    const handleValueChange = (val: string) => {
+        const raw = val && val.length > 0 ? Number(val) : null
+        setValue(raw)
+    }
+
+    const handleOnKeyDown = (e: any) => {
+        if (e.key === 'Enter') {
+            handleSendMessage()
+        }
+    }
+
+    const handleSendMessage = async () => {
+        if (!user) dialog.showDialog("Unable to send message", null, "Please login again!")
+        if (socket) {
+            if (!isLastMessageWasMine) {
+                setTempMessage({
+                    bidRoomId: props.currentRoom.id,
+                    createdAt: new Date(),
+                    id: `${props.currentRoom.id}-${user.id}`,
+                    intial: false,
+                    isFinalOffer: false,
+                    isSeen: false,
+                    price: value || 0,
+                    userId: user.id
+                })
+                socket.emit("place-bid", serialize({ roomKey: props.currentRoom.key, userId: user.id, amount: value }));
+            } else {
+                dialog.showDialog("Unable to send message", null, "You can't send a message twice in a row")
+            }
+        } else {
+            dialog.showDialog("Unable to send message", null, "Error: No internet connection")
+        }
+    }
+
+    const totalQuantity = Number(props.currentRoom.maleQuantityAvailable || 0) + Number(props.currentRoom.femaleQuantityAvailable || 0)
     return (
         <div className='flex flex-col gap-2'>
             <div onClick={() => props.handleSelectCurrentRoom(null)} className='relative cursor-pointer'>
@@ -30,8 +80,8 @@ const Chatroom = (props: Props) => {
                     <div className='leading-2'>
                         <div className='text-sm'>{totalQuantity} x Persian Cats</div>
                         <div className='text-zinc-400 text-xs'>
-                            {Number(currentRoom.maleQuantityAvailable || 0) > 0 && <span>{Number(currentRoom.maleQuantityAvailable || 0)} Male</span>}
-                            {Number(currentRoom.femaleQuantityAvailable || 0) > 0 && <span>{Number(currentRoom.femaleQuantityAvailable || 0)} Female</span>}
+                            {Number(props.currentRoom.maleQuantityAvailable || 0) > 0 && <span>{Number(props.currentRoom.maleQuantityAvailable || 0)} Male</span>}
+                            {Number(props.currentRoom.femaleQuantityAvailable || 0) > 0 && <span>{Number(props.currentRoom.femaleQuantityAvailable || 0)} Female</span>}
                         </div>
                     </div>
                 </div>
@@ -39,18 +89,28 @@ const Chatroom = (props: Props) => {
                 <Image src={props.animal.images.length > 0 ? props.animal.images[0].image : images.chickens.images[1]} className='w-full h-20 origin-top-left rounded-md object-cover' alt='janwarmarkaz' />
             </div>
             <div>
-                {isAuthor && <AuthorCard room={currentRoom} />}
-                {!isAuthor && <UserCard room={currentRoom} />}
+                {isAuthor && <AuthorCard room={props.currentRoom} />}
+                {!isAuthor && <UserCard room={props.currentRoom} />}
             </div>
             <div className='flex flex-col gap-2'>
                 {
-                    currentRoom.bids.slice(currentRoom.bids.length - 3).map((bid: any, index: number) => {
+                    props.currentRoom.bids.slice(props.currentRoom.bids.length - 3).map((bid: any, index: number) => {
 
                         return (
                             <Message key={`${bid.id}-${index}`} message={bid} />
                         )
                     })
                 }
+                {
+                    tempMessage &&
+                    <Message message={tempMessage} isPlaceHolder />
+                }
+            </div>
+            <div className='relative'>
+                <div className='grid grid-cols-[2fr_1fr] gap-2 p-2 bg-white shadow-sm'>
+                    <Textbox disabled={isLastMessageWasMine} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} className='w-full' />
+                    <Button disabled={isLastMessageWasMine} onClick={handleSendMessage} className='w-full'>Send</Button>
+                </div>
             </div>
         </div>
     )

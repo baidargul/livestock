@@ -9,15 +9,13 @@ type Props = {
 }
 
 const SelectAnimal = (props: Props) => {
-    const [currentRoom, setCurrentRoom] = useState(null)
+    const [currentRoom, setCurrentRoom] = useState<any>(null)
     const [selectedAnimal, setSelectedAnimal] = useState(null)
     const [animals, setAnimals] = useState<any[]>([])
     const Rooms = useRooms()
 
-
-    useEffect(() => {
-        const rooms = [...Rooms.rooms.myRooms, ...Rooms.rooms.otherRooms];
-
+    const extractAnimals = (rooms: any[]) => {
+        let thisRoom = null
         // Map fresh every time
         const animalMap = new Map();
 
@@ -27,12 +25,31 @@ const SelectAnimal = (props: Props) => {
             if (existing) {
                 existing.rooms += 1;
             } else {
-                const subRooms = rooms.filter((r: any) => r.animalId === room.animalId);
+                const subRooms = rooms.filter((r: any) => {
+                    if (currentRoom) {
+                        if (currentRoom.id === r.id) thisRoom = r
+                    }
+                    return r.animalId === room.animalId
+                });
                 animalMap.set(room.animalId, { ...room.animal, roomCount: 1, rooms: subRooms });
             }
         });
+        const raw = Array.from(animalMap.values());
+        setAnimals(raw)
+        if (thisRoom) {
+            setCurrentRoom(thisRoom)
+        }
+        return raw
+    }
 
-        setAnimals(Array.from(animalMap.values()));
+    const refresh = () => {
+        const rooms = [...Rooms.rooms.myRooms, ...Rooms.rooms.otherRooms];
+        extractAnimals(rooms)
+    }
+
+
+    useEffect(() => {
+        refresh()
     }, [Rooms.rooms.myRooms, Rooms.rooms.otherRooms]);
 
     const handleSelectAnimal = (animal: any) => {
@@ -42,9 +59,6 @@ const SelectAnimal = (props: Props) => {
     const handleSelectCurrentRoom = (room: any) => {
         setCurrentRoom(room)
     }
-
-
-
 
     return (
         <div className='flex flex-col gap-2 bg-zinc-200 p-2'>
@@ -62,7 +76,7 @@ const SelectAnimal = (props: Props) => {
                 selectedAnimal && !currentRoom && <RoomsContainer handleSelectCurrentRoom={handleSelectCurrentRoom} handleSelectAnimal={handleSelectAnimal} animal={selectedAnimal} />
             }
             {
-                selectedAnimal && currentRoom && <Chatroom handleSelectCurrentRoom={handleSelectCurrentRoom} animal={selectedAnimal} currentRoom={currentRoom} />
+                selectedAnimal && currentRoom && <Chatroom refresh={refresh} handleSelectCurrentRoom={handleSelectCurrentRoom} animal={selectedAnimal} currentRoom={currentRoom} />
             }
         </div>
     )
