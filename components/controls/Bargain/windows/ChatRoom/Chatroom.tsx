@@ -93,7 +93,7 @@ const Chatroom = (props: Props) => {
                 {isAuthor && <AuthorCard room={props.currentRoom} />}
                 {!isAuthor && <UserCard room={props.currentRoom} />}
             </div>
-            <div className='flex flex-col gap-2 bg-amber-700/5 p-1'>
+            <div className='flex flex-col gap-2 bg-amber-600/10 p-2'>
                 {
                     props.currentRoom?.bids.slice(props.currentRoom?.bids.length - 3).map((bid: any, index: number) => {
 
