@@ -24,7 +24,7 @@ const Chatroom = (props: Props) => {
     const [value, setValue] = useState<number | null>(0)
     const [tempMessage, setTempMessage] = useState<Bids | null>(null)
     const user = useUser();
-    const isLastMessageWasMine = props.currentRoom.bids[props.currentRoom.bids.length - 1].userId === user.id
+    const isLastMessageWasMine = props.currentRoom?.bids[props.currentRoom?.bids.length - 1]?.userId === user?.id
     const isAuthor = props.animal.userId === user?.id
     const socket = useSocket();
     const dialog = useDialog();
@@ -94,7 +94,7 @@ const Chatroom = (props: Props) => {
             </div>
             <div className='flex flex-col gap-2'>
                 {
-                    props.currentRoom.bids.slice(props.currentRoom.bids.length - 3).map((bid: any, index: number) => {
+                    props.currentRoom?.bids.slice(props.currentRoom?.bids.length - 3).map((bid: any, index: number) => {
 
                         return (
                             <Message key={`${bid.id}-${index}`} message={bid} />
