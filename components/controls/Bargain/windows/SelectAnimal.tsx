@@ -53,7 +53,7 @@ const SelectAnimal = (props: Props) => {
                 })
             }
             {
-                selectedAnimal && <RoomsContainer animal={selectedAnimal} />
+                selectedAnimal && <RoomsContainer handleSelectAnimal={handleSelectAnimal} animal={selectedAnimal} />
             }
         </div>
     )

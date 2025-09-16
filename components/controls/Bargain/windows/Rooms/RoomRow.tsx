@@ -6,6 +6,7 @@ import LastMessage from './LastMessage'
 
 type Props = {
     room: any
+    handleSelectAnimal: (animal: any) => void
 }
 
 const RoomRow = (props: Props) => {
