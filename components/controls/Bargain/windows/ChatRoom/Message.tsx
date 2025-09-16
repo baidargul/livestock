@@ -19,12 +19,13 @@ const Message = (props: Props) => {
     const isMyMessage = user?.id === message.userId
 
     useEffect(() => {
-        if (isMyMessage && !message.isSeen) handleMessageSeen()
+        if (!isMyMessage && !message.isSeen) handleMessageSeen()
     }, [])
 
     const handleMessageSeen = () => {
         if (socket) {
             if (message.isSeen) return
+            if (isMyMessage) return
             socket.emit("message-seen", serialize({ bidId: message.id, room: message.bidRoomId }));
         }
     };
