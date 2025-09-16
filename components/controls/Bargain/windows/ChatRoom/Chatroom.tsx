@@ -61,6 +61,7 @@ const Chatroom = (props: Props) => {
                     userId: user.id
                 })
                 socket.emit("place-bid", serialize({ roomKey: props.currentRoom.key, userId: user.id, amount: value }));
+                setValue(null)
             } else {
                 dialog.showDialog("Unable to send message", null, "You can't send a message twice in a row")
             }
