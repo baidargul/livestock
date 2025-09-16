@@ -3,6 +3,7 @@ import { actions } from "../../actions";
 import { account } from "./account";
 import { contacts } from "./contacts";
 import { interactions } from "./interactions";
+import { bargain } from "./bargain";
 async function signup(
   name: string,
   email: string,
@@ -278,5 +279,6 @@ export const user = {
   toggleBroker,
   account,
   contacts,
+  bargain,
   interactions,
 };
