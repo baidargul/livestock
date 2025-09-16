@@ -108,8 +108,8 @@ const Chatroom = (props: Props) => {
             </div>
             <div className='relative'>
                 <div className='grid grid-cols-[2fr_1fr] gap-2 p-2 bg-white shadow-sm'>
-                    <Textbox disabled={isLastMessageWasMine} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} className='w-full' />
-                    <Button disabled={isLastMessageWasMine} onClick={handleSendMessage} className='w-full'>Send</Button>
+                    <Textbox disabled={isLastMessageWasMine || tempMessage !== null} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} className='w-full' />
+                    <Button disabled={isLastMessageWasMine || tempMessage !== null} onClick={handleSendMessage} className='w-full'>Send</Button>
                 </div>
             </div>
         </div>
