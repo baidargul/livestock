@@ -29,12 +29,12 @@ const UserCard = (props: Props) => {
                     })
                 }
             </div>
-            <div className='flex items-center gap-2'>
-                <div className='text-lg'>
+            <div className='grid grid-cols-3 w-full place-items-center'>
+                <div className='text-sm'>
                     {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
                 </div>
                 <FaShippingFast size={24} />
-                <div className='text-lg'>
+                <div className='text-sm'>
                     {formalizeText(room.city)}, {formalizeText(room.province)}
                 </div>
             </div>
