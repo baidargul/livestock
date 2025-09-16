@@ -98,13 +98,13 @@ const Chatroom = (props: Props) => {
                     props.currentRoom?.bids.slice(props.currentRoom?.bids.length - 3).map((bid: any, index: number) => {
 
                         return (
-                            <Message key={`${bid.id}-${index}`} message={bid} />
+                            <Message key={`${bid.id}-${index}`} message={bid} currentRoom={props.currentRoom} />
                         )
                     })
                 }
                 {
                     tempMessage &&
-                    <Message message={tempMessage} isPlaceHolder />
+                    <Message message={tempMessage} currentRoom={props.currentRoom} isPlaceHolder />
                 }
             </div>
             <div className='relative'>

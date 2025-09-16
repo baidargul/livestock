@@ -8,6 +8,7 @@ import { FaLock } from 'react-icons/fa6'
 import { RiCheckDoubleFill } from 'react-icons/ri'
 
 type Props = {
+    currentRoom: any
     message: Bids
     isPlaceHolder?: boolean
 }
@@ -19,14 +20,16 @@ const Message = (props: Props) => {
     const isMyMessage = user?.id === message.userId
 
     useEffect(() => {
-        if (!isMyMessage && !message.isSeen) handleMessageSeen()
+        if (user && socket) {
+            if (!isMyMessage && !message.isSeen) handleMessageSeen()
+        }
     }, [user, socket, isMyMessage, message])
 
     const handleMessageSeen = () => {
         if (socket) {
             if (message.isSeen) return
             if (isMyMessage) return
-            socket.emit("message-seen", serialize({ bidId: message.id, room: message.bidRoomId }));
+            socket.emit("message-seen", serialize({ bidId: message.id, room: props.currentRoom }));
         }
     };
 

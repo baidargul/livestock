@@ -3,6 +3,7 @@ import AnimalRow from './selectAnimal/AnimalRow'
 import { useRooms } from '@/hooks/useRooms'
 import RoomsContainer from './Rooms/RoomsContainer'
 import Chatroom from './ChatRoom/Chatroom'
+import { bidsReverse } from '../../Bidding/BiddingWrapper'
 
 type Props = {
     animal?: any
@@ -27,7 +28,10 @@ const SelectAnimal = (props: Props) => {
             } else {
                 const subRooms = rooms.filter((r: any) => {
                     if (currentRoom) {
-                        if (currentRoom.id === r.id) thisRoom = r
+                        if (currentRoom.id === r.id) {
+                            thisRoom = r
+                            thisRoom.bids = r.bids
+                        }
                     }
                     return r.animalId === room.animalId
                 });
