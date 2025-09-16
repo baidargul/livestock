@@ -7,6 +7,7 @@ import LastMessage from './LastMessage'
 type Props = {
     room: any
     handleSelectAnimal: (animal: any) => void
+    handleSelectCurrentRoom: (room: any) => void
 }
 
 const RoomRow = (props: Props) => {
@@ -16,7 +17,7 @@ const RoomRow = (props: Props) => {
 
     if (isBuyingRoom) {
         return (
-            <div className='bg-white p-2 rounded-md flex justify-between items-center'>
+            <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
                 <div>
                     <div className='font-semibold text-black text-xl'>
                         {room.user.name}
@@ -28,11 +29,21 @@ const RoomRow = (props: Props) => {
                 <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
             </div>
         )
+    } else {
+        return (
+            <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
+                <div>
+                    <div className='font-semibold text-black text-xl'>
+                        {room.author.name}
+                    </div>
+                    <div className='text-zinc-500 text-sm'>
+                        {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
+                    </div>
+                </div>
+                <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
+            </div>
+        )
     }
-
-    return (
-        <div></div>
-    )
 }
 
 export default RoomRow

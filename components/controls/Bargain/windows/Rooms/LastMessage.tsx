@@ -21,7 +21,7 @@ const LastMessage = (props: Props) => {
                     <ElapsedTimeControl date={new Date(lastBid.createdAt).toString()} />
                 </div>
                 <div className='flex gap-1 items-center'>
-                    <RiCheckDoubleFill size={24} className={lastBid.isSeen ? "text-green-600" : "text-zinc-400"} />
+                    <RiCheckDoubleFill size={24} className={lastBid.isSeen ? "text-blue-400" : "text-zinc-400"} />
                     <div className='text-xl font-bold'>
                         {formatCurrency(lastBid.price)}
                     </div>

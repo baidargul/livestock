@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import AnimalRow from './selectAnimal/AnimalRow'
 import { useRooms } from '@/hooks/useRooms'
 import RoomsContainer from './Rooms/RoomsContainer'
+import Chatroom from './ChatRoom/Chatroom'
 
 type Props = {
     animal?: any
 }
 
 const SelectAnimal = (props: Props) => {
+    const [currentRoom, setCurrentRoom] = useState(null)
     const [selectedAnimal, setSelectedAnimal] = useState(null)
     const [animals, setAnimals] = useState<any[]>([])
     const Rooms = useRooms()
@@ -37,6 +39,10 @@ const SelectAnimal = (props: Props) => {
         setSelectedAnimal(animal)
     }
 
+    const handleSelectCurrentRoom = (room: any) => {
+        setCurrentRoom(room)
+    }
+
 
 
 
@@ -46,14 +52,17 @@ const SelectAnimal = (props: Props) => {
                 (animals.length === 0) && <div>No Bargaining is started with any animal yet.</div>
             }
             {
-                !selectedAnimal && animals.map((animal: any, index: number) => {
+                !selectedAnimal && !currentRoom && animals.map((animal: any, index: number) => {
                     return (
                         !selectedAnimal && <AnimalRow handleSelectAnimal={handleSelectAnimal} key={`${animal.id}-${index + 1}`} animal={animal} />
                     )
                 })
             }
             {
-                selectedAnimal && <RoomsContainer handleSelectAnimal={handleSelectAnimal} animal={selectedAnimal} />
+                selectedAnimal && !currentRoom && <RoomsContainer handleSelectCurrentRoom={handleSelectCurrentRoom} handleSelectAnimal={handleSelectAnimal} animal={selectedAnimal} />
+            }
+            {
+                selectedAnimal && currentRoom && <Chatroom handleSelectCurrentRoom={handleSelectCurrentRoom} animal={selectedAnimal} currentRoom={currentRoom} />
             }
         </div>
     )
