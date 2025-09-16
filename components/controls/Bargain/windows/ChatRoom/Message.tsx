@@ -1,8 +1,9 @@
 import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import { formatCurrency } from '@/lib/utils'
-import { useUser } from '@/socket-client/SocketWrapper'
+import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import { Bids } from '@prisma/client'
-import React from 'react'
+import { serialize } from 'bson'
+import React, { useEffect } from 'react'
 import { FaLock } from 'react-icons/fa6'
 import { RiCheckDoubleFill } from 'react-icons/ri'
 
@@ -14,7 +15,19 @@ type Props = {
 const Message = (props: Props) => {
     const message = props.message
     const user = useUser()
+    const socket = useSocket()
     const isMyMessage = user?.id === message.userId
+
+    useEffect(() => {
+        if (isMyMessage && !message.isSeen) handleMessageSeen()
+    }, [])
+
+    const handleMessageSeen = () => {
+        if (socket) {
+            if (message.isSeen) return
+            socket.emit("message-seen", serialize({ bidId: message.id, room: message.bidRoomId }));
+        }
+    };
 
     if (isMyMessage) {
         return (
