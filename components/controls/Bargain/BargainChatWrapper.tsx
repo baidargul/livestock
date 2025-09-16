@@ -18,6 +18,8 @@ const BargainChatWrapper = (props: Props) => {
         setIsOpen(val)
         if (val) {
             dialog.setLayer("bargain-chat")
+        } else {
+            dialog.setLayer("")
         }
     }
 
