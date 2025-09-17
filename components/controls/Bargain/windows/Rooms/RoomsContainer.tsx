@@ -7,16 +7,24 @@ type Props = {
     animal: any
     handleSelectAnimal: (animal: any) => void
     handleSelectCurrentRoom: (room: any) => void
+    disableAnimalChange?: boolean
 }
 
 const RoomsContainer = (props: Props) => {
     const totalQuantity = Number(props.animal.maleQuantityAvailable || 0) + Number(props.animal.femaleQuantityAvailable || 0)
+
+    const handleGoBack = () => {
+        if (!props.disableAnimalChange) {
+            props.handleSelectAnimal(null)
+        }
+    }
+
     return (
         <div className='flex flex-col gap-2'>
-            <div onClick={() => props.handleSelectAnimal(null)} className='relative cursor-pointer'>
-                <div className='absolute top-1 left-1 bg-white/50 border border-white/30 z-[3] p-2 px-4 rounded'>
+            <div onClick={handleGoBack} className={`relative ${props.disableAnimalChange ? "cursor-default" : "cursor-pointer"} `}>
+                {!props.disableAnimalChange && <div className='absolute top-1 left-1 bg-white/50 border border-white/30 z-[3] p-2 px-4 rounded'>
                     <IoReturnUpBackSharp className='text-white' size={14} />
-                </div>
+                </div>}
                 <div className='absolute bottom-4 left-2 z-[2] text-white'>
                     <div className={`text-4xl font-semibold text-amber-400`}>{Number(props.animal.roomCount) > 1 ? `${props.animal.roomCount} Applicants` : `${props.animal.roomCount} Applicant`}</div>
                     <div className='leading-2'>

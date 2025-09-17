@@ -166,7 +166,7 @@ const page = async (props: Props) => {
                         <CreateLeadButton animal={animal} />
                     </div>
                 }
-                <BargainChatWrapper animal={animal}>
+                <BargainChatWrapper animal={animal} disableAnimalChange>
                     <div className='px-4 mt-2'>
                         <Button className='w-full'>New Bargain</Button>
                     </div>

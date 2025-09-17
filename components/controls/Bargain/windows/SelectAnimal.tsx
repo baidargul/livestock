@@ -7,6 +7,7 @@ import { bidsReverse } from '../../Bidding/BiddingWrapper'
 
 type Props = {
     animal?: any
+    disableAnimalChange?: boolean
 }
 
 const SelectAnimal = (props: Props) => {
@@ -17,12 +18,9 @@ const SelectAnimal = (props: Props) => {
 
     const extractAnimals = (rooms: any[]) => {
         let thisRoom = null
-        // Map fresh every time
         const animalMap = new Map();
-
         rooms.forEach((room: any) => {
             const existing = animalMap.get(room.animalId);
-
             if (existing) {
                 existing.rooms += 1;
             } else {
@@ -35,6 +33,12 @@ const SelectAnimal = (props: Props) => {
                     }
                     return r.animalId === room.animalId
                 });
+                if (props.animal) {
+                    if (props.animal.id === room.animalId) {
+                        const animal = { ...room.animal, roomCount: 1, rooms: subRooms };
+                        setSelectedAnimal(animal)
+                    }
+                }
                 animalMap.set(room.animalId, { ...room.animal, roomCount: 1, rooms: subRooms });
             }
         });
@@ -77,7 +81,7 @@ const SelectAnimal = (props: Props) => {
                 })
             }
             {
-                selectedAnimal && !currentRoom && <RoomsContainer handleSelectCurrentRoom={handleSelectCurrentRoom} handleSelectAnimal={handleSelectAnimal} animal={selectedAnimal} />
+                selectedAnimal && !currentRoom && <RoomsContainer disableAnimalChange={props.disableAnimalChange} handleSelectCurrentRoom={handleSelectCurrentRoom} handleSelectAnimal={handleSelectAnimal} animal={selectedAnimal} />
             }
             {
                 selectedAnimal && currentRoom && <Chatroom refresh={refresh} handleSelectCurrentRoom={handleSelectCurrentRoom} animal={selectedAnimal} currentRoom={currentRoom} />
