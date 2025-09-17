@@ -63,7 +63,7 @@ const BidWindow = (props: Props) => {
                                         }
                                     </div>
                                     <div className='ml-auto text-right'>
-                                        {formatCurrency(room.bids[0]?.price ?? 0)}
+                                        {formatCurrency(room.bids[room.bids.length - 1]?.price ?? 0)}
                                         <ElapsedTimeControl date={room.bids[0]?.createdAt} />
                                     </div>
                                 </div>
