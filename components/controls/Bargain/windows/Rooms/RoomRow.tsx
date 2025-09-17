@@ -14,6 +14,7 @@ const RoomRow = (props: Props) => {
     const user = useUser()
     const room = props.room
     const isBuyingRoom = room.userId === user.id
+    const isSelfPickUp = !room.deliveryOptions.includes("SELLER_DELIVERY")
 
     if (isBuyingRoom) {
         return (
@@ -37,7 +38,7 @@ const RoomRow = (props: Props) => {
                         {room.user.name}
                     </div>
                     <div className='text-zinc-500 text-sm'>
-                        {formalizeText(room.city)}, {formalizeText(room.province)}
+                        {isSelfPickUp ? `${formalizeText(room.city)}, ${formalizeText(room.province)}` : "I'll self pickup"}
                     </div>
                 </div>
                 <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
