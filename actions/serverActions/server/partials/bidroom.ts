@@ -441,7 +441,26 @@ async function listByUser(
     const extraClause = bidLimit ? { take: bidLimit } : {};
 
     const commonInclude: any = {
-      animal: true,
+      animal: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              province: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              province: true,
+            },
+          },
+        },
+      },
       bids: {
         ...extraClause,
         include: {

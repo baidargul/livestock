@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { images } from '@/consts/images'
 import NewContactAnimationWrapper from '@/components/animation-wrappers/NewContactAnimationWrapper'
 import LeadsWrapper from './_components/LeadsWrapper'
+import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
 
 type Props = {}
 
@@ -69,14 +70,24 @@ const PhoneFooter = (props: Props) => {
                 </div>
             </ContactsWrapper>}
 
-            {user && user.broker && <RoomsWrapper forPhone>
+            {/* {user && user.broker && <RoomsWrapper forPhone>
                 <div className={`${route.includes("cart") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
                     <ShoppingBagIcon />
                     <div>
                         Bargains
                     </div>
                 </div>
-            </RoomsWrapper>}
+            </RoomsWrapper>} */}
+            <div className='w-fit'>
+                {user && user.broker && <BargainChatWrapper>
+                    <div className={`${route.includes("cart") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>
+                        <ShoppingBagIcon />
+                        <div>
+                            Bargains
+                        </div>
+                    </div>
+                </BargainChatWrapper>}
+            </div>
 
             {user && user.broker && <LeadsWrapper defaultAnimalId=''>
                 <div className={`${route.includes("contacts") ? "bg-white border-b-2 border-zinc-200 text-black rounded p-1 px-2" : ""} w-fit h-fit cursor-pointer flex flex-col text-center justify-center items-center  scale-75 origin-center-left`}>

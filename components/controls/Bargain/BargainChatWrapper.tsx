@@ -5,7 +5,7 @@ import SelectAnimal from './windows/SelectAnimal'
 
 type Props = {
     children: React.ReactNode
-    animal: any
+    animal?: any
     disableAnimalChange?: boolean
 }
 

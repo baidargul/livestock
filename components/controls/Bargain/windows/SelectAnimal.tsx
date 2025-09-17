@@ -26,10 +26,11 @@ const SelectAnimal = (props: Props) => {
         setIsCalculatingRooms(true)
         let thisRoom = null
         const animalMap = new Map();
+        console.log(rooms)
         rooms.forEach((room: any) => {
             const existing = animalMap.get(room.animalId);
             if (existing) {
-                existing.rooms += 1;
+                existing.roomCount += 1;
             } else {
                 const subRooms = rooms.filter((r: any) => {
                     if (currentRoom) {
