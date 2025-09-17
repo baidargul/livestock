@@ -2,6 +2,7 @@ import DeliveryIcon from '@/components/Animals/DeliveryIcon'
 import { formalizeText } from '@/lib/utils'
 import React from 'react'
 import { FaShippingFast } from 'react-icons/fa'
+import { GiCardPickup } from 'react-icons/gi'
 
 type Props = {
     room: any
@@ -9,6 +10,8 @@ type Props = {
 
 const AuthorCard = (props: Props) => {
     const room = props.room
+    const isSelfPickUp = !room.deliveryOptions.includes("SELLER_DELIVERY")
+
     return (
         <div className='p-2 bg-white rounded-md'>
             <div className='text-2xl'>{room.user.name}</div>
@@ -30,7 +33,7 @@ const AuthorCard = (props: Props) => {
                     })
                 }
             </div>
-            <div className='grid grid-cols-3 w-full place-items-center'>
+            {!isSelfPickUp && <div className='grid grid-cols-3 w-full place-items-center'>
                 <div className='text-sm'>
                     {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
                 </div>
@@ -38,7 +41,16 @@ const AuthorCard = (props: Props) => {
                 <div className='text-sm'>
                     {formalizeText(room.city)}, {formalizeText(room.province)}
                 </div>
-            </div>
+            </div>}
+            {isSelfPickUp && <div className='grid grid-cols-3 w-full place-items-center'>
+                <div className='text-sm'>
+                    {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
+                </div>
+                <GiCardPickup size={24} />
+                <div className='text-sm'>
+                    He'll Self Pick up from you
+                </div>
+            </div>}
         </div>
     )
 }
