@@ -451,14 +451,6 @@ async function listByUser(
               province: true,
             },
           },
-          author: {
-            select: {
-              id: true,
-              name: true,
-              city: true,
-              province: true,
-            },
-          },
         },
       },
       bids: {
