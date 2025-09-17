@@ -38,7 +38,7 @@ const RoomRow = (props: Props) => {
                         {room.user.name}
                     </div>
                     <div className='text-zinc-500 text-sm'>
-                        {isSelfPickUp ? `${formalizeText(room.city)}, ${formalizeText(room.province)}` : "I'll self pickup"}
+                        {!isSelfPickUp ? `${formalizeText(room.city)}, ${formalizeText(room.province)}` : "I'll self pickup"}
                     </div>
                 </div>
                 <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
