@@ -83,7 +83,7 @@ const SelectAnimal = (props: Props) => {
     return (
         <div className='flex flex-col gap-2 bg-zinc-200 p-2'>
             {
-                // (animals.length === 0) && !isCalculatingRooms && !props.animal && <div>No Bargaining is started with any animal yet.</div>
+                (animals.length === 0) && !isCalculatingRooms && !props.animal && <div>No Bargaining is started with any animal yet.</div>
             }
             {
                 (animals.length === 0) && !isCalculatingRooms && props.animal && isAuthor && <div>
