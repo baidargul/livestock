@@ -20,7 +20,7 @@ const RoomRow = (props: Props) => {
             <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
                 <div>
                     <div className='font-semibold line-clamp-1 text-black text-xl'>
-                        {room.author.name}
+                        {room.animal.user.name}
                     </div>
                     <div className='text-zinc-500 text-sm'>
                         {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
