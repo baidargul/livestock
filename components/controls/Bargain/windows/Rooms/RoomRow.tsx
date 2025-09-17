@@ -19,11 +19,11 @@ const RoomRow = (props: Props) => {
         return (
             <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
                 <div>
-                    <div className='font-semibold text-black text-xl'>
-                        {room.user.name}
+                    <div className='font-semibold line-clamp-1 text-black text-xl'>
+                        {room.author.name}
                     </div>
                     <div className='text-zinc-500 text-sm'>
-                        {formalizeText(room.city)}, {formalizeText(room.province)}
+                        {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
                     </div>
                 </div>
                 <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
@@ -33,11 +33,11 @@ const RoomRow = (props: Props) => {
         return (
             <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
                 <div>
-                    <div className='font-semibold text-black text-xl'>
-                        {room.author.name}
+                    <div className='font-semibold line-clamp-1 text-black text-xl'>
+                        {room.user.name}
                     </div>
                     <div className='text-zinc-500 text-sm'>
-                        {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
+                        {formalizeText(room.city)}, {formalizeText(room.province)}
                     </div>
                 </div>
                 <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />

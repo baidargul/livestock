@@ -29,6 +29,7 @@ import LeadsWindow from './_components/LeadsWindow'
 import PostControls from './_components/PostControls'
 import GeneralHeader from '@/components/website/header/GeneralHeader'
 import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
+import BidWindow from './_components/BidWindow'
 
 export const dynamic = 'force-dynamic';
 
@@ -166,11 +167,6 @@ const page = async (props: Props) => {
                         <CreateLeadButton animal={animal} />
                     </div>
                 }
-                <BargainChatWrapper animal={animal} disableAnimalChange>
-                    <div className='px-4 mt-2'>
-                        <Button className='w-full'>New Bargain</Button>
-                    </div>
-                </BargainChatWrapper>
                 <PostControls animal={animal} />
                 <SidebarButtons animal={animal} />
                 <GeneralFooter />

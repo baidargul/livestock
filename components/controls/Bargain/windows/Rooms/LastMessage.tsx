@@ -23,7 +23,7 @@ const LastMessage = (props: Props) => {
                 </div>
                 <div className='flex gap-1 items-center'>
                     <RiCheckDoubleFill size={24} className={lastBid.isSeen ? "text-blue-400" : "text-zinc-400"} />
-                    <div className='text-xl font-bold'>
+                    <div className='text-lg font-bold text-nowrap'>
                         {formatCurrency(lastBid.price)}
                     </div>
                 </div>
@@ -37,7 +37,7 @@ const LastMessage = (props: Props) => {
                 </div>
                 <div className='flex gap-1 items-center'>
                     {!lastBid.isSeen && <FaCircle className={lastBid.isSeen ? "text-amber-500" : "text-amber-400"} />}
-                    <div className='text-xl font-bold'>
+                    <div className='text-lg font-bold text-nowrap'>
                         {formatCurrency(lastBid.price)}
                     </div>
                 </div>

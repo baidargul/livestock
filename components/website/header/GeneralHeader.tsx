@@ -6,11 +6,21 @@ import PhoneHeaderHome from './home/Phone'
 import PhoneHeader from './PhoneHeader'
 import DesktopHeader from './DesktopHeader'
 import DesktopHeaderHome from './home/DesktopHeaderHome'
+import { useUser } from '@/socket-client/SocketWrapper'
+import { useRooms } from '@/hooks/useRooms'
 
 type Props = {}
 
 const GeneralHeader = (props: Props) => {
     const [route, setRoute] = useState('')
+    const user = useUser()
+    const RoomController = useRooms()
+
+    useEffect(() => {
+        if (user) {
+            RoomController.getLatestRooms(user.id)
+        }
+    }, [user])
 
     useEffect(() => {
         setRoute(window.location.pathname)

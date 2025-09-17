@@ -3,6 +3,7 @@ import Image from 'next/image'
 import React from 'react'
 import RoomRow from './RoomRow'
 import { IoReturnUpBackSharp } from "react-icons/io5";
+import { useUser } from '@/socket-client/SocketWrapper';
 type Props = {
     animal: any
     handleSelectAnimal: (animal: any) => void

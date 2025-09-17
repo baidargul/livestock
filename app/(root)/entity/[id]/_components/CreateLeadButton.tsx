@@ -17,6 +17,7 @@ import BidProtection from './BidProtection'
 import { useRooms } from '@/hooks/useRooms'
 import BidWindow from './BidWindow'
 import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
+import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
 
 type Props = {
     animal: any
@@ -188,9 +189,12 @@ const CreateLeadButton = (props: Props) => {
     //AUTHOR OF THIS ANIMAL
     if (user && user.id === props.animal.userId && props.animal.allowBidding) {
         return (
-            <BiddingWrapper animal={animal}>
-                <></>
-            </BiddingWrapper>
+            // <BiddingWrapper animal={animal}>
+            //     <></>
+            // </BiddingWrapper>
+            <BargainChatWrapper animal={animal} disableAnimalChange>
+                <BidWindow animal={animal} />
+            </BargainChatWrapper>
         )
     }
 

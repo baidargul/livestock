@@ -12,6 +12,7 @@ import PostBiddingOptions from './PostBiddingOptions'
 import LeadsWindow from './LeadsWindow'
 import CreateLeadButton from './CreateLeadButton'
 import { useDialog } from '@/hooks/useDialog'
+import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
 
 type Props = {
     children: React.ReactNode
@@ -23,7 +24,6 @@ const BidProtection = (props: Props) => {
     const [isMounted, setIsMounted] = useState(false)
     const [bid, setBid] = useState<any>(null)
     const [room, setRoom] = useState<any>(null)
-    const [isOpeningBidRoom, setIsOpeningBidRoom] = useState(false)
     const [postBiddingOptions, setPostBiddingOptions] = useState<{
         deliveryOptions: string[],
         maleQuantityAvailable: number,
@@ -56,9 +56,6 @@ const BidProtection = (props: Props) => {
             socket?.on("user-joined-bidroom", (binaryData) => {
                 const { room, userId }: any = deserialize(binaryData);
                 const route = window.location.pathname;
-                if (route === `/entity/${room.animalId}` && userId === user?.id) {
-                    setIsOpeningBidRoom(false)
-                }
             });
 
             // return () => {
@@ -147,8 +144,8 @@ const BidProtection = (props: Props) => {
 
     if (room && !room.closedAt) {
         return (
-            <BiddingWrapper animal={props.animal}>
-                <div className='w-full cursor-pointer' onClick={() => setIsOpeningBidRoom(true)}>
+            <BargainChatWrapper animal={props.animal} disableAnimalChange>
+                <div className='w-full cursor-pointer'>
                     <div className='text-xs p-1 px-2 bg-emerald-700 text-white rounded-t w-fit'>You're currently bargaining on this animal</div>
                     <div className='w-full rounded-b border-t border-t-emerald-700/30 bg-gradient-to-r from-emerald-100 via-white to-zinc-50 p-2 flex gap-2 justify-evenly text-center items-center'>
                         <div>
@@ -157,10 +154,10 @@ const BidProtection = (props: Props) => {
                             </div>
                             <div className='text-start pl-13'>{formatCurrency(bid.price)}</div>
                         </div>
-                        <div className={`p-2 ${isOpeningBidRoom ? "bg-amber-700" : "bg-emerald-700"} text-nowrap  text-white rounded`}>{isOpeningBidRoom ? `Loading Bargains` : `Show Bargains`}</div>
+                        <Button className={`p-2 rounded`}>Show Bargains</Button>
                     </div>
                 </div>
-            </BiddingWrapper>
+            </BargainChatWrapper>
         )
     }
 

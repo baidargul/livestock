@@ -23,7 +23,7 @@ const AuthorCard = (props: Props) => {
                             <div key={`${opt}-${index}`} className='flex gap-1 items-center text-sm'>
                                 <DeliveryIcon icon={opt} />
                                 {
-                                    opt === "SELLER_DELIVERY" ? "He'll Cargo to me" : "I'll Self Pick up from him"
+                                    opt === "SELLER_DELIVERY" ? "You will Cargo to him" : "He'll Self Pick up from you"
                                 }
                             </div>
                         )
