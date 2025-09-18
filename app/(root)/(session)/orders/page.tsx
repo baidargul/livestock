@@ -34,7 +34,6 @@ const page = (props: Props) => {
         if (!user) return
         setGettingOrderCount(true)
         const response = await actions.client.orders.getOrderCount(user.id)
-        console.log(response)
         if (response.status === 200) {
             setOrders(response.data)
         }

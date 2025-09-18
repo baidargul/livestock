@@ -26,7 +26,6 @@ const SelectAnimal = (props: Props) => {
         setIsCalculatingRooms(true)
         let thisRoom = null
         const animalMap = new Map();
-        console.log(rooms)
         rooms.forEach((room: any) => {
             const existing = animalMap.get(room.animalId);
             if (existing) {

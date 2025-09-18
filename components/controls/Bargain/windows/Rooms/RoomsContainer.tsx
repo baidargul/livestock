@@ -20,8 +20,6 @@ const RoomsContainer = (props: Props) => {
         }
     }
 
-    console.log(props.animal)
-
     return (
         <div className='flex flex-col gap-2'>
             <div onClick={handleGoBack} className={`relative ${props.disableAnimalChange ? "cursor-default" : "cursor-pointer"} `}>
