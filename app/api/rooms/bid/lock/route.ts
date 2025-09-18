@@ -2,7 +2,7 @@ import { actions } from "@/actions/serverActions/actions";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const response = {
+  let response = {
     status: 500,
     message: "Internal Server Error",
     data: null as any,
@@ -10,11 +10,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    const { roomId, userId } = data;
-    const response = await actions.server.bidRoom.lockBidAsFinalOffer(
-      roomId,
-      userId
-    );
+    const { bid, userId } = data;
+    if (!bid || !userId) {
+      response.status = 400;
+      response.message = "Missing required fields: bid, userId";
+      response.data = null;
+      return new Response(JSON.stringify(response));
+    }
+
+    response = await actions.server.bidRoom.lockBidAsFinalOffer(bid, userId);
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     console.log("[SERVER ERROR]: " + error.message);

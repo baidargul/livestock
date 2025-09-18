@@ -76,7 +76,7 @@ const Chatroom = (props: Props) => {
             if (user) {
                 if (!isLockingOffer) {
                     setIsLockingOffer(true)
-                    socket.emit("lock-bid-as-final-offer", serialize({ roomId: props.currentRoom, userId: user.id }));
+                    socket.emit("lock-bid-as-final-offer", serialize({ bid: message, userId: user.id }));
                     setIsLockingOffer(false)
                 } else {
                     dialog.showDialog("Unable to send message", null, "You can't lock an offer while another offer is being locked!")

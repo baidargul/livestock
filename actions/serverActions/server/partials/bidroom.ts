@@ -3,6 +3,7 @@ import { actions } from "../../actions";
 import { user } from "./user";
 import { calculatePricing } from "@/lib/utils";
 import { bidding } from "./bidding";
+import { Bids } from "@prisma/client";
 
 export type RoomType = {
   key: string;
@@ -672,29 +673,19 @@ async function leaveAllBidRooms(userId: string) {
   }
 }
 
-async function lockBidAsFinalOffer(roomId: string, userId: string) {
+async function lockBidAsFinalOffer(bid: Bids, userId: string) {
   try {
-    const existingRoom = await prisma.bidRoom.findUnique({
-      where: { id: roomId },
-      include: {
-        bids: {
-          take: 1,
-          where: { userId },
-          orderBy: { createdAt: "desc" },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-                province: true,
-                connectionIds: true,
-              },
-            },
-          },
+    const [isBidExists, existingRoom] = await Promise.all([
+      prisma.bids.findUnique({
+        where: { id: bid.id },
+      }),
+      prisma.bidRoom.findUnique({
+        where: { id: bid.bidRoomId ?? "" },
+        select: {
+          id: true,
         },
-      },
-    });
+      }),
+    ]);
 
     if (!existingRoom) {
       return {
@@ -704,38 +695,32 @@ async function lockBidAsFinalOffer(roomId: string, userId: string) {
       };
     }
 
-    if (!existingRoom.bids.length) {
+    if (!isBidExists) {
       return {
-        status: 400,
-        message: "No bid found for this user in this room",
+        status: 404,
+        message: "Bid not found",
         data: null,
       };
     }
 
-    const bidToLock = existingRoom.bids[0];
+    await prisma.$transaction([
+      prisma.bids.updateMany({
+        where: {
+          bidRoomId: isBidExists.bidRoomId,
+          userId: userId,
+        },
+        data: {
+          isFinalOffer: false,
+        },
+      }),
+      prisma.bids.update({
+        where: { id: bid.id, userId: userId },
+        data: { isFinalOffer: true },
+      }),
+    ]);
 
-    await prisma.bids.update({
-      where: { id: bidToLock.id },
-      data: {
-        isFinalOffer: true,
-        isSeen: false,
-      },
-    });
-
-    // Optional: Fetch top 2 offers (could be used for extra business logic)
-    const offers = await prisma.bids.findMany({
-      where: { bidRoomId: roomId },
-      orderBy: { createdAt: "desc" },
-      take: 2,
-      select: { id: true, price: true, userId: true },
-    });
-
-    // // Example price match logic
-    // if (offers.length === 2 && offers[0].price === offers[1].price && offers[0].userId !== offers[1].userId) {
-    //   await closeDeal(existingRoom, userId, offers.find(o => o.userId !== userId)!);
-    // }
-
-    const room = await actions.server.bidRoom.list(roomId, "id", 5);
+    const roomId = isBidExists.bidRoomId;
+    const room = await actions.server.bidRoom.list(roomId ?? "", "id", 3);
 
     return {
       status: 200,
