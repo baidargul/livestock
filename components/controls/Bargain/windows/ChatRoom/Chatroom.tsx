@@ -32,6 +32,7 @@ const Chatroom = (props: Props) => {
     const Rooms = useRooms();
 
     useEffect(() => {
+        setIsLockingOffer(false)
         props.refresh()
         setTempMessage(null)
     }, [Rooms.rooms.myRooms, Rooms.rooms.otherRooms])
@@ -77,7 +78,6 @@ const Chatroom = (props: Props) => {
                 if (!isLockingOffer) {
                     setIsLockingOffer(true)
                     socket.emit("lock-bid-as-final-offer", serialize({ bid: message, userId: user.id }));
-                    setIsLockingOffer(false)
                 } else {
                     dialog.showDialog("Unable to send message", null, "You can't lock an offer while another offer is being locked!")
                 }

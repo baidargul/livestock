@@ -149,12 +149,12 @@ app.prepare().then(() => {
       }
     });
     socket.on("lock-bid-as-final-offer", async (binaryData) => {
-      const { roomId, userId } = deserialize(binaryData);
+      const { bid, userId } = deserialize(binaryData);
       try {
         const res = await fetch(`${route}/api/rooms/bid/lock`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ roomId, userId }),
+          body: JSON.stringify({ bid, userId }),
         });
         const data = await res.json();
         if (data.status === 200) {

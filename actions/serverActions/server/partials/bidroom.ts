@@ -216,7 +216,7 @@ async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
     // Delete bids and room in parallel (no await inside Promise.all)
     await Promise.all([
       prisma.bids.deleteMany({
-        where: { OR: [{ bidRoomId: null }, { bidRoomId: existingRoom.id }] },
+        where: { bidRoomId: existingRoom.id },
       }),
       prisma.bidRoom.delete({ where: { id: existingRoom.id } }),
       prisma.orders.deleteMany({
@@ -675,7 +675,7 @@ async function leaveAllBidRooms(userId: string) {
 
 async function lockBidAsFinalOffer(bid: Bids, userId: string) {
   try {
-    const [isBidExists, existingRoom] = await Promise.all([
+    const [isBidExists, existingRoom, otherUserBid] = await Promise.all([
       prisma.bids.findUnique({
         where: { id: bid.id },
       }),
@@ -684,6 +684,13 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
         select: {
           id: true,
         },
+      }),
+      prisma.bids.findFirst({
+        where: {
+          bidRoomId: bid.bidRoomId,
+          userId: { not: userId },
+        },
+        orderBy: { createdAt: "desc" },
       }),
     ]);
 
@@ -703,22 +710,49 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
       };
     }
 
-    await prisma.$transaction([
-      prisma.bids.updateMany({
-        where: {
-          bidRoomId: isBidExists.bidRoomId,
-          userId: userId,
-        },
-        data: {
-          isFinalOffer: false,
-        },
-      }),
-      prisma.bids.update({
-        where: { id: bid.id, userId: userId },
-        data: { isFinalOffer: true },
-      }),
-    ]);
+    const newBid: any = {
+      ...bid,
+      isFinalOffer: true,
+    };
 
+    const transactions = [];
+
+    transactions.push(
+      prisma.bids.deleteMany({
+        where: {
+          NOT: { id: otherUserBid ? otherUserBid.id : "" },
+          bidRoomId: bid.bidRoomId,
+        },
+      })
+    );
+
+    transactions.push(
+      prisma.bids.create({
+        data: {
+          id: newBid.id,
+          bidRoomId: newBid.bidRoomId,
+          userId: newBid.userId,
+          isFinalOffer: true,
+          price: Number(newBid.price),
+        },
+      })
+    );
+
+    if (otherUserBid) {
+      transactions.push(
+        prisma.bids.create({
+          data: {
+            id: otherUserBid.id,
+            bidRoomId: otherUserBid.bidRoomId,
+            userId: otherUserBid.userId,
+            isFinalOffer: false,
+            price: Number(otherUserBid.price),
+          },
+        })
+      );
+    }
+
+    await prisma.$transaction(transactions);
     const roomId = isBidExists.bidRoomId;
     const room = await actions.server.bidRoom.list(roomId ?? "", "id", 3);
 

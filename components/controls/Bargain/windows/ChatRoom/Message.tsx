@@ -45,7 +45,7 @@ const Message = (props: Props) => {
 
     if (isMyMessage) {
         return (
-            <div className={`${props.isLockingOffer ? "animate-pulse" : ""} ${props.message.isFinalOffer ? "mt-4" : ""} relative ml-auto rounded p-2 px-4 w-fit flex flex-col justify-end text-end items-end bg-lime-100 shadow-sm`}>
+            <div className={`${props.isLockingOffer ? "animate-pulse" : ""} ${props.message.isFinalOffer ? "mt-4 border border-emerald-600" : ""} relative ml-auto rounded p-2 px-4 w-fit flex flex-col justify-end text-end items-end bg-lime-100 shadow-sm`}>
                 {props.message.isFinalOffer && <div className='p-1 text-xs px-6 text-center flex gap-2 justify-center items-center bg-emerald-600 text-white rounded-t absolute -top-4 scale-[.7] origin-top-left left-0'>
                     <FaLock /> <div>Locked</div>
                 </div>}
@@ -66,7 +66,10 @@ const Message = (props: Props) => {
         )
     } else {
         return (
-            <div className='rounded p-2 w-fit pr-4 flex flex-col bg-white'>
+            <div className={`${props.message.isFinalOffer ? "mt-4 border border-zinc-600" : ""} rounded relative p-2 w-fit pr-4 flex flex-col bg-white`}>
+                {props.message.isFinalOffer && <div className='p-1 text-xs px-6 text-center flex gap-2 justify-center items-center bg-zinc-600 text-white rounded-t absolute -top-4 scale-[.7] origin-top-left left-0'>
+                    <FaLock /> <div>Locked</div>
+                </div>}
                 <div className='flex gap-1 items-center'>
                     <div className='font-bold'>{formatCurrency(message.price)}</div>
                     {/* <div>Lock</div> */}
