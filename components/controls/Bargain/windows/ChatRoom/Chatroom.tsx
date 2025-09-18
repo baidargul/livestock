@@ -23,6 +23,7 @@ type Props = {
 const Chatroom = (props: Props) => {
     const [value, setValue] = useState<number | null>(0)
     const [tempMessage, setTempMessage] = useState<Bids | null>(null)
+    const [isLockingOffer, setIsLockingOffer] = useState(false)
     const user = useUser();
     const isLastMessageWasMine = props.currentRoom?.bids[props.currentRoom?.bids.length - 1]?.userId === user?.id
     const isAuthor = props.animal.userId === user?.id
@@ -70,6 +71,24 @@ const Chatroom = (props: Props) => {
         }
     }
 
+    const handleLockOffer = async (message: Bids) => {
+        if (socket) {
+            if (user) {
+                if (isLockingOffer) {
+                    setIsLockingOffer(true)
+                    socket.emit("close-deal", serialize({ room: props.currentRoom, userId: user.id, bid: message }))
+                    setIsLockingOffer(false)
+                } else {
+                    dialog.showDialog("Unable to send message", null, "You can't lock an offer while another offer is being locked!")
+                }
+            } else {
+                dialog.showDialog("Unable to send message", null, "Please login again!")
+            }
+        } else {
+            dialog.showDialog("Unable to send message", null, "Error: No internet connection")
+        }
+    }
+
     const totalQuantity = Number(props.currentRoom.maleQuantityAvailable || 0) + Number(props.currentRoom.femaleQuantityAvailable || 0)
     return (
         <div className='flex flex-col gap-2'>
@@ -98,19 +117,19 @@ const Chatroom = (props: Props) => {
                     props.currentRoom?.bids.slice(props.currentRoom?.bids.length - 3).map((bid: any, index: number) => {
 
                         return (
-                            <Message key={`${bid.id}-${index}`} message={bid} currentRoom={props.currentRoom} />
+                            <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} key={`${bid.id}-${index}`} message={bid} currentRoom={props.currentRoom} />
                         )
                     })
                 }
                 {
                     tempMessage &&
-                    <Message message={tempMessage} currentRoom={props.currentRoom} isPlaceHolder />
+                    <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} message={tempMessage} currentRoom={props.currentRoom} isPlaceHolder />
                 }
             </div>
             <div className='relative'>
                 <div className='grid grid-cols-[2fr_1fr] gap-2 p-2 bg-white shadow-sm'>
-                    <Textbox disabled={isLastMessageWasMine || tempMessage !== null} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} className='w-full' />
-                    <Button disabled={isLastMessageWasMine || tempMessage !== null} onClick={handleSendMessage} className='w-full'>Send</Button>
+                    <Textbox disabled={isLastMessageWasMine || tempMessage !== null || isLockingOffer} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} className='w-full' />
+                    <Button disabled={isLastMessageWasMine || tempMessage !== null || isLockingOffer} onClick={handleSendMessage} className='w-full'>Send</Button>
                 </div>
             </div>
         </div>
