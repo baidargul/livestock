@@ -19,6 +19,8 @@ export const useSession = create((set) => ({
   },
   logoutUser: () => {
     localStorage.removeItem("session");
+    if (window.location.pathname.includes("entity") === true)
+      window.location.reload();
     set({ user: null });
   },
   setUser: (user: any) => {
