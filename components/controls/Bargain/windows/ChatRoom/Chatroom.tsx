@@ -74,7 +74,7 @@ const Chatroom = (props: Props) => {
     const handleLockOffer = async (message: Bids) => {
         if (socket) {
             if (user) {
-                if (isLockingOffer) {
+                if (!isLockingOffer) {
                     setIsLockingOffer(true)
                     socket.emit("close-deal", serialize({ room: props.currentRoom, userId: user.id, bid: message }))
                     setIsLockingOffer(false)
