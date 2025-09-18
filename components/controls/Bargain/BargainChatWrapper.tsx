@@ -27,7 +27,7 @@ const BargainChatWrapper = (props: Props) => {
     return (
         <>
             {isOpen && <div onClick={() => handleToggleChatWindow(false)} className='fixed inset-0 top-0 left-0 backdrop-blur-[1px] bg-black/50 z-30' />}
-            {<div className={`fixed ${layer === "bargain-chat" ? `z-50 transition duration-300 ease-in-out ${isOpen ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-full"}` : "z-0"} bottom-0 right-1/2 translate-x-1/2 p-2 w-[90%] bg-white rounded-t shadow-sm`}>
+            {<div className={`fixed ${layer === "bargain-chat" ? `z-50 transition duration-300 ease-in-out ${isOpen ? "opacity-100 pointer-events-auto translate-y-0  bottom-0 right-1/2 translate-x-1/2" : "opacity-0 pointer-events-none translate-y-full"}` : "z-0"} p-2 w-[90%] bg-white rounded-t shadow-sm`}>
                 {isOpen && <div className='bg-white p-1'>
                     <SelectAnimal disableAnimalChange={props.disableAnimalChange} animal={props.animal} />
                 </div>}
