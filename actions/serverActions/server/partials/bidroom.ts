@@ -122,7 +122,18 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
         where: { id: isExists?.id },
         data: { activeUsers: newUsers },
         include: {
-          animal: true,
+          animal: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  province: true,
+                },
+              },
+            },
+          },
           bids: {
             take: 5,
             include: {
@@ -362,7 +373,18 @@ async function list(value: string, key: "id" | "key", bidLimit?: number) {
     let rooms: any = await prisma.bidRoom.findFirst({
       where: { [key]: value },
       include: {
-        animal: true,
+        animal: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                city: true,
+                province: true,
+              },
+            },
+          },
+        },
         user: {
           select: {
             id: true,
