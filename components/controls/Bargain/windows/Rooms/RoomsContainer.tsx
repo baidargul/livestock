@@ -37,7 +37,7 @@ const RoomsContainer = (props: Props) => {
                     </div>
                 </div>
                 <div className='w-full h-[100%] absolute pointer-events-none rounded-md bg-gradient-to-r from-black to-transparent z-[1]'></div>
-                <Image src={props.animal.images.length > 0 ? props.animal.images[0].image : images.chickens.images[1]} className='w-full h-44 rounded-md object-cover' alt='janwarmarkaz' />
+                <Image src={props.animal.images.length > 0 ? props.animal.images[0].image : images.chickens.images[1]} width={100} height={100} className='w-full h-44 rounded-md object-cover' alt='janwarmarkaz' />
             </div>
             <div className='flex flex-col gap-2'>
                 {
