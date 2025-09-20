@@ -12,6 +12,7 @@ import { serialize } from 'bson'
 import { useDialog } from '@/hooks/useDialog'
 import { useRooms } from '@/hooks/useRooms'
 import { Bids } from '@prisma/client'
+import FinalBidSelection from './FinalBidSelection'
 
 type Props = {
     animal: any
@@ -24,6 +25,7 @@ const Chatroom = (props: Props) => {
     const [value, setValue] = useState<number | null>(0)
     const [tempMessage, setTempMessage] = useState<Bids | null>(null)
     const [isLockingOffer, setIsLockingOffer] = useState(false)
+    const [lockedBids, setLockedBids] = useState<Bids[]>([])
     const user = useUser();
     const isLastMessageWasMine = props.currentRoom?.bids[props.currentRoom?.bids.length - 1]?.userId === user?.id
     const isAuthor = props.animal.userId === user?.id
@@ -35,7 +37,39 @@ const Chatroom = (props: Props) => {
         setIsLockingOffer(false)
         props.refresh()
         setTempMessage(null)
+        extractLockedBids(props.currentRoom.bids)
     }, [Rooms.rooms.myRooms, Rooms.rooms.otherRooms])
+
+    const extractLockedBids = (bids: any[]) => {
+        if (user) {
+            let myBid = null
+            let otherUserBid = null
+
+            for (const bid of bids) {
+                if (bid.userId === user.id) {
+                    if (bid.isFinalOffer && !myBid) {
+                        myBid = bid
+                    }
+                } else {
+                    if (bid.isFinalOffer && !otherUserBid) {
+                        otherUserBid = bid
+                    }
+                }
+            }
+            let locked = []
+            if (myBid) {
+                locked.push(myBid)
+            }
+
+            if (otherUserBid) {
+                locked.push(otherUserBid)
+            }
+
+            setLockedBids(locked)
+        } else {
+            setLockedBids([])
+        }
+    }
 
     const handleValueChange = (val: string) => {
         const raw = val && val.length > 0 ? Number(val) : null
@@ -113,26 +147,34 @@ const Chatroom = (props: Props) => {
                 {isAuthor && <AuthorCard room={props.currentRoom} />}
                 {!isAuthor && <UserCard room={props.currentRoom} />}
             </div>
-            <div className='flex flex-col gap-2 bg-amber-700/10 p-2 max-h-[300px] overflow-y-auto'>
-                {
-                    afterSlicedBids.map((bid: any, index: number) => {
+            {lockedBids.length !== 2 &&
+                <section>
+                    <div className='flex flex-col gap-2 bg-amber-700/10 p-2 max-h-[300px] overflow-y-auto'>
+                        {
+                            afterSlicedBids.map((bid: any, index: number) => {
 
-                        return (
-                            <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} key={`${bid.id}-${index}`} message={bid} currentRoom={props.currentRoom} />
-                        )
-                    })
-                }
-                {
-                    tempMessage &&
-                    <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} message={tempMessage} currentRoom={props.currentRoom} isPlaceHolder />
-                }
-            </div>
-            <div className='relative'>
-                <div className='grid grid-cols-[2fr_1fr] gap-2 p-2 bg-white shadow-sm'>
-                    <Textbox disabled={isLastMessageWasMine || tempMessage !== null || isLockingOffer} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} type='number' className='w-full' />
-                    <Button disabled={isLastMessageWasMine || tempMessage !== null || isLockingOffer} onClick={handleSendMessage} className='w-full'>Send</Button>
-                </div>
-            </div>
+                                return (
+                                    <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} key={`${bid.id}-${index}`} message={bid} currentRoom={props.currentRoom} />
+                                )
+                            })
+                        }
+                        {
+                            tempMessage &&
+                            <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} message={tempMessage} currentRoom={props.currentRoom} isPlaceHolder />
+                        }
+                    </div>
+                    <div className='relative'>
+                        <div className='grid grid-cols-[2fr_1fr] gap-2 p-2 bg-white shadow-sm'>
+                            <Textbox disabled={isLastMessageWasMine || tempMessage !== null || isLockingOffer} onKeyDown={handleOnKeyDown} onChange={handleValueChange} value={value ?? ''} type='number' className='w-full' />
+                            <Button disabled={isLastMessageWasMine || tempMessage !== null || isLockingOffer} onClick={handleSendMessage} className='w-full'>Send</Button>
+                        </div>
+                    </div>
+                </section>
+            }
+            {
+                lockedBids.length === 2 &&
+                <FinalBidSelection lockedBids={lockedBids} isAuthor={isAuthor} />
+            }
         </div>
     )
 }
