@@ -90,6 +90,7 @@ const Chatroom = (props: Props) => {
     }
 
     const totalQuantity = Number(props.currentRoom.maleQuantityAvailable || 0) + Number(props.currentRoom.femaleQuantityAvailable || 0)
+    const afterSlicedBids = props.currentRoom.bids.length > 3 ? props.currentRoom?.bids.slice(props.currentRoom?.bids.length - 3) : props.currentRoom.bids
     return (
         <div className='flex flex-col gap-2'>
             <div onClick={() => props.handleSelectCurrentRoom(null)} className='relative cursor-pointer'>
@@ -114,7 +115,7 @@ const Chatroom = (props: Props) => {
             </div>
             <div className='flex flex-col gap-2 bg-amber-700/10 p-2 max-h-[300px] overflow-y-auto'>
                 {
-                    props.currentRoom?.bids.slice(props.currentRoom?.bids.length - 3).map((bid: any, index: number) => {
+                    afterSlicedBids.map((bid: any, index: number) => {
 
                         return (
                             <Message handleLockOffer={handleLockOffer} isLockingOffer={isLockingOffer} key={`${bid.id}-${index}`} message={bid} currentRoom={props.currentRoom} />

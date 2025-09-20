@@ -136,7 +136,7 @@ async function createBidRoom(room: any, userId: string, demandId?: string) {
             },
           },
           bids: {
-            take: 5,
+            take: 3,
             include: {
               user: {
                 select: {
@@ -720,7 +720,7 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
     transactions.push(
       prisma.bids.deleteMany({
         where: {
-          NOT: { id: otherUserBid ? otherUserBid.id : "" },
+          // NOT: { id: otherUserBid ? otherUserBid.id : "" },
           bidRoomId: bid.bidRoomId,
         },
       })
@@ -729,11 +729,12 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
     transactions.push(
       prisma.bids.create({
         data: {
-          id: newBid.id,
+          // id: newBid.id,
           bidRoomId: newBid.bidRoomId,
           userId: newBid.userId,
           isFinalOffer: true,
           price: Number(newBid.price),
+          isSeen: newBid.isSeen,
         },
       })
     );
@@ -742,11 +743,12 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
       transactions.push(
         prisma.bids.create({
           data: {
-            id: otherUserBid.id,
+            // id: otherUserBid.id,
             bidRoomId: otherUserBid.bidRoomId,
             userId: otherUserBid.userId,
-            isFinalOffer: false,
+            isFinalOffer: otherUserBid.isFinalOffer,
             price: Number(otherUserBid.price),
+            isSeen: otherUserBid.isSeen,
           },
         })
       );
@@ -754,7 +756,7 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
 
     await prisma.$transaction(transactions);
     const roomId = isBidExists.bidRoomId;
-    const room = await actions.server.bidRoom.list(roomId ?? "", "id", 3);
+    const room = await actions.server.bidRoom.list(roomId ?? "", "id");
 
     return {
       status: 200,
