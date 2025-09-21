@@ -240,12 +240,6 @@ async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
 }
 async function closeDeal(room: any, userId: string, bid: any) {
   try {
-    console.log(`room`);
-    console.log(room);
-    console.log(`userId`);
-    console.log(userId);
-    console.log(`bid`);
-    console.log(bid);
     const bidRoom = await prisma.bidRoom.findFirst({
       where: {
         id: room.id,
