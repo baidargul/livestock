@@ -14,17 +14,22 @@ const FinalBidSelection = (props: Props) => {
     if (props.lockedBids.length < 2) return null
     const isAuthor = props.isAuthor
     const isSelected = props.currentRoom.closedAt && String(props.currentRoom.closedAt).length > 0
+    const myBid = props.lockedBids[0]
+    const otherBid = props.lockedBids[1]
+
+    const isMyBidSelected = myBid.selected && myBid.selected === true
+
     let selectedStyle = ""
-    if (isSelected) {
+    if (isMyBidSelected) {
         selectedStyle = "p-2 w-full rounded text-emerald-800 bg-emerald-200 border border-emerald-300"
     } else {
         selectedStyle = "p-2 w-full rounded text-red-800 bg-red-200 border border-red-300"
     }
+
+
     const user = useUser()
     const socket = useSocket()
 
-    const myBid = props.lockedBids[0]
-    const otherBid = props.lockedBids[1]
 
     const handleSelectFinalBid = (bid: Bids) => {
         if (socket && user) {
