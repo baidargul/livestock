@@ -148,6 +148,7 @@ model Bids {
   createdAt    DateTime @default(now())
   BidRoom      BidRoom? @relation(fields: [bidRoomId], references: [id], onDelete: Cascade)
   isSeen       Boolean  @default(false)
+  selected     Boolean  @default(false)
 }
 
 model BidRoom {
@@ -170,8 +171,6 @@ model BidRoom {
   city                    String?
   province                String?
   closedAt                DateTime?
-  closedAmount            Float?
-  userOfferAccepted       Boolean?          @default(false)
 }
 
 model BusinessProtocol {

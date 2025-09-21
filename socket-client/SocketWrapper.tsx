@@ -55,8 +55,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         if (isMounted) {
             let socket: any = null;
             if (user) {
-                // let socket = io({
-                let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com/', {
+                let socket = io({
+                    // let socket = io('https://janwarmarkaz-ca4ca354a024.herokuapp.com/', {
                     query: {
                         userId: user.id, // Send user details as query
                     },
@@ -97,12 +97,15 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
                     setLoading(false);
                 });
                 socket.on("deal-closed", (binaryData) => {
-                    const { room, bid } = deserialize(binaryData);
-                    // const rawRoom = { ...room.room };
-                    // let newBids = bidsReverse(rawRoom.bids);
-                    // rawRoom.bids = newBids;
-                    // rooms.addRoom(rawRoom, user);
-                    rooms.removeRoom(room.key);
+                    //Sabi ko jayega, agar aesa hai to sab users mai room add ho jayega
+                    const { room } = deserialize(binaryData);
+                    console.log(`deal closed room`)
+                    console.log(room)
+                    const rawRoom = { ...room.room };
+                    let newBids = bidsReverse(rawRoom.bids);
+                    rawRoom.bids = newBids;
+                    rooms.addRoom(rawRoom, user);
+                    // rooms.removeRoom(room.key);
                 });
                 socket.on("message-is-seen", (binaryData) => {
                     const { room, bidId } = deserialize(binaryData);

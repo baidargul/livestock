@@ -94,7 +94,8 @@ const Chatroom = (props: Props) => {
                     isFinalOffer: false,
                     isSeen: false,
                     price: value || 0,
-                    userId: user.id
+                    userId: user.id,
+                    selected: false
                 })
                 socket.emit("place-bid", serialize({ roomKey: props.currentRoom.key, userId: user.id, amount: value }));
                 setValue(null)
@@ -173,7 +174,7 @@ const Chatroom = (props: Props) => {
             }
             {
                 lockedBids.length === 2 &&
-                <FinalBidSelection lockedBids={lockedBids} isAuthor={isAuthor} />
+                <FinalBidSelection lockedBids={lockedBids} currentRoom={props.currentRoom} isAuthor={isAuthor} />
             }
         </div>
     )

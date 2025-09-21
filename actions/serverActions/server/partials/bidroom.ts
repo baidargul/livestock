@@ -240,119 +240,73 @@ async function closeBidRoom(value: string, key: "id" | "key", userId: string) {
 }
 async function closeDeal(room: any, userId: string, bid: any) {
   try {
-    const activeRoom = await prisma.bidRoom.findUnique({
-      where: { id: room.id },
-    });
-    if (!activeRoom)
-      return { status: 404, message: "Bid room does not exist.", data: null };
-
-    if (activeRoom.closedAt || activeRoom.closedAmount) {
-      return {
-        status: 404,
-        message: "Bid room has already been closed.",
-        data: null,
-      };
-    }
-
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user)
-      return { status: 404, message: "User does not exist.", data: null };
-
-    if (activeRoom.userId !== userId && activeRoom.authorId !== userId) {
-      return {
-        status: 404,
-        message: "You are not authorized to close this deal.",
-        data: null,
-      };
-    }
-
-    const [selectedBid, authorLastBid] = await Promise.all([
-      prisma.bids.findUnique({
-        where: { id: bid.id },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              city: true,
-              province: true,
-            },
+    console.log(`room`);
+    console.log(room);
+    console.log(`userId`);
+    console.log(userId);
+    console.log(`bid`);
+    console.log(bid);
+    const bidRoom = await prisma.bidRoom.findFirst({
+      where: {
+        id: room.id,
+        animal: {
+          userId: userId,
+        },
+        bids: {
+          some: {
+            id: bid.id,
           },
         },
-      }),
-      prisma.bids.findFirst({
-        where: { bidRoomId: activeRoom.id, userId: activeRoom.authorId },
-        orderBy: { createdAt: "desc" },
-      }),
-    ]);
-
-    if (!selectedBid)
-      return { status: 404, message: "Bid does not exist.", data: null };
-    if (!authorLastBid)
-      return {
-        status: 404,
-        message: "Unable to fetch author bids",
-        data: null,
-      };
-
-    const bothHasSamePrice =
-      Number(authorLastBid.price) === Number(selectedBid.price);
-    const OfferAccepted = bothHasSamePrice
-      ? true
-      : selectedBid.userId !== activeRoom.authorId;
-
-    // Update room close details
-    await prisma.bidRoom.update({
-      where: { id: room.id },
-      data: {
-        closedAt: new Date(),
-        closedAmount: selectedBid.price ?? 0,
-        userOfferAccepted: OfferAccepted,
+      },
+      include: {
+        animal: {
+          select: {
+            id: true,
+            userId: true,
+          },
+        },
+        bids: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
-    if (OfferAccepted) {
-      const totalQuantity =
-        Number(room.maleQuantityAvailable ?? 0) +
-        Number(room.femaleQuantityAvailable ?? 0);
+    console.log(bidRoom);
 
-      await prisma.$transaction([
-        prisma.bids.deleteMany({
-          where: {
-            bidRoomId: room.id,
-          },
-        }),
-        prisma.bidRoom.delete({
-          where: {
-            id: room.id,
-          },
-        }),
-      ]);
-      const lead = await actions.server.leads.create(
-        room.animalId,
-        room.userId,
-        {
-          amount: Number(Number(selectedBid.price ?? 0) / totalQuantity),
-          deliveryOptions: room.deliveryOptions,
-          maleQuantityAvailable: room.maleQuantityAvailable,
-          femaleQuantityAvailable: room.femaleQuantityAvailable,
-          province: selectedBid?.user?.province ?? "",
-          city: selectedBid?.user?.city ?? "",
-          posted: true,
-        }
-      );
+    if (!bidRoom) {
+      return {
+        status: 404,
+        message: "Either bid room, bid or user does not exist.",
+        data: null,
+      };
     }
 
-    // const theRoomResp = await actions.server.bidRoom.list(room.id, "id");
-    // if (theRoomResp.status !== 200) return theRoomResp;
+    await prisma.$transaction([
+      prisma.bids.update({
+        where: { id: bid.id },
+        data: {
+          selected: true,
+        },
+      }),
+      prisma.bidRoom.update({
+        where: {
+          id: room.id,
+        },
+        data: {
+          closedAt: new Date(),
+        },
+      }),
+    ]);
+
+    const finalRoom = actions.server.bidRoom.list(room.id, "id");
 
     return {
       status: 200,
       message: "Deal closed successfully.",
       data: {
-        room: room, //theRoomResp.data,
-        bid: selectedBid,
-        sold: true, //theRoomResp.data.animal.sold,
+        room: finalRoom,
       },
     };
   } catch (error: any) {
@@ -735,6 +689,7 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
           isFinalOffer: true,
           price: Number(newBid.price),
           isSeen: newBid.isSeen,
+          selected: newBid.selected,
         },
       })
     );
@@ -749,6 +704,7 @@ async function lockBidAsFinalOffer(bid: Bids, userId: string) {
             isFinalOffer: otherUserBid.isFinalOffer,
             price: Number(otherUserBid.price),
             isSeen: otherUserBid.isSeen,
+            selected: otherUserBid.selected,
           },
         })
       );

@@ -1,18 +1,29 @@
 import { formatCurrency } from '@/lib/utils'
+import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import { Bids } from '@prisma/client'
+import { serialize } from 'bson'
 import React from 'react'
 
 type Props = {
     lockedBids: Bids[]
     isAuthor: boolean
+    currentRoom: any
 }
 
 const FinalBidSelection = (props: Props) => {
     if (props.lockedBids.length < 2) return null
     const isAuthor = props.isAuthor
+    const user = useUser()
+    const socket = useSocket()
 
     const myBid = props.lockedBids[0]
     const otherBid = props.lockedBids[1]
+
+    const handleSelectFinalBid = (bid: Bids) => {
+        if (socket && user) {
+            socket.emit("close-deal", serialize({ room: props.currentRoom, userId: user.id, bid: bid }))
+        }
+    }
 
     return (
         <div className='flex flex-col gap-2'>
@@ -37,12 +48,12 @@ const FinalBidSelection = (props: Props) => {
                     {/* <div className='p-2 w-full rounded text-red-800 bg-red-200 border border-red-300'>
                 <div>{formatCurrency(myBid.price)}</div>
                 </div> */}
-                    <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
+                    <div onClick={() => { handleSelectFinalBid(myBid) }} className='cursor-pointer p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
                         <div>{formatCurrency(myBid.price)}</div>
                     </div>
                     <div className='absolute -top-4 left-0 text-xs scale-[.7] origin-top-left mt-1'>Your offer</div>
                 </div>
-                <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
+                <div onClick={() => { handleSelectFinalBid(otherBid) }} className='cursor-pointer p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
                     <div>{formatCurrency(otherBid.price)}</div>
                 </div>
             </div>

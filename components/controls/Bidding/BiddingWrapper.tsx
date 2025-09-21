@@ -348,7 +348,7 @@ const BiddingWrapper = (props: Props) => {
             if (socket && user) {
                 socket.emit("place-bid", serialize({ roomKey: activeBidRoom.key, userId: user.id, amount: offerValue }));
                 setMyLastOffer(offerValue)
-                setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: Number(offerValue), createdAt: new Date(), isSeen: false, isFinalOffer: false, intial: false })
+                setTempMessageOnHold({ id: `${activeBidRoom.id}-${user.id}`, bidRoomId: activeBidRoom.id, userId: user.id, price: Number(offerValue), createdAt: new Date(), isSeen: false, isFinalOffer: false, intial: false, selected: false })
                 setOfferValue(0)
             }
         }
