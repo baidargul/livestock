@@ -267,8 +267,6 @@ async function closeDeal(room: any, userId: string, bid: any) {
       },
     });
 
-    console.log(bidRoom);
-
     if (!bidRoom) {
       return {
         status: 404,
