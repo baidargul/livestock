@@ -101,17 +101,17 @@ const BidProtection = (props: Props) => {
 
     if (!bid) {
         return (
-            <BiddingWrapper animal={props.animal} >
+            <BargainChatWrapper animal={props.animal} >
                 {props.children}
-            </BiddingWrapper>
+            </BargainChatWrapper>
         )
     }
 
     if (!user && !bid && !room) {
         return (
-            <BiddingWrapper animal={props.animal} >
+            <BargainChatWrapper animal={props.animal} >
                 {props.children}
-            </BiddingWrapper>
+            </BargainChatWrapper>
         )
     }
 
@@ -162,9 +162,9 @@ const BidProtection = (props: Props) => {
     }
 
     return (
-        <BiddingWrapper animal={props.animal}>
+        <BargainChatWrapper animal={props.animal}>
             {props.children}
-        </BiddingWrapper>
+        </BargainChatWrapper>
     )
 }
 

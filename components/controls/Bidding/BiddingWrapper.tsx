@@ -509,7 +509,7 @@ const BiddingWrapper = (props: Props) => {
 
 export default BiddingWrapper
 
-export function bidsReverse(bids: any[]) {
+export function bidsReverse(bids: any[] = []) {
     let bidsCopy = []
     for (let i = bids.length - 1; i >= 0; i--) {
         bidsCopy.push(bids[i])

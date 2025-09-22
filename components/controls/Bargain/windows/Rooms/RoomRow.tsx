@@ -41,26 +41,56 @@ const RoomRow = (props: Props) => {
     if (isBuyingRoom) {
         return (
             <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
-                <div>
-                    <div className={`font-semibold line-clamp-1 text-black text-xl`}>
-                        {room.animal.user.name}
+                {/* BUYER WON */}
+                {closedBid && closedBid.userId === user.id && <>
+                    <div>
+                        <div className={`font-semibold line-clamp-1 text-black text-xl flex items-center gap-1`}>
+                            <LuHandshake className="text-emerald-600" /> {room.animal.user.name}
+                        </div>
+                        <div className='text-zinc-500 text-sm'>
+                            {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
+                        </div>
                     </div>
-                    <div className='text-zinc-500 text-sm'>
-                        {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
+                    <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
+                </>}
+
+                {/* SELLER REJECTED */}
+                {closedBid && closedBid.userId !== user.id && <>
+                    <div>
+                        <div className={`font-semibold line-clamp-1 text-black text-xl`}>
+                            ❌ {room.animal.user.name}
+                        </div>
+                        <div className='text-zinc-500 text-sm'>
+                            {/* {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)} */}
+                            Seller has rejected your offer
+                        </div>
                     </div>
-                </div>
-                <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
+                    <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
+                </>}
+
+                {/* ON GOING BIDS */}
+                {!closedBid && <>
+                    <div>
+                        <div className={`font-semibold line-clamp-1 text-black text-xl`}>
+                            {room.animal.user.name}
+                        </div>
+                        <div className='text-zinc-500 text-sm'>
+                            {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)}
+                        </div>
+                    </div>
+                    <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
+                </>}
             </div>
         )
     } else {
         return (
             <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
                 <div>
-                    <div className={`font-semibold line-clamp-1 flex items-center gap-1 text-black text-xl ${closedBid && closedBid.userId !== user.id ? 'line-through text-zinc-600' : ''}`}>
-                        {closedBid && <LuHandshake className={`${closedBid && closedBid.userId !== user.id ? "hidden" : "text-emerald-700 fill-emerald-50 "}`} />}
+                    <div className={`font-semibold line-clamp-1 flex items-center gap-1 text-black text-xl ${closedBid && closedBid.userId === user.id ? 'line-through text-zinc-600' : ''}`}>
+                        {closedBid && closedBid.userId === user.id && <LuHandshake className={`${closedBid && closedBid.userId === user.id ? "hidden" : "text-emerald-700 fill-emerald-50 "}`} />}
                         {room.user.name}
                     </div>
-                    {closedBid && closedBid.userId !== user.id ? <div className='text-zinc-500 text-sm'>
+                    {closedBid && closedBid.userId === user.id ? <div className='text-zinc-500 text-sm'>
                         Rejected
                     </div> :
                         <div className='text-zinc-500 text-sm'>
@@ -68,7 +98,7 @@ const RoomRow = (props: Props) => {
                         </div>
                     }
                 </div>
-                <div className={`${closedBid && closedBid.userId !== user.id ? 'line-through text-zinc-600' : ''}`}>
+                <div className={`${closedBid && closedBid.userId === user.id ? 'line-through text-zinc-600' : ''}`}>
                     <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
                 </div>
             </div>

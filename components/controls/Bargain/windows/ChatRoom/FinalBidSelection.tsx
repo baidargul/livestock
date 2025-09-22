@@ -40,7 +40,7 @@ const FinalBidSelection = (props: Props) => {
     if (isMyBidSelected) {
         selectedStyle = "p-2 w-full rounded text-emerald-800 bg-emerald-200 border border-emerald-300"
     } else {
-        selectedStyle = "p-2 w-full rounded text-red-800 bg-red-200 border border-red-300"
+        selectedStyle = "p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300"
     }
 
 
@@ -79,23 +79,29 @@ const FinalBidSelection = (props: Props) => {
                 </div>
             </>}
             {isSelected && !isAuthor && <>
-                <div className='p-2 pt-5 bg-zinc-100 grid grid-cols-2 gap-2 w-full place-items-center text-center'>
-                    <div className='relative w-full'>
-                        <div className={selectedStyle}>
-                            <div>{formatCurrency(myBid.price)}</div>
-                        </div>
-                        <div className='absolute -top-4 left-0 text-xs scale-[.7] origin-top-left mt-1'>Your offer</div>
+                <div>
+                    <div>
+                        {isMyBidSelected && <div className='p-2 bg-emerald-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Congratulations ! <br />You've won the deal.</div>}
+                        {!isMyBidSelected && <div className='p-2 bg-red-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Sorry ! <br />Seller has declined your offer.</div>}
                     </div>
-                    <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
-                        <div>{formatCurrency(otherBid.price)}</div>
+                    <div className='p-2 pt-5 bg-zinc-100 grid grid-cols-2 gap-2 w-full place-items-center text-center'>
+                        <div className='relative w-full'>
+                            <div className={!isMyBidSelected ? "p-2 w-full rounded text-red-800 bg-red-200 border border-red-300" : "p-2 w-full rounded text-emerald-800 bg-emerald-200 border border-emerald-300"}>
+                                <div>{formatCurrency(myBid.price)}</div>
+                            </div>
+                            <div className='absolute -top-4 left-0 text-xs scale-[.7] origin-top-left mt-1'>Your offer</div>
+                        </div>
+                        <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
+                            <div>{formatCurrency(otherBid.price)}</div>
+                        </div>
                     </div>
                 </div>
             </>}
             {isSelected && isAuthor && <>
                 <div>
                     <div>
-                        {isMyBidSelected && <div className='p-2 bg-emerald-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Congratulations ! <br />You've won the deal.</div>}
-                        {!isMyBidSelected && <div className='p-2 bg-red-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Sorry ! <br />Seller has declined your offer.</div>}
+                        {isMyBidSelected && <div className='p-2 bg-amber-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Rejected! <br />You've declined his offer.</div>}
+                        {!isMyBidSelected && <div className='p-2 bg-emerald-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Offer accepted! <br />You've accepted his offer.</div>}
                     </div>
                     <div className='p-2 pt-5 bg-zinc-100 grid grid-cols-2 gap-2 w-full place-items-center text-center'>
                         <div className='relative w-full'>
@@ -104,7 +110,7 @@ const FinalBidSelection = (props: Props) => {
                             </div>
                             <div className='absolute -top-4 left-0 text-xs scale-[.7] origin-top-left mt-1'>Your offer</div>
                         </div>
-                        <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
+                        <div className={`p-2 w-full rounded ${isMyBidSelected ? " text-zinc-800 bg-zinc-200 border border-zinc-300" : " text-emerald-800 bg-emerald-200 border border-emerald-300"}`}>
                             <div>{formatCurrency(otherBid.price)}</div>
                         </div>
                     </div>
