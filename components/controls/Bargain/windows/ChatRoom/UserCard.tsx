@@ -15,7 +15,7 @@ const UserCard = (props: Props) => {
     return (
         <div className='p-2 bg-white rounded-md'>
             <div className='text-2xl'>{room.author.name}</div>
-            <div className='text-sm text-zinc-600'>
+            <div className='text-sm text-zinc-600 flex gap-1 items-center'>
                 {Number(room.maleQuantityAvailable || 0) > 0 && <span>{Number(room.maleQuantityAvailable || 0)} Male</span>}
                 {Number(room.femaleQuantityAvailable || 0) > 0 && <span>{Number(room.femaleQuantityAvailable || 0)} Female</span>}
             </div>

@@ -135,7 +135,7 @@ const Chatroom = (props: Props) => {
                 <div className='absolute bottom-1 left-2 z-[2] text-white'>
                     <div className='leading-2'>
                         <div className='text-sm'>{totalQuantity} x Persian Cats</div>
-                        <div className='text-zinc-400 text-xs'>
+                        <div className='text-zinc-400 text-xs flex items-center gap-1'>
                             {Number(props.currentRoom.maleQuantityAvailable || 0) > 0 && <span>{Number(props.currentRoom.maleQuantityAvailable || 0)} Male</span>}
                             {Number(props.currentRoom.femaleQuantityAvailable || 0) > 0 && <span>{Number(props.currentRoom.femaleQuantityAvailable || 0)} Female</span>}
                         </div>

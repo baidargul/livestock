@@ -30,7 +30,7 @@ const RoomsContainer = (props: Props) => {
                     <div className={`text-4xl font-semibold text-amber-400`}>{Number(props.animal.roomCount) > 1 ? `${props.animal.roomCount} Applicants` : `${props.animal.roomCount} Applicant`}</div>
                     <div className='leading-2'>
                         <div className='text-lg'>{totalQuantity} x Persian Cats</div>
-                        <div className='text-zinc-400 text-sm'>
+                        <div className='text-zinc-400 text-sm flex gap-1 items-center'>
                             {Number(props.animal.maleQuantityAvailable || 0) > 0 && <span>{Number(props.animal.maleQuantityAvailable || 0)} Male</span>}
                             {Number(props.animal.femaleQuantityAvailable || 0) > 0 && <span>{Number(props.animal.femaleQuantityAvailable || 0)} Female</span>}
                         </div>
