@@ -101,7 +101,7 @@ const SelectAnimal = (props: Props) => {
                 </div>
             }
             {
-                !props.animal && !selectedAnimal && <div className='text-lg font-semibold p-2 rounded bg-emerald-700 text-white tracking-tight'>Animals with active bargaining</div>
+                !props.animal && !selectedAnimal && <div className='text-lg font-semibold p-2 rounded bg-emerald-700 text-white tracking-tight'>Select an animal</div>
             }
             {!props.animal && !currentRoom && selectedAnimal && <div className='text-lg font-semibold p-2 rounded bg-emerald-700 text-white tracking-tight'>Select a room</div>}
             {
