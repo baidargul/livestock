@@ -1,8 +1,9 @@
+'use client'
 import { formatCurrency } from '@/lib/utils'
 import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import { Bids } from '@prisma/client'
 import { serialize } from 'bson'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
     lockedBids: Bids[]
@@ -12,10 +13,26 @@ type Props = {
 
 const FinalBidSelection = (props: Props) => {
     if (props.lockedBids.length < 2) return null
+    const [myBid, setMyBid] = useState<Bids | null>(null)
+    const [otherBid, setOtherBid] = useState<Bids | null>(null)
+    const [isMounted, setIsMounted] = useState(false)
+    const user = useUser()
+    const socket = useSocket()
     const isAuthor = props.isAuthor
     const isSelected = props.currentRoom.closedAt && String(props.currentRoom.closedAt).length > 0
-    const myBid = props.lockedBids[0]
-    const otherBid = props.lockedBids[1]
+
+    useEffect(() => {
+        props.lockedBids.forEach(bid => {
+            if (bid.userId === user?.id) {
+                setMyBid(bid)
+            } else {
+                setOtherBid(bid)
+            }
+        })
+        setIsMounted(true)
+    }, [])
+
+    if (!isMounted || !myBid || !otherBid) return null
 
     const isMyBidSelected = myBid.selected && myBid.selected === true
 
@@ -25,10 +42,6 @@ const FinalBidSelection = (props: Props) => {
     } else {
         selectedStyle = "p-2 w-full rounded text-red-800 bg-red-200 border border-red-300"
     }
-
-
-    const user = useUser()
-    const socket = useSocket()
 
 
     const handleSelectFinalBid = (bid: Bids) => {
@@ -65,7 +78,7 @@ const FinalBidSelection = (props: Props) => {
                     </div>
                 </div>
             </>}
-            {isSelected && <>
+            {isSelected && !isAuthor && <>
                 <div className='p-2 pt-5 bg-zinc-100 grid grid-cols-2 gap-2 w-full place-items-center text-center'>
                     <div className='relative w-full'>
                         <div className={selectedStyle}>
@@ -75,6 +88,25 @@ const FinalBidSelection = (props: Props) => {
                     </div>
                     <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
                         <div>{formatCurrency(otherBid.price)}</div>
+                    </div>
+                </div>
+            </>}
+            {isSelected && isAuthor && <>
+                <div>
+                    <div>
+                        {isMyBidSelected && <div className='p-2 bg-emerald-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Congratulations ! <br />You've won the deal.</div>}
+                        {!isMyBidSelected && <div className='p-2 bg-red-700 text-white rounded my-2 text-center flex justify-center items-center font-semibold tracking-tight'>Sorry ! <br />Seller has declined your offer.</div>}
+                    </div>
+                    <div className='p-2 pt-5 bg-zinc-100 grid grid-cols-2 gap-2 w-full place-items-center text-center'>
+                        <div className='relative w-full'>
+                            <div className={selectedStyle}>
+                                <div>{formatCurrency(myBid.price)}</div>
+                            </div>
+                            <div className='absolute -top-4 left-0 text-xs scale-[.7] origin-top-left mt-1'>Your offer</div>
+                        </div>
+                        <div className='p-2 w-full rounded text-zinc-800 bg-zinc-200 border border-zinc-300'>
+                            <div>{formatCurrency(otherBid.price)}</div>
+                        </div>
                     </div>
                 </div>
             </>}
