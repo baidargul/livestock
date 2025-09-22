@@ -83,23 +83,11 @@ const RoomRow = (props: Props) => {
             </div>
         )
     } else {
+        const isSelfPickUp = !room.deliveryOptions.includes("SELLER_DELIVERY")
         return (
             <div onClick={() => props.handleSelectCurrentRoom(room)} className='bg-white cursor-pointer p-2 rounded-md flex justify-between items-center'>
                 {/* YOU ACCEPTED BUYER*/}
                 {closedBid && closedBid.userId === user.id && <>
-                    <div>
-                        <div className={`font-semibold line-clamp-1 text-black text-xl flex items-center gap-1`}>
-                            <LuHandshake className="text-emerald-600" /> <div className="line-clamp-1">{room.user.name}</div>
-                        </div>
-                        <div className='text-zinc-500 text-sm'>
-                            {formalizeText(room.city)}, {formalizeText(room.province)}
-                        </div>
-                    </div>
-                    <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
-                </>}
-
-                {/* YOU REJECTED BUYER */}
-                {closedBid && closedBid.userId !== user.id && <>
                     <div>
                         <div className={`font-semibold line-clamp-1 text-black text-xl flex items-center gap-1`}>
                             <div>❌</div> <div className="line-clamp-1">{room.user.name}</div>
@@ -107,6 +95,21 @@ const RoomRow = (props: Props) => {
                         <div className='text-zinc-500 text-sm'>
                             {/* {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)} */}
                             You've rejected this offer
+                        </div>
+                    </div>
+                    <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
+
+                </>}
+
+                {/* YOU REJECTED BUYER */}
+                {closedBid && closedBid.userId !== user.id && <>
+                    <div>
+                        <div className={`font-semibold line-clamp-1 text-black text-xl flex items-center gap-1`}>
+                            <LuHandshake className="text-emerald-600" size={24} /> <div className="line-clamp-1">{room.user.name}</div>
+                        </div>
+                        <div className='text-zinc-500 text-sm'>
+                            {/* {isSelfPickUp ? "He'll Self Pick up" : `${formalizeText(room.city)}, ${formalizeText(room.province)}`} */}
+                            Offer accepted
                         </div>
                     </div>
                     <LastMessage lastBid={room.bids[room.bids.length - 1] ?? null} />
