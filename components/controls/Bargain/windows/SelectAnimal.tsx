@@ -101,6 +101,10 @@ const SelectAnimal = (props: Props) => {
                 </div>
             }
             {
+                !props.animal && !selectedAnimal && <div className='text-lg font-semibold p-2 rounded bg-emerald-700 text-white'>Animals with active bargaining</div>
+            }
+            {!props.animal && !currentRoom && selectedAnimal && <div className='text-lg font-semibold p-2 rounded bg-emerald-700 text-white'>Select a room</div>}
+            {
                 !selectedAnimal && !currentRoom && animals.map((animal: any, index: number) => {
                     return (
                         !selectedAnimal && <AnimalRow handleSelectAnimal={handleSelectAnimal} key={`${animal.id}-${index + 1}`} animal={animal} />
