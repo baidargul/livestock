@@ -100,43 +100,42 @@ app.prepare().then(() => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ room, userId, bid }),
         });
-        const data = await res.json();
+        let data = await res.json();
         if (data.status === 200) {
+          data = data.data;
           socket.join(room.key);
-          if (data.data.closedAt && String(data.data.closedAt).length > 0) {
-            io.emit(
-              "sold",
-              serialize({ animalId: data.data.room.animalId, room: room })
-            );
+          if (data.closedAt && String(data.closedAt).length > 0) {
+            io.emit("sold", serialize({ animalId: data.animalId, room: room }));
           }
           socket.emit(
             "deal-closed",
             serialize({
-              room: data.data,
+              room: data,
               userId: userId,
             })
           );
           socket.to(room.key).emit(
             "deal-closed",
             serialize({
-              room: data.data,
+              room: data,
               userId: userId,
             })
           );
-          for (const ids of data.data.author.connectionIds) {
+
+          for (const ids of data.author.connectionIds) {
             io.to(ids).emit(
               "deal-closed",
               serialize({
-                room: data.data,
+                room: data,
                 userId: userId,
               })
             );
           }
-          for (const ids of data.data.user.connectionIds) {
+          for (const ids of data.user.connectionIds) {
             io.to(ids).emit(
               "deal-closed",
               serialize({
-                room: data.data,
+                room: data,
                 userId: userId,
               })
             );

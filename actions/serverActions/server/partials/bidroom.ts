@@ -300,13 +300,13 @@ async function closeDeal(room: any, userId: string, bid: any) {
       }),
     ]);
 
-    const finalRoom = actions.server.bidRoom.list(room.id, "id");
+    const finalRoom = await actions.server.bidRoom.list(room.id, "id", 3);
 
     return {
       status: 200,
       message: "Deal closed successfully.",
       data: {
-        room: finalRoom,
+        ...finalRoom.data,
       },
     };
   } catch (error: any) {
