@@ -68,7 +68,7 @@ const BargainCTOControls = (props: Props) => {
                 </BargainChatWrapper>
             }
             {props.animal.allowBidding && rooms.length === 0 && !isFetching && <PostBiddingOptions directCTO directCTOAction={props.handleCreateLead} postBiddingOptions={props.postBiddingOptions} setPostBiddingOptions={props.setPostBiddingOptions} animal={{ ...props.animal, price: props.fixedAmount && props.fixedAmount > 0 ? props.fixedAmount : props.animal.price }} user={props.user}>
-                <Button disabled={props.isChecking || props.isCreating} className='w-full mt-2'>{props.isCreating ? "..." : `${props.leads && props.leads.length > 0 ? "Request More" : "Create Request"}`}</Button>
+                <Button disabled={props.isChecking || props.isCreating} className='w-full mt-2'>{props.isCreating ? "..." : `Create bargain request`}</Button>
             </PostBiddingOptions>}
         </>
     )

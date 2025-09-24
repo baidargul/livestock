@@ -8,9 +8,11 @@ import { useDialog } from '@/hooks/useDialog'
 import { useSession } from '@/hooks/useSession'
 import { calculatePricing, formatCurrency } from '@/lib/utils'
 import { useSocket } from '@/socket-client/SocketWrapper'
+import { DeliveryOptions } from '@prisma/client'
 import { serialize } from 'bson'
 import Image from 'next/image'
 import React, { use, useEffect, useState } from 'react'
+import { PiFireTruckDuotone } from 'react-icons/pi'
 
 type Props = {
     animal: any
@@ -131,7 +133,7 @@ const PostBiddingOptions = (props: Props) => {
                             <div className='text-emerald-700 font-semibold text-xl tracking-wide'>{props.directCTO ? `Flat Rate Purchase | No Bargain` : `Customize your offer`}</div>
                             <div className='flex flex-col gap-2'>
                                 <div className='font-semibold'>Delivery Options</div>
-                                <div className='grid grid-cols-2 gap-2 w-full'>
+                                <div className='grid grid-cols-2 gap-2 w-full text-sm text-nowrap'>
                                     {props.animal.deliveryOptions.includes("SELF_PICKUP") && <Button onClick={() => addDeliveryOption("SELF_PICKUP")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELF_PICKUP") ? "btn-primary" : "btn-secondary"}> <DeliveryIcon icon='SELF_PICKUP' /> I'll Pickup</Button>}
                                     {props.animal.deliveryOptions.includes("SELLER_DELIVERY") && <Button onClick={() => addDeliveryOption("SELLER_DELIVERY")} className='w-full flex items-center gap-2 justify-center' variant={props.postBiddingOptions?.deliveryOptions?.includes("SELLER_DELIVERY") ? "btn-primary" : "btn-secondary"} ><DeliveryIcon icon='SELLER_DELIVERY' /> Cargo</Button>}
                                 </div>
@@ -156,13 +158,16 @@ const PostBiddingOptions = (props: Props) => {
                                     <Textbox disabled={props.directCTO ? props.animal.priceUnit === "per Set" ? true : Number(props.animal.femaleQuantityAvailable) < 1 : false} label='Female' type='number' onChange={(e: any) => handleChangeValue("femaleQuantityAvailable", Number(e) > props.animal.femaleQuantityAvailable || Number(e) < 0 ? props.animal.femaleQuantityAvailable : e)} value={props.postBiddingOptions.femaleQuantityAvailable} className='w-full' />
                                 </div>
                             </div>
-                            {Number(props.animal.cargoPrice ?? 0) > 0 && <div>{formatCurrency(props.animal.cargoPrice ?? 0)}</div>}
+
                             <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
                                 {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${Number(Number(sellerOffer / totalQuantity).toFixed(0))} per animal.`} />}
-                                <div className='relative flex items-center group'>
-                                    {!props.directCTO && <div className='absolute top-1/2 right-2 text-zinc-500 pointer-events-none group-hover:opacity-0 transition duration-600 ease-in-out'>per animal</div>}
-                                    <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type={props.directCTO ? 'text' : 'number'} value={props.directCTO ? formatCurrency(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price.toFixed(0))) : props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
+                                <div>
+                                    <div className='relative flex items-center group'>
+                                        {!props.directCTO && <div className='absolute top-1/2 right-2 text-zinc-500 pointer-events-none group-hover:opacity-0 transition duration-600 ease-in-out'>per animal</div>}
+                                        <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type={props.directCTO ? 'text' : 'number'} value={props.directCTO ? formatCurrency(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable, deliveryOptions: props.postBiddingOptions.deliveryOptions }).price.toFixed(0))) : props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
+                                    </div>
+                                    {Number(props.animal.cargoPrice ?? 0) > 0 && props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") && <div className='flex gap-2 items-start text-xs mt-1'> <PiFireTruckDuotone className='text-xl' /> Cargo fair {formatCurrency(props.animal.cargoPrice ?? 0)} is already included.</div>}
                                 </div>
                             </div>
                             {!props.directCTO && <div className='flex justify-center items-center text-center mt-4 mb-5'>
@@ -180,7 +185,7 @@ const PostBiddingOptions = (props: Props) => {
                             {props.directCTO && props.animal.allowBidding && <div className='text-sm mt-4 p-2 text-amber-700 bg-yellow-50'>The price is fixed and non-negotiable. Please confirm your preferred delivery method so we can create the order, after which we’ll share the seller’s phone number with you to complete the transaction.</div>}
 
                         </div>
-                        <div className={`${props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") ? "pb-10" : "pb-10"}   mt-auto grid grid-cols-2 gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
+                        <div className={`${props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") ? "pb-10" : "pb-10"}   mt-auto grid grid-cols-2 text-sm text-nowrap gap-2 w-full transition-all duration-300 ease-in-out ${isWorking && "pointer-events-none opacity-20 grayscale-100"}`}>
                             <Button onClick={() => handleClose()} className='w-full' variant='btn-secondary' >Cancel</Button>
                             <Button disabled={props.postBiddingOptions.deliveryOptions.length === 0 || (props.postBiddingOptions.maleQuantityAvailable + props.postBiddingOptions.femaleQuantityAvailable) === 0 || Number(props.postBiddingOptions.amount) < 1} onClick={handlePostOffer} className='w-full'>Create Request</Button>
                         </div>
