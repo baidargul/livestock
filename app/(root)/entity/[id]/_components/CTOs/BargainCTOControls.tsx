@@ -2,12 +2,13 @@
 import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
 import Button from '@/components/ui/Button'
 import { Animal, Bids } from '@prisma/client'
-import { CandlestickChartIcon, LockIcon } from 'lucide-react'
+import { LockIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from '../PostBiddingOptions'
 import { useRooms } from '@/hooks/useRooms'
 import { formatCurrency } from '@/lib/utils'
 import { LuHandshake } from 'react-icons/lu'
+import { MdOutlineCancel } from "react-icons/md";
 type Props = {
     animal: Animal
     leads: any[]
@@ -56,7 +57,7 @@ const BargainCTOControls = (props: Props) => {
 
                                     return (
                                         <div key={`bid-${index}-${rooms[0].id}`} className={`flex border-b p-1 border-zinc-300 gap-1 justify-between items-center ${bid.selected && bid.userId === user.id ? "bg-emerald-100" : bid.selected && bid.userId !== user.id ? "bg-red-100" : ""}`}>
-                                            <div className='flex gap-1 items-center'>{bid.selected && <LuHandshake className="text-emerald-600" />}{bid.userId === user.id ? "You" : bid.user.name}</div>
+                                            <div className='flex gap-1 items-center'>{bid.selected && bid.userId === user.id ? <LuHandshake className="text-emerald-600" /> : bid.selected && bid.userId !== user.id ? <MdOutlineCancel className="text-red-600" /> : ""} {bid.userId === user.id ? "You" : bid.user.name}</div>
                                             <div className='flex gap-1 items-center'> {bid.isFinalOffer && <LockIcon size={14} className='text-amber-700' />}{formatCurrency(bid.price)}</div>
                                         </div>
                                     )

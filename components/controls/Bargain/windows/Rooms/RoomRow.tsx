@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import LastMessage from './LastMessage'
 import { Bids } from '@prisma/client'
 import { bidRoom } from '@/actions/serverActions/server/partials/bidroom'
+import { MdOutlineCancel } from "react-icons/md";
 
 type Props = {
     room: any
@@ -57,8 +58,8 @@ const RoomRow = (props: Props) => {
                 {/* SELLER REJECTED */}
                 {closedBid && closedBid.userId !== user.id && <>
                     <div>
-                        <div className={`font-semibold line-clamp-1 text-black text-xl`}>
-                            ❌ {room.animal.user.name}
+                        <div className={`font-semibold line-clamp-1 flex gap-1 items-center text-black text-xl`}>
+                            <MdOutlineCancel className="text-red-600" /> {room.animal.user.name}
                         </div>
                         <div className='text-zinc-500 text-sm'>
                             {/* {formalizeText(room.animal.city)}, {formalizeText(room.animal.province)} */}
