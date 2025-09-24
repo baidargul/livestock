@@ -32,7 +32,7 @@ const BargainChatWrapper = (props: Props) => {
                     <SelectAnimal disableAnimalChange={props.disableAnimalChange} animal={props.animal} />
                 </div>}
             </div>}
-            <div onClick={() => handleToggleChatWindow(!isOpen)} className='w-full'>
+            <div onClick={() => handleToggleChatWindow(!isOpen)} className='w-full cursor-pointer'>
                 {props.children}
             </div>
         </>

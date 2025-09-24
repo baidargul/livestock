@@ -38,6 +38,14 @@ const BargainCTOControls = (props: Props) => {
 
     return (
         props.user && !isAuthor && <>
+            {
+                props.animal.allowBidding && isFetching &&
+                <div className='w-full flex flex-col gap-2 justify-center items-center'>
+                    <div className='w-full h-6 bg-zinc-200 animate-pulse'></div>
+                    <div className='w-full h-28 bg-zinc-200 animate-pulse'></div>
+                    <div className='w-[10%] ml-auto h-6 bg-zinc-200 animate-pulse'></div>
+                </div>
+            }
             {props.animal.allowBidding && props.isChecking === false && rooms.length > 0 && !isFetching &&
                 <BargainChatWrapper animal={props.animal}>
                     <div className='flex flex-col gap-2'>
