@@ -63,7 +63,7 @@ const BargainCTOControls = (props: Props) => {
                                 })
                             }
                         </div>
-                        <div className='text-emerald-700 text-right w-full text-xs underline cursor-pointer'>Click to chat</div>
+                        <div className='text-emerald-700 text-right w-full text-xs underline cursor-pointer'>Click to Bargain</div>
                     </div>
                 </BargainChatWrapper>
             }
