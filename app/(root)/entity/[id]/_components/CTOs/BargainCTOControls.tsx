@@ -13,7 +13,7 @@ type Props = {
     leads: any[]
     isChecking: boolean
     isCreating: boolean
-    handleCreateLead: () => void
+    handleCreateBidRoom: () => void
     postBiddingOptions: any
     setPostBiddingOptions: (options: any) => void
     user: any
@@ -67,7 +67,7 @@ const BargainCTOControls = (props: Props) => {
                     </div>
                 </BargainChatWrapper>
             }
-            {props.animal.allowBidding && rooms.length === 0 && !isFetching && <PostBiddingOptions directCTO directCTOAction={props.handleCreateLead} postBiddingOptions={props.postBiddingOptions} setPostBiddingOptions={props.setPostBiddingOptions} animal={{ ...props.animal, price: props.fixedAmount && props.fixedAmount > 0 ? props.fixedAmount : props.animal.price }} user={props.user}>
+            {props.animal.allowBidding && rooms.length === 0 && !isFetching && <PostBiddingOptions postBiddingOptions={props.postBiddingOptions} setPostBiddingOptions={props.setPostBiddingOptions} animal={{ ...props.animal, price: props.fixedAmount && props.fixedAmount > 0 ? props.fixedAmount : props.animal.price }} user={props.user}>
                 <Button disabled={props.isChecking || props.isCreating} className='w-full mt-2'>{props.isCreating ? "..." : `Create bargain request`}</Button>
             </PostBiddingOptions>}
         </>

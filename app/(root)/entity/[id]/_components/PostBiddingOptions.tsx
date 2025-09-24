@@ -71,14 +71,24 @@ const PostBiddingOptions = (props: Props) => {
 
     useEffect(() => {
         let amount = 0
-        amount = calculatePricing(props.animal).price
-        setSellerOffer(Number(Number(amount).toFixed(0)) ?? 0)
+        // const rawAnimal = { ...props.animal, maleQuantityAvailable: Number(props.postBiddingOptions.maleQuantityAvailable), femaleQuantityAvailable: Number(props.postBiddingOptions.femaleQuantityAvailable), deliveryOptions: props.postBiddingOptions.deliveryOptions.length === 0 ? [DeliveryOptions.SELF_PICKUP] : props.postBiddingOptions.deliveryOptions }
+        // console.log(`rawAnimal`)
+        // console.log(rawAnimal)
+        // amount = calculatePricing({ ...rawAnimal }).price
+        // setSellerOffer(Number(Number(amount).toFixed(0)) ?? 0)
         const totalQuantity = Number(props.postBiddingOptions.femaleQuantityAvailable) + Number(props.postBiddingOptions.maleQuantityAvailable)
-        amount = Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0))
+        amount = Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable, deliveryOptions: props.postBiddingOptions.deliveryOptions }).price).toFixed(0))
         if (props.directCTO) {
             props.setPostBiddingOptions((prev) => ({ ...prev, amount: Number(Number(amount / totalQuantity).toFixed(0)) }))
         }
-    }, [props.postBiddingOptions.femaleQuantityAvailable, props.postBiddingOptions.maleQuantityAvailable])
+        calculateSellerOffer()
+    }, [props.postBiddingOptions.femaleQuantityAvailable, props.postBiddingOptions.maleQuantityAvailable, props.postBiddingOptions.deliveryOptions])
+
+    const calculateSellerOffer = () => {
+        let rawAnimal = { ...props.animal, deliveryOptions: props.postBiddingOptions.deliveryOptions.length === 0 ? [DeliveryOptions.SELF_PICKUP] : props.postBiddingOptions.deliveryOptions }
+        rawAnimal = calculatePricing(rawAnimal).price
+        setSellerOffer(rawAnimal)
+    }
 
     const handlePostOffer = () => {
         if (Number(props.postBiddingOptions.amount) < 1) return
@@ -162,21 +172,21 @@ const PostBiddingOptions = (props: Props) => {
                             <div className={`${"flex gap-2 mt-4 justify-between items-center"}`}>
                                 {props.directCTO && <Image src={images.site.ui.flatrate} width={100} height={100} layout='fixed' loading='lazy' quality={50} alt='janwarmarkaz' className='w-[100px] h-[100px] object-contain' />}
                                 {!props.directCTO && <Textbox disabled label={`Seller offer`} value={`${Number(Number(sellerOffer / totalQuantity).toFixed(0))} per animal.`} />}
-                                <div>
+                                <div className={`relative`}>
                                     <div className='relative flex items-center group'>
                                         {!props.directCTO && <div className='absolute top-1/2 right-2 text-zinc-500 pointer-events-none group-hover:opacity-0 transition duration-600 ease-in-out'>per animal</div>}
                                         <Textbox disabled={props.directCTO} label={`${props.directCTO ? 'Total amount' : 'Your offer'}`} type={props.directCTO ? 'text' : 'number'} value={props.directCTO ? formatCurrency(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable, deliveryOptions: props.postBiddingOptions.deliveryOptions }).price.toFixed(0))) : props.postBiddingOptions.amount} onChange={(e: any) => handleChangeValue("amount", e)} />
                                     </div>
-                                    {Number(props.animal.cargoPrice ?? 0) > 0 && props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") && <div className='flex gap-2 items-start text-xs mt-1'> <PiFireTruckDuotone className='text-xl' /> Cargo fair {formatCurrency(props.animal.cargoPrice ?? 0)} is already included.</div>}
+                                    {Number(props.animal.cargoPrice ?? 0) > 0 && props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") && <div className='absolute -bottom-10 left-0 flex gap-2 items-start text-xs mt-1'> <PiFireTruckDuotone className='text-xl' /> Cargo fair {formatCurrency(props.animal.cargoPrice ?? 0)} is already included.</div>}
                                 </div>
                             </div>
-                            {!props.directCTO && <div className='flex justify-center items-center text-center mt-4 mb-5'>
+                            {!props.directCTO && <div className={`flex justify-center items-center text-center  ${Number(props.animal.cargoPrice ?? 0) > 0 && props.postBiddingOptions.deliveryOptions.includes("SELLER_DELIVERY") ? "mt-12" : "mt-4"}  mb-5`}>
                                 <div className='relative flex justify-center items-center'>
                                     <div className='border-b-4 border-zinc-700 p-2 bg-amber-50 px-4'>{formatCurrency(props.postBiddingOptions.amount * (Number(props.postBiddingOptions.maleQuantityAvailable) + Number(props.postBiddingOptions.femaleQuantityAvailable)))}</div>
                                     <div className='absolute -bottom-5 text-xs text-nowrap'>Your offer</div>
                                 </div>
                                 <div className='relative flex justify-center items-center'>
-                                    <div className='p-2 bg-zinc-100 border-b line-clamp-1'>{formatCurrency(Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable }).price).toFixed(0)))}</div>
+                                    <div className='p-2 bg-zinc-100 border-b line-clamp-1'>{formatCurrency(Number(Number(calculatePricing({ ...props.animal, maleQuantityAvailable: props.postBiddingOptions.maleQuantityAvailable, femaleQuantityAvailable: props.postBiddingOptions.femaleQuantityAvailable, deliveryOptions: props.postBiddingOptions.deliveryOptions }).price).toFixed(0)))}</div>
                                     <div className='absolute -bottom-5 text-zinc-600 text-xs text-nowrap'>Seller offer</div>
                                 </div>
                             </div>}

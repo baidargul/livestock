@@ -6,7 +6,7 @@ import { useDialog } from '@/hooks/useDialog'
 import { useProtocols } from '@/hooks/useProtocols'
 import { useSession } from '@/hooks/useSession'
 import { calculatePricing, formalizeText, formatCurrency } from '@/lib/utils'
-import { useUser } from '@/socket-client/SocketWrapper'
+import { useSocket, useUser } from '@/socket-client/SocketWrapper'
 import React, { useEffect, useState } from 'react'
 import PostBiddingOptions from './PostBiddingOptions'
 import { CandlestickChartIcon, PhoneCallIcon, XIcon } from 'lucide-react'
@@ -20,6 +20,7 @@ import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
 import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
 import LeadCTOControls from './CTOs/LeadCTOControls'
 import BargainCTOControls from './CTOs/BargainCTOControls'
+import { serialize } from 'bson'
 
 type Props = {
     animal: any
@@ -39,6 +40,8 @@ const CreateLeadButton = (props: Props) => {
     const [fetchingHandshake, setFetchingHandshake] = useState(false)
     const session: any = useSession()
     const user = useUser()
+    const isAuthor = user?.id === props.animal.userId
+    const socket = useSocket()
     const [HandShakeCost, setHandshakeCost] = useState({
         buyer: 0,
         seller: 0
@@ -179,6 +182,24 @@ const CreateLeadButton = (props: Props) => {
         setIsChecking(false)
     }
 
+    const handleCreateBidRoom = async () => {
+        if (!isAuthor) {
+            if (socket && user) {
+                const room = {
+                    animalId: animal.id,
+                    authorId: animal.userId,
+                    userId: user.id,
+                    key: `${animal.id}-${animal.userId}-${user.id}`,
+                    offer: calculatePricing({ ...animal, ...postBiddingOptions }).price,
+                    deliveryOptions: postBiddingOptions.deliveryOptions,
+                    maleQuantityAvailable: Number(postBiddingOptions.maleQuantityAvailable || 0),
+                    femaleQuantityAvailable: Number(postBiddingOptions.femaleQuantityAvailable || 0),
+                }
+                socket.emit("join-bidroom", serialize({ room, userId: user.id }));
+            }
+        }
+    }
+
     // NO SESSION
     if (!user) {
         return (
@@ -260,7 +281,7 @@ const CreateLeadButton = (props: Props) => {
                     </table>
                 </div>}
                 <LeadCTOControls user={user} leads={leads} animal={animal} isChecking={isChecking} isCreating={isCreating} handleCreateLead={handleCreateLead} fixedAmount={fixedAmount} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} />
-                <BargainCTOControls user={user} leads={leads} animal={animal} isChecking={isChecking} isCreating={isCreating} handleCreateLead={handleCreateLead} fixedAmount={fixedAmount} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} />
+                <BargainCTOControls user={user} leads={leads} animal={animal} isChecking={isChecking} isCreating={isCreating} handleCreateBidRoom={handleCreateBidRoom} fixedAmount={fixedAmount} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} />
             </div>
         )
     }
