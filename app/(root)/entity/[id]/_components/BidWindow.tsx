@@ -4,7 +4,9 @@ import ElapsedTimeControl from '@/components/controls/ElapsedTimeControl'
 import { useRooms } from '@/hooks/useRooms'
 import { formalizeText, formatCurrency } from '@/lib/utils'
 import { useUser } from '@/socket-client/SocketWrapper'
+import { Bids } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
+import { LuHandshake } from 'react-icons/lu'
 
 type Props = {
     animal: any
@@ -51,12 +53,40 @@ const BidWindow = (props: Props) => {
                 {
                     !isFetching && rooms.map((room: any, index: number) => {
 
+                        let selectedBid!: Bids
+                        room.bids.forEach((bid: Bids) => {
+                            if (bid.selected) {
+                                selectedBid = bid;
+                            }
+                        })
+                        const isAuthor = room.animal.userId === user?.id
+                        let dealAccepted = false;
+                        if (isAuthor) {
+                            if (selectedBid) {
+                                if (selectedBid.userId === user?.id) {
+                                    dealAccepted = false;
+                                } else {
+                                    dealAccepted = true;
+                                }
+                            } else {
+                                dealAccepted = false;
+                            }
+                        } else {
+                            if (selectedBid) {
+                                if (selectedBid.userId === user?.id) {
+                                    dealAccepted = true;
+                                } else {
+                                    dealAccepted = false;
+                                }
+                            }
+                        }
+
                         return (
                             <div key={`${room.key}${room.id}-${index}`}>
                                 <div className='w-full grid grid-cols-[1fr_1fr] border-b border-zinc-200 pb-2'>
                                     <div>
-                                        <div className='truncate'>
-                                            {room.user.name}
+                                        <div className='truncate flex gap-1 items-center'>
+                                            {dealAccepted && <LuHandshake className="text-emerald-600" />}{room.user.name}
                                         </div>
                                         {
                                             room.deliveryOptions.includes("SELF_PICKUP") ? <div className='text-xs text-zinc-600'>Self Pickup</div> : <div>{formalizeText(room.city)}, {formalizeText(room.province)}</div>
