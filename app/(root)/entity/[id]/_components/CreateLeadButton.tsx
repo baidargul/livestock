@@ -18,6 +18,8 @@ import { useRooms } from '@/hooks/useRooms'
 import BidWindow from './BidWindow'
 import BiddingWrapper from '@/components/controls/Bidding/BiddingWrapper'
 import BargainChatWrapper from '@/components/controls/Bargain/BargainChatWrapper'
+import LeadCTOControls from './CTOs/LeadCTOControls'
+import BargainCTOControls from './CTOs/BargainCTOControls'
 
 type Props = {
     animal: any
@@ -257,14 +259,8 @@ const CreateLeadButton = (props: Props) => {
                         </tbody>
                     </table>
                 </div>}
-                {(leads.length === 0 && isChecking === false) &&
-                    <BidProtection animal={animal}>
-                        <Button className='w-full mt-2 flex gap-2 items-center justify-center'> <CandlestickChartIcon size={20} /> Bargain</Button>
-                    </BidProtection>
-                }
-                {(leads.length > 0 || !props.animal.allowBidding) && <PostBiddingOptions directCTO directCTOAction={handleCreateLead} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} animal={{ ...props.animal, price: fixedAmount && fixedAmount > 0 ? fixedAmount : props.animal.price }} user={user}>
-                    <Button disabled={isChecking || isCreating} className='w-full mt-2'>{isCreating ? "..." : `${leads && leads.length > 0 ? "Request More" : "Create Request"}`}</Button>
-                </PostBiddingOptions>}
+                <LeadCTOControls user={user} leads={leads} animal={animal} isChecking={isChecking} isCreating={isCreating} handleCreateLead={handleCreateLead} fixedAmount={fixedAmount} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} />
+                <BargainCTOControls user={user} leads={leads} animal={animal} isChecking={isChecking} isCreating={isCreating} handleCreateLead={handleCreateLead} fixedAmount={fixedAmount} postBiddingOptions={postBiddingOptions} setPostBiddingOptions={setPostBiddingOptions} />
             </div>
         )
     }
